@@ -1,10 +1,8 @@
 package org.ostrya.presencepublisher;
 
-import android.Manifest;
 import android.app.*;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -14,7 +12,6 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -141,11 +138,6 @@ public class ForegroundService extends Service {
     }
 
     private void start() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "No location permission granted, not sending requests");
-            return;
-        }
         if (isConnectedToWiFi() && isCorrectSsid()) {
             Log.d(TAG, "Correct Wi-Fi connected");
             executorService.submit(this::sendPing);
@@ -177,22 +169,28 @@ public class ForegroundService extends Service {
 
     private boolean isCorrectSsid() {
         Log.i(TAG, "Checking SSID");
-        if (wifiManager == null) {
-            Log.wtf(TAG, "No wifi manager");
-        } else {
-            String ssid = wifiManager.getConnectionInfo().getSSID();
-            if (ssid == null) {
-                Log.i(TAG, "No SSID found");
+        String ssid;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if (wifiManager == null) {
+                Log.wtf(TAG, "No wifi manager");
+                return false;
             } else {
-                if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
-                    ssid = ssid.substring(1, ssid.length() - 1);
-                }
-                if (ssid.equals(targetSsid)) {
-                    Log.i(TAG, "Correct network found");
-                    return true;
-                } else {
-                    Log.d(TAG, "Not connected to desired network, skipping.");
-                }
+                ssid = wifiManager.getConnectionInfo().getSSID();
+            }
+        } else {
+            ssid = connectivityManager.getActiveNetworkInfo().getExtraInfo();
+        }
+        if (ssid == null) {
+            Log.i(TAG, "No SSID found");
+        } else {
+            if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
+                ssid = ssid.substring(1, ssid.length() - 1);
+            }
+            if (ssid.equals(targetSsid)) {
+                Log.i(TAG, "Correct network found");
+                return true;
+            } else {
+                Log.d(TAG, ssid + " does not match desired network, skipping.");
             }
         }
         return false;

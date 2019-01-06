@@ -10,12 +10,17 @@
     <string name="ssid_summary">The WiFi network name for which to send ping messages.%nCurrent value: %s</string>
     <string name="last_ping_title">Last ping</string>
     <string name="next_ping_title">Next scheduled ping</string>
-    <string name="dialog_permission">Please allow access to coarse location. Otherwise, this app will not be able to
+    <string name="permission_dialog_title">Location permission</string>
+    <string name="permission_dialog_message">Please allow access to coarse location. Otherwise, this app will not be able to
         retrieve the currently connected WiFi name. You can skip granting the permission, but then the app will not send
         any notifications.
     </string>
     <string name="dialog_continue">Continue</string>
     <string name="dialog_skip">Skip</string>
-    <string name="dialog_title">Location permission</string>
     <string name="autostart_title">Start on boot</string>
+    <string name="location_dialog_title">Location service</string>
+    <string name="location_dialog_message">Please enable location services (at least network-based) and keep them enabled.
+        Otherwise, this app will not be able to retrieve the currently connected WiFi name. You can skip enabling it, but
+        then the app will not send any notifications.
+    </string>
 </resources>

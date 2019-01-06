@@ -5,7 +5,8 @@ This can be used to integrate the presence of your phone in home automation.
 The app uses the built-in Android alarm manager, so notifications are sent even if the phone is in stand-by.
 
 ## Permissions
-* ACCESS_COARSE_LOCATION: necessary to retrieve SSID of connected WiFi
+* ACCESS_COARSE_LOCATION: on Android 9+, necessary to retrieve SSID of connected WiFi (you do not need to grant
+ the permission in Android 6.0 - 8.1 for the app to work)
 * ACCESS_NETWORK_STATE: necessary to register network change listener
 * ACCESS_WIFI_STATE: necessary to retrieve SSID of connected WiFi
 * INTERNET: only necessary if your MQTT server is not running locally
