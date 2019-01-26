@@ -7,6 +7,18 @@ This can be used to integrate the presence of your phone in home automation.
 
 The app uses the built-in Android alarm manager, so notifications are sent even if the phone is in stand-by.
 
+## TLS with self-signed certificates
+
+The app uses the default Android CA trust store for checking the server certificate validity. You can simply add your
+certificate via:
+
+* Android 4.0 - 7.1:
+  * `Settings` → `Security` → `Install from SD card`
+* Android 8.0+:
+  * `Settings` → `Security & location` → `Encryption & credentials` → `Install from SD card`
+
+
+
 ## Permissions
 
 * ACCESS_COARSE_LOCATION: on Android 9+, necessary to retrieve SSID of connected WiFi (you do not need to grant
@@ -19,6 +31,5 @@ The app uses the built-in Android alarm manager, so notifications are sent even 
 
 ## Future ideas
 
-* TLS support including self-signed server certificates
 * client certificate authentication
 * ...

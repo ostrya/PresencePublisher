@@ -34,10 +34,14 @@ public class MqttService {
     public void doSendPing() throws MqttException {
         Log.d(TAG, "Try pinging server");
         String topic = sharedPreferences.getString(TOPIC, "topic");
+        boolean tls = sharedPreferences.getBoolean(TLS, false);
 
-        MqttClient mqttClient = new MqttClient(getMqttUrl(), Settings.Secure.ANDROID_ID, new MemoryPersistence());
+        MqttClient mqttClient = new MqttClient(getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence());
         MqttConnectOptions options = new MqttConnectOptions();
         options.setConnectionTimeout(5);
+        if (tls) {
+            options.setSocketFactory(AndroidSslSocketFactoryFactory.getSslSocketFactory());
+        }
         mqttClient.connect(options);
         mqttClient.publish(topic, "online".getBytes(Charset.forName("UTF-8")), 0, false);
         mqttClient.disconnect(5);
@@ -45,10 +49,9 @@ public class MqttService {
         Log.d(TAG, "Ping successful");
     }
 
-    private String getMqttUrl() {
+    private String getMqttUrl(boolean tls) {
         String host = sharedPreferences.getString(HOST, "localhost");
         String port = sharedPreferences.getString(PORT, null);
-        boolean tls = sharedPreferences.getBoolean(TLS, false);
         String protocolPrefix = tls ? "ssl://" : "tcp://";
         String portAppendix = port == null ? "" : ":" + port;
         return protocolPrefix + host + portAppendix;
