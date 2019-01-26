@@ -23,8 +23,8 @@ public class SsidUtil {
 
     public static List<String> getKnownSsids(final Context context) {
         WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifiManager == null) {
-            Log.w(TAG, "No wifi manager found");
+        if (wifiManager == null || wifiManager.getConfiguredNetworks() == null) {
+            Log.w(TAG, "No wifi list found");
             return null;
         }
         List<String> ssids = new ArrayList<>();

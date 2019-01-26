@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Presence Publisher</string>
+    <string name="host_title">MQTT Host</string>
+    <string name="host_summary">IP-Adresse oder Hostname.%nAktueller Wert: %s</string>
+    <string name="topic_title">Topic</string>
+    <string name="topic_summary">Das Topic, zu dem gesendet wird.%nAktueller Wert: %s</string>
+    <string name="ping_title">Sendeperiode</string>
+    <string name="ping_summary">Zeit zwischen Benachrichtigungen in Minuten.</string>
+    <string name="ssid_title">Ziel-WLAN</string>
+    <string name="ssid_summary">Das WLAN, in dem Benachrichtigungen gesendet werden sollen.%nAktueller Wert: %s</string>
+    <string name="permission_dialog_title">Standortberechtigung</string>
+    <string name="permission_dialog_message">Bitte erlaube den Zugriff auf ungefähre Position. Andernfalls kann diese App den
+        Namen des aktuell verbundenen WLANs nicht bestimmen. Du kannst das Setzen der Berechtigung überspringen, aber
+        in diesem Fall wird die App keine Benachrichtigungen senden.
+    </string>
+    <string name="dialog_continue">Weiter</string>
+    <string name="dialog_skip">Überspringen</string>
+    <string name="autostart_title">Autostart</string>
+    <string name="location_dialog_title">Standortdienst</string>
+    <string name="location_dialog_message">Bitte schalte den Standortdienst (zumindest Energiesparmodus) dauerhaft an.
+        Andernfalls kann diese App den Namen des aktuell verbundenen WLANs nicht bestimmen. Du kannst das Einschalten
+        überspringen, aber in diesem Fall wird die App keine Benachrichtigungen senden.
+    </string>
+    <string name="tab_connection_title">Verbindung</string>
+    <string name="tab_schedule_title">Zeitplan</string>
+    <string name="notification_last_ping">Letzter Erfolg: %s</string>
+    <string name="notification_next_ping">Geplant für: %s</string>
+    <string name="tls_title">TLS</string>
+    <string name="port_title">MQTT Port</string>
+    <string name="port_summary">Standardwert 1883, bzw. 8883 bei TLS.%nAktueller Wert: %s</string>
+    <string name="tls_summary">Transportverschlüsselung verwenden?</string>
+    <string name="toast_invalid_input">Ungültige Eingabe!</string>
+    <string name="check_connection_summary">Tippe hier, um eine Testbenachrichtigung zu senden.</string>
+    <string name="check_connection_title">Verbindung prüfen</string>
+    <string name="dialog_check_connection_title">Prüfe Verbindung</string>
+    <string name="dialog_check_connection_summary_waiting">Bitte warten. Dies kann bis zu 15 Sekunden dauern.</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Abbrechen</string>
+    <string name="dialog_check_connection_summary_success">Benachrichtigung erfolgreich gesendet.</string>
+    <string name="value_undefined"><![CDATA[<nicht gesetzt>]]></string>
+    <string name="autostart_summary">Soll diese App beim Boot starten?</string>
+    <string name="dialog_check_connection_summary_failure">Verbindung fehlgeschlagen:%n%s</string>
+</resources>

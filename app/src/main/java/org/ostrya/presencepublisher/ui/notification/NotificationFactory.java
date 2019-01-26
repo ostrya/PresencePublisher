@@ -59,8 +59,7 @@ public class NotificationFactory {
         if (timestamp == 0L) {
             return context.getString(R.string.value_undefined);
         }
-        return DateFormat
-                .getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(new Date(timestamp));
+        return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(new Date(timestamp));
     }
 
 }

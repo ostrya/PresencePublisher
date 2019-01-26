@@ -52,6 +52,7 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         SwitchPreferenceCompat autostart = new SwitchPreferenceCompat(context);
         autostart.setKey(AUTOSTART);
         autostart.setTitle(getString(R.string.autostart_title));
+        autostart.setSummary(R.string.autostart_summary);
         autostart.setIconSpaceReserved(false);
 
         screen.addPreference(ssid);
