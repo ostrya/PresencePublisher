@@ -30,7 +30,7 @@
             android:name=".ForegroundService"
             android:enabled="true" />
 
-        <receiver android:name=".SystemBroadcastReceiver">
+        <receiver android:name=".receiver.SystemBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action
@@ -39,7 +39,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".receiver.AlarmReceiver" />
     </application>
 
 </manifest>

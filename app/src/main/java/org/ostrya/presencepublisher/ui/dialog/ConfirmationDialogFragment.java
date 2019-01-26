@@ -1,18 +1,20 @@
-package org.ostrya.presencepublisher;
+package org.ostrya.presencepublisher.ui.dialog;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import org.ostrya.presencepublisher.R;
 
-public class DialogFragment extends androidx.fragment.app.DialogFragment {
+public class ConfirmationDialogFragment extends DialogFragment {
     private Callback callback;
     private int titleId;
     private int messageId;
 
-    static DialogFragment getInstance(final Callback callback, int titleId, int messageId) {
-        DialogFragment fragment = new DialogFragment();
+    public static ConfirmationDialogFragment getInstance(final Callback callback, int titleId, int messageId) {
+        ConfirmationDialogFragment fragment = new ConfirmationDialogFragment();
         fragment.setCallback(callback);
         fragment.setTitleId(titleId);
         fragment.setMessageId(messageId);
@@ -22,7 +24,7 @@ public class DialogFragment extends androidx.fragment.app.DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle(titleId)
                 .setMessage(messageId)
                 .setPositiveButton(R.string.dialog_continue, (dialog, id) -> callback.accept(true))

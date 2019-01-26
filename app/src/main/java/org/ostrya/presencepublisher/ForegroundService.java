@@ -9,32 +9,32 @@ import android.net.NetworkCapabilities;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.util.Log;
-import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.ostrya.presencepublisher.mqtt.MqttService;
+import org.ostrya.presencepublisher.receiver.AlarmReceiver;
+import org.ostrya.presencepublisher.util.SsidUtil;
 
-import java.nio.charset.Charset;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.ostrya.presencepublisher.SettingsFragment.*;
+import static org.ostrya.presencepublisher.ui.ConnectionFragment.*;
+import static org.ostrya.presencepublisher.ui.ScheduleFragment.*;
+import static org.ostrya.presencepublisher.ui.notification.NotificationFactory.getServiceNotification;
 
 public class ForegroundService extends Service {
-    static final String ALARM_ACTION = "org.ostrya.presencepublisher.ALARM_ACTION";
+    public static final String ALARM_ACTION = "org.ostrya.presencepublisher.ALARM_ACTION";
 
     private static final String TAG = ForegroundService.class.getSimpleName();
 
     private static final String CHANNEL_ID = "org.ostrya.presencepublisher";
     private static final String CHANNEL_NAME = "Presence Publisher";
+    private static final int NOTIFICATION_ID = 1;
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private MqttService mqttService;
     private String targetSsid;
-    private String url;
-    private String topic;
     private int ping;
     private ConnectivityManager connectivityManager;
     private AlarmManager alarmManager;
@@ -46,6 +46,8 @@ public class ForegroundService extends Service {
     public void onCreate() {
         Log.d(TAG, "Starting service");
         super.onCreate();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mqttService = new MqttService(sharedPreferences);
         showNotificationAndStartInForeground();
         connectivityManager = (ConnectivityManager) this.getSystemService(CONNECTIVITY_SERVICE);
         alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
@@ -76,38 +78,20 @@ public class ForegroundService extends Service {
             }
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(getResources().getString(R.string.app_name))
-                .setContentText("Service is running ...");
-        Notification notification;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            notification = builder
-                    .setCategory(Notification.CATEGORY_SERVICE)
-                    .build();
-        } else {
-            notification = builder
-                    .build();
-        }
-        startForeground(1, notification);
+        Notification notification = getServiceNotification(this, CHANNEL_ID);
+        startForeground(NOTIFICATION_ID, notification);
     }
 
     private void initializeParameters() {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        url = sharedPreferences.getString(URL, "tcp://localhost");
-        topic = sharedPreferences.getString(TOPIC, "topic");
         targetSsid = sharedPreferences.getString(SSID, "ssid");
         ping = sharedPreferences.getInt(PING, 15);
         sharedPreferences.registerOnSharedPreferenceChangeListener((prefs, key) -> {
             Log.d(TAG, "Changed parameter " + key);
             switch (key) {
-                case URL:
-                    url = prefs.getString(URL, "tcp://localhost");
-                    start();
-                    break;
+                case HOST:
+                case PORT:
+                case TLS:
                 case TOPIC:
-                    topic = prefs.getString(TOPIC, "topic");
                     start();
                     break;
                 case SSID:
@@ -117,6 +101,10 @@ public class ForegroundService extends Service {
                 case PING:
                     ping = prefs.getInt(PING, 15);
                     start();
+                    break;
+                case LAST_PING:
+                case NEXT_PING:
+                    NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, getServiceNotification(this, CHANNEL_ID));
                     break;
                 default:
                     Log.v(TAG, "Ignoring unexpected value " + key);
@@ -140,7 +128,7 @@ public class ForegroundService extends Service {
     private void start() {
         if (isConnectedToWiFi() && isCorrectSsid()) {
             Log.d(TAG, "Correct Wi-Fi connected");
-            executorService.submit(this::sendPing);
+            executorService.submit(mqttService::sendPing);
         }
         long nextPing = System.currentTimeMillis() + ping * 60_000L;
         sharedPreferences.edit().putLong(NEXT_PING, nextPing).apply();
@@ -178,42 +166,23 @@ public class ForegroundService extends Service {
                 ssid = wifiManager.getConnectionInfo().getSSID();
             }
         } else {
-            ssid = connectivityManager.getActiveNetworkInfo().getExtraInfo();
+            ssid = SsidUtil.normalizeSsid(connectivityManager.getActiveNetworkInfo().getExtraInfo());
         }
         if (ssid == null) {
             Log.i(TAG, "No SSID found");
         } else {
-            if (ssid.startsWith("\"") && ssid.endsWith("\"")) {
-                ssid = ssid.substring(1, ssid.length() - 1);
-            }
             if (ssid.equals(targetSsid)) {
                 Log.i(TAG, "Correct network found");
                 return true;
             } else {
-                Log.d(TAG, ssid + " does not match desired network, skipping.");
+                Log.d(TAG, "'" + ssid + "' does not match desired network'" + targetSsid + "', skipping.");
             }
         }
         return false;
-    }
-
-    private void sendPing() {
-        Log.d(TAG, "Try pinging server");
-        try {
-            MqttClient mqttClient = new MqttClient(url, Settings.Secure.ANDROID_ID, new MemoryPersistence());
-            mqttClient.connect();
-            mqttClient.publish(topic, "online".getBytes(Charset.forName("UTF-8")), 0, false);
-            sharedPreferences.edit().putLong(LAST_PING, System.currentTimeMillis()).apply();
-            mqttClient.disconnect();
-            mqttClient.close();
-            Log.d(TAG, "Ping successful");
-        } catch (MqttException e) {
-            Log.w(TAG, "Error while sending ping", e);
-        }
     }
 
     @Override
     public IBinder onBind(final Intent intent) {
         return null;
     }
-
 }

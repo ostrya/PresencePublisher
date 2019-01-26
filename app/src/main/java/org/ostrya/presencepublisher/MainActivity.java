@@ -9,24 +9,35 @@ import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
+import org.ostrya.presencepublisher.ui.MainPagerAdapter;
+import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     private static final int LOCATION_REQUEST_CODE = 2;
 
+    private MainPagerAdapter mainPagerAdapter;
+    private ViewPager viewPager;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "Creating activity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), this);
+        viewPager = findViewById(R.id.pager);
+        viewPager.setAdapter(mainPagerAdapter);
+
         checkLocationPermission();
         Log.d(TAG, "Creating activity finished");
     }
@@ -58,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Location permission not yet granted, asking user ...");
             FragmentManager fm = getSupportFragmentManager();
 
-            DialogFragment fragment = DialogFragment.getInstance(ok -> {
+            ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(ok -> {
                 if (ok) {
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_CODE);
                 }
@@ -76,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Location service not yet enabled, asking user ...");
             FragmentManager fm = getSupportFragmentManager();
 
-            DialogFragment fragment = DialogFragment.getInstance(ok -> {
+            ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(ok -> {
                 if (ok) {
                     startActivityForResult(new Intent(ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_REQUEST_CODE);
                 }

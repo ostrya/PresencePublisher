@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher;
+package org.ostrya.presencepublisher.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,9 +7,10 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 import androidx.preference.PreferenceManager;
+import org.ostrya.presencepublisher.ForegroundService;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
-import static org.ostrya.presencepublisher.SettingsFragment.AUTOSTART;
+import static org.ostrya.presencepublisher.ui.ScheduleFragment.AUTOSTART;
 
 public class SystemBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = SystemBroadcastReceiver.class.getSimpleName();

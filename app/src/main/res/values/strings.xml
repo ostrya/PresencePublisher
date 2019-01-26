@@ -1,15 +1,13 @@
 <resources>
     <string name="app_name">Presence Publisher</string>
-    <string name="url_title">MQTT URL</string>
-    <string name="url_summary"><![CDATA[The URL of the MQTT broker. Format: tcp://<address>[:port]%nCurrent value: %s]]></string>
+    <string name="host_title">MQTT Host</string>
+    <string name="host_summary">IP address or hostname.%nCurrent value: %s</string>
     <string name="topic_title">Topic</string>
     <string name="topic_summary">The topic to publish messages to.%nCurrent value: %s</string>
     <string name="ping_title">Ping time</string>
     <string name="ping_summary">The time between pings in minutes.</string>
     <string name="ssid_title">WiFi SSID</string>
     <string name="ssid_summary">The WiFi network name for which to send ping messages.%nCurrent value: %s</string>
-    <string name="last_ping_title">Last ping</string>
-    <string name="next_ping_title">Next scheduled ping</string>
     <string name="permission_dialog_title">Location permission</string>
     <string name="permission_dialog_message">Please allow access to coarse location. Otherwise, this app will not be able to
         retrieve the currently connected WiFi name. You can skip granting the permission, but then the app will not send
@@ -23,4 +21,21 @@
         Otherwise, this app will not be able to retrieve the currently connected WiFi name. You can skip enabling it, but
         then the app will not send any notifications.
     </string>
+    <string name="tab_connection_title">Connection</string>
+    <string name="tab_schedule_title">Schedule</string>
+    <string name="notification_last_ping">Last ping: %s</string>
+    <string name="notification_next_ping">Next ping: %s</string>
+    <string name="tls_title">TLS</string>
+    <string name="port_title">MQTT Port</string>
+    <string name="port_summary">Defaults to 1883, or 8883 for TLS.%nCurrent value: %s</string>
+    <string name="tls_summary">Use transport encryption?</string>
+    <string name="toast_invalid_input">Invalid input!</string>
+    <string name="check_connection_summary">Click here to send test message.</string>
+    <string name="check_connection_title">Check connection</string>
+    <string name="dialog_check_connection_title">Testing connection</string>
+    <string name="dialog_check_connection_summary_waiting">Please wait. This may take up to 15 seconds.</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_check_connection_summary_success">Message successfully sent.</string>
+    <string name="value_undefined"><![CDATA[<undefined>]]></string>
 </resources>
