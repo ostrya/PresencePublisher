@@ -28,7 +28,7 @@ public class CheckConnectionDialogFragment extends DialogFragment {
     public static CheckConnectionDialogFragment getInstance(final Context context, final SharedPreferences sharedPreferences) {
         CheckConnectionDialogFragment fragment = new CheckConnectionDialogFragment();
         fragment.setContext(context);
-        fragment.setMqttService(new MqttService(sharedPreferences));
+        fragment.setMqttService(new MqttService(context.getApplicationContext(), sharedPreferences));
         return fragment;
     }
 

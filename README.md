@@ -17,8 +17,6 @@ certificate via:
 * Android 8.0+:
   * `Settings` → `Security & location` → `Encryption & credentials` → `Install from SD card`
 
-
-
 ## Permissions
 
 * ACCESS_COARSE_LOCATION: on Android 9+, necessary to retrieve SSID of connected WiFi (you do not need to grant
@@ -31,5 +29,9 @@ certificate via:
 
 ## Future ideas
 
-* client certificate authentication
+* more conditions when to send notification
+  * time ranges
+  * presence of Bluetooth beacons
+  * actual location
+  * ...
 * ...

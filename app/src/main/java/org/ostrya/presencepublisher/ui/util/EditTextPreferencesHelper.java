@@ -12,7 +12,7 @@ public class EditTextPreferencesHelper {
         EditTextPreference preference = new EditTextPreference(context);
         preference.setKey(key);
         preference.setTitle(context.getString(titleId));
-        preference.setSummaryProvider(new TextExplanationSummaryProvider(summaryId));
+        preference.setSummaryProvider(new ExplanationSummaryProvider(summaryId));
         preference.setIconSpaceReserved(false);
         preference.setOnPreferenceChangeListener(((prefs, newValue) -> {
             boolean result = validator.isValid((String) newValue);

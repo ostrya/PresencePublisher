@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import androidx.preference.*;
 import org.ostrya.presencepublisher.R;
-import org.ostrya.presencepublisher.ui.util.ListExplanationSummaryProvider;
+import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
 import org.ostrya.presencepublisher.ui.util.RegexValidator;
 import org.ostrya.presencepublisher.util.SsidUtil;
 
@@ -33,7 +33,7 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
             ListPreference ssidList = new ListPreference(context);
             ssidList.setKey(SSID);
             ssidList.setTitle(R.string.ssid_title);
-            ssidList.setSummaryProvider(new ListExplanationSummaryProvider(R.string.ssid_summary));
+            ssidList.setSummaryProvider(new ExplanationSummaryProvider(R.string.ssid_summary));
             ssidList.setEntryValues(entryValues);
             ssidList.setEntries(entryValues);
             ssidList.setIconSpaceReserved(false);

@@ -47,7 +47,7 @@ public class ForegroundService extends Service {
         Log.d(TAG, "Starting service");
         super.onCreate();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mqttService = new MqttService(sharedPreferences);
+        mqttService = new MqttService(getApplicationContext(), sharedPreferences);
         showNotificationAndStartInForeground();
         connectivityManager = (ConnectivityManager) this.getSystemService(CONNECTIVITY_SERVICE);
         alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
@@ -91,6 +91,7 @@ public class ForegroundService extends Service {
                 case HOST:
                 case PORT:
                 case TLS:
+                case CLIENT_CERT:
                 case TOPIC:
                     start();
                     break;

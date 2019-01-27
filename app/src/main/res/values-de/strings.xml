@@ -41,4 +41,6 @@
     <string name="value_undefined"><![CDATA[<nicht gesetzt>]]></string>
     <string name="autostart_summary">Soll diese App beim Boot starten?</string>
     <string name="dialog_check_connection_summary_failure">Verbindung fehlgeschlagen:%n%s</string>
+    <string name="client_cert_title">Client-Zertifikat</string>
+    <string name="client_cert_summary">Das Client-Zertifikat, mit dem sich das Gerät authentifizieren soll.%nAktueller Wert: %s</string>
 </resources>

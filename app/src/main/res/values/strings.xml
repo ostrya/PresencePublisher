@@ -40,4 +40,6 @@
     <string name="value_undefined"><![CDATA[<undefined>]]></string>
     <string name="autostart_summary">Should this app start on boot?</string>
     <string name="dialog_check_connection_summary_failure">Connection failed:%n%s</string>
+    <string name="client_cert_title">Client certificate</string>
+    <string name="client_cert_summary">Client certificate to authenticate this device.%nCurrent value: %s</string>
 </resources>
