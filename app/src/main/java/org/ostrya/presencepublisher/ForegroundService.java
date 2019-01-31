@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
@@ -127,9 +128,13 @@ public class ForegroundService extends Service {
     }
 
     private void start() {
-        if (isConnectedToWiFi() && isCorrectSsid()) {
-            Log.d(TAG, "Correct Wi-Fi connected");
-            executorService.submit(mqttService::sendPing);
+        try {
+            if (isConnectedToWiFi() && isCorrectSsid()) {
+                Log.d(TAG, "Correct Wi-Fi connected");
+                executorService.submit(mqttService::sendPing);
+            }
+        } catch (RuntimeException e) {
+            Log.w(TAG, "Error while checking WiFi network", e);
         }
         long nextPing = System.currentTimeMillis() + ping * 60_000L;
         sharedPreferences.edit().putLong(NEXT_PING, nextPing).apply();
@@ -143,31 +148,39 @@ public class ForegroundService extends Service {
     private boolean isConnectedToWiFi() {
         if (connectivityManager == null) {
             Log.wtf(TAG, "Connectivity Manager not found");
+            return false;
         }
-        if (connectivityManager.getActiveNetworkInfo() == null
-                || !connectivityManager.getActiveNetworkInfo().isConnected()) {
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo == null
+                || !activeNetworkInfo.isConnected()) {
             return false;
         }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
             return networkCapabilities != null && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
         } else {
-            return connectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
+            return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI;
         }
     }
 
     private boolean isCorrectSsid() {
         Log.i(TAG, "Checking SSID");
-        String ssid;
+        String ssid = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if (wifiManager == null) {
                 Log.wtf(TAG, "No wifi manager");
-                return false;
             } else {
                 ssid = wifiManager.getConnectionInfo().getSSID();
             }
         } else {
-            ssid = SsidUtil.normalizeSsid(connectivityManager.getActiveNetworkInfo().getExtraInfo());
+            if (connectivityManager == null) {
+                Log.wtf(TAG, "Connectivity Manager not found");
+                return false;
+            }
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null) {
+                ssid = SsidUtil.normalizeSsid(activeNetworkInfo.getExtraInfo());
+            }
         }
         if (ssid == null) {
             Log.i(TAG, "No SSID found");
