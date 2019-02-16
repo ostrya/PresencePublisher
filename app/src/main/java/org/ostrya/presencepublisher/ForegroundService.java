@@ -17,12 +17,14 @@ import org.ostrya.presencepublisher.mqtt.MqttService;
 import org.ostrya.presencepublisher.receiver.AlarmReceiver;
 import org.ostrya.presencepublisher.util.SsidUtil;
 
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.ostrya.presencepublisher.ui.ConnectionFragment.*;
 import static org.ostrya.presencepublisher.ui.ScheduleFragment.*;
 import static org.ostrya.presencepublisher.ui.notification.NotificationFactory.getServiceNotification;
+import static org.ostrya.presencepublisher.ui.notification.NotificationFactory.updateServiceNotification;
 
 public class ForegroundService extends Service {
     public static final String ALARM_ACTION = "org.ostrya.presencepublisher.ALARM_ACTION";
@@ -35,8 +37,8 @@ public class ForegroundService extends Service {
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private MqttService mqttService;
-    private String targetSsid;
-    private int ping;
+    private long lastPing;
+    private long nextPing;
     private ConnectivityManager connectivityManager;
     private AlarmManager alarmManager;
     private WifiManager wifiManager;
@@ -85,8 +87,8 @@ public class ForegroundService extends Service {
     }
 
     private void initializeParameters() {
-        targetSsid = sharedPreferences.getString(SSID, "ssid");
-        ping = sharedPreferences.getInt(PING, 15);
+        lastPing = sharedPreferences.getLong(LAST_PING, 0L);
+        nextPing = sharedPreferences.getLong(NEXT_PING, 0L);
         sharedPreferences.registerOnSharedPreferenceChangeListener((prefs, key) -> {
             Log.d(TAG, "Changed parameter " + key);
             switch (key) {
@@ -95,19 +97,12 @@ public class ForegroundService extends Service {
                 case TLS:
                 case CLIENT_CERT:
                 case TOPIC:
-                    start();
-                    break;
                 case SSID:
-                    targetSsid = prefs.getString(SSID, "ssid");
-                    start();
-                    break;
                 case PING:
-                    ping = prefs.getInt(PING, 15);
                     start();
                     break;
                 case LAST_PING:
                 case NEXT_PING:
-                    NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, getServiceNotification(this, CHANNEL_ID));
                     break;
                 default:
                     Log.v(TAG, "Ignoring unexpected value " + key);
@@ -138,17 +133,33 @@ public class ForegroundService extends Service {
         try {
             if (isConnectedToWiFi() && isCorrectSsid()) {
                 Log.d(TAG, "Correct Wi-Fi connected");
-                executorService.submit(mqttService::sendPing);
+                executorService.submit(this::doSend);
             }
         } catch (RuntimeException e) {
             Log.w(TAG, "Error while checking WiFi network", e);
         }
-        long nextPing = System.currentTimeMillis() + ping * 60_000L;
+        int ping = sharedPreferences.getInt(PING, 15);
+        nextPing = System.currentTimeMillis() + ping * 60_000L;
+        Log.d(TAG, "Re-scheduling for " + new Date(nextPing));
         sharedPreferences.edit().putLong(NEXT_PING, nextPing).apply();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        updateNotification();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextPing, pendingIntent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, nextPing, pendingIntent);
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, nextPing, pendingIntent);
+        }
+    }
+
+    private void doSend() {
+        try {
+            mqttService.sendPing();
+            lastPing = System.currentTimeMillis();
+            sharedPreferences.edit().putLong(LAST_PING, lastPing).apply();
+            updateNotification();
+        } catch (Exception e) {
+            Log.w(TAG, "Error while sending ping", e);
         }
     }
 
@@ -192,6 +203,7 @@ public class ForegroundService extends Service {
         if (ssid == null) {
             Log.i(TAG, "No SSID found");
         } else {
+            String targetSsid = sharedPreferences.getString(SSID, "ssid");
             if (ssid.equals(targetSsid)) {
                 Log.i(TAG, "Correct network found");
                 return true;
@@ -200,6 +212,11 @@ public class ForegroundService extends Service {
             }
         }
         return false;
+    }
+
+    private void updateNotification() {
+        NotificationManagerCompat.from(this)
+                .notify(NOTIFICATION_ID, updateServiceNotification(getApplicationContext(), lastPing, nextPing, CHANNEL_ID));
     }
 
     @Override

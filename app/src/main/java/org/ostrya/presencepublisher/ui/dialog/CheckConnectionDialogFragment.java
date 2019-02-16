@@ -65,7 +65,7 @@ public class CheckConnectionDialogFragment extends DialogFragment {
         public void run() {
             String message;
             try {
-                mqttService.doSendPing();
+                mqttService.sendPing();
                 message = getResources().getString(R.string.dialog_check_connection_summary_success);
             } catch (MqttException e) {
                 Log.w(TAG, "Error while sending message", e);

@@ -12,7 +12,6 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.nio.charset.Charset;
 
 import static org.ostrya.presencepublisher.ui.ConnectionFragment.*;
-import static org.ostrya.presencepublisher.ui.ScheduleFragment.LAST_PING;
 
 public class MqttService {
     private static final String TAG = MqttService.class.getSimpleName();
@@ -25,16 +24,7 @@ public class MqttService {
         this.sharedPreferences = sharedPreferences;
     }
 
-    public void sendPing() {
-        try {
-            doSendPing();
-            sharedPreferences.edit().putLong(LAST_PING, System.currentTimeMillis()).apply();
-        } catch (MqttException e) {
-            Log.w(TAG, "Error while sending ping", e);
-        }
-    }
-
-    public void doSendPing() throws MqttException {
+    public void sendPing() throws MqttException {
         Log.d(TAG, "Try pinging server");
         String topic = sharedPreferences.getString(TOPIC, "topic");
         boolean tls = sharedPreferences.getBoolean(TLS, false);
