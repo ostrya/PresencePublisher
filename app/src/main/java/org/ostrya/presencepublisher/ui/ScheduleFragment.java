@@ -2,10 +2,16 @@ package org.ostrya.presencepublisher.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.preference.*;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
+import androidx.preference.SeekBarPreference;
+import androidx.preference.SwitchPreferenceCompat;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
 import org.ostrya.presencepublisher.ui.util.RegexValidator;
+import org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider;
 import org.ostrya.presencepublisher.util.SsidUtil;
 
 import java.util.List;
@@ -55,9 +61,23 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         autostart.setSummary(R.string.autostart_summary);
         autostart.setIconSpaceReserved(false);
 
+        Preference lastPing = new Preference(context);
+        lastPing.setKey(LAST_PING);
+        lastPing.setTitle(R.string.last_ping_title);
+        lastPing.setSummaryProvider(new TimestampSummaryProvider());
+        lastPing.setIconSpaceReserved(false);
+
+        Preference nextPing = new Preference(context);
+        nextPing.setKey(NEXT_PING);
+        nextPing.setTitle(R.string.next_ping_title);
+        nextPing.setSummaryProvider(new TimestampSummaryProvider());
+        nextPing.setIconSpaceReserved(false);
+
         screen.addPreference(ssid);
         screen.addPreference(ping);
         screen.addPreference(autostart);
+        screen.addPreference(lastPing);
+        screen.addPreference(nextPing);
 
         setPreferenceScreen(screen);
     }

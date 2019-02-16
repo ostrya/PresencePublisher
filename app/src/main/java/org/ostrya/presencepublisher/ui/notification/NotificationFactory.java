@@ -31,11 +31,10 @@ public class NotificationFactory {
                 .setContentIntent(pendingIntent)
                 .setStyle(new NotificationCompat.InboxStyle()
                         .addLine(getLastPing(context))
-                        .addLine(getNextPing(context)))
-                .setOnlyAlertOnce(true);
+                    .addLine(getNextPing(context)));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             notification = builder
-                    .setCategory(Notification.CATEGORY_SERVICE)
+                .setCategory(Notification.CATEGORY_STATUS)
                     .build();
         } else {
             notification = builder

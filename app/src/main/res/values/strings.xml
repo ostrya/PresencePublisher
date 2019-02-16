@@ -42,4 +42,6 @@
     <string name="dialog_check_connection_summary_failure">Connection failed:%n%s</string>
     <string name="client_cert_title">Client certificate</string>
     <string name="client_cert_summary">Client certificate to authenticate this device.%nCurrent value: %s</string>
+  <string name="last_ping_title">Last success</string>
+  <string name="next_ping_title">Scheduled for</string>
 </resources>
