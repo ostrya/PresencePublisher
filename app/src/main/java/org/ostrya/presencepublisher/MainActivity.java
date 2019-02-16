@@ -34,12 +34,18 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), this);
+        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), getApplicationContext());
         viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(mainPagerAdapter);
 
         checkLocationPermission();
         Log.d(TAG, "Creating activity finished");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService();
     }
 
     @Override
@@ -64,7 +70,7 @@ public class MainActivity extends FragmentActivity {
 
     private void checkLocationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Location permission not yet granted, asking user ...");
             FragmentManager fm = getSupportFragmentManager();
@@ -100,11 +106,11 @@ public class MainActivity extends FragmentActivity {
 
     private void startService() {
         Log.d(TAG, "Starting service ...");
-        Intent intent = new Intent(this.getApplicationContext(), ForegroundService.class);
+        Intent intent = new Intent(getApplicationContext(), ForegroundService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            this.startForegroundService(intent);
+            getApplicationContext().startForegroundService(intent);
         } else {
-            this.startService(intent);
+            getApplicationContext().startService(intent);
         }
     }
 }

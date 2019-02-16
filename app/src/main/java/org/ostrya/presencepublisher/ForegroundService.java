@@ -47,17 +47,18 @@ public class ForegroundService extends Service {
     public void onCreate() {
         Log.d(TAG, "Starting service");
         super.onCreate();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mqttService = new MqttService(getApplicationContext(), sharedPreferences);
         showNotificationAndStartInForeground();
-        connectivityManager = (ConnectivityManager) this.getSystemService(CONNECTIVITY_SERVICE);
-        alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
-        wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mqttService = new MqttService(getApplicationContext(), sharedPreferences);
+        connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(CONNECTIVITY_SERVICE);
+        alarmManager = (AlarmManager) getApplicationContext().getSystemService(ALARM_SERVICE);
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         Intent intent = new Intent(ALARM_ACTION);
-        intent.setClass(this, AlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        intent.setClass(getApplicationContext(), AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
         initializeParameters();
         registerNetworkCallback();
+        registerWatchDog();
         Log.d(TAG, "Starting service finished");
     }
 
@@ -71,7 +72,7 @@ public class ForegroundService extends Service {
 
     private void showNotificationAndStartInForeground() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = this.getSystemService(NotificationManager.class);
+            NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
             if (notificationManager != null) {
                 Log.d(TAG, "Setting notification");
                 notificationManager
@@ -79,7 +80,7 @@ public class ForegroundService extends Service {
             }
         }
 
-        Notification notification = getServiceNotification(this, CHANNEL_ID);
+        Notification notification = getServiceNotification(getApplicationContext(), CHANNEL_ID);
         startForeground(NOTIFICATION_ID, notification);
     }
 
@@ -125,6 +126,12 @@ public class ForegroundService extends Service {
                 }
             });
         }
+    }
+
+    private void registerWatchDog() {
+        // if for some reason individual scheduling fails, this will make sure it is resumed at least once per hour
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_HOUR,
+                AlarmManager.INTERVAL_HOUR, pendingIntent);
     }
 
     private void start() {
