@@ -23,7 +23,8 @@ public class NotificationFactory {
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(context.getString(R.string.app_name))
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             notification = builder
                 .setCategory(Notification.CATEGORY_STATUS)
@@ -49,7 +50,8 @@ public class NotificationFactory {
                 .setContentIntent(pendingIntent)
                 .setStyle(new NotificationCompat.InboxStyle()
                         .addLine(getLastPing(context, lastPing))
-                        .addLine(getNextPing(context, nextPing)));
+                        .addLine(getNextPing(context, nextPing)))
+                .setOnlyAlertOnce(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             notification = builder
                     .setCategory(Notification.CATEGORY_STATUS)
