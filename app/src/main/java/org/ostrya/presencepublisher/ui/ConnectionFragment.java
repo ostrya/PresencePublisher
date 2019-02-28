@@ -22,6 +22,8 @@ public class ConnectionFragment extends PreferenceFragmentCompat {
     public static final String CLIENT_CERT = "client_cert";
     public static final String TOPIC = "topic";
     public static final String PING = "ping";
+    public static final String LOGIN = "login";
+    public static final String PASSWORD = "password";
 
     @Override
     public void onCreatePreferences(final Bundle savedInstanceState, final String rootKey) {
@@ -30,6 +32,8 @@ public class ConnectionFragment extends PreferenceFragmentCompat {
 
         EditTextPreference host = getEditTextPreference(context, HOST, R.string.host_title, R.string.host_summary, new RegexValidator("[^:/]+"));
         EditTextPreference port = getEditTextPreference(context, PORT, R.string.port_title, R.string.port_summary, new RangeValidator(1025, 65535));
+        EditTextPreference login = getEditTextPreference(context, LOGIN, R.string.login_title, R.string.login_summary, new RegexValidator("[^ ]*"));
+        EditTextPreference password = getEditTextPreference(context, PASSWORD, R.string.password_title, R.string.password_summary, new RegexValidator("[^ ]*"));
 
         SwitchPreferenceCompat tls = new SwitchPreferenceCompat(context);
         tls.setKey(TLS);
@@ -69,6 +73,8 @@ public class ConnectionFragment extends PreferenceFragmentCompat {
 
         screen.addPreference(host);
         screen.addPreference(port);
+        screen.addPreference(login);
+        screen.addPreference(password);
         screen.addPreference(tls);
         screen.addPreference(clientCert);
         screen.addPreference(topic);

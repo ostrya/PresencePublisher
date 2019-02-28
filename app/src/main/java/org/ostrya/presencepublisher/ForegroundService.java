@@ -94,6 +94,8 @@ public class ForegroundService extends Service {
             switch (key) {
                 case HOST:
                 case PORT:
+                case LOGIN:
+                case PASSWORD:
                 case TLS:
                 case CLIENT_CERT:
                 case TOPIC:
@@ -133,7 +135,13 @@ public class ForegroundService extends Service {
         try {
             if (isConnectedToWiFi() && isCorrectSsid()) {
                 Log.d(TAG, "Correct Wi-Fi connected");
-                executorService.submit(this::doSend);
+                executorService.submit(this::doSendOnline);
+            } else {
+                boolean sendOffline = sharedPreferences.getBoolean(OFFLINE_PING, false);
+                if(sendOffline) {
+                    Log.d(TAG, "Correct Wi-Fi disconnected");
+                    executorService.submit(this::doSendOffline);
+                }
             }
         } catch (RuntimeException e) {
             Log.w(TAG, "Error while checking WiFi network", e);
@@ -152,9 +160,20 @@ public class ForegroundService extends Service {
         }
     }
 
-    private void doSend() {
+    private void doSendOnline() {
         try {
-            mqttService.sendPing();
+            mqttService.sendPing("online");
+            lastPing = System.currentTimeMillis();
+            sharedPreferences.edit().putLong(LAST_PING, lastPing).apply();
+            updateNotification();
+        } catch (Exception e) {
+            Log.w(TAG, "Error while sending ping", e);
+        }
+    }
+
+    private void doSendOffline() {
+        try {
+            mqttService.sendPing("offline");
             lastPing = System.currentTimeMillis();
             sharedPreferences.edit().putLong(LAST_PING, lastPing).apply();
             updateNotification();

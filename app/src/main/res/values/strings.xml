@@ -2,6 +2,10 @@
     <string name="app_name">Presence Publisher</string>
     <string name="host_title">MQTT Host</string>
     <string name="host_summary">IP address or hostname.%nCurrent value: %s</string>
+    <string name="login_title">MQTT Login</string>
+    <string name="login_summary">User Login.%nCurrent value: %s</string>
+    <string name="password_title">MQTT Password</string>
+    <string name="password_summary">User Password.%nCurrent value: %s</string>
     <string name="topic_title">Topic</string>
     <string name="topic_summary">The topic to publish messages to.%nCurrent value: %s</string>
     <string name="ping_title">Publish period</string>
@@ -44,4 +48,6 @@
     <string name="client_cert_summary">Client certificate to authenticate this device.%nCurrent value: %s</string>
   <string name="last_ping_title">Last success</string>
   <string name="next_ping_title">Scheduled for</string>
+    <string name="offlineping_title">Send Offline Pings</string>
+    <string name="offlineping_summary">Send pings when WiFi disconnected</string>
 </resources>
