@@ -50,5 +50,5 @@
     <string name="password_title">MQTT Passwort</string>
     <string name="password_summary">Passwort.%nAktueller Wert: %s</string>
     <string name="offlineping_title">Offline-Pings senden</string>
-    <string name="offlineping_summary">Senden Sie Pings, wenn WLAN nicht verbunden ist</string>
+    <string name="offlineping_summary">Pings senden, wenn Ziel-WLAN nicht verbunden ist</string>
 </resources>
