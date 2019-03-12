@@ -48,7 +48,7 @@
     <string name="login_title">MQTT Anmeldung</string>
     <string name="login_summary">Anmeldung.%nAktueller Wert: %s</string>
     <string name="password_title">MQTT Passwort</string>
-    <string name="password_summary">Passwort.%nAktueller Wert: %s</string>
+    <string name="password_summary">Passwort.%nAktueller Wert: **********</string>
     <string name="offlineping_title">Offline-Pings senden</string>
     <string name="offlineping_summary">Pings senden, wenn Ziel-WLAN nicht verbunden ist</string>
 </resources>
