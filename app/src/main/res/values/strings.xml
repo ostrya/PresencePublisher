@@ -9,9 +9,9 @@
     <string name="topic_title">Topic</string>
     <string name="topic_summary">The topic to publish messages to.%nCurrent value: %s</string>
     <string name="ping_title">Publish period</string>
-    <string name="ping_summary">The time between publishings in minutes.</string>
+    <string name="ping_summary">The time between messages in minutes.</string>
     <string name="ssid_title">Target WiFi</string>
-    <string name="ssid_summary">The WiFi network name for which to send ping messages.%nCurrent value: %s</string>
+    <string name="ssid_summary">The WiFi network name for which to send messages.%nCurrent value: %s</string>
     <string name="permission_dialog_title">Location permission</string>
     <string name="permission_dialog_message">Please allow access to coarse location. Otherwise, this app will not be able to
         retrieve the currently connected WiFi name. You can skip granting the permission, but then the app will not send

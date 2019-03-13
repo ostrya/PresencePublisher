@@ -53,6 +53,7 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         ping.setKey(PING);
         ping.setMin(1);
         ping.setMax(30);
+        ping.setDefaultValue(15);
         ping.setSeekBarIncrement(1);
         ping.setTitle(getString(R.string.ping_title));
         ping.setSummary(getString(R.string.ping_summary));
