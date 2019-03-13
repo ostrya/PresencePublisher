@@ -65,12 +65,11 @@ public class CheckConnectionDialogFragment extends DialogFragment {
         public void run() {
             String message;
             try {
-                mqttService.sendPing();
+                mqttService.sendPing("online");
                 message = getResources().getString(R.string.dialog_check_connection_summary_success);
             } catch (MqttException e) {
                 Log.w(TAG, "Error while sending message", e);
-                message = String.format(context.getString(R.string.dialog_check_connection_summary_failure),
-                        e.getCause().getMessage());
+                message = String.format(context.getString(R.string.dialog_check_connection_summary_failure), e.getCause().getMessage());
             }
             final String result = message;
             requireActivity().runOnUiThread(() -> {

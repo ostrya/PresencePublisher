@@ -24,6 +24,9 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
     public static final String AUTOSTART = "autostart";
     public static final String LAST_PING = "lastPing";
     public static final String NEXT_PING = "nextPing";
+    public static final String OFFLINE_PING = "offlinePing";
+    public static final String CONNECTION_STATUS = "connection";
+
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -55,6 +58,12 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         ping.setSummary(getString(R.string.ping_summary));
         ping.setIconSpaceReserved(false);
 
+        SwitchPreferenceCompat sendOfflinePing = new SwitchPreferenceCompat(context);
+        sendOfflinePing.setKey(OFFLINE_PING);
+        sendOfflinePing.setTitle(getString(R.string.offlineping_title));
+        sendOfflinePing.setSummary(R.string.offlineping_summary);
+        sendOfflinePing.setIconSpaceReserved(false);
+
         SwitchPreferenceCompat autostart = new SwitchPreferenceCompat(context);
         autostart.setKey(AUTOSTART);
         autostart.setTitle(getString(R.string.autostart_title));
@@ -75,6 +84,7 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
 
         screen.addPreference(ssid);
         screen.addPreference(ping);
+        screen.addPreference(sendOfflinePing);
         screen.addPreference(autostart);
         screen.addPreference(lastPing);
         screen.addPreference(nextPing);
