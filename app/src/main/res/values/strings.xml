@@ -5,7 +5,7 @@
     <string name="login_title">MQTT Login</string>
     <string name="login_summary">User Login.%nCurrent value: %s</string>
     <string name="password_title">MQTT Password</string>
-    <string name="password_summary">User Password.%nCurrent value: **********</string>
+    <string name="password_summary">User Password.</string>
     <string name="topic_title">Topic</string>
     <string name="topic_summary">The topic to publish messages to.%nCurrent value: %s</string>
     <string name="ping_title">Publish period</string>
