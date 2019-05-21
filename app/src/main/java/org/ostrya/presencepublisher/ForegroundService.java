@@ -207,7 +207,7 @@ public class ForegroundService extends Service {
             if (wifiManager == null) {
                 Log.wtf(TAG, "No wifi manager");
             } else {
-                ssid = wifiManager.getConnectionInfo().getSSID();
+                ssid = SsidUtil.normalizeSsid(wifiManager.getConnectionInfo().getSSID());
             }
         } else {
             if (connectivityManager == null) {
