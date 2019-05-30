@@ -6,8 +6,8 @@ android {
         applicationId "org.ostrya.presencepublisher"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.4.1"
+        versionCode 10
+        versionName "1.5.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {

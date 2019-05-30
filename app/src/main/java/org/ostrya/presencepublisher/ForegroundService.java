@@ -155,7 +155,11 @@ public class ForegroundService extends Service {
 
     private void start() {
         try {
-            executorService.submit(() -> doSend(getMessagesToSend()));
+            List<String> messages = getMessagesToSend();
+            if (!messages.isEmpty()) {
+                Log.d(TAG, "Schedule sending messages");
+                executorService.submit(() -> doSend(messages));
+            }
         } catch (RuntimeException e) {
             Log.w(TAG, "Error while getting messages to send", e);
         }
@@ -194,7 +198,7 @@ public class ForegroundService extends Service {
             }
         }
         if (content.isEmpty() && sharedPreferences.getBoolean(OFFLINE_PING, false)) {
-            Log.d(TAG, "Correct Wi-Fi disconnected");
+            Log.d(TAG, "Not connected to any expected network");
             content.add(sharedPreferences.getString(CONTENT_OFFLINE, DEFAULT_CONTENT_OFFLINE));
         }
         return content;
