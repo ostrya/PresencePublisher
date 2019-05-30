@@ -3,7 +3,11 @@
 [<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="75">](https://f-droid.org/packages/org.ostrya.presencepublisher)
 
 A simple app that regularly publishes to a configurable MQTT topic whenever connected to a given WiFi network.
-This can be used to integrate the presence of your phone in home automation.
+This can be used to integrate the presence of your phone in home automation. Several networks can be configured
+at once and the message to be sent can be configured for each network.
+
+Additionally, if your MQTT server is available on the internet, you can also choose to send messages whenever
+you are not connected to any of the configured WiFi networks.
 
 The app uses the built-in Android alarm manager, so notifications are sent even if the phone is in stand-by.
 

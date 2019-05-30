@@ -2,7 +2,7 @@ package org.ostrya.presencepublisher.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.preference.ListPreference;
+import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
@@ -10,44 +10,40 @@ import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreferenceCompat;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
-import org.ostrya.presencepublisher.ui.util.RegexValidator;
 import org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider;
 import org.ostrya.presencepublisher.util.SsidUtil;
 
 import java.util.List;
 
 import static org.ostrya.presencepublisher.ui.ConnectionFragment.PING;
-import static org.ostrya.presencepublisher.ui.util.EditTextPreferencesHelper.getEditTextPreference;
+import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.LIST;
 
 public class ScheduleFragment extends PreferenceFragmentCompat {
+    /**
+     * @deprecated old parameter from before v1.5, use SSID_LIST instead
+     */
+    @Deprecated
     public static final String SSID = "ssid";
+    public static final String SSID_LIST = "ssids";
     public static final String AUTOSTART = "autostart";
     public static final String LAST_PING = "lastPing";
     public static final String NEXT_PING = "nextPing";
     public static final String OFFLINE_PING = "offlinePing";
-    public static final String CONNECTION_STATUS = "connection";
-
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         Context context = getPreferenceManager().getContext();
         PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(context);
 
-        Preference ssid;
         List<String> knownSsids = SsidUtil.getKnownSsids(context);
-        if (knownSsids == null) {
-            ssid = getEditTextPreference(context, SSID, R.string.ssid_title, R.string.ssid_summary, new RegexValidator(".+"));
-        } else {
-            String[] entryValues = knownSsids.toArray(new String[knownSsids.size()]);
-            ListPreference ssidList = new ListPreference(context);
-            ssidList.setKey(SSID);
-            ssidList.setTitle(R.string.ssid_title);
-            ssidList.setSummaryProvider(new ExplanationSummaryProvider(R.string.ssid_summary));
-            ssidList.setEntryValues(entryValues);
-            ssidList.setEntries(entryValues);
-            ssidList.setIconSpaceReserved(false);
-            ssid = ssidList;
-        }
+        String[] entryValues = knownSsids.toArray(new String[knownSsids.size()]);
+        MultiSelectListPreference ssidList = new MultiSelectListPreference(context);
+        ssidList.setKey(SSID_LIST);
+        ssidList.setTitle(R.string.ssid_title);
+        ssidList.setSummaryProvider(new ExplanationSummaryProvider(R.string.ssid_summary, LIST));
+        ssidList.setEntryValues(entryValues);
+        ssidList.setEntries(entryValues);
+        ssidList.setIconSpaceReserved(false);
 
         SeekBarPreference ping = new SeekBarPreference(context);
         ping.setKey(PING);
@@ -84,7 +80,7 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         nextPing.setSummaryProvider(new TimestampSummaryProvider());
         nextPing.setIconSpaceReserved(false);
 
-        screen.addPreference(ssid);
+        screen.addPreference(ssidList);
         screen.addPreference(ping);
         screen.addPreference(sendOfflinePing);
         screen.addPreference(autostart);

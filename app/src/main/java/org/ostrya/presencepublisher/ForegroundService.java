@@ -1,6 +1,11 @@
 package org.ostrya.presencepublisher;
 
-import android.app.*;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -17,11 +22,16 @@ import org.ostrya.presencepublisher.mqtt.MqttService;
 import org.ostrya.presencepublisher.receiver.AlarmReceiver;
 import org.ostrya.presencepublisher.util.SsidUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static org.ostrya.presencepublisher.ui.ConnectionFragment.*;
+import static org.ostrya.presencepublisher.ui.ContentFragment.*;
 import static org.ostrya.presencepublisher.ui.ScheduleFragment.*;
 import static org.ostrya.presencepublisher.ui.notification.NotificationFactory.getServiceNotification;
 import static org.ostrya.presencepublisher.ui.notification.NotificationFactory.updateServiceNotification;
@@ -59,6 +69,7 @@ public class ForegroundService extends Service {
         intent.setClass(getApplicationContext(), AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
         initializeParameters();
+        migrateOldPreference();
         registerNetworkCallback();
         registerWatchDog();
         Log.d(TAG, "Starting service finished");
@@ -99,7 +110,7 @@ public class ForegroundService extends Service {
                 case TLS:
                 case CLIENT_CERT:
                 case TOPIC:
-                case SSID:
+                case SSID_LIST:
                 case PING:
                     start();
                     break;
@@ -110,6 +121,17 @@ public class ForegroundService extends Service {
                     Log.v(TAG, "Ignoring unexpected value " + key);
             }
         });
+    }
+
+    @SuppressWarnings("deprecation")
+    private void migrateOldPreference() {
+        if (sharedPreferences.contains(SSID) && !sharedPreferences.contains(SSID_LIST)) {
+            Log.d(TAG, "Migrating wifi network to new parameter");
+            String ssid = sharedPreferences.getString(SSID, "");
+            if (!"".equals(ssid)) {
+                sharedPreferences.edit().putStringSet(SSID_LIST, Collections.singleton(ssid)).apply();
+            }
+        }
     }
 
     private void registerNetworkCallback() {
@@ -133,18 +155,9 @@ public class ForegroundService extends Service {
 
     private void start() {
         try {
-            if (isConnectedToWiFi() && isCorrectSsid()) {
-                Log.d(TAG, "Correct Wi-Fi connected");
-                executorService.submit(this::doSendOnline);
-            } else {
-                boolean sendOffline = sharedPreferences.getBoolean(OFFLINE_PING, false);
-                if(sendOffline) {
-                    Log.d(TAG, "Correct Wi-Fi disconnected");
-                    executorService.submit(this::doSendOffline);
-                }
-            }
+            executorService.submit(() -> doSend(getMessagesToSend()));
         } catch (RuntimeException e) {
-            Log.w(TAG, "Error while checking WiFi network", e);
+            Log.w(TAG, "Error while getting messages to send", e);
         }
         int ping = sharedPreferences.getInt(PING, 15);
         nextPing = System.currentTimeMillis() + ping * 60_000L;
@@ -160,26 +173,31 @@ public class ForegroundService extends Service {
         }
     }
 
-    private void doSendOnline() {
+    private void doSend(List<String> messages) {
         try {
-            mqttService.sendPing("online");
+            mqttService.sendMessages(messages);
             lastPing = System.currentTimeMillis();
             sharedPreferences.edit().putLong(LAST_PING, lastPing).apply();
             updateNotification();
         } catch (Exception e) {
-            Log.w(TAG, "Error while sending ping", e);
+            Log.w(TAG, "Error while sending messages", e);
         }
     }
 
-    private void doSendOffline() {
-        try {
-            mqttService.sendPing("offline");
-            lastPing = System.currentTimeMillis();
-            sharedPreferences.edit().putLong(LAST_PING, lastPing).apply();
-            updateNotification();
-        } catch (Exception e) {
-            Log.w(TAG, "Error while sending ping", e);
+    private List<String> getMessagesToSend() {
+        List<String> content = new ArrayList<>();
+        if (isConnectedToWiFi()) {
+            String ssid = getSsidIfMatching();
+            if (ssid != null) {
+                Log.d(TAG, "Correct Wi-Fi connected");
+                content.add(sharedPreferences.getString(WIFI_PREFIX + ssid, DEFAULT_CONTENT_ONLINE));
+            }
         }
+        if (content.isEmpty() && sharedPreferences.getBoolean(OFFLINE_PING, false)) {
+            Log.d(TAG, "Correct Wi-Fi disconnected");
+            content.add(sharedPreferences.getString(CONTENT_OFFLINE, DEFAULT_CONTENT_OFFLINE));
+        }
+        return content;
     }
 
     private boolean isConnectedToWiFi() {
@@ -201,41 +219,42 @@ public class ForegroundService extends Service {
             }
             return false;
         } else {
+            //noinspection deprecation
             return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI;
         }
     }
 
-    private boolean isCorrectSsid() {
+    private String getSsidIfMatching() {
         Log.i(TAG, "Checking SSID");
         String ssid = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if (wifiManager == null) {
-                Log.wtf(TAG, "No wifi manager");
+                Log.e(TAG, "No wifi manager");
             } else {
                 ssid = SsidUtil.normalizeSsid(wifiManager.getConnectionInfo().getSSID());
             }
         } else {
             if (connectivityManager == null) {
-                Log.wtf(TAG, "Connectivity Manager not found");
-                return false;
-            }
-            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-            if (activeNetworkInfo != null) {
-                ssid = SsidUtil.normalizeSsid(activeNetworkInfo.getExtraInfo());
+                Log.e(TAG, "Connectivity Manager not found");
+            } else {
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if (activeNetworkInfo != null) {
+                    ssid = SsidUtil.normalizeSsid(activeNetworkInfo.getExtraInfo());
+                }
             }
         }
         if (ssid == null) {
             Log.i(TAG, "No SSID found");
-        } else {
-            String targetSsid = sharedPreferences.getString(SSID, "ssid");
-            if (ssid.equals(targetSsid)) {
-                Log.i(TAG, "Correct network found");
-                return true;
-            } else {
-                Log.d(TAG, "'" + ssid + "' does not match desired network'" + targetSsid + "', skipping.");
-            }
+            return null;
         }
-        return false;
+        Set<String> targetSsids = sharedPreferences.getStringSet(SSID_LIST, Collections.emptySet());
+        if (targetSsids.contains(ssid)) {
+            Log.i(TAG, "Correct network found");
+            return ssid;
+        } else {
+            Log.d(TAG, "'" + ssid + "' does not match any desired network '" + targetSsids + "', skipping.");
+            return null;
+        }
     }
 
     private void updateNotification() {

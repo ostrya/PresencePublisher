@@ -10,8 +10,8 @@
     <string name="topic_summary">The topic to publish messages to.%nCurrent value: %s</string>
     <string name="ping_title">Publish period</string>
     <string name="ping_summary">The time between messages in minutes.</string>
-    <string name="ssid_title">Target WiFi</string>
-    <string name="ssid_summary">The WiFi network name for which to send messages.%nCurrent value: %s</string>
+    <string name="ssid_title">Target WiFi networks</string>
+    <string name="ssid_summary">WiFi networks for which to send messages.%nCurrent value: %s</string>
     <string name="permission_dialog_title">Location permission</string>
     <string name="permission_dialog_message">Please allow access to coarse location. Otherwise, this app will not be able to
         retrieve the currently connected WiFi name. You can skip granting the permission, but then the app will not send
@@ -46,8 +46,14 @@
     <string name="dialog_check_connection_summary_failure">Connection failed:%n%s</string>
     <string name="client_cert_title">Client certificate</string>
     <string name="client_cert_summary">Client certificate to authenticate this device.%nCurrent value: %s</string>
-  <string name="last_ping_title">Last success</string>
-  <string name="next_ping_title">Scheduled for</string>
-    <string name="offlineping_title">Send Offline Pings</string>
-    <string name="offlineping_summary">Send pings when target WiFi not connected</string>
+    <string name="last_ping_title">Last success</string>
+    <string name="next_ping_title">Scheduled for</string>
+    <string name="offlineping_title">Send Offline message</string>
+    <string name="offlineping_summary">Send message when not connected to target network</string>
+    <string name="tab_content_title">Content</string>
+    <string name="content_summary">Current value: %s</string>
+    <string name="offline_content_title">Offline message</string>
+    <string name="content_category_other">Other</string>
+    <string name="content_category_wifi">WiFi</string>
+    <string name="content_help">Here you can configure the content of the MQTT message to be sent for any condition.</string>
 </resources>

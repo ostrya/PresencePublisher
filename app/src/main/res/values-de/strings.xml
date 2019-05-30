@@ -7,8 +7,8 @@
     <string name="topic_summary">Das Topic, zu dem gesendet wird.%nAktueller Wert: %s</string>
     <string name="ping_title">Sendeperiode</string>
     <string name="ping_summary">Zeit zwischen Benachrichtigungen in Minuten.</string>
-    <string name="ssid_title">Ziel-WLAN</string>
-    <string name="ssid_summary">Das WLAN, in dem Benachrichtigungen gesendet werden sollen.%nAktueller Wert: %s</string>
+    <string name="ssid_title">Ziel-WLAN-Netzwerke</string>
+    <string name="ssid_summary">Netzwerke, in denen benachrichtigt wird.%nAktueller Wert: %s</string>
     <string name="permission_dialog_title">Standortberechtigung</string>
     <string name="permission_dialog_message">Bitte erlaube den Zugriff auf ungefähre Position. Andernfalls kann diese App den
         Namen des aktuell verbundenen WLANs nicht bestimmen. Du kannst das Setzen der Berechtigung überspringen, aber
@@ -49,6 +49,12 @@
     <string name="login_summary">Anmeldung.%nAktueller Wert: %s</string>
     <string name="password_title">MQTT Passwort</string>
     <string name="password_summary">Passwort.</string>
-    <string name="offlineping_title">Offline-Pings senden</string>
-    <string name="offlineping_summary">Pings senden, wenn Ziel-WLAN nicht verbunden ist</string>
+    <string name="offlineping_title">Offline-Nachricht senden</string>
+    <string name="offlineping_summary">Nachricht senden, wenn Ziel-WLAN nicht verbunden ist</string>
+    <string name="tab_content_title">Inhalt</string>
+    <string name="content_summary">Aktueller Wert: %s</string>
+    <string name="offline_content_title">Offline-Nachricht</string>
+    <string name="content_category_other">Anderes</string>
+    <string name="content_category_wifi">WLAN</string>
+    <string name="content_help">Hier kann der Inhalt der Nachricht je nach Bedingung konfiguriert werden.</string>
 </resources>

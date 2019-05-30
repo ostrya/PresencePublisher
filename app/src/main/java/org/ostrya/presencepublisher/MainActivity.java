@@ -38,7 +38,7 @@ public class MainActivity extends FragmentActivity {
         viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(mainPagerAdapter);
 
-        checkLocationPermission();
+        checkLocationPermissionAndAccessAndStartService();
         Log.d(TAG, "Creating activity finished");
     }
 
@@ -53,7 +53,7 @@ public class MainActivity extends FragmentActivity {
         if (requestCode == PERMISSION_REQUEST_CODE && grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Successfully granted location permission");
-            checkLocationService();
+            checkLocationAccessAndStartService();
         }
     }
 
@@ -68,7 +68,7 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    private void checkLocationPermission() {
+    private void checkLocationPermissionAndAccessAndStartService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                 && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -82,11 +82,11 @@ public class MainActivity extends FragmentActivity {
             }, R.string.permission_dialog_title, R.string.permission_dialog_message);
             fragment.show(fm, null);
         } else {
-            checkLocationService();
+            checkLocationAccessAndStartService();
         }
     }
 
-    private void checkLocationService() {
+    private void checkLocationAccessAndStartService() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && (locationManager == null || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)))) {

@@ -12,7 +12,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     private Context context;
 
     public MainPagerAdapter(FragmentManager fm, Context context) {
-        super(fm);
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.context = context;
     }
 
@@ -25,12 +25,14 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
                 return new ConnectionFragment();
             case 1:
                 return new ScheduleFragment();
+            case 2:
+                return new ContentFragment();
         }
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Nullable
@@ -41,6 +43,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
                 return context.getString(R.string.tab_connection_title);
             case 1:
                 return context.getString(R.string.tab_schedule_title);
+            case 2:
+                return context.getString(R.string.tab_content_title);
         }
         return null;
     }

@@ -22,12 +22,12 @@ public class SsidUtil {
     }
 
     public static List<String> getKnownSsids(final Context context) {
+        List<String> ssids = new ArrayList<>();
         WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifiManager == null || wifiManager.getConfiguredNetworks() == null) {
             Log.w(TAG, "No wifi list found");
-            return null;
+            return ssids;
         }
-        List<String> ssids = new ArrayList<>();
         for (WifiConfiguration configuration : wifiManager.getConfiguredNetworks()) {
             ssids.add(normalizeSsid(configuration.SSID));
         }

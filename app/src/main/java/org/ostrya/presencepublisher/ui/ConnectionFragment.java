@@ -3,7 +3,11 @@ package org.ostrya.presencepublisher.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.security.KeyChain;
-import androidx.preference.*;
+import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
+import androidx.preference.SwitchPreferenceCompat;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.dialog.CheckConnectionDialogFragment;
 import org.ostrya.presencepublisher.ui.util.CustomPreference;
@@ -13,6 +17,7 @@ import org.ostrya.presencepublisher.ui.util.RegexValidator;
 
 import static org.ostrya.presencepublisher.ui.dialog.CheckConnectionDialogFragment.getInstance;
 import static org.ostrya.presencepublisher.ui.util.EditTextPreferencesHelper.getEditTextPreference;
+import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
 
 public class ConnectionFragment extends PreferenceFragmentCompat {
 
@@ -44,7 +49,7 @@ public class ConnectionFragment extends PreferenceFragmentCompat {
         CustomPreference clientCert = new CustomPreference(context);
         clientCert.setKey(CLIENT_CERT);
         clientCert.setTitle(context.getString(R.string.client_cert_title));
-        clientCert.setSummaryProvider(new ExplanationSummaryProvider(R.string.client_cert_summary));
+        clientCert.setSummaryProvider(new ExplanationSummaryProvider(R.string.client_cert_summary, STRING));
         clientCert.setOnPreferenceClickListener(prefs -> {
             KeyChain.choosePrivateKeyAlias(
                     requireActivity(),

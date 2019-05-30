@@ -14,6 +14,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.mqtt.MqttService;
 
+import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -65,7 +66,7 @@ public class CheckConnectionDialogFragment extends DialogFragment {
         public void run() {
             String message;
             try {
-                mqttService.sendPing("online");
+                mqttService.sendMessages(Collections.singletonList("test"));
                 message = getResources().getString(R.string.dialog_check_connection_summary_success);
             } catch (MqttException e) {
                 Log.w(TAG, "Error while sending message", e);

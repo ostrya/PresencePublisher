@@ -10,6 +10,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import java.nio.charset.Charset;
+import java.util.List;
 
 import static org.ostrya.presencepublisher.ui.ConnectionFragment.*;
 
@@ -24,8 +25,8 @@ public class MqttService {
         this.sharedPreferences = sharedPreferences;
     }
 
-    public void sendPing(String status) throws MqttException {
-        Log.d(TAG, "Try pinging server");
+    public void sendMessages(List<String> messages) throws MqttException {
+        Log.d(TAG, "Sending messages to server");
         String topic = sharedPreferences.getString(TOPIC, "topic");
         boolean tls = sharedPreferences.getBoolean(TLS, false);
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERT, null);
@@ -43,10 +44,12 @@ public class MqttService {
             options.setSocketFactory(factory.getSslSocketFactory(clientCertAlias));
         }
         mqttClient.connect(options);
-        mqttClient.publish(topic, status.getBytes(Charset.forName("UTF-8")), 0, false);
+        for (String message : messages) {
+            mqttClient.publish(topic, message.getBytes(Charset.forName("UTF-8")), 0, false);
+        }
         mqttClient.disconnect(5);
         mqttClient.close(true);
-        Log.d(TAG, "Ping successful");
+        Log.d(TAG, "Sending messages was successful");
     }
 
     private String getMqttUrl(boolean tls) {
