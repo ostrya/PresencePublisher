@@ -1,13 +1,13 @@
 package org.ostrya.presencepublisher.ui.util;
 
-import android.util.Log;
 import androidx.preference.Preference;
+import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.R;
 
 import java.util.Collections;
 
 public class ExplanationSummaryProvider<T extends Preference> implements Preference.SummaryProvider<T> {
-    private static final String TAG = ExplanationSummaryProvider.class.getSimpleName();
+    private static final String TAG = "ExplanationSummaryProvider";
     private final int summaryId;
     private final PreferenceType type;
 
@@ -30,7 +30,7 @@ public class ExplanationSummaryProvider<T extends Preference> implements Prefere
                 case LIST:
                     return preference.getSharedPreferences().getStringSet(preference.getKey(), Collections.emptySet()).toString();
                 default:
-                    Log.e(TAG, "Unexpected type received: " + type);
+                    HyperLog.e(TAG, "Unexpected type received: " + type);
                     throw new IllegalArgumentException("Unexpected type");
             }
         } else {

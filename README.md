@@ -30,6 +30,7 @@ certificate via:
 * INTERNET: only necessary if your MQTT server is not running locally
 * FOREGROUND_SERVICE: necessary to send notifications
 * RECEIVE_BOOT_COMPLETED: necessary to start service on start-up
+* WRITE_EXTERNAL_STORAGE: only necessary if you want to export log files in Android 4.0 - 4.3
 
 ## Future ideas
 

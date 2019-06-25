@@ -27,12 +27,14 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
                 return new ScheduleFragment();
             case 2:
                 return new ContentFragment();
+            case 3:
+                return new LogFragment();
         }
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Nullable
@@ -45,6 +47,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
                 return context.getString(R.string.tab_schedule_title);
             case 2:
                 return context.getString(R.string.tab_content_title);
+            case 3:
+                return context.getString(R.string.tab_log_title);
         }
         return null;
     }

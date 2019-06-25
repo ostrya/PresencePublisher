@@ -3,13 +3,13 @@ package org.ostrya.presencepublisher.util;
 import android.content.Context;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.util.Log;
+import com.hypertrack.hyperlog.HyperLog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SsidUtil {
-    private static final String TAG = SsidUtil.class.getSimpleName();
+    private static final String TAG = "SsidUtil";
 
     public static String normalizeSsid(final String ssid) {
         if (ssid == null) {
@@ -25,7 +25,7 @@ public class SsidUtil {
         List<String> ssids = new ArrayList<>();
         WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifiManager == null || wifiManager.getConfiguredNetworks() == null) {
-            Log.w(TAG, "No wifi list found");
+            HyperLog.w(TAG, "No wifi list found");
             return ssids;
         }
         for (WifiConfiguration configuration : wifiManager.getConfiguredNetworks()) {

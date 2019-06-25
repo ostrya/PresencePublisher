@@ -56,4 +56,9 @@
     <string name="content_category_other">Other</string>
     <string name="content_category_wifi">WiFi</string>
     <string name="content_help">Here you can configure the content of the MQTT message to be sent for any condition.</string>
+    <string name="tab_log_title">Log</string>
+    <string name="button_reload">Reload</string>
+    <string name="button_clear">Clear</string>
+    <string name="button_export">Export</string>
+    <string name="toast_no_logs">No logs available</string>
 </resources>

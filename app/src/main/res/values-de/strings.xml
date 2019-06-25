@@ -57,4 +57,9 @@
     <string name="content_category_other">Anderes</string>
     <string name="content_category_wifi">WLAN</string>
     <string name="content_help">Hier kann der Inhalt der Nachricht je nach Bedingung konfiguriert werden.</string>
+    <string name="tab_log_title">Log</string>
+    <string name="button_export">Exportieren</string>
+    <string name="toast_no_logs">Keine Logs vorhanden</string>
+    <string name="button_reload">Neu laden</string>
+    <string name="button_clear">Löschen</string>
 </resources>

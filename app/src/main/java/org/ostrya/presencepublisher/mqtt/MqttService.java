@@ -3,7 +3,7 @@ package org.ostrya.presencepublisher.mqtt;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
-import android.util.Log;
+import com.hypertrack.hyperlog.HyperLog;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -15,7 +15,7 @@ import java.util.List;
 import static org.ostrya.presencepublisher.ui.ConnectionFragment.*;
 
 public class MqttService {
-    private static final String TAG = MqttService.class.getSimpleName();
+    private static final String TAG = "MqttService";
 
     private final AndroidSslSocketFactoryFactory factory;
     private final SharedPreferences sharedPreferences;
@@ -26,7 +26,7 @@ public class MqttService {
     }
 
     public void sendMessages(List<String> messages) throws MqttException {
-        Log.d(TAG, "Sending messages to server");
+        HyperLog.i(TAG, "Sending messages to server");
         String topic = sharedPreferences.getString(TOPIC, "topic");
         boolean tls = sharedPreferences.getBoolean(TLS, false);
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERT, null);
@@ -49,7 +49,7 @@ public class MqttService {
         }
         mqttClient.disconnect(5);
         mqttClient.close(true);
-        Log.d(TAG, "Sending messages was successful");
+        HyperLog.i(TAG, "Sending messages was successful");
     }
 
     private String getMqttUrl(boolean tls) {

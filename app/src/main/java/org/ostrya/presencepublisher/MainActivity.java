@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -14,13 +13,14 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
+import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.ui.MainPagerAdapter;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
 public class MainActivity extends FragmentActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = "MainActivity";
 
     private static final int PERMISSION_REQUEST_CODE = 1;
     private static final int LOCATION_REQUEST_CODE = 2;
@@ -30,7 +30,7 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "Creating activity");
+        HyperLog.d(TAG, "Creating activity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -39,7 +39,7 @@ public class MainActivity extends FragmentActivity {
         viewPager.setAdapter(mainPagerAdapter);
 
         checkLocationPermissionAndAccessAndStartService();
-        Log.d(TAG, "Creating activity finished");
+        HyperLog.d(TAG, "Creating activity finished");
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MainActivity extends FragmentActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_CODE && grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Successfully granted location permission");
+            HyperLog.i(TAG, "Successfully granted location permission");
             checkLocationAccessAndStartService();
         }
     }
@@ -63,7 +63,7 @@ public class MainActivity extends FragmentActivity {
         if (requestCode == LOCATION_REQUEST_CODE) {
             // For some reason, the activity returns RESULT_CANCELED even when the service is enabled, so we don't
             // know if it was actually enabled or not. For now, we don't check again and just start the service.
-            Log.d(TAG, "Returning from location service with result " + resultCode + ", assuming it is running ...");
+            HyperLog.d(TAG, "Returning from location service with result " + resultCode + ", assuming it is running ...");
             startService();
         }
     }
@@ -72,7 +72,7 @@ public class MainActivity extends FragmentActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                 && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Location permission not yet granted, asking user ...");
+            HyperLog.d(TAG, "Location permission not yet granted, asking user ...");
             FragmentManager fm = getSupportFragmentManager();
 
             ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(ok -> {
@@ -90,7 +90,7 @@ public class MainActivity extends FragmentActivity {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && (locationManager == null || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)))) {
-            Log.d(TAG, "Location service not yet enabled, asking user ...");
+            HyperLog.d(TAG, "Location service not yet enabled, asking user ...");
             FragmentManager fm = getSupportFragmentManager();
 
             ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(ok -> {
@@ -105,7 +105,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void startService() {
-        Log.d(TAG, "Starting service ...");
+        HyperLog.d(TAG, "Starting service ...");
         Intent intent = new Intent(getApplicationContext(), ForegroundService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getApplicationContext().startForegroundService(intent);

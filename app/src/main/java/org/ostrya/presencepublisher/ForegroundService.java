@@ -15,9 +15,9 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
+import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.mqtt.MqttService;
 import org.ostrya.presencepublisher.receiver.AlarmReceiver;
 import org.ostrya.presencepublisher.util.SsidUtil;
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.ostrya.presencepublisher.ui.ConnectionFragment.*;
 import static org.ostrya.presencepublisher.ui.ContentFragment.*;
@@ -39,7 +40,7 @@ import static org.ostrya.presencepublisher.ui.notification.NotificationFactory.u
 public class ForegroundService extends Service {
     public static final String ALARM_ACTION = "org.ostrya.presencepublisher.ALARM_ACTION";
 
-    private static final String TAG = ForegroundService.class.getSimpleName();
+    private static final String TAG = "ForegroundService";
 
     private static final String CHANNEL_ID = "org.ostrya.presencepublisher";
     private static final String CHANNEL_NAME = "Presence Publisher";
@@ -54,10 +55,11 @@ public class ForegroundService extends Service {
     private WifiManager wifiManager;
     private SharedPreferences sharedPreferences;
     private PendingIntent pendingIntent;
+    private AtomicBoolean currentlyRunning = new AtomicBoolean();
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "Starting service");
+        HyperLog.i(TAG, "Starting service");
         super.onCreate();
         showNotificationAndStartInForeground();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -72,13 +74,13 @@ public class ForegroundService extends Service {
         migrateOldPreference();
         registerNetworkCallback();
         registerWatchDog();
-        Log.d(TAG, "Starting service finished");
+        HyperLog.d(TAG, "Starting service finished");
     }
 
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
         super.onStartCommand(intent, flags, startId);
-        Log.d(TAG, "Received start intent " + (intent == null ? "null" : intent.getAction()));
+        HyperLog.i(TAG, "Received start intent " + (intent == null ? "null" : intent.getAction()));
         start();
         return START_STICKY;
     }
@@ -87,7 +89,7 @@ public class ForegroundService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
             if (notificationManager != null) {
-                Log.d(TAG, "Setting notification");
+                HyperLog.d(TAG, "Setting notification");
                 notificationManager
                         .createNotificationChannel(new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT));
             }
@@ -101,7 +103,6 @@ public class ForegroundService extends Service {
         lastPing = sharedPreferences.getLong(LAST_PING, 0L);
         nextPing = sharedPreferences.getLong(NEXT_PING, 0L);
         sharedPreferences.registerOnSharedPreferenceChangeListener((prefs, key) -> {
-            Log.d(TAG, "Changed parameter " + key);
             switch (key) {
                 case HOST:
                 case PORT:
@@ -112,13 +113,15 @@ public class ForegroundService extends Service {
                 case TOPIC:
                 case SSID_LIST:
                 case PING:
+                case OFFLINE_PING:
+                    HyperLog.i(TAG, "Changed parameter " + key);
                     start();
                     break;
                 case LAST_PING:
                 case NEXT_PING:
                     break;
                 default:
-                    Log.v(TAG, "Ignoring unexpected value " + key);
+                    HyperLog.v(TAG, "Ignoring unexpected value " + key);
             }
         });
     }
@@ -126,7 +129,7 @@ public class ForegroundService extends Service {
     @SuppressWarnings("deprecation")
     private void migrateOldPreference() {
         if (sharedPreferences.contains(SSID) && !sharedPreferences.contains(SSID_LIST)) {
-            Log.d(TAG, "Migrating wifi network to new parameter");
+            HyperLog.d(TAG, "Migrating wifi network to new parameter");
             String ssid = sharedPreferences.getString(SSID, "");
             if (!"".equals(ssid)) {
                 sharedPreferences.edit().putStringSet(SSID_LIST, Collections.singleton(ssid)).apply();
@@ -139,7 +142,7 @@ public class ForegroundService extends Service {
             connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
                 @Override
                 public void onAvailable(final Network network) {
-                    Log.d(TAG, "Network available");
+                    HyperLog.i(TAG, "Network available");
                     super.onAvailable(network);
                     start();
                 }
@@ -154,18 +157,22 @@ public class ForegroundService extends Service {
     }
 
     private void start() {
+        if (!currentlyRunning.compareAndSet(false, true)) {
+            HyperLog.d(TAG, "Skip message scheduling as already running");
+            return;
+        }
         try {
             List<String> messages = getMessagesToSend();
             if (!messages.isEmpty()) {
-                Log.d(TAG, "Schedule sending messages");
+                HyperLog.d(TAG, "Sending messages in background");
                 executorService.submit(() -> doSend(messages));
             }
         } catch (RuntimeException e) {
-            Log.w(TAG, "Error while getting messages to send", e);
+            HyperLog.w(TAG, "Error while getting messages to send", e);
         }
         int ping = sharedPreferences.getInt(PING, 15);
         nextPing = System.currentTimeMillis() + ping * 60_000L;
-        Log.d(TAG, "Re-scheduling for " + new Date(nextPing));
+        HyperLog.i(TAG, "Re-scheduling for " + new Date(nextPing));
         sharedPreferences.edit().putLong(NEXT_PING, nextPing).apply();
         updateNotification();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -175,6 +182,7 @@ public class ForegroundService extends Service {
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, nextPing, pendingIntent);
         }
+        currentlyRunning.set(false);
     }
 
     private void doSend(List<String> messages) {
@@ -184,7 +192,7 @@ public class ForegroundService extends Service {
             sharedPreferences.edit().putLong(LAST_PING, lastPing).apply();
             updateNotification();
         } catch (Exception e) {
-            Log.w(TAG, "Error while sending messages", e);
+            HyperLog.w(TAG, "Error while sending messages", e);
         }
     }
 
@@ -193,12 +201,12 @@ public class ForegroundService extends Service {
         if (isConnectedToWiFi()) {
             String ssid = getSsidIfMatching();
             if (ssid != null) {
-                Log.d(TAG, "Correct Wi-Fi connected");
+                HyperLog.i(TAG, "Scheduling message for SSID " + ssid);
                 content.add(sharedPreferences.getString(WIFI_PREFIX + ssid, DEFAULT_CONTENT_ONLINE));
             }
         }
         if (content.isEmpty() && sharedPreferences.getBoolean(OFFLINE_PING, false)) {
-            Log.d(TAG, "Not connected to any expected network");
+            HyperLog.i(TAG, "Scheduling offline message");
             content.add(sharedPreferences.getString(CONTENT_OFFLINE, DEFAULT_CONTENT_OFFLINE));
         }
         return content;
@@ -206,7 +214,7 @@ public class ForegroundService extends Service {
 
     private boolean isConnectedToWiFi() {
         if (connectivityManager == null) {
-            Log.wtf(TAG, "Connectivity Manager not found");
+            HyperLog.e(TAG, "Connectivity Manager not found");
             return false;
         }
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -229,17 +237,17 @@ public class ForegroundService extends Service {
     }
 
     private String getSsidIfMatching() {
-        Log.i(TAG, "Checking SSID");
+        HyperLog.i(TAG, "Checking SSID");
         String ssid = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if (wifiManager == null) {
-                Log.e(TAG, "No wifi manager");
+                HyperLog.e(TAG, "No wifi manager");
             } else {
                 ssid = SsidUtil.normalizeSsid(wifiManager.getConnectionInfo().getSSID());
             }
         } else {
             if (connectivityManager == null) {
-                Log.e(TAG, "Connectivity Manager not found");
+                HyperLog.e(TAG, "Connectivity Manager not found");
             } else {
                 NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
                 if (activeNetworkInfo != null) {
@@ -248,15 +256,15 @@ public class ForegroundService extends Service {
             }
         }
         if (ssid == null) {
-            Log.i(TAG, "No SSID found");
+            HyperLog.i(TAG, "No SSID found");
             return null;
         }
         Set<String> targetSsids = sharedPreferences.getStringSet(SSID_LIST, Collections.emptySet());
         if (targetSsids.contains(ssid)) {
-            Log.i(TAG, "Correct network found");
+            HyperLog.d(TAG, "Correct network found");
             return ssid;
         } else {
-            Log.d(TAG, "'" + ssid + "' does not match any desired network '" + targetSsids + "', skipping.");
+            HyperLog.i(TAG, "'" + ssid + "' does not match any desired network '" + targetSsids + "', skipping.");
             return null;
         }
     }

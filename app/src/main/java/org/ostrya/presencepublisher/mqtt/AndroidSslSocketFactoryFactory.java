@@ -2,17 +2,25 @@ package org.ostrya.presencepublisher.mqtt;
 
 import android.content.Context;
 import android.security.KeyChain;
-import android.util.Log;
 import androidx.annotation.Nullable;
+import com.hypertrack.hyperlog.HyperLog;
 
-import javax.net.ssl.*;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
 import java.io.IOException;
-import java.security.*;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 class AndroidSslSocketFactoryFactory {
-    private static final String TAG = AndroidSslSocketFactoryFactory.class.getSimpleName();
+    private static final String TAG = "AndroidSslSocketFactoryFactory";
 
     private final Context context;
 
@@ -26,7 +34,7 @@ class AndroidSslSocketFactoryFactory {
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             KeyStore androidCAStore = KeyStore.getInstance("AndroidCAStore");
             if (androidCAStore == null) {
-                Log.w(TAG, "Unable to load CA keystore");
+                HyperLog.w(TAG, "Unable to load CA keystore");
                 return null;
             }
             androidCAStore.load(null);
@@ -38,7 +46,7 @@ class AndroidSslSocketFactoryFactory {
             sslContext.init(keyManagers, trustManagerFactory.getTrustManagers(), null);
             return sslContext.getSocketFactory();
         } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException | CertificateException | IOException e) {
-            Log.w(TAG, "Unable to get socket factory", e);
+            HyperLog.w(TAG, "Unable to get socket factory", e);
             return null;
         }
     }
@@ -55,7 +63,7 @@ class AndroidSslSocketFactoryFactory {
             keyManagerFactory.init(customKeyStore, pwdArray);
             return keyManagerFactory.getKeyManagers();
         } catch (Exception e) {
-            Log.w(TAG, "Unable to initialize client key store", e);
+            HyperLog.w(TAG, "Unable to initialize client key store", e);
             return null;
         }
     }
