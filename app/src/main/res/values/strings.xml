@@ -61,4 +61,5 @@
     <string name="button_clear">Clear</string>
     <string name="button_export">Export</string>
     <string name="toast_no_logs">No logs available</string>
+    <string name="tab_licenses_title">Licenses</string>
 </resources>

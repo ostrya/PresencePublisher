@@ -1,3 +1,7 @@
+plugins {
+    id "com.jaredsburrows.license" version "0.8.42"
+}
+
 apply plugin: 'com.android.application'
 
 android {
@@ -6,8 +10,8 @@ android {
         applicationId "org.ostrya.presencepublisher"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 11
-        versionName "1.5.2"
+        versionCode 12
+        versionName "1.5.3"
     }
     signingConfigs {
         release {
@@ -36,12 +40,17 @@ android {
     buildToolsVersion '28.0.3'
 }
 
+afterEvaluate {
+    preBuild.dependsOn(licenseDebugReport)
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.preference:preference:1.1.0-beta01'
+    implementation 'androidx.preference:preference:1.1.0-rc01'
     implementation('com.hypertrack:hyperlog:0.0.10') {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support'
+        exclude group: 'com.android.volley'
     }
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
 }

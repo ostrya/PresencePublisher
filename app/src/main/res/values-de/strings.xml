@@ -62,4 +62,5 @@
     <string name="toast_no_logs">Keine Logs vorhanden</string>
     <string name="button_reload">Neu laden</string>
     <string name="button_clear">Löschen</string>
+    <string name="tab_licenses_title">Lizenzen</string>
 </resources>
