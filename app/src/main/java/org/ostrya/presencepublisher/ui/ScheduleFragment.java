@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.ui;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
@@ -9,9 +10,9 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreferenceCompat;
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.message.wifi.SsidUtil;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
 import org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider;
-import org.ostrya.presencepublisher.util.SsidUtil;
 
 import java.util.List;
 
@@ -29,14 +30,19 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
     public static final String LAST_PING = "lastPing";
     public static final String NEXT_PING = "nextPing";
     public static final String OFFLINE_PING = "offlinePing";
+    public static final String MOBILE_NETWORK_PING = "mobileNetworkPing";
+    private Preference lastPing;
+    private Preference nextPing;
+    private final SharedPreferences.OnSharedPreferenceChangeListener listener = this::onPreferencesChanged;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         Context context = getPreferenceManager().getContext();
         PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(context);
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
 
         List<String> knownSsids = SsidUtil.getKnownSsids(context);
-        String[] entryValues = knownSsids.toArray(new String[knownSsids.size()]);
+        String[] entryValues = knownSsids.toArray(new String[0]);
         MultiSelectListPreference ssidList = new MultiSelectListPreference(context);
         ssidList.setKey(SSID_LIST);
         ssidList.setTitle(R.string.ssid_title);
@@ -62,19 +68,25 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         sendOfflinePing.setSummary(R.string.offlineping_summary);
         sendOfflinePing.setIconSpaceReserved(false);
 
+        SwitchPreferenceCompat sendMobileNetworkPing = new SwitchPreferenceCompat(context);
+        sendMobileNetworkPing.setKey(MOBILE_NETWORK_PING);
+        sendMobileNetworkPing.setTitle(getString(R.string.offlineping_via_mobile_title));
+        sendMobileNetworkPing.setSummary(R.string.offlineping_via_mobile_summary);
+        sendMobileNetworkPing.setIconSpaceReserved(false);
+
         SwitchPreferenceCompat autostart = new SwitchPreferenceCompat(context);
         autostart.setKey(AUTOSTART);
         autostart.setTitle(getString(R.string.autostart_title));
         autostart.setSummary(R.string.autostart_summary);
         autostart.setIconSpaceReserved(false);
 
-        Preference lastPing = new Preference(context);
+        lastPing = new Preference(context);
         lastPing.setKey(LAST_PING);
         lastPing.setTitle(R.string.last_ping_title);
         lastPing.setSummaryProvider(new TimestampSummaryProvider());
         lastPing.setIconSpaceReserved(false);
 
-        Preference nextPing = new Preference(context);
+        nextPing = new Preference(context);
         nextPing.setKey(NEXT_PING);
         nextPing.setTitle(R.string.next_ping_title);
         nextPing.setSummaryProvider(new TimestampSummaryProvider());
@@ -83,10 +95,46 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         screen.addPreference(ssidList);
         screen.addPreference(ping);
         screen.addPreference(sendOfflinePing);
+        screen.addPreference(sendMobileNetworkPing);
         screen.addPreference(autostart);
         screen.addPreference(lastPing);
         screen.addPreference(nextPing);
 
         setPreferenceScreen(screen);
+
+        sendMobileNetworkPing.setDependency(OFFLINE_PING);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    private void onPreferencesChanged(SharedPreferences sharedPreferences, String key) {
+        switch (key) {
+            case LAST_PING:
+                poorMansRefresh(lastPing);
+                break;
+            case NEXT_PING:
+                poorMansRefresh(nextPing);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void poorMansRefresh(Preference preference) {
+        if (preference != null) {
+            boolean copyingEnabled = preference.isCopyingEnabled();
+            preference.setCopyingEnabled(!copyingEnabled);
+            preference.setCopyingEnabled(copyingEnabled);
+        }
     }
 }

@@ -45,7 +45,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        startService();
+        ForegroundService.startService(this);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class MainActivity extends FragmentActivity {
             // For some reason, the activity returns RESULT_CANCELED even when the service is enabled, so we don't
             // know if it was actually enabled or not. For now, we don't check again and just start the service.
             HyperLog.d(TAG, "Returning from location service with result " + resultCode + ", assuming it is running ...");
-            startService();
+            ForegroundService.startService(this);
         }
     }
 
@@ -100,17 +100,7 @@ public class MainActivity extends FragmentActivity {
             }, R.string.location_dialog_title, R.string.location_dialog_message);
             fragment.show(fm, null);
         } else {
-            startService();
-        }
-    }
-
-    private void startService() {
-        HyperLog.d(TAG, "Starting service ...");
-        Intent intent = new Intent(getApplicationContext(), ForegroundService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getApplicationContext().startForegroundService(intent);
-        } else {
-            getApplicationContext().startService(intent);
+            ForegroundService.startService(this);
         }
     }
 }

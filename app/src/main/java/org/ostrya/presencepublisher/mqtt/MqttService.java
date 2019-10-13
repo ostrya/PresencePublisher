@@ -3,11 +3,13 @@ package org.ostrya.presencepublisher.mqtt;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
+import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.ostrya.presencepublisher.message.Message;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -20,14 +22,14 @@ public class MqttService {
     private final AndroidSslSocketFactoryFactory factory;
     private final SharedPreferences sharedPreferences;
 
-    public MqttService(Context context, SharedPreferences sharedPreferences) {
-        this.factory = new AndroidSslSocketFactoryFactory(context);
-        this.sharedPreferences = sharedPreferences;
+    public MqttService(Context context) {
+        Context applicationContext = context.getApplicationContext();
+        factory = new AndroidSslSocketFactoryFactory(applicationContext);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
     }
 
-    public void sendMessages(List<String> messages) throws MqttException {
+    public void sendMessages(List<Message> messages) throws MqttException {
         HyperLog.i(TAG, "Sending messages to server");
-        String topic = sharedPreferences.getString(TOPIC, "topic");
         boolean tls = sharedPreferences.getBoolean(TLS, false);
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERT, null);
         String login = sharedPreferences.getString(LOGIN, "");
@@ -44,8 +46,8 @@ public class MqttService {
             options.setSocketFactory(factory.getSslSocketFactory(clientCertAlias));
         }
         mqttClient.connect(options);
-        for (String message : messages) {
-            mqttClient.publish(topic, message.getBytes(Charset.forName("UTF-8")), 0, false);
+        for (Message message : messages) {
+            mqttClient.publish(message.getTopic(), message.getContent().getBytes(Charset.forName("UTF-8")), 0, false);
         }
         mqttClient.disconnect(5);
         mqttClient.close(true);

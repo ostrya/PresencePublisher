@@ -70,7 +70,7 @@ public class ConnectionFragment extends PreferenceFragmentCompat {
         checkConnection.setTitle(R.string.check_connection_title);
         checkConnection.setSummary(R.string.check_connection_summary);
         checkConnection.setOnPreferenceClickListener(prefs -> {
-            CheckConnectionDialogFragment fragment = getInstance(context, getPreferenceManager().getSharedPreferences());
+            CheckConnectionDialogFragment fragment = getInstance(context);
             fragment.show(requireFragmentManager(), null);
             return true;
         });

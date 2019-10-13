@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.ForegroundService;
@@ -23,12 +22,7 @@ public class SystemBroadcastReceiver extends BroadcastReceiver {
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)
                 || (Intent.ACTION_BOOT_COMPLETED.equals(action) && sharedPreferences.getBoolean(AUTOSTART, false))) {
             HyperLog.i(TAG, "Received intent " + action);
-            Intent startIntent = new Intent(context, ForegroundService.class);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(startIntent);
-            } else {
-                context.startService(startIntent);
-            }
+            ForegroundService.startService(context, intent);
         }
     }
 }

@@ -51,6 +51,8 @@
     <string name="password_summary">Passwort.</string>
     <string name="offlineping_title">Offline-Nachricht senden</string>
     <string name="offlineping_summary">Nachricht senden, wenn Ziel-WLAN nicht verbunden ist</string>
+    <string name="offlineping_via_mobile_title">Nachricht ohne WiFi senden</string>
+    <string name="offlineping_via_mobile_summary">Offline-Nachricht notfalls über mobile Daten senden</string>
     <string name="tab_content_title">Inhalt</string>
     <string name="content_summary">Aktueller Wert: %s</string>
     <string name="offline_content_title">Offline-Nachricht</string>

@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.util;
+package org.ostrya.presencepublisher.message.wifi;
 
 import android.content.Context;
 import android.net.wifi.WifiConfiguration;
