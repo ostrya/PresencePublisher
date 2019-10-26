@@ -18,7 +18,7 @@ import java.util.Set;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.WIFI_SERVICE;
-import static org.ostrya.presencepublisher.ui.ConnectionFragment.TOPIC;
+import static org.ostrya.presencepublisher.ui.ConnectionFragment.PRESENCE_TOPIC;
 import static org.ostrya.presencepublisher.ui.ContentFragment.*;
 import static org.ostrya.presencepublisher.ui.ScheduleFragment.*;
 
@@ -37,7 +37,7 @@ public class WifiMessageProvider {
     }
 
     public List<Message> getMessages() {
-        String topic = sharedPreferences.getString(TOPIC, null);
+        String topic = sharedPreferences.getString(PRESENCE_TOPIC, null);
         if (topic == null) {
             HyperLog.w(TAG, "No topic defined, not generating any messages");
             return Collections.emptyList();

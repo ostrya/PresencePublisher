@@ -3,6 +3,7 @@ package org.ostrya.presencepublisher.ui;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import androidx.preference.EditTextPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -12,11 +13,13 @@ import androidx.preference.SwitchPreferenceCompat;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.message.wifi.SsidUtil;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
+import org.ostrya.presencepublisher.ui.util.RegexValidator;
 import org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider;
 
 import java.util.List;
 
 import static org.ostrya.presencepublisher.ui.ConnectionFragment.PING;
+import static org.ostrya.presencepublisher.ui.util.EditTextPreferencesHelper.getEditTextPreference;
 import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.LIST;
 
 public class ScheduleFragment extends PreferenceFragmentCompat {
@@ -31,6 +34,8 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
     public static final String NEXT_PING = "nextPing";
     public static final String OFFLINE_PING = "offlinePing";
     public static final String MOBILE_NETWORK_PING = "mobileNetworkPing";
+    public static final String BATTERY_MESSAGE = "batteryMessage";
+    public static final String BATTERY_TOPIC = "batteryTopic";
     private Preference lastPing;
     private Preference nextPing;
     private final SharedPreferences.OnSharedPreferenceChangeListener listener = this::onPreferencesChanged;
@@ -74,6 +79,14 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         sendMobileNetworkPing.setSummary(R.string.offlineping_via_mobile_summary);
         sendMobileNetworkPing.setIconSpaceReserved(false);
 
+        SwitchPreferenceCompat sendBatteryMessage = new SwitchPreferenceCompat(context);
+        sendBatteryMessage.setKey(BATTERY_MESSAGE);
+        sendBatteryMessage.setTitle(getString(R.string.battery_message_title));
+        sendBatteryMessage.setSummary(R.string.battery_message_summary);
+        sendBatteryMessage.setIconSpaceReserved(false);
+
+        EditTextPreference batteryTopic = getEditTextPreference(context, BATTERY_TOPIC, R.string.battery_topic_title, R.string.battery_topic_summary, new RegexValidator("[^ ]+"));
+
         SwitchPreferenceCompat autostart = new SwitchPreferenceCompat(context);
         autostart.setKey(AUTOSTART);
         autostart.setTitle(getString(R.string.autostart_title));
@@ -96,6 +109,8 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         screen.addPreference(ping);
         screen.addPreference(sendOfflinePing);
         screen.addPreference(sendMobileNetworkPing);
+        screen.addPreference(sendBatteryMessage);
+        screen.addPreference(batteryTopic);
         screen.addPreference(autostart);
         screen.addPreference(lastPing);
         screen.addPreference(nextPing);
@@ -103,6 +118,7 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         setPreferenceScreen(screen);
 
         sendMobileNetworkPing.setDependency(OFFLINE_PING);
+        batteryTopic.setDependency(BATTERY_MESSAGE);
     }
 
     @Override

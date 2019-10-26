@@ -25,7 +25,7 @@ public class ConnectionFragment extends PreferenceFragmentCompat {
     public static final String PORT = "port";
     public static final String TLS = "tls";
     public static final String CLIENT_CERT = "client_cert";
-    public static final String TOPIC = "topic";
+    public static final String PRESENCE_TOPIC = "topic";
     public static final String PING = "ping";
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
@@ -64,7 +64,7 @@ public class ConnectionFragment extends PreferenceFragmentCompat {
         });
         clientCert.setIconSpaceReserved(false);
 
-        EditTextPreference topic = getEditTextPreference(context, TOPIC, R.string.topic_title, R.string.topic_summary, new RegexValidator("[^ ]+"));
+        EditTextPreference presenceTopic = getEditTextPreference(context, PRESENCE_TOPIC, R.string.presence_topic_title, R.string.presence_topic_summary, new RegexValidator("[^ ]+"));
 
         Preference checkConnection = new Preference(context);
         checkConnection.setTitle(R.string.check_connection_title);
@@ -82,7 +82,7 @@ public class ConnectionFragment extends PreferenceFragmentCompat {
         screen.addPreference(password);
         screen.addPreference(tls);
         screen.addPreference(clientCert);
-        screen.addPreference(topic);
+        screen.addPreference(presenceTopic);
         screen.addPreference(checkConnection);
 
         setPreferenceScreen(screen);

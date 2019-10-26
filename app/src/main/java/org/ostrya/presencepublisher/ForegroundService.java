@@ -18,10 +18,12 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.message.Message;
+import org.ostrya.presencepublisher.message.battery.BatteryMessageProvider;
 import org.ostrya.presencepublisher.message.wifi.WifiMessageProvider;
 import org.ostrya.presencepublisher.mqtt.MqttService;
 import org.ostrya.presencepublisher.receiver.AlarmReceiver;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +55,7 @@ public class ForegroundService extends Service {
     private SharedPreferences sharedPreferences;
     private long nextPing;
     private WifiMessageProvider wifiMessageProvider;
+    private BatteryMessageProvider batteryMessageProvider;
     private final OnSharedPreferenceChangeListener sharedPreferenceListener = this::onSharedPreferenceChanged;
 
     public static void startService(Context context) {
@@ -107,6 +110,7 @@ public class ForegroundService extends Service {
         lastPing = sharedPreferences.getLong(LAST_PING, 0L);
         nextPing = sharedPreferences.getLong(NEXT_PING, 0L);
         wifiMessageProvider = new WifiMessageProvider(this);
+        batteryMessageProvider = new BatteryMessageProvider(this);
         registerPreferenceCallback();
         migrateOldPreference();
         registerNetworkCallback();
@@ -154,7 +158,7 @@ public class ForegroundService extends Service {
             case PORT:
             case TLS:
             case CLIENT_CERT:
-            case TOPIC:
+            case PRESENCE_TOPIC:
             case PING:
             case LOGIN:
             case PASSWORD:
@@ -227,6 +231,9 @@ public class ForegroundService extends Service {
     }
 
     private List<Message> getMessagesToSend() {
-        return wifiMessageProvider.getMessages();
+        List<Message> result = new ArrayList<>();
+        result.addAll(wifiMessageProvider.getMessages());
+        result.addAll(batteryMessageProvider.getMessages());
+        return Collections.unmodifiableList(result);
     }
 }

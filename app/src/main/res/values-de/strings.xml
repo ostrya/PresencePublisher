@@ -3,8 +3,8 @@
     <string name="app_name">Presence Publisher</string>
     <string name="host_title">MQTT Host</string>
     <string name="host_summary">IP-Adresse oder Hostname.%nAktueller Wert: %s</string>
-    <string name="topic_title">Topic</string>
-    <string name="topic_summary">Das Topic, zu dem gesendet wird.%nAktueller Wert: %s</string>
+    <string name="presence_topic_title">Präsenz-Topic</string>
+    <string name="presence_topic_summary">Das Topic, zu dem Präsenznachrichten gesendet werden.%nAktueller Wert: %s</string>
     <string name="ping_title">Sendeperiode</string>
     <string name="ping_summary">Zeit zwischen Benachrichtigungen in Minuten.</string>
     <string name="ssid_title">Ziel-WLAN-Netzwerke</string>
@@ -65,4 +65,8 @@
     <string name="button_reload">Neu laden</string>
     <string name="button_clear">Löschen</string>
     <string name="tab_licenses_title">Lizenzen</string>
+    <string name="battery_topic_title">Batterie-Topic</string>
+    <string name="battery_topic_summary">Das Topic, zu dem Batterienachrichten gesendet werden.%nAktueller Wert: %s</string>
+    <string name="battery_message_title">Batteriestand senden</string>
+    <string name="battery_message_summary">Batteriestand in Prozent zusätzlich zu Präsenznachricht senden.</string>
 </resources>

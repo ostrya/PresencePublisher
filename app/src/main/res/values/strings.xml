@@ -6,8 +6,12 @@
     <string name="login_summary">User Login.%nCurrent value: %s</string>
     <string name="password_title">MQTT Password</string>
     <string name="password_summary">User Password.</string>
-    <string name="topic_title">Topic</string>
-    <string name="topic_summary">The topic to publish messages to.%nCurrent value: %s</string>
+    <string name="presence_topic_title">Presence Topic</string>
+    <string name="presence_topic_summary">The topic to publish presence messages to.%nCurrent value: %s</string>
+    <string name="battery_message_title">Send battery level</string>
+    <string name="battery_message_summary">Send battery level percentage in addition to presence information.</string>
+    <string name="battery_topic_title">Battery Topic</string>
+    <string name="battery_topic_summary">The topic to publish battery level to.%nCurrent value: %s</string>
     <string name="ping_title">Publish period</string>
     <string name="ping_summary">The time between messages in minutes.</string>
     <string name="ssid_title">Target WiFi networks</string>
