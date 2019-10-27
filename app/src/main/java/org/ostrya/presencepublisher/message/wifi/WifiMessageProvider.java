@@ -11,6 +11,8 @@ import android.os.Build;
 import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.message.Message;
+import org.ostrya.presencepublisher.ui.preference.OfflineContentPreference;
+import org.ostrya.presencepublisher.ui.preference.WifiContentPreference;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,9 +20,10 @@ import java.util.Set;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.WIFI_SERVICE;
-import static org.ostrya.presencepublisher.ui.ConnectionFragment.PRESENCE_TOPIC;
-import static org.ostrya.presencepublisher.ui.ContentFragment.*;
-import static org.ostrya.presencepublisher.ui.ScheduleFragment.*;
+import static org.ostrya.presencepublisher.ui.preference.PresenceTopicPreference.PRESENCE_TOPIC;
+import static org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
+import static org.ostrya.presencepublisher.ui.preference.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
+import static org.ostrya.presencepublisher.ui.preference.SsidListPreference.SSID_LIST;
 
 public class WifiMessageProvider {
     private static final String TAG = "WifiMessageProvider";
@@ -48,14 +51,14 @@ public class WifiMessageProvider {
             String ssid = getSsidIfMatching();
             if (ssid != null) {
                 HyperLog.i(TAG, "Scheduling message for SSID " + ssid);
-                String onlineContent = sharedPreferences.getString(WIFI_PREFIX + ssid, DEFAULT_CONTENT_ONLINE);
+                String onlineContent = sharedPreferences.getString(WifiContentPreference.WIFI_CONTENT_PREFIX + ssid, WifiContentPreference.DEFAULT_CONTENT_ONLINE);
                 return Collections.singletonList(messageBuilder.withContent(onlineContent));
             }
         }
-        if (sharedPreferences.getBoolean(OFFLINE_PING, false)
-                && (connectedToWiFi || sharedPreferences.getBoolean(MOBILE_NETWORK_PING, false))) {
+        if (sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)
+                && (connectedToWiFi || sharedPreferences.getBoolean(SEND_VIA_MOBILE_NETWORK, false))) {
             HyperLog.i(TAG, "Scheduling offline message");
-            String offlineContent = sharedPreferences.getString(CONTENT_OFFLINE, DEFAULT_CONTENT_OFFLINE);
+            String offlineContent = sharedPreferences.getString(OfflineContentPreference.OFFLINE_CONTENT, OfflineContentPreference.DEFAULT_CONTENT_OFFLINE);
             return Collections.singletonList(messageBuilder.withContent(offlineContent));
         }
         return Collections.emptyList();

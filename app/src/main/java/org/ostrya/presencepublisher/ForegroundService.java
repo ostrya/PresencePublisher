@@ -31,10 +31,27 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.ostrya.presencepublisher.ui.ConnectionFragment.*;
-import static org.ostrya.presencepublisher.ui.ScheduleFragment.*;
+import static org.ostrya.presencepublisher.ui.ScheduleFragment.SSID;
 import static org.ostrya.presencepublisher.ui.notification.NotificationFactory.getServiceNotification;
 import static org.ostrya.presencepublisher.ui.notification.NotificationFactory.updateServiceNotification;
+import static org.ostrya.presencepublisher.ui.preference.AutostartPreference.AUTOSTART;
+import static org.ostrya.presencepublisher.ui.preference.BatteryTopicPreference.BATTERY_TOPIC;
+import static org.ostrya.presencepublisher.ui.preference.ClientCertificatePreference.CLIENT_CERTIFICATE;
+import static org.ostrya.presencepublisher.ui.preference.HostPreference.HOST;
+import static org.ostrya.presencepublisher.ui.preference.LastSuccessTimestampPreference.LAST_SUCCESS;
+import static org.ostrya.presencepublisher.ui.preference.MessageSchedulePreference.MESSAGE_SCHEDULE;
+import static org.ostrya.presencepublisher.ui.preference.NextScheduleTimestampPreference.NEXT_SCHEDULE;
+import static org.ostrya.presencepublisher.ui.preference.OfflineContentPreference.OFFLINE_CONTENT;
+import static org.ostrya.presencepublisher.ui.preference.PasswordPreference.PASSWORD;
+import static org.ostrya.presencepublisher.ui.preference.PortPreference.PORT;
+import static org.ostrya.presencepublisher.ui.preference.PresenceTopicPreference.PRESENCE_TOPIC;
+import static org.ostrya.presencepublisher.ui.preference.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
+import static org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
+import static org.ostrya.presencepublisher.ui.preference.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
+import static org.ostrya.presencepublisher.ui.preference.SsidListPreference.SSID_LIST;
+import static org.ostrya.presencepublisher.ui.preference.UseTlsPreference.USE_TLS;
+import static org.ostrya.presencepublisher.ui.preference.UsernamePreference.USERNAME;
+import static org.ostrya.presencepublisher.ui.preference.WifiContentPreference.WIFI_CONTENT_PREFIX;
 
 public class ForegroundService extends Service {
     public static final String ALARM_ACTION = "org.ostrya.presencepublisher.ALARM_ACTION";
@@ -51,9 +68,9 @@ public class ForegroundService extends Service {
     private MqttService mqttService;
     private ConnectivityManager connectivityManager;
     private AlarmManager alarmManager;
-    private long lastPing;
+    private long lastSuccess;
     private SharedPreferences sharedPreferences;
-    private long nextPing;
+    private long nextSchedule;
     private WifiMessageProvider wifiMessageProvider;
     private BatteryMessageProvider batteryMessageProvider;
     private final OnSharedPreferenceChangeListener sharedPreferenceListener = this::onSharedPreferenceChanged;
@@ -107,8 +124,8 @@ public class ForegroundService extends Service {
         intent.setClass(getApplicationContext(), AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        lastPing = sharedPreferences.getLong(LAST_PING, 0L);
-        nextPing = sharedPreferences.getLong(NEXT_PING, 0L);
+        lastSuccess = sharedPreferences.getLong(LAST_SUCCESS, 0L);
+        nextSchedule = sharedPreferences.getLong(NEXT_SCHEDULE, 0L);
         wifiMessageProvider = new WifiMessageProvider(this);
         batteryMessageProvider = new BatteryMessageProvider(this);
         registerPreferenceCallback();
@@ -156,24 +173,32 @@ public class ForegroundService extends Service {
         switch (key) {
             case HOST:
             case PORT:
-            case TLS:
-            case CLIENT_CERT:
+            case USE_TLS:
+            case CLIENT_CERTIFICATE:
             case PRESENCE_TOPIC:
-            case PING:
-            case LOGIN:
+            case MESSAGE_SCHEDULE:
+            case USERNAME:
             case PASSWORD:
             case SSID_LIST:
-            case OFFLINE_PING:
-            case MOBILE_NETWORK_PING:
+            case SEND_OFFLINE_MESSAGE:
+            case SEND_VIA_MOBILE_NETWORK:
+            case SEND_BATTERY_MESSAGE:
+            case BATTERY_TOPIC:
+            case OFFLINE_CONTENT:
                 HyperLog.i(TAG, "Changed parameter " + key);
                 start();
                 break;
             case AUTOSTART:
-            case LAST_PING:
-            case NEXT_PING:
+            case LAST_SUCCESS:
+            case NEXT_SCHEDULE:
                 break;
             default:
-                HyperLog.v(TAG, "Ignoring unexpected value " + key);
+                if (key.startsWith(WIFI_CONTENT_PREFIX)) {
+                    HyperLog.i(TAG, "Changed parameter " + key);
+                    start();
+                } else {
+                    HyperLog.v(TAG, "Ignoring unexpected value " + key);
+                }
         }
     }
 
@@ -192,17 +217,17 @@ public class ForegroundService extends Service {
             } catch (RuntimeException e) {
                 HyperLog.w(TAG, "Error while getting messages to send", e);
             }
-            int ping = sharedPreferences.getInt(PING, 15);
-            nextPing = System.currentTimeMillis() + ping * 60_000L;
-            HyperLog.i(TAG, "Re-scheduling for " + new Date(nextPing));
-            sharedPreferences.edit().putLong(NEXT_PING, nextPing).apply();
+            int ping = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
+            nextSchedule = System.currentTimeMillis() + ping * 60_000L;
+            HyperLog.i(TAG, "Re-scheduling for " + new Date(nextSchedule));
+            sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
             updateNotification();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextPing, pendingIntent);
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, nextSchedule, pendingIntent);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, nextPing, pendingIntent);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, nextSchedule, pendingIntent);
             } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, nextPing, pendingIntent);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, nextSchedule, pendingIntent);
             }
         } finally {
             currentlyRunning.set(false);
@@ -211,7 +236,7 @@ public class ForegroundService extends Service {
 
     private void updateNotification() {
         NotificationManagerCompat.from(this)
-                .notify(NOTIFICATION_ID, updateServiceNotification(getApplicationContext(), lastPing, nextPing, CHANNEL_ID));
+                .notify(NOTIFICATION_ID, updateServiceNotification(getApplicationContext(), lastSuccess, nextSchedule, CHANNEL_ID));
     }
 
     @Override
@@ -222,8 +247,8 @@ public class ForegroundService extends Service {
     private void doSend(List<Message> messages) {
         try {
             mqttService.sendMessages(messages);
-            lastPing = System.currentTimeMillis();
-            sharedPreferences.edit().putLong(LAST_PING, lastPing).apply();
+            lastSuccess = System.currentTimeMillis();
+            sharedPreferences.edit().putLong(LAST_SUCCESS, lastSuccess).apply();
             updateNotification();
         } catch (Exception e) {
             HyperLog.w(TAG, "Error while sending messages", e);

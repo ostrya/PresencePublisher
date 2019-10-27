@@ -3,24 +3,23 @@ package org.ostrya.presencepublisher.ui;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.preference.EditTextPreference;
-import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
-import androidx.preference.SeekBarPreference;
-import androidx.preference.SwitchPreferenceCompat;
-import org.ostrya.presencepublisher.R;
-import org.ostrya.presencepublisher.message.wifi.SsidUtil;
-import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
-import org.ostrya.presencepublisher.ui.util.RegexValidator;
-import org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider;
+import org.ostrya.presencepublisher.ui.preference.AutostartPreference;
+import org.ostrya.presencepublisher.ui.preference.BatteryTopicPreference;
+import org.ostrya.presencepublisher.ui.preference.LastSuccessTimestampPreference;
+import org.ostrya.presencepublisher.ui.preference.MessageSchedulePreference;
+import org.ostrya.presencepublisher.ui.preference.NextScheduleTimestampPreference;
+import org.ostrya.presencepublisher.ui.preference.SendBatteryMessagePreference;
+import org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference;
+import org.ostrya.presencepublisher.ui.preference.SendViaMobileNetworkPreference;
+import org.ostrya.presencepublisher.ui.preference.SsidListPreference;
 
-import java.util.List;
-
-import static org.ostrya.presencepublisher.ui.ConnectionFragment.PING;
-import static org.ostrya.presencepublisher.ui.util.EditTextPreferencesHelper.getEditTextPreference;
-import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.LIST;
+import static org.ostrya.presencepublisher.ui.preference.LastSuccessTimestampPreference.LAST_SUCCESS;
+import static org.ostrya.presencepublisher.ui.preference.NextScheduleTimestampPreference.NEXT_SCHEDULE;
+import static org.ostrya.presencepublisher.ui.preference.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
+import static org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 
 public class ScheduleFragment extends PreferenceFragmentCompat {
     /**
@@ -28,17 +27,10 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
      */
     @Deprecated
     public static final String SSID = "ssid";
-    public static final String SSID_LIST = "ssids";
-    public static final String AUTOSTART = "autostart";
-    public static final String LAST_PING = "lastPing";
-    public static final String NEXT_PING = "nextPing";
-    public static final String OFFLINE_PING = "offlinePing";
-    public static final String MOBILE_NETWORK_PING = "mobileNetworkPing";
-    public static final String BATTERY_MESSAGE = "batteryMessage";
-    public static final String BATTERY_TOPIC = "batteryTopic";
-    private Preference lastPing;
-    private Preference nextPing;
+
     private final SharedPreferences.OnSharedPreferenceChangeListener listener = this::onPreferencesChanged;
+    private LastSuccessTimestampPreference lastSuccess;
+    private NextScheduleTimestampPreference nextSchedule;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -46,79 +38,34 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(context);
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
 
-        List<String> knownSsids = SsidUtil.getKnownSsids(context);
-        String[] entryValues = knownSsids.toArray(new String[0]);
-        MultiSelectListPreference ssidList = new MultiSelectListPreference(context);
-        ssidList.setKey(SSID_LIST);
-        ssidList.setTitle(R.string.ssid_title);
-        ssidList.setSummaryProvider(new ExplanationSummaryProvider(R.string.ssid_summary, LIST));
-        ssidList.setEntryValues(entryValues);
-        ssidList.setEntries(entryValues);
-        ssidList.setIconSpaceReserved(false);
+        Preference ssidList = new SsidListPreference(context);
+        Preference messageSchedule = new MessageSchedulePreference(context);
 
-        SeekBarPreference ping = new SeekBarPreference(context);
-        ping.setKey(PING);
-        ping.setMin(1);
-        ping.setMax(30);
-        ping.setDefaultValue(15);
-        ping.setSeekBarIncrement(1);
-        ping.setShowSeekBarValue(true);
-        ping.setTitle(getString(R.string.ping_title));
-        ping.setSummary(getString(R.string.ping_summary));
-        ping.setIconSpaceReserved(false);
+        Preference sendOfflineMessage = new SendOfflineMessagePreference(context);
+        Preference sendViaMobileNetwork = new SendViaMobileNetworkPreference(context);
 
-        SwitchPreferenceCompat sendOfflinePing = new SwitchPreferenceCompat(context);
-        sendOfflinePing.setKey(OFFLINE_PING);
-        sendOfflinePing.setTitle(getString(R.string.offlineping_title));
-        sendOfflinePing.setSummary(R.string.offlineping_summary);
-        sendOfflinePing.setIconSpaceReserved(false);
+        Preference sendBatteryMessage = new SendBatteryMessagePreference(context);
+        Preference batteryTopic = new BatteryTopicPreference(context);
 
-        SwitchPreferenceCompat sendMobileNetworkPing = new SwitchPreferenceCompat(context);
-        sendMobileNetworkPing.setKey(MOBILE_NETWORK_PING);
-        sendMobileNetworkPing.setTitle(getString(R.string.offlineping_via_mobile_title));
-        sendMobileNetworkPing.setSummary(R.string.offlineping_via_mobile_summary);
-        sendMobileNetworkPing.setIconSpaceReserved(false);
+        Preference autostart = new AutostartPreference(context);
 
-        SwitchPreferenceCompat sendBatteryMessage = new SwitchPreferenceCompat(context);
-        sendBatteryMessage.setKey(BATTERY_MESSAGE);
-        sendBatteryMessage.setTitle(getString(R.string.battery_message_title));
-        sendBatteryMessage.setSummary(R.string.battery_message_summary);
-        sendBatteryMessage.setIconSpaceReserved(false);
-
-        EditTextPreference batteryTopic = getEditTextPreference(context, BATTERY_TOPIC, R.string.battery_topic_title, R.string.battery_topic_summary, new RegexValidator("[^ ]+"));
-
-        SwitchPreferenceCompat autostart = new SwitchPreferenceCompat(context);
-        autostart.setKey(AUTOSTART);
-        autostart.setTitle(getString(R.string.autostart_title));
-        autostart.setSummary(R.string.autostart_summary);
-        autostart.setIconSpaceReserved(false);
-
-        lastPing = new Preference(context);
-        lastPing.setKey(LAST_PING);
-        lastPing.setTitle(R.string.last_ping_title);
-        lastPing.setSummaryProvider(new TimestampSummaryProvider());
-        lastPing.setIconSpaceReserved(false);
-
-        nextPing = new Preference(context);
-        nextPing.setKey(NEXT_PING);
-        nextPing.setTitle(R.string.next_ping_title);
-        nextPing.setSummaryProvider(new TimestampSummaryProvider());
-        nextPing.setIconSpaceReserved(false);
+        lastSuccess = new LastSuccessTimestampPreference(context);
+        nextSchedule = new NextScheduleTimestampPreference(context);
 
         screen.addPreference(ssidList);
-        screen.addPreference(ping);
-        screen.addPreference(sendOfflinePing);
-        screen.addPreference(sendMobileNetworkPing);
+        screen.addPreference(messageSchedule);
+        screen.addPreference(sendOfflineMessage);
+        screen.addPreference(sendViaMobileNetwork);
         screen.addPreference(sendBatteryMessage);
         screen.addPreference(batteryTopic);
         screen.addPreference(autostart);
-        screen.addPreference(lastPing);
-        screen.addPreference(nextPing);
+        screen.addPreference(lastSuccess);
+        screen.addPreference(nextSchedule);
 
         setPreferenceScreen(screen);
 
-        sendMobileNetworkPing.setDependency(OFFLINE_PING);
-        batteryTopic.setDependency(BATTERY_MESSAGE);
+        sendViaMobileNetwork.setDependency(SEND_OFFLINE_MESSAGE);
+        batteryTopic.setDependency(SEND_BATTERY_MESSAGE);
     }
 
     @Override
@@ -135,22 +82,14 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
 
     private void onPreferencesChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
-            case LAST_PING:
-                poorMansRefresh(lastPing);
+            case LAST_SUCCESS:
+                lastSuccess.refresh();
                 break;
-            case NEXT_PING:
-                poorMansRefresh(nextPing);
+            case NEXT_SCHEDULE:
+                nextSchedule.refresh();
                 break;
             default:
                 break;
-        }
-    }
-
-    private void poorMansRefresh(Preference preference) {
-        if (preference != null) {
-            boolean copyingEnabled = preference.isCopyingEnabled();
-            preference.setCopyingEnabled(!copyingEnabled);
-            preference.setCopyingEnabled(copyingEnabled);
         }
     }
 }

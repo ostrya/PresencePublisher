@@ -9,7 +9,7 @@ import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.ForegroundService;
 
-import static org.ostrya.presencepublisher.ui.ScheduleFragment.AUTOSTART;
+import static org.ostrya.presencepublisher.ui.preference.AutostartPreference.AUTOSTART;
 
 public class SystemBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "SystemBroadcastReceiver";

@@ -69,6 +69,7 @@ afterEvaluate {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.preference:preference:1.1.0'
+    implementation 'androidx.security:security-crypto:1.0.0-alpha02'
     implementation('com.hypertrack:hyperlog:0.0.10') {
         exclude group: 'com.android.support'
         exclude group: 'com.android.volley'

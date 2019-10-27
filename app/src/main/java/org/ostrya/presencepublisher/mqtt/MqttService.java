@@ -10,30 +10,38 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.ostrya.presencepublisher.message.Message;
+import org.ostrya.presencepublisher.security.SecurePreferencesHelper;
 
 import java.nio.charset.Charset;
 import java.util.List;
 
-import static org.ostrya.presencepublisher.ui.ConnectionFragment.*;
+import static org.ostrya.presencepublisher.ui.preference.ClientCertificatePreference.CLIENT_CERTIFICATE;
+import static org.ostrya.presencepublisher.ui.preference.HostPreference.HOST;
+import static org.ostrya.presencepublisher.ui.preference.PasswordPreference.PASSWORD;
+import static org.ostrya.presencepublisher.ui.preference.PortPreference.PORT;
+import static org.ostrya.presencepublisher.ui.preference.UseTlsPreference.USE_TLS;
+import static org.ostrya.presencepublisher.ui.preference.UsernamePreference.USERNAME;
 
 public class MqttService {
     private static final String TAG = "MqttService";
 
     private final AndroidSslSocketFactoryFactory factory;
     private final SharedPreferences sharedPreferences;
+    private final SharedPreferences securePreferences;
 
     public MqttService(Context context) {
         Context applicationContext = context.getApplicationContext();
         factory = new AndroidSslSocketFactoryFactory(applicationContext);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        securePreferences = SecurePreferencesHelper.getSecurePreferences(applicationContext);
     }
 
     public void sendMessages(List<Message> messages) throws MqttException {
         HyperLog.i(TAG, "Sending messages to server");
-        boolean tls = sharedPreferences.getBoolean(TLS, false);
-        String clientCertAlias = sharedPreferences.getString(CLIENT_CERT, null);
-        String login = sharedPreferences.getString(LOGIN, "");
-        String password = sharedPreferences.getString(PASSWORD, "");
+        boolean tls = sharedPreferences.getBoolean(USE_TLS, false);
+        String clientCertAlias = sharedPreferences.getString(CLIENT_CERTIFICATE, null);
+        String login = sharedPreferences.getString(USERNAME, "");
+        String password = securePreferences.getString(PASSWORD, "");
 
         MqttClient mqttClient = new MqttClient(getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence());
         MqttConnectOptions options = new MqttConnectOptions();

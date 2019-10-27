@@ -12,8 +12,8 @@ import org.ostrya.presencepublisher.message.Message;
 import java.util.Collections;
 import java.util.List;
 
-import static org.ostrya.presencepublisher.ui.ScheduleFragment.BATTERY_MESSAGE;
-import static org.ostrya.presencepublisher.ui.ScheduleFragment.BATTERY_TOPIC;
+import static org.ostrya.presencepublisher.ui.preference.BatteryTopicPreference.BATTERY_TOPIC;
+import static org.ostrya.presencepublisher.ui.preference.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 
 public class BatteryMessageProvider {
     private static final String TAG = "BatteryMessageProvider";
@@ -27,7 +27,7 @@ public class BatteryMessageProvider {
     }
 
     public List<Message> getMessages() {
-        if (!sharedPreferences.getBoolean(BATTERY_MESSAGE, false)) {
+        if (!sharedPreferences.getBoolean(SEND_BATTERY_MESSAGE, false)) {
             HyperLog.d(TAG, "Battery messages disabled, not generating any messages");
             return Collections.emptyList();
         }
