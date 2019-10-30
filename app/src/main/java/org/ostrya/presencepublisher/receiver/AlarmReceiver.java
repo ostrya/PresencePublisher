@@ -4,17 +4,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import com.hypertrack.hyperlog.HyperLog;
-import org.ostrya.presencepublisher.ForegroundService;
+import org.ostrya.presencepublisher.mqtt.Publisher;
 
 public class AlarmReceiver extends BroadcastReceiver {
+    public static final String ALARM_ACTION = "org.ostrya.presencepublisher.ALARM";
+
     private static final String TAG = "AlarmReceiver";
 
     @Override
-    public void onReceive(final Context context, final Intent intent) {
+    public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        if (ForegroundService.ALARM_ACTION.equals(action)) {
+        if (ALARM_ACTION.equals(action)) {
             HyperLog.i(TAG, "Alarm broadcast received");
-            ForegroundService.startService(context, intent);
+            PendingResult pendingResult = goAsync();
+            new Thread(() -> publish(context, pendingResult)).start();
         }
+    }
+
+    private void publish(Context context, PendingResult pendingResult) {
+        new Publisher(context).publish();
+        pendingResult.finish();
     }
 }

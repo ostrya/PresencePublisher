@@ -37,7 +37,7 @@ public class MqttService {
     }
 
     public void sendMessages(List<Message> messages) throws MqttException {
-        HyperLog.i(TAG, "Sending messages to server");
+        HyperLog.i(TAG, "Sending " + messages.size() + " messages to server");
         boolean tls = sharedPreferences.getBoolean(USE_TLS, false);
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERTIFICATE, null);
         String login = sharedPreferences.getString(USERNAME, "");

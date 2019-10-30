@@ -10,8 +10,8 @@ public class MessageSchedulePreference extends SeekBarPreference {
     public MessageSchedulePreference(Context context) {
         super(context);
         setKey(MESSAGE_SCHEDULE);
-        setMin(1);
-        setMax(30);
+        setMin(15);
+        setMax(60);
         setDefaultValue(15);
         setSeekBarIncrement(1);
         setShowSeekBarValue(true);

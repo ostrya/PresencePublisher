@@ -54,6 +54,7 @@ public class LogRecyclerViewAdapter extends ListAdapter<DeviceLogModel, LogRecyc
             mContentView = view.findViewById(R.id.content);
         }
 
+        @NonNull
         @Override
         public String toString() {
             return super.toString() + " '" + mContentView.getText() + "'";

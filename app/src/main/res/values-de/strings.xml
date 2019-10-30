@@ -69,4 +69,6 @@
     <string name="battery_topic_summary">Das Topic, zu dem Batterienachrichten gesendet werden.%nAktueller Wert: %s</string>
     <string name="send_battery_message_title">Batteriestand senden</string>
     <string name="send_battery_message_summary">Batteriestand in Prozent zusätzlich zu Präsenznachricht senden.</string>
+    <string name="battery_optimization_dialog_title">Akku-Optimierung</string>
+    <string name="battery_optimization_dialog_message">Bitte deaktiviere Akku-Optimierung für diese App. Andernfalls kann Android diese App anhalten, sodass keine Nachrichten im Standby gesendet werden.</string>
 </resources>

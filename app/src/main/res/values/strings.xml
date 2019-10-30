@@ -29,6 +29,8 @@
         Otherwise, this app will not be able to retrieve the currently connected WiFi name. You can skip enabling it, but
         then the app will not send any notifications.
     </string>
+    <string name="battery_optimization_dialog_title">Battery optimization</string>
+    <string name="battery_optimization_dialog_message">Please disable battery optimization. Otherwise, Android may doze this app and stop it from sending messages during standby.</string>
     <string name="tab_connection_title">Connection</string>
     <string name="tab_schedule_title">Schedule</string>
     <string name="notification_last_ping">Last success: %s</string>

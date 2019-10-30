@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
-import org.ostrya.presencepublisher.ForegroundService;
+import org.ostrya.presencepublisher.mqtt.Publisher;
 
 import static org.ostrya.presencepublisher.ui.preference.AutostartPreference.AUTOSTART;
+import static org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
+import static org.ostrya.presencepublisher.ui.preference.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
 
 public class SystemBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "SystemBroadcastReceiver";
@@ -19,10 +22,18 @@ public class SystemBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         String action = intent.getAction();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)
-                || (Intent.ACTION_BOOT_COMPLETED.equals(action) && sharedPreferences.getBoolean(AUTOSTART, false))) {
-            HyperLog.i(TAG, "Received intent " + action);
-            ForegroundService.startService(context, intent);
+        if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+            NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+            boolean useMobile = sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)
+                    && sharedPreferences.getBoolean(SEND_VIA_MOBILE_NETWORK, false);
+            if (networkInfo.isConnected() && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI || useMobile)) {
+                HyperLog.i(TAG, "Reacting to network change");
+                new Publisher(context).scheduleNow();
+            }
+        } else if (Intent.ACTION_BOOT_COMPLETED.equals(action) && sharedPreferences.getBoolean(AUTOSTART, false)) {
+            HyperLog.i(TAG, "Starting after boot");
+            new Publisher(context).scheduleNow();
         }
     }
+
 }
