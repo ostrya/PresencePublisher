@@ -21,12 +21,29 @@ scmVersion {
 }
 
 def getBuildVersionCode() {
-    return grgit.tag.list().findAll{ it.getName().matches('v[1-9].*') }.size()
+    def tagCount = grgit.tag.list().findAll{ it.getName().matches('v[1-9].*') }.size()
+    return isTagged() ? tagCount : tagCount + 1
 }
 
 def getBuildApplicationId() {
-    def isTagged = grgit.describe(tags: true, match: ['v[1-9]*']) == "v${scmVersion.version}"
-    return isTagged ? 'org.ostrya.presencepublisher' : 'org.ostrya.presencepublisher.snapshot'
+    return isTagged() ? 'org.ostrya.presencepublisher' : 'org.ostrya.presencepublisher.snapshot'
+}
+
+def isTagged() {
+    return grgit.status().clean && grgit.describe(tags: true, match: ['v[1-9]*']) == "v${scmVersion.version}"
+}
+
+def getSigningConfig() {
+    if (hasProperty('keystorePath')) {
+        return {
+            storeFile file(keystorePath)
+            storePassword keystorePassword
+            keyAlias signkeyAlias
+            keyPassword signkeyPassword
+        }
+    } else {
+        return {}
+    }
 }
 
 android {
@@ -35,22 +52,16 @@ android {
         applicationId getBuildApplicationId()
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode getBuildVersionCode()
+        versionCode 18
         versionName scmVersion.version
     }
     signingConfigs {
-        release {
-            storeFile file(keystorePath)
-            storePassword keystorePassword
-            keyAlias signkeyAlias
-            keyPassword signkeyPassword
-        }
+        release getSigningConfig()
     }
     buildTypes {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
         release {
             minifyEnabled true
@@ -67,11 +78,14 @@ android {
 
 afterEvaluate {
     preBuild.dependsOn(generateLicenseFile)
+    preBuild.dependsOn(checkVersionCode)
 }
 
 // work around empty license file bug
 // see https://github.com/jaredsburrows/gradle-license-plugin/issues/38
 task generateLicenseFile(type: Exec) {
+    inputs.file(buildFile)
+    outputs.file("${project.projectDir}/src/main/assets/open_source_licenses.html")
     workingDir project.rootDir
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
         commandLine 'gradlew.bat', 'app:licenseReleaseReport'
@@ -80,6 +94,13 @@ task generateLicenseFile(type: Exec) {
     }
 }
 
+task checkVersionCode {
+    doLast {
+        if (android.defaultConfig.versionCode != getBuildVersionCode()) {
+            throw new InvalidUserDataException("Version code should be ${getBuildVersionCode()}")
+        }
+    }
+}
 
 play {
     serviceAccountCredentials = file("../../google-key.json")
