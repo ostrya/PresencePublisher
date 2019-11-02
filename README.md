@@ -1,6 +1,11 @@
 # Presence Publisher
 
+[<img src="https://img.shields.io/travis/ostrya/presencepublisher?logo=travis" alt="Travis CI">](https://travis-ci.com/ostrya/PresencePublisher)
+[<img src="https://img.shields.io/github/release/ostrya/presencepublisher.svg?logo=github" alt="Github release">](https://github.com/ostrya/PresencePublisher/releases)
+[<img src="https://img.shields.io/f-droid/v/org.ostrya.presencepublisher.svg" alt="F-Droid release">](https://f-droid.org/packages/org.ostrya.presencepublisher)
+
 [<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="75">](https://f-droid.org/packages/org.ostrya.presencepublisher)
+[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="75" alt="Get it on Google Play">](https://play.google.com/store/apps/details?id=org.ostrya.presencepublisher&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1)
 
 A simple app that regularly publishes to a configurable MQTT topic whenever connected to a given WiFi network.
 This can be used to integrate the presence of your phone in home automation. Several networks can be configured
