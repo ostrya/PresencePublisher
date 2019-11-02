@@ -26,7 +26,9 @@ public class SystemBroadcastReceiver extends BroadcastReceiver {
             NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
             boolean useMobile = sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)
                     && sharedPreferences.getBoolean(SEND_VIA_MOBILE_NETWORK, false);
-            if (networkInfo.isConnected() && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI || useMobile)) {
+            if (networkInfo.isConnected() && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI
+                    || networkInfo.getType() == ConnectivityManager.TYPE_VPN
+                    || networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET || useMobile)) {
                 HyperLog.i(TAG, "Reacting to network change");
                 new Publisher(context).scheduleNow();
             }

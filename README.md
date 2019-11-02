@@ -28,7 +28,6 @@ certificate via:
 * ACCESS_NETWORK_STATE: necessary to register network change listener
 * ACCESS_WIFI_STATE: necessary to retrieve SSID of connected WiFi
 * INTERNET: only necessary if your MQTT server is not running locally
-* FOREGROUND_SERVICE: necessary to send notifications
 * RECEIVE_BOOT_COMPLETED: necessary to start service on start-up
 * REQUEST_IGNORE_BATTERY_OPTIMIZATIONS: on Android 6+, necessary to request disabling battery optimization
 * WRITE_EXTERNAL_STORAGE: only necessary if you want to export log files in Android 4.0 - 4.3
