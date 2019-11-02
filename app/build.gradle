@@ -30,7 +30,7 @@ def getBuildApplicationId() {
 }
 
 def isTagged() {
-    return grgit.status().clean && grgit.describe(tags: true, match: ['v[1-9]*']) == "v${scmVersion.version}"
+    return grgit.describe(tags: true, match: ['v[1-9]*']) == "v${scmVersion.version}"
 }
 
 def getSigningConfig() {

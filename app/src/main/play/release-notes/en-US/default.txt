@@ -1,1 +1,11 @@
-Minor bugfix related to handling of VPN connections.
+v1.6.2:
+• Minor build script changes.
+
+v1.6.1:
+• Minor bugfix related to handling of VPN connections.
+
+v1.6.0:
+• Added option to send offline messages while connected to mobile network.
+• Added option to send battery level to a separate topic.
+• On Android 6+, encrypt login password.
+• Migrate from foreground service with scheduled thread pool to Android alarm manager and request disabling battery optimization. This should make sending messages more reliable during standby.
