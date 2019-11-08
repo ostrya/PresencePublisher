@@ -52,7 +52,7 @@ android {
         applicationId getBuildApplicationId()
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 18
+        versionCode 19
         versionName scmVersion.version
     }
     signingConfigs {
@@ -77,27 +77,24 @@ android {
 }
 
 afterEvaluate {
-    preBuild.dependsOn(generateLicenseFile)
     preBuild.dependsOn(checkVersionCode)
-}
-
-// work around empty license file bug
-// see https://github.com/jaredsburrows/gradle-license-plugin/issues/38
-task generateLicenseFile(type: Exec) {
-    inputs.file(buildFile)
-    outputs.file("${project.projectDir}/src/main/assets/open_source_licenses.html")
-    workingDir project.rootDir
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        commandLine 'gradlew.bat', 'app:licenseReleaseReport'
-    } else {
-        commandLine './gradlew', 'app:licenseReleaseReport'
-    }
 }
 
 task checkVersionCode {
     doLast {
         if (android.defaultConfig.versionCode != getBuildVersionCode()) {
             throw new InvalidUserDataException("Version code should be ${getBuildVersionCode()}")
+        }
+    }
+}
+
+afterEvaluate {
+    task checkUpdatedLicenseFile {
+        dependsOn licenseDebugReport
+        doLast {
+            if (grgit.status().unstaged.modified.contains('app/src/main/assets/open_source_licenses.html')) {
+                throw new InvalidUserDataException('License file has changed, please commit new version first')
+            }
         }
     }
 }

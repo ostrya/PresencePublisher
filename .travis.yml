@@ -9,7 +9,9 @@ android:
     # Additional components
     - extra-google-m2repository
     - extra-android-m2repository
-script: ./gradlew assembleDebug lintDebug testDebug checkDebugDuplicateClasses checkDebugManifest
+script:
+  - ./gradlew assembleDebug lintDebug testDebug checkDebugDuplicateClasses checkDebugManifest
+  - ./gradlew checkUpdatedLicenseFile
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
