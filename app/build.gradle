@@ -1,24 +1,10 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-
 plugins {
     id 'com.github.triplet.play' version '2.4.2'
     id 'com.jaredsburrows.license' version '0.8.42'
     id 'org.ajoberstar.grgit' version '4.0.0-rc.1'
-    id 'pl.allegro.tech.build.axion-release' version '1.10.2'
 }
 
 apply plugin: 'com.android.application'
-
-scmVersion {
-    tag {
-        prefix = 'v'
-        versionSeparator = ''
-    }
-    branchVersionIncrementer = [
-        'feature/.*' : 'incrementMinor',
-        'master' : 'incrementMinor',
-    ]
-}
 
 def getBuildVersionCode() {
     def tagCount = grgit.tag.list().findAll{ it.getName().matches('v[1-9].*') }.size()
@@ -29,8 +15,12 @@ def getBuildApplicationId() {
     return isTagged() ? 'org.ostrya.presencepublisher' : 'org.ostrya.presencepublisher.snapshot'
 }
 
+def getBuildVersionName() {
+    return grgit.describe(tags: true, match: ['v[1-9]*']).substring(1)
+}
+
 def isTagged() {
-    return grgit.describe(tags: true, match: ['v[1-9]*']) == "v${scmVersion.version}"
+    return getBuildVersionName().matches('[0-9]+\\.[0-9]+\\.[0-9]+')
 }
 
 def getSigningConfig() {
@@ -52,8 +42,8 @@ android {
         applicationId getBuildApplicationId()
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 19
-        versionName scmVersion.version
+        versionCode 20
+        versionName '1.6.4'
     }
     signingConfigs {
         release getSigningConfig()
@@ -77,13 +67,16 @@ android {
 }
 
 afterEvaluate {
-    preBuild.dependsOn(checkVersionCode)
+    preBuild.dependsOn(checkParameters)
 }
 
-task checkVersionCode {
+task checkParameters {
     doLast {
         if (android.defaultConfig.versionCode != getBuildVersionCode()) {
             throw new InvalidUserDataException("Version code should be ${getBuildVersionCode()}")
+        }
+        if (isTagged() && getBuildVersionName() != android.defaultConfig.versionName) {
+            throw new InvalidUserDataException("Version name should be ${getBuildVersionName()}")
         }
     }
 }

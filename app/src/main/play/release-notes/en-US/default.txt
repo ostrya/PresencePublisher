@@ -1,3 +1,6 @@
+v1.6.4
+• Next attempt to fix F-Droid build.
+
 v1.6.3:
 • More minor build script changes to fix F-Droid build.
 
