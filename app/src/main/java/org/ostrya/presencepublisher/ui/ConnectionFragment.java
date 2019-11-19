@@ -14,6 +14,7 @@ import org.ostrya.presencepublisher.ui.preference.PresenceTopicPreference;
 import org.ostrya.presencepublisher.ui.preference.UseTlsPreference;
 import org.ostrya.presencepublisher.ui.preference.UsernamePreference;
 
+import static org.ostrya.presencepublisher.ui.preference.HostPreference.HOST;
 import static org.ostrya.presencepublisher.ui.preference.UseTlsPreference.USE_TLS;
 
 public class ConnectionFragment extends PreferenceFragmentCompat {
@@ -47,6 +48,7 @@ public class ConnectionFragment extends PreferenceFragmentCompat {
 
         setPreferenceScreen(screen);
 
+        checkConnection.setDependency(HOST);
         clientCertificate.setDependency(USE_TLS);
     }
 }

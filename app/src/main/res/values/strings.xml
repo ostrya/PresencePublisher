@@ -1,22 +1,23 @@
 <resources>
     <string name="app_name">Presence Publisher</string>
     <string name="host_title">MQTT Host</string>
-    <string name="host_summary">IP address or hostname.%nCurrent value: %s</string>
+    <string name="host_summary" formatted="true">IP address or hostname.%nCurrent value: %1$s</string>
     <string name="username_title">MQTT Login</string>
-    <string name="username_summary">User Login.%nCurrent value: %s</string>
+    <string name="username_summary" formatted="true">User Login.%nCurrent value: %1$s</string>
     <string name="password_title">MQTT Password</string>
-    <string name="password_summary">User Password.</string>
+    <string name="password_summary" formatted="true">User Password.%nCurrent value: %1$s</string>
+    <string name="password_placeholder" translatable="false">••••••••</string>
     <string name="presence_topic_title">Presence Topic</string>
-    <string name="presence_topic_summary">The topic to publish presence messages to.%nCurrent value: %s</string>
+    <string name="presence_topic_summary" formatted="true">The topic to publish presence messages to.%nCurrent value: %1$s</string>
     <string name="send_battery_message_title">Send battery level</string>
     <string name="send_battery_message_summary">Send battery level percentage in addition to presence information.</string>
     <string name="battery_topic_title">Battery Topic</string>
-    <string name="battery_topic_summary">The topic to publish battery level to.%nCurrent value: %s</string>
+    <string name="battery_topic_summary" formatted="true">The topic to publish battery level to.%nCurrent value: %1$s</string>
     <string name="message_schedule_title">Publish period</string>
     <string name="message_schedule_summary">The time between messages in minutes.</string>
     <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>
     <string name="ssid_list_title">Target WiFi networks</string>
-    <string name="ssid_list_summary">WiFi networks for which to send messages.%nCurrent value: %s</string>
+    <string name="ssid_list_summary" formatted="true">WiFi networks for which to send messages.%nCurrent value: %1$s</string>
     <string name="permission_dialog_title">Location permission</string>
     <string name="permission_dialog_message">Please allow access to coarse location. Otherwise, this app will not be able to
         retrieve the currently connected WiFi name. You can skip granting the permission, but then the app will not send
@@ -34,11 +35,11 @@
     <string name="battery_optimization_dialog_message">Please disable battery optimization. Otherwise, Android may doze this app and stop it from sending messages during standby.</string>
     <string name="tab_connection_title">Connection</string>
     <string name="tab_schedule_title">Schedule</string>
-    <string name="notification_last_ping">Last success: %s</string>
-    <string name="notification_next_ping">Scheduled for: %s</string>
+    <string name="notification_last_ping" formatted="true">Last success: %1$s</string>
+    <string name="notification_next_ping" formatted="true">Scheduled for: %1$s</string>
     <string name="use_tls_title">TLS</string>
     <string name="port_title">MQTT Port</string>
-    <string name="port_summary">Defaults to 1883, or 8883 for TLS.%nCurrent value: %s</string>
+    <string name="port_summary" formatted="true">Defaults to 1883, or 8883 for TLS.%nCurrent value: %1$s</string>
     <string name="use_tls_summary">Use transport encryption?</string>
     <string name="toast_invalid_input">Invalid input!</string>
     <string name="check_connection_summary">Click here to send test message.</string>
@@ -50,9 +51,9 @@
     <string name="dialog_check_connection_summary_success">Message successfully sent.</string>
     <string name="value_undefined"><![CDATA[<undefined>]]></string>
     <string name="autostart_summary">Should this app start on boot?</string>
-    <string name="dialog_check_connection_summary_failure">Connection failed:%n%s</string>
+    <string name="dialog_check_connection_summary_failure" formatted="true">Connection failed:%n%1$s</string>
     <string name="client_certificate_title">Client certificate</string>
-    <string name="client_certificate_summary">Client certificate to authenticate this device.%nCurrent value: %s</string>
+    <string name="client_certificate_summary" formatted="true">Client certificate to authenticate this device.%nCurrent value: %1$s</string>
     <string name="last_success_title">Last success</string>
     <string name="next_schedule_title">Scheduled for</string>
     <string name="send_offline_message_title">Send offline message</string>
@@ -60,7 +61,7 @@
     <string name="send_via_mobile_network_title">Send without WiFi</string>
     <string name="send_via_mobile_network_summary">Send offline message via mobile network if necessary</string>
     <string name="tab_content_title">Content</string>
-    <string name="content_summary">Current value: %s</string>
+    <string name="content_summary" formatted="true">Current value: %1$s</string>
     <string name="offline_content_title">Offline message</string>
     <string name="content_category_other">Other</string>
     <string name="content_category_wifi">WiFi</string>

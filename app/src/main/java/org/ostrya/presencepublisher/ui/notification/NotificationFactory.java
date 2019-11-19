@@ -60,11 +60,11 @@ public class NotificationFactory {
     }
 
     private static String getLastPing(Context context, long lastSuccess) {
-        return String.format(context.getString(R.string.notification_last_ping), getFormattedTimestamp(context, lastSuccess));
+        return context.getString(R.string.notification_last_ping, getFormattedTimestamp(context, lastSuccess));
     }
 
     private static String getNextPing(Context context, long nextSchedule) {
-        return String.format(context.getString(R.string.notification_next_ping), getFormattedTimestamp(context, nextSchedule));
+        return context.getString(R.string.notification_next_ping, getFormattedTimestamp(context, nextSchedule));
     }
 
     private static String getFormattedTimestamp(Context context, long timestamp) {

@@ -56,6 +56,24 @@ public class CheckConnectionDialogFragment extends DialogFragment {
         this.context = context;
     }
 
+    private String getErrorString(Throwable e) {
+        String message;
+        if (e instanceof MqttException) {
+            if (((MqttException) e).getReasonCode() == MqttException.REASON_CODE_CLIENT_EXCEPTION) {
+                message = genericExceptionToString(e.getCause());
+            } else {
+                message = e.getLocalizedMessage();
+            }
+        } else {
+            message = genericExceptionToString(e);
+        }
+        return context.getString(R.string.dialog_check_connection_summary_failure, message);
+    }
+
+    private String genericExceptionToString(Throwable e) {
+        return e.getClass().getSimpleName() + ": " + e.getLocalizedMessage();
+    }
+
     private class ConnectionTestWorker implements Runnable {
         private final AlertDialog alertDialog;
 
@@ -69,9 +87,9 @@ public class CheckConnectionDialogFragment extends DialogFragment {
             try {
                 mqttService.sendMessages(Collections.singletonList(messageForTopic("test").withContent("test")));
                 message = getResources().getString(R.string.dialog_check_connection_summary_success);
-            } catch (MqttException e) {
+            } catch (MqttException | RuntimeException e) {
                 HyperLog.w(TAG, "Error while sending message", e);
-                message = String.format(context.getString(R.string.dialog_check_connection_summary_failure), e.getCause().getMessage());
+                message = getErrorString(e);
             }
             final String result = message;
             requireActivity().runOnUiThread(() -> {

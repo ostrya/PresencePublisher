@@ -34,6 +34,9 @@ class AbstractTextPreference extends EditTextPreference {
             if (!result) {
                 String text = context.getString(R.string.toast_invalid_input);
                 Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+            } else if (((String) newValue).isEmpty()) {
+                setText(null);
+                return false;
             }
             return result;
         }));

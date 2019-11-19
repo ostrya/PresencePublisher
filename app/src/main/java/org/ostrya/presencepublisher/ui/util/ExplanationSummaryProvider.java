@@ -18,7 +18,7 @@ public class ExplanationSummaryProvider<T extends Preference> implements Prefere
 
     @Override
     public CharSequence provideSummary(T preference) {
-        return String.format(preference.getContext().getString(summaryId), getValue(preference));
+        return preference.getContext().getString(summaryId, getValue(preference));
     }
 
     private String getValue(T preference) {

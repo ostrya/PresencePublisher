@@ -55,7 +55,7 @@ public class MqttService {
         }
         mqttClient.connect(options);
         for (Message message : messages) {
-            mqttClient.publish(message.getTopic(), message.getContent().getBytes(Charset.forName("UTF-8")), 0, false);
+            mqttClient.publish(message.getTopic(), message.getContent().getBytes(Charset.forName("UTF-8")), 1, false);
         }
         mqttClient.disconnect(5);
         mqttClient.close(true);
