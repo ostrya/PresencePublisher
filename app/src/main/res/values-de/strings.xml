@@ -7,6 +7,7 @@
     <string name="presence_topic_summary">Das Topic, zu dem Präsenznachrichten gesendet werden.%nAktueller Wert: %s</string>
     <string name="message_schedule_title">Sendeperiode</string>
     <string name="message_schedule_summary">Zeit zwischen Benachrichtigungen in Minuten.</string>
+    <string name="message_schedule_dialog_text">Die Periode auf unter 15 Minuten zu setzen wird den Batterieverbrauch erhöhen. Fortfahren?</string>
     <string name="ssid_list_title">Ziel-WLAN-Netzwerke</string>
     <string name="ssid_list_summary">Netzwerke, in denen benachrichtigt wird.%nAktueller Wert: %s</string>
     <string name="permission_dialog_title">Standortberechtigung</string>

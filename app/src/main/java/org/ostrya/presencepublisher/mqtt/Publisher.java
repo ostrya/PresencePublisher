@@ -77,15 +77,16 @@ public class Publisher {
     }
 
     public void scheduleNow() {
-        scheduleFor(System.currentTimeMillis());
+        scheduleFor(System.currentTimeMillis(), false);
     }
 
     private void scheduleNext() {
         int messageScheduleInMinutes = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
-        scheduleFor(System.currentTimeMillis() + messageScheduleInMinutes * 60_000L);
+        scheduleFor(System.currentTimeMillis() + messageScheduleInMinutes * 60_000L,
+                messageScheduleInMinutes < 15);
     }
 
-    private void scheduleFor(long nextSchedule) {
+    private void scheduleFor(long nextSchedule, boolean ignoreBattery) {
         AlarmManager alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager == null) {
             HyperLog.e(TAG, "Unable to get alarm manager, cannot schedule!");
@@ -97,7 +98,11 @@ public class Publisher {
         NotificationManagerCompat.from(applicationContext)
                 .notify(NOTIFICATION_ID, NotificationFactory.getNotification(applicationContext, lastSuccess, nextSchedule));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setAndAllowWhileIdle(RTC_WAKEUP, nextSchedule, scheduledIntent);
+            if (ignoreBattery) {
+                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(nextSchedule, scheduledIntent), scheduledIntent);
+            } else {
+                alarmManager.setAndAllowWhileIdle(RTC_WAKEUP, nextSchedule, scheduledIntent);
+            }
         } else {
             alarmManager.set(RTC_WAKEUP, nextSchedule, scheduledIntent);
         }

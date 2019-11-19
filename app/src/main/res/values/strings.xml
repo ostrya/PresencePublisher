@@ -14,6 +14,7 @@
     <string name="battery_topic_summary">The topic to publish battery level to.%nCurrent value: %s</string>
     <string name="message_schedule_title">Publish period</string>
     <string name="message_schedule_summary">The time between messages in minutes.</string>
+    <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>
     <string name="ssid_list_title">Target WiFi networks</string>
     <string name="ssid_list_summary">WiFi networks for which to send messages.%nCurrent value: %s</string>
     <string name="permission_dialog_title">Location permission</string>
