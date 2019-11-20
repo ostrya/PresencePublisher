@@ -46,7 +46,7 @@ public class MqttService {
         MqttClient mqttClient = new MqttClient(getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence());
         MqttConnectOptions options = new MqttConnectOptions();
         options.setConnectionTimeout(5);
-        if(!login.isEmpty() && !password.isEmpty()) {
+        if (!login.isEmpty() && !password.isEmpty()) {
             options.setUserName(login);
             options.setPassword(password.toCharArray());
         }

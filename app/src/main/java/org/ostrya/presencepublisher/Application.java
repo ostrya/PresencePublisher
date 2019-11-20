@@ -6,6 +6,7 @@ import android.os.Build;
 import android.util.Log;
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.log.CustomLogFormat;
+import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
 import org.ostrya.presencepublisher.receiver.SystemBroadcastReceiver;
 import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 
@@ -31,6 +32,8 @@ public class Application extends android.app.Application {
         } else {
             HyperLog.setLogLevel(Log.INFO);
         }
+        Thread.setDefaultUncaughtExceptionHandler(
+                new LogUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler()));
     }
 
     @SuppressWarnings("deprecation")
