@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.log;
 
+import android.util.Log;
 import androidx.annotation.Nullable;
 import com.hypertrack.hyperlog.HyperLog;
 
@@ -14,7 +15,7 @@ public class LogUncaughtExceptionHandler implements Thread.UncaughtExceptionHand
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        HyperLog.e(TAG, t + " crashed due to " + e);
+        HyperLog.e(TAG, t + " crashed due to " + Log.getStackTraceString(e));
         if (originalHandler != null) {
             originalHandler.uncaughtException(t, e);
         }

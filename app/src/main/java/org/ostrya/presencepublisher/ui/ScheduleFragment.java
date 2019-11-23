@@ -22,12 +22,6 @@ import static org.ostrya.presencepublisher.ui.preference.SendBatteryMessagePrefe
 import static org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 
 public class ScheduleFragment extends PreferenceFragmentCompat {
-    /**
-     * @deprecated old parameter from before v1.5, use SSID_LIST instead
-     */
-    @Deprecated
-    public static final String SSID = "ssid";
-
     private final SharedPreferences.OnSharedPreferenceChangeListener listener = this::onPreferencesChanged;
     private LastSuccessTimestampPreference lastSuccess;
     private NextScheduleTimestampPreference nextSchedule;

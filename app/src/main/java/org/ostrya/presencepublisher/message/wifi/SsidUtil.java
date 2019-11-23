@@ -29,7 +29,10 @@ public class SsidUtil {
             return ssids;
         }
         for (WifiConfiguration configuration : wifiManager.getConfiguredNetworks()) {
-            ssids.add(normalizeSsid(configuration.SSID));
+            String ssid = normalizeSsid(configuration.SSID);
+            if (ssid != null) {
+                ssids.add(ssid);
+            }
         }
         return ssids;
     }
