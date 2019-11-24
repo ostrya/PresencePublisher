@@ -1,7 +1,7 @@
 package org.ostrya.presencepublisher.ui.preference;
 
 import android.content.Context;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.internal.NetworkModuleService;
 import org.ostrya.presencepublisher.R;
 
 import java.net.URI;
@@ -14,7 +14,7 @@ public class HostPreference extends AbstractTextPreference {
         super(context, HOST, value -> {
             try {
                 String testUri = "tcp://" + value;
-                MqttConnectOptions.validateURI(testUri);
+                NetworkModuleService.validateURI(testUri);
                 return new URI(testUri).getHost() != null;
             } catch (IllegalArgumentException | URISyntaxException e) {
                 return false;

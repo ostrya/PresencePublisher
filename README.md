@@ -1,8 +1,9 @@
 # Presence Publisher
 
-[<img src="https://img.shields.io/travis/ostrya/presencepublisher?logo=travis" alt="Travis CI">](https://travis-ci.com/ostrya/PresencePublisher)
-[<img src="https://img.shields.io/github/release/ostrya/presencepublisher.svg?logo=github" alt="Github release">](https://github.com/ostrya/PresencePublisher/releases)
-[<img src="https://img.shields.io/f-droid/v/org.ostrya.presencepublisher.svg" alt="F-Droid release">](https://f-droid.org/packages/org.ostrya.presencepublisher)
+[![Android CI](https://github.com/ostrya/presencepublisher/workflows/Android%20CI/badge.svg?branch=master)](https://github.com/ostrya/PresencePublisher/actions?query=branch%3Amaster)
+[![Travis CI](https://img.shields.io/travis/ostrya/presencepublisher/master?logo=travis)](https://travis-ci.com/ostrya/PresencePublisher)
+[![Github release date](https://img.shields.io/github/release-date/ostrya/presencepublisher.svg?logo=github) ![Github release](https://img.shields.io/github/release/ostrya/presencepublisher.svg?logo=github)](https://github.com/ostrya/PresencePublisher/releases)
+[![F-Droid release](https://img.shields.io/f-droid/v/org.ostrya.presencepublisher.svg)](https://f-droid.org/packages/org.ostrya.presencepublisher)
 
 [<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="75">](https://f-droid.org/packages/org.ostrya.presencepublisher)
 [<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="75" alt="Get it on Google Play">](https://play.google.com/store/apps/details?id=org.ostrya.presencepublisher&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1)
