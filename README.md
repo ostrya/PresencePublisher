@@ -26,6 +26,28 @@ certificate via:
 * Android 8.0+:
   * `Settings` → `Security & location` → `Encryption & credentials` → `Install from SD card`
 
+### Client certificates
+
+The Android keychain will only allow you to import a PKCS#12 keystore. If you have created a client certificate along
+the lines of [https://mosquitto.org/man/mosquitto-tls-7.html](https://mosquitto.org/man/mosquitto-tls-7.html),
+you will need to combine the certificate and key file together like this:
+
+```bash
+openssl pkcs12 -inkey client.key -in client.crt -export -out client.pfx
+```
+
+If you do not need your client certificate to be signed by a root certificate, because you plan to add it directly to
+the trusted certificates of your MQTT broker, you can also use the [KeyStore Explorer](https://keystore-explorer.org)
+to generate your client certificate:
+
+* `Create a new KeyStore` → choose `PKCS #12`
+* `Tools` → `Generate Key Pair` → choose one of Android's
+  [supported algorithms](https://developer.android.com/training/articles/keystore#SupportedKeyPairGenerators)
+  → configure properties of the public certificate → set a password for the private key
+* `File` → `Save` → use the same password as above for the keystore
+
+Make sure your PKCS#12 keystore file has the `.pfx` extension, otherwise Android will not recognize it.
+
 ## Permissions
 
 * ACCESS_COARSE_LOCATION: on Android 9+, necessary to retrieve SSID of connected WiFi (you do not need to grant

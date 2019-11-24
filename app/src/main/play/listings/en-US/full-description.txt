@@ -6,6 +6,10 @@ The app uses the built-in Android alarm manager, so notifications are sent
 even if the phone is in stand-by. In addition to regularly scheduled checks,
 the app also reacts to changes in the network connection.
 
+In addition to anonymous and username / password authentication, client certificate
+authentication is also supported. For more details, please have a look at
+https://github.com/ostrya/PresencePublisher/blob/master/README.md .
+
 <b>Permissions</b>
 
 • ACCESS_COARSE_LOCATION: on Android 9+, necessary to retrieve SSID of connected WiFi (you do not need to grant the permission in Android 6.0 - 8.1 for the app to work)
