@@ -10,7 +10,7 @@ import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.Pr
 public class ContentHelpDummy extends Preference {
     public ContentHelpDummy(Context context) {
         super(context);
-        setSummaryProvider(new ExplanationSummaryProvider(R.string.content_help_summary, STRING));
+        setSummaryProvider(new ExplanationSummaryProvider(R.string.condition_help_summary, STRING));
         setIconSpaceReserved(false);
     }
 }

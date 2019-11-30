@@ -6,37 +6,33 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
-import android.os.Build;
 import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.message.Message;
 import org.ostrya.presencepublisher.ui.preference.OfflineContentPreference;
-import org.ostrya.presencepublisher.ui.preference.WifiContentPreference;
+import org.ostrya.presencepublisher.ui.preference.WifiNetworkPreference;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
-import static android.content.Context.WIFI_SERVICE;
+import static org.ostrya.presencepublisher.ui.preference.AddNetworkChoicePreferenceDummy.SSID_LIST;
 import static org.ostrya.presencepublisher.ui.preference.PresenceTopicPreference.PRESENCE_TOPIC;
 import static org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
-import static org.ostrya.presencepublisher.ui.preference.SsidListPreference.SSID_LIST;
 
 public class WifiMessageProvider {
     private static final String TAG = "WifiMessageProvider";
 
+    private final Context applicationContext;
     private final SharedPreferences sharedPreferences;
     private final ConnectivityManager connectivityManager;
-    private final WifiManager wifiManager;
 
     public WifiMessageProvider(Context context) {
-        Context applicationContext = context.getApplicationContext();
+        applicationContext = context.getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         connectivityManager = (ConnectivityManager) applicationContext.getSystemService(CONNECTIVITY_SERVICE);
-        wifiManager = (WifiManager) applicationContext.getSystemService(WIFI_SERVICE);
     }
 
     public List<Message> getMessages() {
@@ -51,7 +47,7 @@ public class WifiMessageProvider {
             String ssid = getSsidIfMatching();
             if (ssid != null) {
                 HyperLog.i(TAG, "Scheduling message for SSID " + ssid);
-                String onlineContent = sharedPreferences.getString(WifiContentPreference.WIFI_CONTENT_PREFIX + ssid, WifiContentPreference.DEFAULT_CONTENT_ONLINE);
+                String onlineContent = sharedPreferences.getString(WifiNetworkPreference.WIFI_CONTENT_PREFIX + ssid, WifiNetworkPreference.DEFAULT_CONTENT_ONLINE);
                 return Collections.singletonList(messageBuilder.withContent(onlineContent));
             }
         }
@@ -70,9 +66,10 @@ public class WifiMessageProvider {
             HyperLog.e(TAG, "Connectivity Manager not found");
             return false;
         }
+        //noinspection deprecation
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        if (activeNetworkInfo == null
-                || !activeNetworkInfo.isConnected()) {
+        //noinspection deprecation
+        if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
             return false;
         }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -85,29 +82,15 @@ public class WifiMessageProvider {
             return false;
         } else {
             //noinspection deprecation
-            return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+            return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI
+                    || activeNetworkInfo.getType() == ConnectivityManager.TYPE_VPN
+                    || activeNetworkInfo.getType() == ConnectivityManager.TYPE_ETHERNET;
         }
     }
 
     private String getSsidIfMatching() {
         HyperLog.i(TAG, "Checking SSID");
-        String ssid = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            if (wifiManager == null) {
-                HyperLog.e(TAG, "No wifi manager");
-            } else {
-                ssid = SsidUtil.normalizeSsid(wifiManager.getConnectionInfo().getSSID());
-            }
-        } else {
-            if (connectivityManager == null) {
-                HyperLog.e(TAG, "Connectivity Manager not found");
-            } else {
-                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-                if (activeNetworkInfo != null) {
-                    ssid = SsidUtil.normalizeSsid(activeNetworkInfo.getExtraInfo());
-                }
-            }
-        }
+        String ssid = SsidUtil.getCurrentSsid(applicationContext);
         if (ssid == null) {
             HyperLog.i(TAG, "No SSID found");
             return null;

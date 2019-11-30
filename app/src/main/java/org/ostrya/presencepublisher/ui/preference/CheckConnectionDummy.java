@@ -13,7 +13,7 @@ public class CheckConnectionDummy extends Preference {
         super(context);
         setTitle(R.string.check_connection_title);
         setSummary(R.string.check_connection_summary);
-        setIconSpaceReserved(false);
+        setIcon(R.drawable.ic_notification);
         setOnPreferenceClickListener(prefs -> {
             CheckConnectionDialogFragment instance = getInstance(context);
             instance.show(fragment.requireFragmentManager(), null);

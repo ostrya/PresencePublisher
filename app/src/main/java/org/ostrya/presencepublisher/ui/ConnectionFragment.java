@@ -10,7 +10,6 @@ import org.ostrya.presencepublisher.ui.preference.ClientCertificatePreference;
 import org.ostrya.presencepublisher.ui.preference.HostPreference;
 import org.ostrya.presencepublisher.ui.preference.PasswordPreference;
 import org.ostrya.presencepublisher.ui.preference.PortPreference;
-import org.ostrya.presencepublisher.ui.preference.PresenceTopicPreference;
 import org.ostrya.presencepublisher.ui.preference.UseTlsPreference;
 import org.ostrya.presencepublisher.ui.preference.UsernamePreference;
 
@@ -33,8 +32,6 @@ public class ConnectionFragment extends PreferenceFragmentCompat {
         Preference useTls = new UseTlsPreference(context);
         Preference clientCertificate = new ClientCertificatePreference(context, this);
 
-        Preference presenceTopic = new PresenceTopicPreference(context);
-
         Preference checkConnection = new CheckConnectionDummy(context, this);
 
         screen.addPreference(host);
@@ -43,7 +40,6 @@ public class ConnectionFragment extends PreferenceFragmentCompat {
         screen.addPreference(password);
         screen.addPreference(useTls);
         screen.addPreference(clientCertificate);
-        screen.addPreference(presenceTopic);
         screen.addPreference(checkConnection);
 
         setPreferenceScreen(screen);

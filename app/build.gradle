@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.triplet.play' version '2.5.0'
+    id 'com.github.triplet.play' version '2.6.1'
     id 'com.jaredsburrows.license' version '0.8.42'
     id 'org.ajoberstar.grgit' version '4.0.0'
 }
@@ -37,13 +37,13 @@ def getSigningConfig() {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId getBuildApplicationId()
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 23
-        versionName '1.6.6'
+        versionName '1.7.0'
     }
     signingConfigs {
         release getSigningConfig()
@@ -63,7 +63,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.2'
 }
 
 afterEvaluate {

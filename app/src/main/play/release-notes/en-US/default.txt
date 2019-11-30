@@ -1,2 +1,5 @@
-v1.6.6
-• Fixed a NullPointerException.
+v1.7.0
+Updated the app to fully support Android 10.
+• The Content tab has been renamed to Conditions and allows both adding networks and configuring their message.
+• In addition to adding known networks, it is now possible to enter network names manually.
+• The presence topic can now be found in the Schedule tab.
