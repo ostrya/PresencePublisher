@@ -8,15 +8,13 @@
     <string name="message_schedule_title">Sendeperiode</string>
     <string name="message_schedule_summary">Zeit zwischen Benachrichtigungen in Minuten.</string>
     <string name="message_schedule_dialog_text">Die Periode auf unter 15 Minuten zu setzen wird den Batterieverbrauch erhöhen. Fortfahren?</string>
-    <string name="ssid_list_title">Ziel-WLAN-Netzwerke</string>
-    <string name="ssid_list_summary" formatted="true">Netzwerke, in denen benachrichtigt wird.%nAktueller Wert: %1$s</string>
     <string name="permission_dialog_title">Standortberechtigung</string>
-    <string name="permission_dialog_message">Bitte erlaube den Zugriff auf ungefähre Position. Andernfalls kann diese App den
+    <string name="permission_dialog_message">Bitte erlaube den Zugriff auf genaue Position. Andernfalls kann diese App den
         Namen des aktuell verbundenen WLANs nicht bestimmen. Du kannst das Setzen der Berechtigung überspringen, aber
         in diesem Fall wird die App keine Benachrichtigungen senden.
     </string>
-    <string name="dialog_continue">Weiter</string>
-    <string name="dialog_skip">Überspringen</string>
+    <string name="dialog_confirm">OK</string>
+    <string name="dialog_abort">Abbrechen</string>
     <string name="autostart_title">Autostart</string>
     <string name="location_dialog_title">Standortdienst</string>
     <string name="location_dialog_message">Bitte schalte den Standortdienst (zumindest Energiesparmodus) dauerhaft an.
@@ -54,12 +52,12 @@
     <string name="send_offline_message_summary">Nachricht senden, wenn Ziel-WLAN nicht verbunden ist</string>
     <string name="send_via_mobile_network_title">Nachricht ohne WiFi senden</string>
     <string name="send_via_mobile_network_summary">Offline-Nachricht notfalls über mobile Daten senden</string>
-    <string name="tab_content_title">Inhalt</string>
+    <string name="tab_condition_title">Bedingungen</string>
+    <string name="category_wifi">Verbundene WLAN-Netzwerke</string>
+    <string name="category_offline">Offline</string>
     <string name="content_summary" formatted="true">Aktueller Wert: %1$s</string>
     <string name="offline_content_title">Offline-Nachricht</string>
-    <string name="content_category_other">Anderes</string>
-    <string name="content_category_wifi">WLAN</string>
-    <string name="content_help_summary">Hier kann der Inhalt der Nachricht je nach Bedingung konfiguriert werden.</string>
+    <string name="condition_help_summary">Für jede erfüllte Bedingung wird eine Nachricht gesendet. Klicken, um die gesendete Nachricht für eine Bedingung zu ändern. Lange klicken, um einen Eintrag zu löschen.</string>
     <string name="tab_log_title">Log</string>
     <string name="button_export">Exportieren</string>
     <string name="toast_no_logs">Keine Logs vorhanden</string>
@@ -72,4 +70,9 @@
     <string name="send_battery_message_summary">Batteriestand in Prozent zusätzlich zu Präsenznachricht senden.</string>
     <string name="battery_optimization_dialog_title">Akku-Optimierung</string>
     <string name="battery_optimization_dialog_message">Bitte deaktiviere Akku-Optimierung für diese App. Andernfalls kann Android diese App anhalten, sodass keine Nachrichten im Standby gesendet werden.</string>
+    <string name="add_network_title">Netzwerk hinzufügen</string>
+    <string name="add_network_summary">Tippe hier, um ein Netzwerk hinzuzufügen.</string>
+    <string name="remove_network_title">Netzwerk entfernen</string>
+    <string name="remove_network_warning_message">Dieses Netzwerk wirklich entfernen?</string>
+    <string name="enter_network">Anderes Netzwerk eingeben …</string>
 </resources>

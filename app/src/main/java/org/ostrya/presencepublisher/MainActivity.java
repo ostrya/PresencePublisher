@@ -26,6 +26,7 @@ import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 import static android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
 import static org.ostrya.presencepublisher.Application.*;
+import static org.ostrya.presencepublisher.ui.preference.AddNetworkChoicePreferenceDummy.SSID_LIST;
 import static org.ostrya.presencepublisher.ui.preference.AutostartPreference.AUTOSTART;
 import static org.ostrya.presencepublisher.ui.preference.BatteryTopicPreference.BATTERY_TOPIC;
 import static org.ostrya.presencepublisher.ui.preference.ClientCertificatePreference.CLIENT_CERTIFICATE;
@@ -40,10 +41,9 @@ import static org.ostrya.presencepublisher.ui.preference.PresenceTopicPreference
 import static org.ostrya.presencepublisher.ui.preference.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
-import static org.ostrya.presencepublisher.ui.preference.SsidListPreference.SSID_LIST;
 import static org.ostrya.presencepublisher.ui.preference.UseTlsPreference.USE_TLS;
 import static org.ostrya.presencepublisher.ui.preference.UsernamePreference.USERNAME;
-import static org.ostrya.presencepublisher.ui.preference.WifiContentPreference.WIFI_CONTENT_PREFIX;
+import static org.ostrya.presencepublisher.ui.preference.WifiNetworkPreference.WIFI_CONTENT_PREFIX;
 
 public class MainActivity extends FragmentActivity {
     private static final String TAG = "MainActivity";
@@ -142,14 +142,14 @@ public class MainActivity extends FragmentActivity {
 
     private void checkLocationPermissionAndAccessAndBatteryOptimizationAndStartWorker() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             HyperLog.d(TAG, "Location permission not yet granted, asking user ...");
             FragmentManager fm = getSupportFragmentManager();
 
             ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(ok -> {
                 if (ok) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_CODE);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
                 }
             }, R.string.permission_dialog_title, R.string.permission_dialog_message);
             fragment.show(fm, null);

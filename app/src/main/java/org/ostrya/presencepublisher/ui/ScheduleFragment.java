@@ -11,15 +11,12 @@ import org.ostrya.presencepublisher.ui.preference.BatteryTopicPreference;
 import org.ostrya.presencepublisher.ui.preference.LastSuccessTimestampPreference;
 import org.ostrya.presencepublisher.ui.preference.MessageSchedulePreference;
 import org.ostrya.presencepublisher.ui.preference.NextScheduleTimestampPreference;
+import org.ostrya.presencepublisher.ui.preference.PresenceTopicPreference;
 import org.ostrya.presencepublisher.ui.preference.SendBatteryMessagePreference;
-import org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference;
-import org.ostrya.presencepublisher.ui.preference.SendViaMobileNetworkPreference;
-import org.ostrya.presencepublisher.ui.preference.SsidListPreference;
 
 import static org.ostrya.presencepublisher.ui.preference.LastSuccessTimestampPreference.LAST_SUCCESS;
 import static org.ostrya.presencepublisher.ui.preference.NextScheduleTimestampPreference.NEXT_SCHEDULE;
 import static org.ostrya.presencepublisher.ui.preference.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
-import static org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 
 public class ScheduleFragment extends PreferenceFragmentCompat {
     private final SharedPreferences.OnSharedPreferenceChangeListener listener = this::onPreferencesChanged;
@@ -32,11 +29,8 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(context);
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
 
-        Preference ssidList = new SsidListPreference(context);
         Preference messageSchedule = new MessageSchedulePreference(context);
-
-        Preference sendOfflineMessage = new SendOfflineMessagePreference(context);
-        Preference sendViaMobileNetwork = new SendViaMobileNetworkPreference(context);
+        Preference presenceTopic = new PresenceTopicPreference(context);
 
         Preference sendBatteryMessage = new SendBatteryMessagePreference(context);
         Preference batteryTopic = new BatteryTopicPreference(context);
@@ -46,10 +40,8 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         lastSuccess = new LastSuccessTimestampPreference(context);
         nextSchedule = new NextScheduleTimestampPreference(context);
 
-        screen.addPreference(ssidList);
         screen.addPreference(messageSchedule);
-        screen.addPreference(sendOfflineMessage);
-        screen.addPreference(sendViaMobileNetwork);
+        screen.addPreference(presenceTopic);
         screen.addPreference(sendBatteryMessage);
         screen.addPreference(batteryTopic);
         screen.addPreference(autostart);
@@ -58,7 +50,6 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
 
         setPreferenceScreen(screen);
 
-        sendViaMobileNetwork.setDependency(SEND_OFFLINE_MESSAGE);
         batteryTopic.setDependency(SEND_BATTERY_MESSAGE);
     }
 

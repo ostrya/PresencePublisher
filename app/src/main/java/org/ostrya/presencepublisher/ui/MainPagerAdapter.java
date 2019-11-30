@@ -26,7 +26,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return new ScheduleFragment();
             case 2:
-                return new ContentFragment();
+                return new ConditionFragment();
             case 3:
                 return new LogFragment();
             case 4:
@@ -48,7 +48,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return context.getString(R.string.tab_schedule_title);
             case 2:
-                return context.getString(R.string.tab_content_title);
+                return context.getString(R.string.tab_condition_title);
             case 3:
                 return context.getString(R.string.tab_log_title);
             case 4:

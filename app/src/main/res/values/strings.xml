@@ -16,15 +16,13 @@
     <string name="message_schedule_title">Publish period</string>
     <string name="message_schedule_summary">The time between messages in minutes.</string>
     <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>
-    <string name="ssid_list_title">Target WiFi networks</string>
-    <string name="ssid_list_summary" formatted="true">WiFi networks for which to send messages.%nCurrent value: %1$s</string>
     <string name="permission_dialog_title">Location permission</string>
-    <string name="permission_dialog_message">Please allow access to coarse location. Otherwise, this app will not be able to
+    <string name="permission_dialog_message">Please allow access to fine location. Otherwise, this app will not be able to
         retrieve the currently connected WiFi name. You can skip granting the permission, but then the app will not send
         any notifications.
     </string>
-    <string name="dialog_continue">Continue</string>
-    <string name="dialog_skip">Skip</string>
+    <string name="dialog_confirm">OK</string>
+    <string name="dialog_abort">Cancel</string>
     <string name="autostart_title">Autostart</string>
     <string name="location_dialog_title">Location service</string>
     <string name="location_dialog_message">Please enable location services (at least network-based) and keep them enabled.
@@ -60,16 +58,21 @@
     <string name="send_offline_message_summary">Send message when not connected to target network</string>
     <string name="send_via_mobile_network_title">Send without WiFi</string>
     <string name="send_via_mobile_network_summary">Send offline message via mobile network if necessary</string>
-    <string name="tab_content_title">Content</string>
+    <string name="tab_condition_title">Conditions</string>
+    <string name="category_wifi">Connected WiFi networks</string>
+    <string name="category_offline">Offline</string>
     <string name="content_summary" formatted="true">Current value: %1$s</string>
     <string name="offline_content_title">Offline message</string>
-    <string name="content_category_other">Other</string>
-    <string name="content_category_wifi">WiFi</string>
-    <string name="content_help_summary">Here you can configure the content of the MQTT message to be sent for any condition.</string>
+    <string name="condition_help_summary">For each fulfilled condition, a message is sent. Click to edit the message to be sent for a condition. Long-click to delete.</string>
     <string name="tab_log_title">Log</string>
     <string name="button_reload">Reload</string>
     <string name="button_clear">Clear</string>
     <string name="button_export">Export</string>
     <string name="toast_no_logs">No logs available</string>
     <string name="tab_licenses_title">Licenses</string>
+    <string name="add_network_title">Add network</string>
+    <string name="add_network_summary">Click here to add a new network.</string>
+    <string name="remove_network_title">Remove network</string>
+    <string name="remove_network_warning_message">Do you really want to remove this network?</string>
+    <string name="enter_network">Enter other network …</string>
 </resources>
