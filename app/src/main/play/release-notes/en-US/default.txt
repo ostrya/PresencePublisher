@@ -1,3 +1,6 @@
+v1.7.1
+• Fix crash due to missing classes.
+
 v1.7.0
 Updated the app to fully support Android 10.
 • The Content tab has been renamed to Conditions and allows both adding networks and configuring their message.

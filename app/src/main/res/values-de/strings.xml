@@ -9,7 +9,7 @@
     <string name="message_schedule_summary">Zeit zwischen Benachrichtigungen in Minuten.</string>
     <string name="message_schedule_dialog_text">Die Periode auf unter 15 Minuten zu setzen wird den Batterieverbrauch erhöhen. Fortfahren?</string>
     <string name="permission_dialog_title">Standortberechtigung</string>
-    <string name="permission_dialog_message">Bitte erlaube den Zugriff auf genaue Position. Andernfalls kann diese App den
+    <string name="permission_dialog_message">Bitte erlaube den dauerhaften Zugriff auf genaue Position. Andernfalls kann diese App den
         Namen des aktuell verbundenen WLANs nicht bestimmen. Du kannst das Setzen der Berechtigung überspringen, aber
         in diesem Fall wird die App keine Benachrichtigungen senden.
     </string>

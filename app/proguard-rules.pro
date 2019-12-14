@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# seems these classes (as specified in the Paho client JAR META-INF\services\org.eclipse.paho.client.mqttv3.spi.NetworkModuleFactory)
+# need to be manually kept
+-keep public class org.eclipse.paho.client.mqttv3.internal.TCPNetworkModuleFactory
+-keep public class org.eclipse.paho.client.mqttv3.internal.SSLNetworkModuleFactory
+-keep public class org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketNetworkModuleFactory
+-keep public class org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModuleFactory

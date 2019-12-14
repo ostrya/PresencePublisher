@@ -149,7 +149,16 @@ public class MainActivity extends FragmentActivity {
 
             ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(ok -> {
                 if (ok) {
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                                PERMISSION_REQUEST_CODE);
+                    } else {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                PERMISSION_REQUEST_CODE);
+                    }
                 }
             }, R.string.permission_dialog_title, R.string.permission_dialog_message);
             fragment.show(fm, null);
@@ -160,7 +169,8 @@ public class MainActivity extends FragmentActivity {
 
     private void checkLocationAccessAndBatteryOptimizationAndStartWorker() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && (locationManager == null || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+                && (locationManager == null || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)))) {
             HyperLog.d(TAG, "Location service not yet enabled, asking user ...");
             FragmentManager fm = getSupportFragmentManager();

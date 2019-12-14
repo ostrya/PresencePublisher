@@ -42,8 +42,8 @@ android {
         applicationId getBuildApplicationId()
         minSdkVersion 14
         targetSdkVersion 29
-        versionCode 23
-        versionName '1.7.0'
+        versionCode 24
+        versionName '1.7.1'
     }
     signingConfigs {
         release getSigningConfig()

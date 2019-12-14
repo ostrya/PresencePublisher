@@ -17,7 +17,7 @@
     <string name="message_schedule_summary">The time between messages in minutes.</string>
     <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>
     <string name="permission_dialog_title">Location permission</string>
-    <string name="permission_dialog_message">Please allow access to fine location. Otherwise, this app will not be able to
+    <string name="permission_dialog_message">Please allow access to fine location all the time. Otherwise, this app will not be able to
         retrieve the currently connected WiFi name. You can skip granting the permission, but then the app will not send
         any notifications.
     </string>
