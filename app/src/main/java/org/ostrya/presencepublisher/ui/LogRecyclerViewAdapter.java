@@ -39,25 +39,23 @@ public class LogRecyclerViewAdapter extends ListAdapter<DeviceLogModel, LogRecyc
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         DeviceLogModel item = getItem(position);
-        holder.mItem = item;
-        holder.mContentView.setText(item.getDeviceLog());
+        holder.item = item;
+        holder.contentView.setText(item.getDeviceLog());
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        final View mView;
-        final TextView mContentView;
-        DeviceLogModel mItem;
+    static final class ViewHolder extends RecyclerView.ViewHolder {
+        final TextView contentView;
+        DeviceLogModel item;
 
         ViewHolder(View view) {
             super(view);
-            mView = view;
-            mContentView = view.findViewById(R.id.content);
+            contentView = itemView.findViewById(R.id.content);
         }
 
         @NonNull
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + contentView.getText() + "'";
         }
     }
 }
