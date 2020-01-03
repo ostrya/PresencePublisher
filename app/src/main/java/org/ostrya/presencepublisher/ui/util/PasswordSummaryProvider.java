@@ -2,7 +2,7 @@ package org.ostrya.presencepublisher.ui.util;
 
 import androidx.preference.Preference;
 import org.ostrya.presencepublisher.R;
-import org.ostrya.presencepublisher.ui.preference.PasswordPreference;
+import org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference;
 
 public class PasswordSummaryProvider implements Preference.SummaryProvider<PasswordPreference> {
     private final int summaryId;

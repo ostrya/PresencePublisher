@@ -28,7 +28,7 @@ public class ExplanationSummaryProvider<T extends Preference> implements Prefere
                 case STRING:
                     return preference.getSharedPreferences().getString(preference.getKey(), undefined);
                 case LIST:
-                    return preference.getSharedPreferences().getStringSet(preference.getKey(), Collections.emptySet()).toString();
+                    return SetJoiner.join(preference.getSharedPreferences().getStringSet(preference.getKey(), Collections.emptySet()), undefined);
                 default:
                     HyperLog.e(TAG, "Unexpected type received: " + type);
                     throw new IllegalArgumentException("Unexpected type");

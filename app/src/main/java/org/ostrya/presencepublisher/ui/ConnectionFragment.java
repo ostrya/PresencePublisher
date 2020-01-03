@@ -5,16 +5,16 @@ import android.os.Bundle;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
-import org.ostrya.presencepublisher.ui.preference.CheckConnectionDummy;
-import org.ostrya.presencepublisher.ui.preference.ClientCertificatePreference;
-import org.ostrya.presencepublisher.ui.preference.HostPreference;
-import org.ostrya.presencepublisher.ui.preference.PasswordPreference;
-import org.ostrya.presencepublisher.ui.preference.PortPreference;
-import org.ostrya.presencepublisher.ui.preference.UseTlsPreference;
-import org.ostrya.presencepublisher.ui.preference.UsernamePreference;
+import org.ostrya.presencepublisher.ui.preference.connection.CheckConnectionDummy;
+import org.ostrya.presencepublisher.ui.preference.connection.ClientCertificatePreference;
+import org.ostrya.presencepublisher.ui.preference.connection.HostPreference;
+import org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference;
+import org.ostrya.presencepublisher.ui.preference.connection.PortPreference;
+import org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference;
+import org.ostrya.presencepublisher.ui.preference.connection.UsernamePreference;
 
-import static org.ostrya.presencepublisher.ui.preference.HostPreference.HOST;
-import static org.ostrya.presencepublisher.ui.preference.UseTlsPreference.USE_TLS;
+import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
+import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
 
 public class ConnectionFragment extends PreferenceFragmentCompat {
 

@@ -13,8 +13,10 @@
         Namen des aktuell verbundenen WLANs nicht bestimmen. Du kannst das Setzen der Berechtigung überspringen, aber
         in diesem Fall wird die App keine Benachrichtigungen senden.
     </string>
-    <string name="dialog_confirm">OK</string>
-    <string name="dialog_abort">Abbrechen</string>
+    <string name="bluetooth_dialog_title">Bluetooth</string>
+    <string name="bluetooth_dialog_message">Bitte schalte Bluetooth an, damit diese App nach Beacons suchen kann. Andernfalls
+        wird die App keine Beacons finden.
+    </string>
     <string name="autostart_title">Autostart</string>
     <string name="location_dialog_title">Standortdienst</string>
     <string name="location_dialog_message">Bitte schalte den Standortdienst (zumindest Energiesparmodus) dauerhaft an.
@@ -48,15 +50,16 @@
     <string name="username_summary" formatted="true">Anmeldung.%nAktueller Wert: %1$s</string>
     <string name="password_title">MQTT Passwort</string>
     <string name="password_summary" formatted="true">Passwort.%nAktueller Wert: %1$s</string>
-    <string name="send_offline_message_title">Offline-Nachricht senden</string>
-    <string name="send_offline_message_summary">Nachricht senden, wenn Ziel-WLAN nicht verbunden ist</string>
-    <string name="send_via_mobile_network_title">Nachricht ohne WiFi senden</string>
-    <string name="send_via_mobile_network_summary">Offline-Nachricht notfalls über mobile Daten senden</string>
+    <string name="send_offline_message_title">\'Keine Bedingung\'-Nachricht senden</string>
+    <string name="send_offline_message_summary">Nachricht senden, wenn keine der obigen Bedingungen zutrifft</string>
+    <string name="send_via_mobile_network_title">Ohne WiFi senden</string>
+    <string name="send_via_mobile_network_summary">Nachrichten notfalls über mobile Daten senden</string>
     <string name="tab_condition_title">Bedingungen</string>
-    <string name="category_wifi">Verbundene WLAN-Netzwerke</string>
-    <string name="category_offline">Offline</string>
+    <string name="category_wifi">Ein Netzwerk ist verbunden</string>
+    <string name="category_beacon_regions">In der Nähe eines Beacons</string>
+    <string name="category_offline">Keine Bedingung ist erfüllt</string>
     <string name="content_summary" formatted="true">Aktueller Wert: %1$s</string>
-    <string name="offline_content_title">Offline-Nachricht</string>
+    <string name="offline_content_title">\'Keine Bedingung\'-Nachricht</string>
     <string name="condition_help_summary">Für jede erfüllte Bedingung wird eine Nachricht gesendet. Klicken, um die gesendete Nachricht für eine Bedingung zu ändern. Lange klicken, um einen Eintrag zu löschen.</string>
     <string name="tab_log_title">Log</string>
     <string name="button_export">Exportieren</string>
@@ -75,4 +78,10 @@
     <string name="remove_network_title">Netzwerk entfernen</string>
     <string name="remove_network_warning_message">Dieses Netzwerk wirklich entfernen?</string>
     <string name="enter_network">Anderes Netzwerk eingeben …</string>
+    <string name="add_beacon_title">Beacon hinzufügen</string>
+    <string name="add_beacon_summary">Tippe hier, um ein Beacon hinzuzufügen.</string>
+    <string name="remove_region_title">Region entfernen</string>
+    <string name="remove_region_warning_message">Diese Beacon-Region wirklich entfernen?</string>
+    <string name="no_bluetooth_explanation">Dein Gerät unterstützt keine Bluetooth-Beacons.</string>
+    <string name="dialog_scan_beacons_title">Beacons in der Nähe</string>
 </resources>

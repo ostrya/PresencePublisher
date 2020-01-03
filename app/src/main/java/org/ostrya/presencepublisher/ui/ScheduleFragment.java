@@ -6,17 +6,17 @@ import android.os.Bundle;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
-import org.ostrya.presencepublisher.ui.preference.AutostartPreference;
-import org.ostrya.presencepublisher.ui.preference.BatteryTopicPreference;
-import org.ostrya.presencepublisher.ui.preference.LastSuccessTimestampPreference;
-import org.ostrya.presencepublisher.ui.preference.MessageSchedulePreference;
-import org.ostrya.presencepublisher.ui.preference.NextScheduleTimestampPreference;
-import org.ostrya.presencepublisher.ui.preference.PresenceTopicPreference;
-import org.ostrya.presencepublisher.ui.preference.SendBatteryMessagePreference;
+import org.ostrya.presencepublisher.ui.preference.schedule.AutostartPreference;
+import org.ostrya.presencepublisher.ui.preference.schedule.BatteryTopicPreference;
+import org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference;
+import org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePreference;
+import org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference;
+import org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference;
+import org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference;
 
-import static org.ostrya.presencepublisher.ui.preference.LastSuccessTimestampPreference.LAST_SUCCESS;
-import static org.ostrya.presencepublisher.ui.preference.NextScheduleTimestampPreference.NEXT_SCHEDULE;
-import static org.ostrya.presencepublisher.ui.preference.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
+import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
+import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
+import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 
 public class ScheduleFragment extends PreferenceFragmentCompat {
     private final SharedPreferences.OnSharedPreferenceChangeListener listener = this::onPreferencesChanged;

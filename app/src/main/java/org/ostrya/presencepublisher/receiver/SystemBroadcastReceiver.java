@@ -10,9 +10,9 @@ import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.mqtt.Publisher;
 
-import static org.ostrya.presencepublisher.ui.preference.AutostartPreference.AUTOSTART;
-import static org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
-import static org.ostrya.presencepublisher.ui.preference.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
+import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
+import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
+import static org.ostrya.presencepublisher.ui.preference.schedule.AutostartPreference.AUTOSTART;
 
 public class SystemBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "SystemBroadcastReceiver";
@@ -26,9 +26,11 @@ public class SystemBroadcastReceiver extends BroadcastReceiver {
             NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
             boolean useMobile = sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)
                     && sharedPreferences.getBoolean(SEND_VIA_MOBILE_NETWORK, false);
-            if (networkInfo.isConnected() && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI
+            if (networkInfo != null && networkInfo.isConnected()
+                    && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI
                     || networkInfo.getType() == ConnectivityManager.TYPE_VPN
-                    || networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET || useMobile)) {
+                    || networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET
+                    || useMobile)) {
                 HyperLog.i(TAG, "Reacting to network change");
                 new Publisher(context).scheduleNow();
             }

@@ -1,7 +1,7 @@
 plugins {
-    id 'com.github.triplet.play' version '2.6.1'
+    id 'com.github.triplet.play' version '2.6.2'
     id 'com.jaredsburrows.license' version '0.8.42'
-    id 'org.ajoberstar.grgit' version '4.0.0'
+    id 'org.ajoberstar.grgit' version '4.0.1'
 }
 
 apply plugin: 'com.android.application'
@@ -42,8 +42,8 @@ android {
         applicationId getBuildApplicationId()
         minSdkVersion 14
         targetSdkVersion 29
-        versionCode 24
-        versionName '1.7.1'
+        versionCode 25
+        versionName '2.0.0'
     }
     signingConfigs {
         release getSigningConfig()
@@ -97,12 +97,15 @@ play {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    //noinspection GradleDependency due to https://github.com/AltBeacon/android-beacon-library/issues/919
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.preference:preference:1.1.0'
     implementation 'androidx.security:security-crypto:1.0.0-alpha02'
     implementation('com.hypertrack:hyperlog:0.0.10') {
         exclude group: 'com.android.support'
         exclude group: 'com.android.volley'
     }
+    implementation 'org.altbeacon:android-beacon-library:2.16.3'
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.2'
 }

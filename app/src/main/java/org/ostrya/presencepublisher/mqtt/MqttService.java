@@ -15,12 +15,12 @@ import org.ostrya.presencepublisher.security.SecurePreferencesHelper;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import static org.ostrya.presencepublisher.ui.preference.ClientCertificatePreference.CLIENT_CERTIFICATE;
-import static org.ostrya.presencepublisher.ui.preference.HostPreference.HOST;
-import static org.ostrya.presencepublisher.ui.preference.PasswordPreference.PASSWORD;
-import static org.ostrya.presencepublisher.ui.preference.PortPreference.PORT;
-import static org.ostrya.presencepublisher.ui.preference.UseTlsPreference.USE_TLS;
-import static org.ostrya.presencepublisher.ui.preference.UsernamePreference.USERNAME;
+import static org.ostrya.presencepublisher.ui.preference.connection.ClientCertificatePreference.CLIENT_CERTIFICATE;
+import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
+import static org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference.PASSWORD;
+import static org.ostrya.presencepublisher.ui.preference.connection.PortPreference.PORT;
+import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
+import static org.ostrya.presencepublisher.ui.preference.connection.UsernamePreference.USERNAME;
 
 public class MqttService {
     private static final String TAG = "MqttService";

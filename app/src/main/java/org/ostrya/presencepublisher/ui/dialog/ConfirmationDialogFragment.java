@@ -27,8 +27,8 @@ public class ConfirmationDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle(titleId)
                 .setMessage(messageId)
-                .setPositiveButton(R.string.dialog_confirm, (dialog, id) -> callback.accept(true))
-                .setNegativeButton(R.string.dialog_abort, (dialog, id) -> callback.accept(false));
+                .setPositiveButton(R.string.dialog_ok, (dialog, id) -> callback.accept(true))
+                .setNegativeButton(R.string.dialog_cancel, (dialog, id) -> callback.accept(false));
         return builder.create();
     }
 

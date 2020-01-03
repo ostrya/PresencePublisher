@@ -19,11 +19,20 @@ public class EditTextDialog extends DialogFragment {
 
     private Callback callback;
     private int titleId;
+    private String text;
 
     public static EditTextDialog getInstance(final Callback callback, int titleId) {
         EditTextDialog fragment = new EditTextDialog();
         fragment.setCallback(callback);
         fragment.setTitleId(titleId);
+        return fragment;
+    }
+
+    public static EditTextDialog getInstance(final Callback callback, int titleId, String text) {
+        EditTextDialog fragment = new EditTextDialog();
+        fragment.setCallback(callback);
+        fragment.setTitleId(titleId);
+        fragment.setText(text);
         return fragment;
     }
 
@@ -39,18 +48,19 @@ public class EditTextDialog extends DialogFragment {
         if (editText != null) {
             editText.requestFocus();
             editText.setSelection(0);
+            editText.setText(text);
         }
 
         builder.setTitle(titleId)
                 .setView(view)
-                .setPositiveButton(R.string.dialog_confirm, (dialog, id) -> {
+                .setPositiveButton(R.string.dialog_ok, (dialog, id) -> {
                     if (editText != null) {
                         callback.accept(editText.getText().toString());
                     } else {
                         HyperLog.e(TAG, "Unable to find edit text field");
                     }
                 })
-                .setNegativeButton(R.string.dialog_abort, null);
+                .setNegativeButton(R.string.dialog_cancel, null);
         AlertDialog alertDialog = builder.create();
 
         Window window = alertDialog.getWindow();
@@ -67,6 +77,10 @@ public class EditTextDialog extends DialogFragment {
 
     private void setTitleId(int titleId) {
         this.titleId = titleId;
+    }
+
+    private void setText(String text) {
+        this.text = text;
     }
 
     public interface Callback {

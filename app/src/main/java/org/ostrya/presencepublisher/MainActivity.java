@@ -26,31 +26,30 @@ import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 import static android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
 import static org.ostrya.presencepublisher.Application.*;
-import static org.ostrya.presencepublisher.ui.preference.AddNetworkChoicePreferenceDummy.SSID_LIST;
-import static org.ostrya.presencepublisher.ui.preference.AutostartPreference.AUTOSTART;
-import static org.ostrya.presencepublisher.ui.preference.BatteryTopicPreference.BATTERY_TOPIC;
-import static org.ostrya.presencepublisher.ui.preference.ClientCertificatePreference.CLIENT_CERTIFICATE;
-import static org.ostrya.presencepublisher.ui.preference.HostPreference.HOST;
-import static org.ostrya.presencepublisher.ui.preference.LastSuccessTimestampPreference.LAST_SUCCESS;
-import static org.ostrya.presencepublisher.ui.preference.MessageSchedulePreference.MESSAGE_SCHEDULE;
-import static org.ostrya.presencepublisher.ui.preference.NextScheduleTimestampPreference.NEXT_SCHEDULE;
-import static org.ostrya.presencepublisher.ui.preference.OfflineContentPreference.OFFLINE_CONTENT;
-import static org.ostrya.presencepublisher.ui.preference.PasswordPreference.PASSWORD;
-import static org.ostrya.presencepublisher.ui.preference.PortPreference.PORT;
-import static org.ostrya.presencepublisher.ui.preference.PresenceTopicPreference.PRESENCE_TOPIC;
-import static org.ostrya.presencepublisher.ui.preference.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
-import static org.ostrya.presencepublisher.ui.preference.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
-import static org.ostrya.presencepublisher.ui.preference.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
-import static org.ostrya.presencepublisher.ui.preference.UseTlsPreference.USE_TLS;
-import static org.ostrya.presencepublisher.ui.preference.UsernamePreference.USERNAME;
-import static org.ostrya.presencepublisher.ui.preference.WifiNetworkPreference.WIFI_CONTENT_PREFIX;
+import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.AddNetworkChoicePreferenceDummy.SSID_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.OfflineContentPreference.OFFLINE_CONTENT;
+import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
+import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
+import static org.ostrya.presencepublisher.ui.preference.condition.WifiNetworkPreference.WIFI_CONTENT_PREFIX;
+import static org.ostrya.presencepublisher.ui.preference.connection.ClientCertificatePreference.CLIENT_CERTIFICATE;
+import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
+import static org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference.PASSWORD;
+import static org.ostrya.presencepublisher.ui.preference.connection.PortPreference.PORT;
+import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
+import static org.ostrya.presencepublisher.ui.preference.connection.UsernamePreference.USERNAME;
+import static org.ostrya.presencepublisher.ui.preference.schedule.AutostartPreference.AUTOSTART;
+import static org.ostrya.presencepublisher.ui.preference.schedule.BatteryTopicPreference.BATTERY_TOPIC;
+import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
+import static org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePreference.MESSAGE_SCHEDULE;
+import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
+import static org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference.PRESENCE_TOPIC;
+import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 
 public class MainActivity extends FragmentActivity {
     private static final String TAG = "MainActivity";
 
     private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceListener = this::onSharedPreferenceChanged;
-    private MainPagerAdapter mainPagerAdapter;
-    private ViewPager viewPager;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -59,8 +58,8 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), getApplicationContext());
-        viewPager = findViewById(R.id.pager);
+        MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), getApplicationContext());
+        ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(mainPagerAdapter);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -109,6 +108,7 @@ public class MainActivity extends FragmentActivity {
 
     private void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
         switch (key) {
+            case BEACON_LIST:
             case BATTERY_TOPIC:
             case CLIENT_CERTIFICATE:
             case HOST:
