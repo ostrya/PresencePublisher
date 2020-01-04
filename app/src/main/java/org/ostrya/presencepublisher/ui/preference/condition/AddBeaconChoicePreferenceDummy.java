@@ -17,7 +17,7 @@ import org.ostrya.presencepublisher.ui.dialog.BeaconScanDialogFragment;
 
 import java.util.Collections;
 
-import static org.ostrya.presencepublisher.Application.BLUETOOTH_REQUEST_CODE;
+import static org.ostrya.presencepublisher.Application.ON_DEMAND_BLUETOOTH_REQUEST_CODE;
 import static org.ostrya.presencepublisher.ui.dialog.BeaconScanDialogFragment.getInstance;
 
 public class AddBeaconChoicePreferenceDummy extends Preference {
@@ -40,7 +40,7 @@ public class AddBeaconChoicePreferenceDummy extends Preference {
                 BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
                 if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
                     Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    fragment.startActivityForResult(enableBtIntent, BLUETOOTH_REQUEST_CODE);
+                    fragment.startActivityForResult(enableBtIntent, ON_DEMAND_BLUETOOTH_REQUEST_CODE);
                     return true;
                 }
             }

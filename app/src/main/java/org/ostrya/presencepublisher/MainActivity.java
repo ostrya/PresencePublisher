@@ -2,6 +2,9 @@ package org.ostrya.presencepublisher;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -22,6 +25,8 @@ import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.mqtt.Publisher;
 import org.ostrya.presencepublisher.ui.MainPagerAdapter;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
+
+import java.util.Collections;
 
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 import static android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
@@ -65,7 +70,7 @@ public class MainActivity extends FragmentActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceListener);
 
-        checkLocationPermissionAndAccessAndBatteryOptimizationAndStartWorker();
+        checkLocationPermissionAndAccessAndBluetoothAndBatteryOptimizationAndStartWorker();
 
         HyperLog.d(TAG, "Creating activity finished");
     }
@@ -88,7 +93,7 @@ public class MainActivity extends FragmentActivity {
         if (requestCode == PERMISSION_REQUEST_CODE && grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             HyperLog.i(TAG, "Successfully granted location permission");
-            checkLocationAccessAndBatteryOptimizationAndStartWorker();
+            checkLocationAccessAndBluetoothAndBatteryOptimizationAndStartWorker();
         }
     }
 
@@ -99,9 +104,12 @@ public class MainActivity extends FragmentActivity {
             // For some reason, the activity returns RESULT_CANCELED even when the service is enabled, so we don't
             // know if it was actually enabled or not. For now, we don't check again and just start the service.
             HyperLog.d(TAG, "Returning from location service with result " + resultCode + ", assuming it is running ...");
+            checkBluetoothAndBatteryOptimizationAndStartWorker();
+        } else if (requestCode == START_BLUETOOTH_REQUEST_CODE) {
+            HyperLog.d(TAG, "Returning from bluetooth enabling with result " + resultCode);
             checkBatteryOptimizationAndStartWorker();
         } else if (requestCode == BATTERY_OPTIMIZATION_REQUEST_CODE) {
-            HyperLog.d(TAG, "Returning from battery optimization with result " + resultCode + ", assuming it disabled ...");
+            HyperLog.d(TAG, "Returning from battery optimization with result " + resultCode);
             new Publisher(this).scheduleNow();
         }
     }
@@ -140,7 +148,7 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    private void checkLocationPermissionAndAccessAndBatteryOptimizationAndStartWorker() {
+    private void checkLocationPermissionAndAccessAndBluetoothAndBatteryOptimizationAndStartWorker() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                 && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -163,11 +171,11 @@ public class MainActivity extends FragmentActivity {
             }, R.string.permission_dialog_title, R.string.permission_dialog_message);
             fragment.show(fm, null);
         } else {
-            checkLocationAccessAndBatteryOptimizationAndStartWorker();
+            checkLocationAccessAndBluetoothAndBatteryOptimizationAndStartWorker();
         }
     }
 
-    private void checkLocationAccessAndBatteryOptimizationAndStartWorker() {
+    private void checkLocationAccessAndBluetoothAndBatteryOptimizationAndStartWorker() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                 && (locationManager == null || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -182,8 +190,33 @@ public class MainActivity extends FragmentActivity {
             }, R.string.location_dialog_title, R.string.location_dialog_message);
             fragment.show(fm, null);
         } else {
-            checkBatteryOptimizationAndStartWorker();
+            checkBluetoothAndBatteryOptimizationAndStartWorker();
         }
+    }
+
+    private void checkBluetoothAndBatteryOptimizationAndStartWorker() {
+        if (((Application) getApplication()).supportsBeacons()
+                && !sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()).isEmpty()) {
+            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            if (bluetoothManager == null) {
+                HyperLog.w(TAG, "Unable to get bluetooth manager");
+            } else {
+                BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+                if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+                    FragmentManager fm = getSupportFragmentManager();
+
+                    ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(ok -> {
+                        if (ok) {
+                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(enableBtIntent, START_BLUETOOTH_REQUEST_CODE);
+                        }
+                    }, R.string.bluetooth_dialog_title, R.string.bluetooth_dialog_message);
+                    fragment.show(fm, null);
+                    return;
+                }
+            }
+        }
+        checkBatteryOptimizationAndStartWorker();
     }
 
     private void checkBatteryOptimizationAndStartWorker() {
