@@ -31,7 +31,8 @@ public class Application extends android.app.Application {
     public static final int BATTERY_OPTIMIZATION_REQUEST_CODE = 3;
     public static final int ALARM_REQUEST_CODE = 4;
     public static final int MAIN_ACTIVITY_REQUEST_CODE = 5;
-    public static final int BLUETOOTH_REQUEST_CODE = 6;
+    public static final int START_BLUETOOTH_REQUEST_CODE = 6;
+    public static final int ON_DEMAND_BLUETOOTH_REQUEST_CODE = 7;
 
     private BackgroundPowerSaver backgroundPowerSaver;
 
