@@ -10,8 +10,7 @@
     <string name="message_schedule_dialog_text">Die Periode auf unter 15 Minuten zu setzen wird den Batterieverbrauch erhöhen. Fortfahren?</string>
     <string name="permission_dialog_title">Standortberechtigung</string>
     <string name="permission_dialog_message">Bitte erlaube den dauerhaften Zugriff auf genaue Position. Andernfalls kann diese App den
-        Namen des aktuell verbundenen WLANs nicht bestimmen. Du kannst das Setzen der Berechtigung überspringen, aber
-        in diesem Fall wird die App keine Benachrichtigungen senden.
+        Namen des aktuell verbundenen WLANs nicht bestimmen und Bluetooth-Beacons nicht finden.
     </string>
     <string name="bluetooth_dialog_title">Bluetooth</string>
     <string name="bluetooth_dialog_message">Bitte schalte Bluetooth an, damit diese App nach Beacons suchen kann. Andernfalls
@@ -20,8 +19,7 @@
     <string name="autostart_title">Autostart</string>
     <string name="location_dialog_title">Standortdienst</string>
     <string name="location_dialog_message">Bitte schalte den Standortdienst (zumindest Energiesparmodus) dauerhaft an.
-        Andernfalls kann diese App den Namen des aktuell verbundenen WLANs nicht bestimmen. Du kannst das Einschalten
-        überspringen, aber in diesem Fall wird die App keine Benachrichtigungen senden.
+        Andernfalls kann diese App den Namen des aktuell verbundenen WLANs nicht bestimmen und Bluetooth-Beacons nicht finden.
     </string>
     <string name="tab_connection_title">Verbindung</string>
     <string name="tab_schedule_title">Zeitplan</string>
