@@ -55,6 +55,7 @@ public class MainActivity extends FragmentActivity {
     private static final String TAG = "MainActivity";
 
     private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceListener = this::onSharedPreferenceChanged;
+    private boolean needsLocationService;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -67,6 +68,9 @@ public class MainActivity extends FragmentActivity {
         ViewPager viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(mainPagerAdapter);
 
+        needsLocationService = ((Application) getApplication()).supportsBeacons()
+                // for WiFi name resolution
+                || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceListener);
 
@@ -149,7 +153,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void checkLocationPermissionAndAccessAndBluetoothAndBatteryOptimizationAndStartWorker() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        if (needsLocationService
                 && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             HyperLog.d(TAG, "Location permission not yet granted, asking user ...");
@@ -177,7 +181,9 @@ public class MainActivity extends FragmentActivity {
 
     private void checkLocationAccessAndBluetoothAndBatteryOptimizationAndStartWorker() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        if (needsLocationService
+                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
                 && (locationManager == null || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)))) {
             HyperLog.d(TAG, "Location service not yet enabled, asking user ...");
@@ -196,6 +202,10 @@ public class MainActivity extends FragmentActivity {
 
     private void checkBluetoothAndBatteryOptimizationAndStartWorker() {
         if (((Application) getApplication()).supportsBeacons()
+                // make linter happy
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
+                && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
                 && !sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()).isEmpty()) {
             BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             if (bluetoothManager == null) {

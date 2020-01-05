@@ -56,8 +56,7 @@ Make sure your PKCS#12 keystore file has the `.pfx` extension, otherwise Android
 ## Permissions
 
 * ACCESS_BACKGROUND_LOCATION: on Android 10+, necessary to retrieve SSID of connected WiFi while running in background
-* ACCESS_FINE_LOCATION: on Android 9+, necessary to retrieve SSID of connected WiFi (you do not need to grant
- the permission in Android 6.0 - 8.1 for the app to work)
+* ACCESS_FINE_LOCATION: necessary to discover beacons; on Android 9+, necessary to retrieve SSID of connected WiFi
 * ACCESS_NETWORK_STATE: necessary to register network change listener
 * ACCESS_WIFI_STATE: necessary to retrieve SSID of connected WiFi
 * BLUETOOTH: necessary to communicate with beacons

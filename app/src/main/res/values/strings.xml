@@ -18,8 +18,7 @@
     <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>
     <string name="permission_dialog_title">Location permission</string>
     <string name="permission_dialog_message">Please allow access to fine location all the time. Otherwise, this app will not be able to
-        retrieve the currently connected WiFi name. You can skip granting the permission, but then the app will not send
-        any notifications.
+        retrieve the currently connected WiFi name or find Bluetooth beacons.
     </string>
     <string name="bluetooth_dialog_title">Bluetooth</string>
     <string name="bluetooth_dialog_message">Please enable Bluetooth so that this app can scan for beacons. Otherwise,
@@ -28,8 +27,7 @@
     <string name="autostart_title">Autostart</string>
     <string name="location_dialog_title">Location service</string>
     <string name="location_dialog_message">Please enable location services (at least network-based) and keep them enabled.
-        Otherwise, this app will not be able to retrieve the currently connected WiFi name. You can skip enabling it, but
-        then the app will not send any notifications.
+        Otherwise, this app will not be able to retrieve the currently connected WiFi name or find Bluetooth beacons.
     </string>
     <string name="battery_optimization_dialog_title">Battery optimization</string>
     <string name="battery_optimization_dialog_message">Please disable battery optimization. Otherwise, Android may doze this app and stop it from sending messages during standby.</string>
