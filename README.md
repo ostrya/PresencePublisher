@@ -8,12 +8,16 @@
 [<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="75">](https://f-droid.org/packages/org.ostrya.presencepublisher)
 [<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="75" alt="Get it on Google Play">](https://play.google.com/store/apps/details?id=org.ostrya.presencepublisher&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1)
 
-A simple app that regularly publishes to a configurable MQTT topic whenever connected to a given WiFi network.
-This can be used to integrate the presence of your phone in home automation. Several networks can be configured
-at once and the message to be sent can be configured for each network.
+A simple app that regularly publishes to a configurable MQTT topic whenever connected to a given WiFi network or in
+proximity to a Bluetooth beacon. This can be used to integrate the presence of your phone in home automation.
+ 
+Several networks and beacons can be configured at once and the message to be sent can be configured for each of them.
 
-Additionally, if your MQTT server is available on the internet, you can also choose to send messages whenever
-you are not connected to any of the configured WiFi networks.
+If your MQTT server is available on the internet, you can also choose to send an 'offline' message
+whenever you are not connected to any of the configured WiFi networks and not in range of any configured beacon.
+
+As an additional feature, you can send the battery level of your device whenever a condition is met, so that you can
+recharge it before it turns off.
 
 The app uses the built-in Android alarm manager, so notifications are sent even if the phone is in stand-by.
 
@@ -56,6 +60,8 @@ Make sure your PKCS#12 keystore file has the `.pfx` extension, otherwise Android
  the permission in Android 6.0 - 8.1 for the app to work)
 * ACCESS_NETWORK_STATE: necessary to register network change listener
 * ACCESS_WIFI_STATE: necessary to retrieve SSID of connected WiFi
+* BLUETOOTH: necessary to communicate with beacons
+* BLUETOOTH_ADMIN: necessary to discover beacons
 * INTERNET: only necessary if your MQTT server is not running locally
 * RECEIVE_BOOT_COMPLETED: necessary to start service on start-up
 * REQUEST_IGNORE_BATTERY_OPTIMIZATIONS: on Android 6+, necessary to request disabling battery optimization
@@ -65,7 +71,6 @@ Make sure your PKCS#12 keystore file has the `.pfx` extension, otherwise Android
 
 * more conditions when to send notification
   * time ranges
-  * presence of Bluetooth beacons
   * actual location
   * ...
 * ...
