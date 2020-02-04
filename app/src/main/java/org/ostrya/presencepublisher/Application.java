@@ -53,7 +53,7 @@ public class Application extends android.app.Application {
             HyperLog.setLogLevel(Log.INFO);
         }
         Thread.setDefaultUncaughtExceptionHandler(
-                new LogUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler()));
+            new LogUncaughtExceptionHandler(this, Thread.getDefaultUncaughtExceptionHandler()));
     }
 
     @SuppressWarnings("deprecation")
