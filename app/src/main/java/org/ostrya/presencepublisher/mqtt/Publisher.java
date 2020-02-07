@@ -21,6 +21,7 @@ import org.ostrya.presencepublisher.message.WifiMessageProvider;
 import org.ostrya.presencepublisher.receiver.AlarmReceiver;
 import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -112,7 +113,7 @@ public class Publisher {
             return;
         }
         alarmManager.cancel(scheduledIntent);
-        HyperLog.i(TAG, "Next run at " + new Date(nextSchedule));
+        HyperLog.i(TAG, "Next run at " + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(new Date(nextSchedule)));
         sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
         NotificationManagerCompat.from(applicationContext)
                 .notify(NOTIFICATION_ID, NotificationFactory.getNotification(applicationContext, lastSuccess, nextSchedule));
