@@ -148,7 +148,7 @@ public class ConditionFragment extends PreferenceFragmentCompat {
         HyperLog.d(TAG, "Received result " + resultCode + " for " + requestCode);
         if (requestCode == ON_DEMAND_BLUETOOTH_REQUEST_CODE && addBeaconChoice != null) {
             HyperLog.i(TAG, "Start scanning after enabling bluetooth");
-            addBeaconChoice.performClick();
+            addBeaconChoice.getOnPreferenceClickListener().onPreferenceClick(addBeaconChoice);
         }
     }
 

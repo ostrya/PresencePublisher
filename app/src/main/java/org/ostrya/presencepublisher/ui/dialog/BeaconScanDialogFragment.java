@@ -101,10 +101,10 @@ public class BeaconScanDialogFragment extends DialogFragment {
 
     private class ScanCallback implements CycledLeScanCallback {
         @Override
-        public void onLeScan(BluetoothDevice bluetoothDevice, int rssi, byte[] scanRecord) {
+        public void onLeScan(BluetoothDevice bluetoothDevice, int rssi, byte[] scanRecord, long timestamp) {
             Beacon beacon = null;
             for (BeaconParser parser : beaconParsers) {
-                beacon = parser.fromScanData(scanRecord, rssi, bluetoothDevice);
+                beacon = parser.fromScanData(scanRecord, rssi, bluetoothDevice, timestamp);
                 if (beacon != null) {
                     break;
                 }
