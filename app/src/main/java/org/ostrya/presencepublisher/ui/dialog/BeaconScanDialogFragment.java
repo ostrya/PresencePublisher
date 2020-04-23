@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,7 +51,8 @@ public class BeaconScanDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
-        View view = inflater.inflate(R.layout.dialog_beacon_scan, null);
+        ViewGroup root = requireActivity().findViewById(android.R.id.content);
+        View view = inflater.inflate(R.layout.dialog_beacon_scan, root, false);
 
         progressBar = view.findViewById(R.id.beaconScanProgress);
         progressBar.setIndeterminate(true);

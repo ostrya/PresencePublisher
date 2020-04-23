@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -42,7 +43,8 @@ public class EditTextDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View view = inflater.inflate(R.layout.dialog_edit_text, null);
+        ViewGroup root = requireActivity().findViewById(android.R.id.content);
+        View view = inflater.inflate(R.layout.dialog_edit_text, root, false);
 
         EditText editText = view.findViewById(android.R.id.edit);
         if (editText != null) {
