@@ -30,10 +30,9 @@ import org.ostrya.presencepublisher.R;
 import java.util.Collection;
 import java.util.Set;
 
-import static android.content.ContentValues.TAG;
-
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class BeaconScanDialogFragment extends DialogFragment implements BeaconConsumer {
+    private static final String TAG = "BeaconScanDialogFragment";
     private static final String REGION_ID = "scan_region_id";
     private BeaconManager beaconManager;
     private ScanCallback scanCallback;

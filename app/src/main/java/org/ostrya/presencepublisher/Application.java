@@ -70,6 +70,7 @@ public class Application extends android.app.Application {
     private void initBeaconReceiver() {
         if (supportsBeacons()) {
             LogManager.setLogger(new HyperlogLogger());
+            LogManager.setVerboseLoggingEnabled(BuildConfig.DEBUG);
             Beacon.setHardwareEqualityEnforced(true);
             Beacon.setDistanceCalculator(new ModelSpecificDistanceCalculator(this, org.altbeacon.beacon.BeaconManager.getDistanceModelUpdateUrl()));
             org.altbeacon.beacon.BeaconManager beaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(this);
