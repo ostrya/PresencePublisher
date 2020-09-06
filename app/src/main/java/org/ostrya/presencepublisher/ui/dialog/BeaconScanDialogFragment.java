@@ -163,15 +163,23 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
         public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
             HyperLog.v(TAG, "Got callback from beacon scan for region " + region);
             for (Beacon beacon : beacons) {
-                if (beacon != null) {
-                    if (beacon.getBluetoothName() != null && beacon.getBluetoothAddress() != null) {
-                        HyperLog.d(TAG, "Found beacon " + beacon);
-                        adapter.addBeacon(beacon);
-                    } else {
-                        HyperLog.d(TAG, "Beacon " + beacon + " is incomplete: " + beacon.getBluetoothName() + "/" + beacon.getBluetoothAddress());
-                    }
+                if (beacon != null && beacon.getBluetoothAddress() != null) {
+                    HyperLog.d(TAG, "Found beacon " + beacon);
+                    adapter.addBeacon(fixEmptyName(beacon));
+                } else {
+                    HyperLog.w(TAG, "Beacon " + beacon + " does not have a Bluetooth address");
                 }
             }
+        }
+
+        private Beacon fixEmptyName(Beacon beacon) {
+            if (beacon.getBluetoothName() != null) {
+                return beacon;
+            }
+            return new Beacon.Builder()
+                    .copyBeaconFields(beacon)
+                    .setBluetoothName(beacon.getBluetoothAddress())
+                    .build();
         }
     }
 }
