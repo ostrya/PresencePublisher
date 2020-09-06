@@ -97,7 +97,7 @@ public class Publisher {
     }
 
     public void scheduleNow() {
-        scheduleFor(System.currentTimeMillis(), false);
+        scheduleFor(System.currentTimeMillis() + 1_000L, false);
     }
 
     private void scheduleNext() {
