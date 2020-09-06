@@ -161,13 +161,14 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
     private class ScanCallback implements RangeNotifier {
         @Override
         public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+            HyperLog.v(TAG, "Got callback from beacon scan for region " + region);
             for (Beacon beacon : beacons) {
                 if (beacon != null) {
                     if (beacon.getBluetoothName() != null && beacon.getBluetoothAddress() != null) {
                         HyperLog.d(TAG, "Found beacon " + beacon);
                         adapter.addBeacon(beacon);
                     } else {
-                        HyperLog.d(TAG, "Beacon " + beacon + " is not complete: " + beacon.getBluetoothName() + "/" + beacon.getBluetoothAddress());
+                        HyperLog.d(TAG, "Beacon " + beacon + " is incomplete: " + beacon.getBluetoothName() + "/" + beacon.getBluetoothAddress());
                     }
                 }
             }
