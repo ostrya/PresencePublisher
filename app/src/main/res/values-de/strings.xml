@@ -82,4 +82,5 @@
     <string name="remove_region_warning_message">Diese Beacon-Region wirklich entfernen?</string>
     <string name="no_bluetooth_explanation">Dein Gerät unterstützt keine Bluetooth-Beacons.</string>
     <string name="dialog_scan_beacons_title">Beacons in der Nähe</string>
+    <string name="toast_scan_failed">Beacon-Suche fehlgeschlagen</string>
 </resources>

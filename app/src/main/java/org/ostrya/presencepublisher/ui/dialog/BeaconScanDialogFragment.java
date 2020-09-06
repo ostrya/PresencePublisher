@@ -132,7 +132,7 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
             beaconManager.startRangingBeaconsInRegion(region);
         } catch (RemoteException e) {
             HyperLog.e(TAG, "Unable to start scanning for beacons", e);
-            Toast.makeText(requireContext(), "Scanning for beacons failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.toast_scan_failed, Toast.LENGTH_SHORT).show();
         }
     }
 
