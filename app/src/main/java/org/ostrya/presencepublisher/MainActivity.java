@@ -22,7 +22,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 import com.hypertrack.hyperlog.HyperLog;
-import org.ostrya.presencepublisher.mqtt.Publisher;
+import org.ostrya.presencepublisher.schedule.Scheduler;
 import org.ostrya.presencepublisher.ui.MainPagerAdapter;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
@@ -83,7 +83,7 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceListener);
-        new Publisher(this).scheduleNow();
+        new Scheduler(this).scheduleNow();
     }
 
     @Override
@@ -114,7 +114,7 @@ public class MainActivity extends FragmentActivity {
             checkBatteryOptimizationAndStartWorker();
         } else if (requestCode == BATTERY_OPTIMIZATION_REQUEST_CODE) {
             HyperLog.d(TAG, "Returning from battery optimization with result " + resultCode);
-            new Publisher(this).scheduleNow();
+            new Scheduler(this).scheduleNow();
         }
     }
 
@@ -136,7 +136,7 @@ public class MainActivity extends FragmentActivity {
             case USERNAME:
             case USE_TLS:
                 HyperLog.i(TAG, "Changed parameter " + key);
-                new Publisher(this).scheduleNow();
+                new Scheduler(this).scheduleNow();
                 break;
             case AUTOSTART:
             case LAST_SUCCESS:
@@ -145,7 +145,7 @@ public class MainActivity extends FragmentActivity {
             default:
                 if (key.startsWith(WIFI_CONTENT_PREFIX)) {
                     HyperLog.i(TAG, "Changed parameter " + key);
-                    new Publisher(this).scheduleNow();
+                    new Scheduler(this).scheduleNow();
                 } else {
                     HyperLog.v(TAG, "Ignoring unexpected value " + key);
                 }
@@ -248,7 +248,7 @@ public class MainActivity extends FragmentActivity {
             }, R.string.battery_optimization_dialog_title, R.string.battery_optimization_dialog_message);
             fragment.show(fm, null);
         } else {
-            new Publisher(this).scheduleNow();
+            new Scheduler(this).scheduleNow();
         }
     }
 }

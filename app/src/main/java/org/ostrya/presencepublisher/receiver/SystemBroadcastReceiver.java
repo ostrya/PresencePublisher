@@ -8,7 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
-import org.ostrya.presencepublisher.mqtt.Publisher;
+import org.ostrya.presencepublisher.schedule.Scheduler;
 
 import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
@@ -32,11 +32,11 @@ public class SystemBroadcastReceiver extends BroadcastReceiver {
                     || networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET
                     || useMobile)) {
                 HyperLog.i(TAG, "Reacting to network change");
-                new Publisher(context).scheduleNow();
+                new Scheduler(context).scheduleNow();
             }
         } else if (Intent.ACTION_BOOT_COMPLETED.equals(action) && sharedPreferences.getBoolean(AUTOSTART, false)) {
             HyperLog.i(TAG, "Starting after boot");
-            new Publisher(context).scheduleNow();
+            new Scheduler(context).scheduleNow();
         }
     }
 
