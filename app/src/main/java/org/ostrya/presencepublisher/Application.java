@@ -74,6 +74,7 @@ public class Application extends android.app.Application {
             Beacon.setHardwareEqualityEnforced(true);
             Beacon.setDistanceCalculator(new ModelSpecificDistanceCalculator(this, org.altbeacon.beacon.BeaconManager.getDistanceModelUpdateUrl()));
             org.altbeacon.beacon.BeaconManager beaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(this);
+            beaconManager.setBackgroundMode(true);
             List<BeaconParser> beaconParsers = beaconManager.getBeaconParsers();
             beaconParsers.add(new BeaconParser("iBeacon")
                     .setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));

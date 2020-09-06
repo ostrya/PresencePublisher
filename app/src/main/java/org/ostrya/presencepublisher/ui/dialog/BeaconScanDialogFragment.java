@@ -119,6 +119,7 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
         } catch (RemoteException e) {
             HyperLog.e(TAG, "Unable to stop scanning for beacons", e);
         }
+        beaconManager.setBackgroundMode(true);
         beaconManager.removeRangeNotifier(scanCallback);
         progressBar.setVisibility(View.GONE);
     }
@@ -127,6 +128,7 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
     public void onBeaconServiceConnect() {
         try {
             HyperLog.i(TAG, "Starting to scan for beacons");
+            beaconManager.setBackgroundMode(false);
             beaconManager.addRangeNotifier(scanCallback);
             beaconManager.startRangingBeaconsInRegion(region);
         } catch (RemoteException e) {
