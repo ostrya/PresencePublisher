@@ -3,11 +3,10 @@ package org.ostrya.presencepublisher.security;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.security.keystore.KeyGenParameterSpec;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceDataStore;
 import androidx.security.crypto.EncryptedSharedPreferences;
-import androidx.security.crypto.MasterKeys;
+import androidx.security.crypto.MasterKey;
 import com.hypertrack.hyperlog.HyperLog;
 
 public class SecurePreferencesHelper {
@@ -35,13 +34,14 @@ public class SecurePreferencesHelper {
     public static SharedPreferences getSecurePreferences(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
-                String masterKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
+                MasterKey masterKey = new MasterKey.Builder(context)
+                        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                        .build();
                 return EncryptedSharedPreferences
                         .create(
-                                FILENAME,
-                                masterKeyAlias,
                                 context,
+                                FILENAME,
+                                masterKey,
                                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
                         );
