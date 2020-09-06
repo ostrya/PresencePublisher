@@ -16,6 +16,8 @@
     <string name="message_schedule_title">Publish period</string>
     <string name="message_schedule_summary">The time between messages in minutes.</string>
     <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>
+    <string name="message_charging_schedule_title">Charging publish period</string>
+    <string name="message_charging_schedule_summary">Publish period while device is charging.\nFor value = 0 the normal schedule is used.</string>
     <string name="permission_dialog_title">Location permission</string>
     <string name="permission_dialog_message">Please allow access to fine location all the time. Otherwise, this app will not be able to
         retrieve the currently connected WiFi name or find Bluetooth beacons.

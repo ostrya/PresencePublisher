@@ -8,6 +8,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 import org.ostrya.presencepublisher.ui.preference.schedule.AutostartPreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.BatteryTopicPreference;
+import org.ostrya.presencepublisher.ui.preference.schedule.ChargingMessageSchedulePreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference;
@@ -30,6 +31,7 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
 
         Preference messageSchedule = new MessageSchedulePreference(context);
+        Preference chargingMessageSchedule = new ChargingMessageSchedulePreference(context);
         Preference presenceTopic = new PresenceTopicPreference(context);
 
         Preference sendBatteryMessage = new SendBatteryMessagePreference(context);
@@ -41,6 +43,7 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
         nextSchedule = new NextScheduleTimestampPreference(context);
 
         screen.addPreference(messageSchedule);
+        screen.addPreference(chargingMessageSchedule);
         screen.addPreference(presenceTopic);
         screen.addPreference(sendBatteryMessage);
         screen.addPreference(batteryTopic);

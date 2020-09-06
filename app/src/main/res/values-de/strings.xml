@@ -83,4 +83,6 @@
     <string name="no_bluetooth_explanation">Dein Gerät unterstützt keine Bluetooth-Beacons.</string>
     <string name="dialog_scan_beacons_title">Beacons in der Nähe</string>
     <string name="toast_scan_failed">Beacon-Suche fehlgeschlagen</string>
+    <string name="message_charging_schedule_title">Ladesendeperiode</string>
+    <string name="message_charging_schedule_summary">Sendeperiode, wenn das Gerät geladen wird.\nBei Wert = 0 wird die normale Periode benutzt.</string>
 </resources>
