@@ -6,8 +6,8 @@ buildscript {
 }
 
 plugins {
-    id("com.github.triplet.play") version "2.7.5"
-    id("com.jaredsburrows.license") version "0.8.70"
+    id("com.github.triplet.play") version "2.8.0"
+    id("com.jaredsburrows.license") version "0.8.80"
     id("org.ajoberstar.grgit") version "4.0.2"
     id("com.android.application")
 }
@@ -99,14 +99,14 @@ play {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.2.0-beta01")
+    implementation("androidx.appcompat:appcompat:1.2.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.preference:preference:1.1.1")
-    implementation("androidx.security:security-crypto:1.0.0-rc01")
+    implementation("androidx.security:security-crypto:1.1.0-alpha02")
     implementation("com.hypertrack:hyperlog:0.0.10") {
         exclude(group = "com.android.support")
         exclude(group = "com.android.volley")
     }
-    implementation("org.altbeacon:android-beacon-library:2.17")
-    implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.2")
+    implementation("org.altbeacon:android-beacon-library:2.17.1")
+    implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
 }
