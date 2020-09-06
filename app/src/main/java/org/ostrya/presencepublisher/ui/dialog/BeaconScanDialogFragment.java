@@ -162,9 +162,13 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
         @Override
         public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
             for (Beacon beacon : beacons) {
-                if (beacon != null && beacon.getBluetoothName() != null && beacon.getBluetoothAddress() != null) {
-                    HyperLog.d(TAG, "Found beacon " + beacon);
-                    adapter.addBeacon(beacon);
+                if (beacon != null) {
+                    if (beacon.getBluetoothName() != null && beacon.getBluetoothAddress() != null) {
+                        HyperLog.d(TAG, "Found beacon " + beacon);
+                        adapter.addBeacon(beacon);
+                    } else {
+                        HyperLog.d(TAG, "Beacon " + beacon + " is not complete: " + beacon.getBluetoothName() + "/" + beacon.getBluetoothAddress());
+                    }
                 }
             }
         }
