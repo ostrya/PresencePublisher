@@ -44,7 +44,7 @@ public class WifiNetworkPreference extends TextPreferenceBase implements View.On
     @Override
     public boolean onLongClick(View v) {
         ConfirmationDialogFragment instance = getInstance(this::deleteOnContinue, R.string.remove_network_title, R.string.remove_network_warning_message);
-        instance.show(fragment.requireFragmentManager(), null);
+        instance.show(fragment.getParentFragmentManager(), null);
         return true;
     }
 

@@ -41,7 +41,7 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
         setOnPreferenceChangeListener((prefs, newValue) -> {
             if (addNew.equals(newValue)) {
                 EditTextDialog instance = EditTextDialog.getInstance(this::onEditText, R.string.add_network_title);
-                instance.show(fragment.requireFragmentManager(), null);
+                instance.show(fragment.getParentFragmentManager(), null);
             } else {
                 saveNewNetwork((String) newValue);
             }

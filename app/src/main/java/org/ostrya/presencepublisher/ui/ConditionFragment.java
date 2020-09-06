@@ -39,7 +39,6 @@ public class ConditionFragment extends PreferenceFragmentCompat {
 
     private final SharedPreferences.OnSharedPreferenceChangeListener listener = this::onPreferencesChanged;
     private Context context;
-    private boolean beaconsSupported = false;
     private AddNetworkChoicePreferenceDummy addNetworkChoice;
     @Nullable
     private AddBeaconChoicePreferenceDummy addBeaconChoice;
@@ -51,7 +50,7 @@ public class ConditionFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         context = getPreferenceManager().getContext();
-        beaconsSupported = ((Application) context.getApplicationContext()).supportsBeacons();
+        boolean beaconsSupported = ((Application) context.getApplicationContext()).supportsBeacons();
         SharedPreferences preference = getPreferenceManager().getSharedPreferences();
         currentNetworks = Collections.unmodifiableSet(preference.getStringSet(SSID_LIST, Collections.emptySet()));
         currentBeacons = Collections.unmodifiableSet(preference.getStringSet(BEACON_LIST, Collections.emptySet()));

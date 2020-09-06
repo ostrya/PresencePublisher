@@ -46,7 +46,7 @@ public class AddBeaconChoicePreferenceDummy extends Preference {
             }
             BeaconScanDialogFragment instance = getInstance(getContext(), this::onScanResult,
                     getSharedPreferences().getStringSet(BEACON_LIST, Collections.emptySet()));
-            instance.show(fragment.requireFragmentManager(), null);
+            instance.show(fragment.getParentFragmentManager(), null);
             return true;
         });
     }

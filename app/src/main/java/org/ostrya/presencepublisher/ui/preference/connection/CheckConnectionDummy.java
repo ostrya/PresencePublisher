@@ -16,7 +16,7 @@ public class CheckConnectionDummy extends Preference {
         setIcon(R.drawable.ic_notification);
         setOnPreferenceClickListener(prefs -> {
             CheckConnectionDialogFragment instance = getInstance(context);
-            instance.show(fragment.requireFragmentManager(), null);
+            instance.show(fragment.getParentFragmentManager(), null);
             return true;
         });
     }

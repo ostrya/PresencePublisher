@@ -56,24 +56,6 @@ public class CheckConnectionDialogFragment extends DialogFragment {
         this.context = context;
     }
 
-    private String getErrorString(Throwable e) {
-        String message;
-        if (e instanceof MqttException) {
-            if (((MqttException) e).getReasonCode() == MqttException.REASON_CODE_CLIENT_EXCEPTION) {
-                message = genericExceptionToString(e.getCause());
-            } else {
-                message = e.getLocalizedMessage();
-            }
-        } else {
-            message = genericExceptionToString(e);
-        }
-        return context.getString(R.string.dialog_check_connection_summary_failure, message);
-    }
-
-    private String genericExceptionToString(Throwable e) {
-        return e.getClass().getSimpleName() + ": " + e.getLocalizedMessage();
-    }
-
     private class ConnectionTestWorker implements Runnable {
         private final AlertDialog alertDialog;
 
@@ -96,6 +78,24 @@ public class CheckConnectionDialogFragment extends DialogFragment {
                 alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setText(R.string.dialog_ok);
                 alertDialog.setMessage(result);
             });
+        }
+
+        private String getErrorString(Throwable e) {
+            String message;
+            if (e instanceof MqttException) {
+                if (((MqttException) e).getReasonCode() == MqttException.REASON_CODE_CLIENT_EXCEPTION) {
+                    message = genericExceptionToString(e.getCause() == null ? e : e.getCause());
+                } else {
+                    message = e.getLocalizedMessage();
+                }
+            } else {
+                message = genericExceptionToString(e);
+            }
+            return context.getString(R.string.dialog_check_connection_summary_failure, message);
+        }
+
+        private String genericExceptionToString(Throwable e) {
+            return e.getClass().getSimpleName() + ": " + e.getLocalizedMessage();
         }
     }
 }
