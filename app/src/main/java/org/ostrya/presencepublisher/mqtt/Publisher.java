@@ -151,7 +151,7 @@ public class Publisher {
         if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
             return false;
         }
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             for (Network network : connectivityManager.getAllNetworks()) {
                 NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(network);
                 if (networkCapabilities != null && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
@@ -159,10 +159,15 @@ public class Publisher {
                 }
             }
             return sendViaMobile();
-        } else {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //noinspection deprecation
             return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI
                     || activeNetworkInfo.getType() == ConnectivityManager.TYPE_VPN
+                    || activeNetworkInfo.getType() == ConnectivityManager.TYPE_ETHERNET
+                    || sendViaMobile();
+        } else {
+            //noinspection deprecation
+            return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI
                     || activeNetworkInfo.getType() == ConnectivityManager.TYPE_ETHERNET
                     || sendViaMobile();
         }
