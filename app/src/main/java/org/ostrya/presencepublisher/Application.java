@@ -22,10 +22,12 @@ import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
 
 public class Application extends android.app.Application {
+    private static final String TAG = "Application";
     public static final int PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_REQUEST_CODE = 2;
     public static final int BATTERY_OPTIMIZATION_REQUEST_CODE = 3;
@@ -78,8 +80,13 @@ public class Application extends android.app.Application {
                     .setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT));
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if (!sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()).isEmpty()) {
+            Set<String> beacons = sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet());
+            if (!beacons.isEmpty()) {
+                HyperLog.i(TAG, "Enabling beacon scanning for " + beacons);
                 BeaconManager.getInstance().initialize(this);
+            } else {
+                HyperLog.i(TAG, "No beacons configured, not enabling background beacon scanning");
+                return;
             }
             if (Build.VERSION.SDK_INT >= 18) {
                 backgroundPowerSaver = new BackgroundPowerSaver(this);

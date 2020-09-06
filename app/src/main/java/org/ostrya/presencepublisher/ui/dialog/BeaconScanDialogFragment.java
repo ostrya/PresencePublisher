@@ -1,14 +1,17 @@
 package org.ostrya.presencepublisher.ui.dialog;
 
 import android.app.Dialog;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -16,22 +19,25 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.hypertrack.hyperlog.HyperLog;
 import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.service.scanner.CycledLeScanCallback;
-import org.altbeacon.beacon.service.scanner.CycledLeScanner;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
 import org.ostrya.presencepublisher.R;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
-@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-public class BeaconScanDialogFragment extends DialogFragment {
-    private static final long SCAN_TIME_MILLIS = 20_000;
+import static android.content.ContentValues.TAG;
 
-    private CycledLeScanner leScanner;
-    private List<BeaconParser> beaconParsers;
+@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+public class BeaconScanDialogFragment extends DialogFragment implements BeaconConsumer {
+    private static final String REGION_ID = "scan_region_id";
+    private BeaconManager beaconManager;
+    private ScanCallback scanCallback;
+    private Region region;
     private DialogCallback dialogCallback;
     private Set<String> knownBeacons;
     private ProgressBar progressBar;
@@ -39,9 +45,9 @@ public class BeaconScanDialogFragment extends DialogFragment {
 
     public static BeaconScanDialogFragment getInstance(Context context, DialogCallback dialogCallback, Set<String> knownBeacons) {
         BeaconScanDialogFragment fragment = new BeaconScanDialogFragment();
-        fragment.setLeScanner(CycledLeScanner.createScanner(context, SCAN_TIME_MILLIS, 0L, false,
-                fragment.new ScanCallback(), null));
-        fragment.setBeaconParsers(BeaconManager.getInstanceForApplication(context.getApplicationContext()).getBeaconParsers());
+        fragment.setScanCallback(fragment.new ScanCallback());
+        fragment.setRegion(new Region(REGION_ID, null, null, null));
+        fragment.setBeaconManager(BeaconManager.getInstanceForApplication(context.getApplicationContext()));
         fragment.setDialogCallback(dialogCallback);
         fragment.setKnownBeacons(knownBeacons);
         return fragment;
@@ -69,10 +75,17 @@ public class BeaconScanDialogFragment extends DialogFragment {
         builder.setTitle(R.string.dialog_scan_beacons_title)
                 .setView(view)
                 .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {
-                    leScanner.stop();
+                    stopScan();
                     dialogCallback.accept(null);
                 });
         return builder.create();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        stopScan();
+        beaconManager.unbind(this);
     }
 
     private void onSelect(Beacon beacon) {
@@ -80,13 +93,17 @@ public class BeaconScanDialogFragment extends DialogFragment {
         dismiss();
     }
 
-    private void setLeScanner(CycledLeScanner leScanner) {
-        this.leScanner = leScanner;
-        this.leScanner.start();
+    private void setBeaconManager(BeaconManager beaconManager) {
+        this.beaconManager = beaconManager;
+        beaconManager.bind(this);
     }
 
-    public void setBeaconParsers(List<BeaconParser> beaconParsers) {
-        this.beaconParsers = beaconParsers;
+    public void setScanCallback(ScanCallback scanCallback) {
+        this.scanCallback = scanCallback;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
 
     private void setDialogCallback(DialogCallback dialogCallback) {
@@ -97,29 +114,58 @@ public class BeaconScanDialogFragment extends DialogFragment {
         this.knownBeacons = knownBeacons;
     }
 
+    private void stopScan() {
+        try {
+            beaconManager.stopRangingBeaconsInRegion(region);
+        } catch (RemoteException e) {
+            HyperLog.e(TAG, "Unable to stop scanning for beacons", e);
+        }
+        beaconManager.removeRangeNotifier(scanCallback);
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onBeaconServiceConnect() {
+        try {
+            HyperLog.i(TAG, "Starting to scan for beacons");
+            beaconManager.addRangeNotifier(scanCallback);
+            beaconManager.startRangingBeaconsInRegion(region);
+        } catch (RemoteException e) {
+            HyperLog.e(TAG, "Unable to start scanning for beacons", e);
+            Toast.makeText(requireContext(), "Scanning for beacons failed", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public Context getApplicationContext() {
+        return requireContext();
+    }
+
+    @Override
+    public void unbindService(ServiceConnection serviceConnection) {
+        HyperLog.i(TAG, "Unbinding from BeaconManager service");
+        requireActivity().unbindService(serviceConnection);
+    }
+
+    @Override
+    public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
+        HyperLog.i(TAG, "Binding to BeaconManager service");
+        return requireActivity().bindService(intent, serviceConnection, i);
+    }
+
     public interface DialogCallback {
         void accept(@Nullable Beacon beacon);
     }
 
-    private class ScanCallback implements CycledLeScanCallback {
+    private class ScanCallback implements RangeNotifier {
         @Override
-        public void onLeScan(BluetoothDevice bluetoothDevice, int rssi, byte[] scanRecord, long timestamp) {
-            Beacon beacon = null;
-            for (BeaconParser parser : beaconParsers) {
-                beacon = parser.fromScanData(scanRecord, rssi, bluetoothDevice, timestamp);
-                if (beacon != null) {
-                    break;
+        public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+            for (Beacon beacon : beacons) {
+                if (beacon != null && beacon.getBluetoothName() != null && beacon.getBluetoothAddress() != null) {
+                    HyperLog.d(TAG, "Found beacon " + beacon);
+                    adapter.addBeacon(beacon);
                 }
             }
-            if (beacon != null && beacon.getBluetoothName() != null && beacon.getBluetoothAddress() != null) {
-                adapter.addBeacon(beacon);
-            }
-        }
-
-        @Override
-        public void onCycleEnd() {
-            leScanner.stop();
-            progressBar.setVisibility(View.GONE);
         }
     }
 }

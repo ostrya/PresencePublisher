@@ -42,10 +42,6 @@ public final class BeaconManager {
         Context applicationContext = context.getApplicationContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         List<Region> configuredScanRegions = getConfiguredScanRegions(sharedPreferences);
-        if (configuredScanRegions.isEmpty()) {
-            HyperLog.i(TAG, "No beacons configured, not enabling beacon scanning");
-            return;
-        }
         RegionMonitorNotifier monitorNotifier = new RegionMonitorNotifier(sharedPreferences);
         regionBootstrap = new RegionBootstrap(applicationContext, monitorNotifier, configuredScanRegions);
     }
