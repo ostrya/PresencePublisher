@@ -1,8 +1,7 @@
+v2.1.1
+• Fixed NullPointerException when detecting some beacons (#25).
+
 v2.1.0
 • Added ability to configure publishing period separately when device is charging (#24).
 • Fixed issue with beacons that do not have a name (#22).
 • Fixed issue with publishing sometimes stopping (#23).
-
-v2.0.0
-• Added initial support for Bluetooth beacons.
-• Fixed that battery messages where being sent via mobile regardless of settings.
