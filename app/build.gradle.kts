@@ -33,7 +33,7 @@ android {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
         targetSdkVersion(29)
-        versionCode = 27
+        versionCode = 28
         versionName = "2.1.0"
     }
     signingConfigs {
