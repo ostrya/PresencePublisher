@@ -10,9 +10,9 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 import com.hypertrack.hyperlog.HyperLog;
-import org.altbeacon.beacon.Beacon;
 import org.ostrya.presencepublisher.R;
-import org.ostrya.presencepublisher.beacon.BeaconManager;
+import org.ostrya.presencepublisher.beacon.PresenceBeacon;
+import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.ui.dialog.BeaconScanDialogFragment;
 
 import java.util.Collections;
@@ -52,10 +52,10 @@ public class AddBeaconChoicePreferenceDummy extends Preference {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void onScanResult(@Nullable Beacon beacon) {
+    private void onScanResult(@Nullable PresenceBeacon beacon) {
         if (beacon == null) {
             return;
         }
-        BeaconManager.getInstance().addBeacon(getContext(), beacon);
+        PresenceBeaconManager.getInstance().addBeacon(getContext(), beacon);
     }
 }

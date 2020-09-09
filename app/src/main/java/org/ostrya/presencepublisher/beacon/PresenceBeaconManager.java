@@ -8,10 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
-import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.RegionBootstrap;
-import org.ostrya.presencepublisher.ui.util.BeaconIdHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,18 +21,18 @@ import static org.ostrya.presencepublisher.beacon.RegionMonitorNotifier.FOUND_BE
 import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-public final class BeaconManager {
-    private static final String TAG = "BeaconManager";
-    private static final BeaconManager INSTANCE = new BeaconManager();
+public final class PresenceBeaconManager {
+    private static final String TAG = "PresenceBeaconManager";
+    private static final PresenceBeaconManager INSTANCE = new PresenceBeaconManager();
 
     @GuardedBy("this")
     @Nullable
     private RegionBootstrap regionBootstrap;
 
-    private BeaconManager() {
+    private PresenceBeaconManager() {
     }
 
-    public static BeaconManager getInstance() {
+    public static PresenceBeaconManager getInstance() {
         return INSTANCE;
     }
 
@@ -50,23 +48,23 @@ public final class BeaconManager {
         Set<String> beaconList = sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet());
         List<Region> scanRegions = new ArrayList<>(beaconList.size());
         for (String beaconId : beaconList) {
-            String address = BeaconIdHelper.toAddress(beaconId);
+            String address = PresenceBeacon.beaconIdToAddress(beaconId);
             HyperLog.d(TAG, "Registering scan region for beacon " + beaconId);
             scanRegions.add(new Region(beaconId, address));
         }
         return scanRegions;
     }
 
-    public synchronized void addBeacon(Context context, Beacon beacon) {
+    public synchronized void addBeacon(Context context, PresenceBeacon beacon) {
         Context applicationContext = context.getApplicationContext();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         Set<String> storedBeacons = new HashSet<>(sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()));
-        String beaconId = BeaconIdHelper.toBeaconId(beacon);
+        String beaconId = beacon.toBeaconId();
         storedBeacons.add(beaconId);
         sharedPreferences.edit().putStringSet(BEACON_LIST, storedBeacons).apply();
 
         HyperLog.d(TAG, "Add scanning for beacon " + beaconId);
-        Region region = new Region(beaconId, beacon.getBluetoothAddress());
+        Region region = new Region(beaconId, beacon.getAddress());
         if (regionBootstrap == null) {
             HyperLog.d(TAG, "Start scanning for beacons");
             RegionMonitorNotifier monitorNotifier = new RegionMonitorNotifier(sharedPreferences);
@@ -89,7 +87,7 @@ public final class BeaconManager {
                 .apply();
 
         HyperLog.d(TAG, "Remove scanning for beacon " + beaconId);
-        Region region = new Region(beaconId, BeaconIdHelper.toAddress(beaconId));
+        Region region = new Region(beaconId, PresenceBeacon.beaconIdToAddress(beaconId));
         if (regionBootstrap != null) {
             if (storedBeacons.isEmpty()) {
                 HyperLog.i(TAG, "Disable scanning for beacons");

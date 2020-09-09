@@ -13,8 +13,8 @@ import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.distance.ModelSpecificDistanceCalculator;
 import org.altbeacon.beacon.logging.LogManager;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
-import org.ostrya.presencepublisher.beacon.BeaconManager;
 import org.ostrya.presencepublisher.beacon.HyperlogLogger;
+import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.log.CustomLogFormat;
 import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
 import org.ostrya.presencepublisher.receiver.SystemBroadcastReceiver;
@@ -85,7 +85,7 @@ public class Application extends android.app.Application {
             Set<String> beacons = sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet());
             if (!beacons.isEmpty()) {
                 HyperLog.i(TAG, "Enabling beacon scanning for " + beacons);
-                BeaconManager.getInstance().initialize(this);
+                PresenceBeaconManager.getInstance().initialize(this);
             } else {
                 HyperLog.i(TAG, "No beacons configured, not enabling background beacon scanning");
                 return;

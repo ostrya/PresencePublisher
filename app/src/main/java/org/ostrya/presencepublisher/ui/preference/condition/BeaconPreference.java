@@ -7,7 +7,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceViewHolder;
 import org.ostrya.presencepublisher.R;
-import org.ostrya.presencepublisher.beacon.BeaconManager;
+import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 import org.ostrya.presencepublisher.ui.preference.common.TextPreferenceBase;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
@@ -49,7 +49,7 @@ public class BeaconPreference extends TextPreferenceBase implements View.OnLongC
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void deleteOnContinue(boolean ok) {
         if (ok) {
-            BeaconManager.getInstance().removeBeacon(getContext(), beaconId);
+            PresenceBeaconManager.getInstance().removeBeacon(getContext(), beaconId);
         }
     }
 

@@ -26,6 +26,7 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.beacon.PresenceBeacon;
 
 import java.util.Collection;
 import java.util.Set;
@@ -87,7 +88,7 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
         beaconManager.unbind(this);
     }
 
-    private void onSelect(Beacon beacon) {
+    private void onSelect(PresenceBeacon beacon) {
         dialogCallback.accept(beacon);
         dismiss();
     }
@@ -155,7 +156,7 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
     }
 
     public interface DialogCallback {
-        void accept(@Nullable Beacon beacon);
+        void accept(@Nullable PresenceBeacon beacon);
     }
 
     private class ScanCallback implements RangeNotifier {
@@ -163,23 +164,13 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
         public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
             HyperLog.v(TAG, "Got callback from beacon scan for region " + region);
             for (Beacon beacon : beacons) {
-                if (beacon != null && beacon.getBluetoothAddress() != null) {
+                if (beacon != null && beacon.getBluetoothAddress() != null && beacon.getParserIdentifier() != null) {
                     HyperLog.d(TAG, "Found beacon " + beacon);
-                    adapter.addBeacon(fixEmptyName(beacon));
+                    adapter.addBeacon(new PresenceBeacon(beacon));
                 } else {
-                    HyperLog.w(TAG, "Beacon " + beacon + " does not have a Bluetooth address");
+                    HyperLog.w(TAG, "Beacon " + beacon + " is incomplete");
                 }
             }
-        }
-
-        private Beacon fixEmptyName(Beacon beacon) {
-            if (beacon.getBluetoothName() != null) {
-                return beacon;
-            }
-            return new Beacon.Builder()
-                    .copyBeaconFields(beacon)
-                    .setBluetoothName(beacon.getBluetoothAddress())
-                    .build();
         }
     }
 }
