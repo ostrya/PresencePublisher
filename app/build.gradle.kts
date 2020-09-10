@@ -3,28 +3,31 @@ buildscript {
     repositories {
         google()
     }
+    dependencies {
+        classpath("org.eclipse.jgit:org.eclipse.jgit:5.8.1.202007141445-r")
+    }
 }
 
 plugins {
     id("com.github.triplet.play") version "2.8.0"
     id("com.jaredsburrows.license") version "0.8.80"
-    id("org.ajoberstar.grgit") version "4.0.2"
     id("com.android.application")
 }
 
+val git = org.eclipse.jgit.api.Git.open(rootDir)
+
 fun getBuildVersionCode(): Int {
-    // The IDE is not clever enough to understand the groovy style syntax grgit.tag.list() here ...
-    val tagList = org.ajoberstar.grgit.operation.TagListOp(grgit.repository).call()
-    val tagCount = tagList.count { it.name.matches(Regex("v[1-9].*")) }
+    val tagList = git.tagList().call()
+    val tagCount = tagList.count { it.name.matches(Regex("refs/tags/v[1-9].*")) }
     return if (isTagged()) tagCount else tagCount + 1
 }
 
 fun getBuildVersionName(): String {
-    return grgit.describe(mapOf<String, Any>("tags" to true, "match" to arrayOf("v[1-9]*"))).substring(1)
+    return git.describe().setTags(true).setMatch("v[1-9].*").call().substring(1)
 }
 
 fun isTagged(): Boolean {
-    return getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))
+    return git.status().call().isClean && getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))
 }
 
 android {
@@ -33,7 +36,7 @@ android {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
         targetSdkVersion(29)
-        versionCode = 28
+        versionCode = 29
         versionName = "2.1.1"
     }
     signingConfigs {
@@ -72,7 +75,7 @@ val checkParameters by tasks.registering {
         if (android.defaultConfig.versionCode != getBuildVersionCode()) {
             throw InvalidUserDataException("Version code should be ${getBuildVersionCode()}")
         }
-        if (isTagged() && getBuildVersionName() != android.defaultConfig.versionName) {
+        if (isTagged() && android.defaultConfig.versionName != getBuildVersionName()) {
             throw InvalidUserDataException("Version name should be ${getBuildVersionName()}")
         }
     }
@@ -87,7 +90,7 @@ afterEvaluate {
     tasks.register("checkUpdatedLicenseFile") {
         dependsOn(licenseDebugReport)
         doLast {
-            if (grgit.status().unstaged.modified.contains("app/src/main/assets/open_source_licenses.html")) {
+            if (git.status().addPath("app/src/main/assets/open_source_licenses.html").call().hasUncommittedChanges()) {
                 throw InvalidUserDataException("License file has changed, please commit new version first")
             }
         }
