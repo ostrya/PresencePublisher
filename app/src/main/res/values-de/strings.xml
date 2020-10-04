@@ -89,4 +89,5 @@
     <string name="toast_scan_failed">Beacon-Suche fehlgeschlagen</string>
     <string name="message_charging_schedule_title">Ladesendeperiode</string>
     <string name="message_charging_schedule_summary">Sendeperiode, wenn das Gerät geladen wird.\nBei Wert = 0 wird die normale Periode benutzt.</string>
+    <string name="toast_logs_stored" formatted="true">Gespeichert nach \'%s\'</string>
 </resources>

@@ -89,4 +89,5 @@
     <string name="no_bluetooth_explanation">Your device does not support Bluetooth beacons.</string>
     <string name="dialog_scan_beacons_title">Beacons in range</string>
     <string name="toast_scan_failed">Scanning for beacons failed</string>
+    <string name="toast_logs_stored" formatted="true">Stored to \'%s\'</string>
 </resources>

@@ -36,7 +36,7 @@ public class LogFragment extends Fragment {
             return;
         }
         File logs = HyperLog.getDeviceLogsInFile(context.getApplicationContext(), false);
-        Toast.makeText(context, "Stored to " + logs, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, context.getString(R.string.toast_logs_stored, logs), Toast.LENGTH_LONG).show();
     }
 
     @Override
