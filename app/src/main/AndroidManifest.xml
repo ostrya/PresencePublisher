@@ -43,9 +43,16 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".receiver.SystemBroadcastReceiver">
+        <receiver android:name=".receiver.AutostartReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receiver.ConnectivityBroadcastReceiver">
+            <intent-filter>
+                <!-- only works until API level 25 -->
                 <action
                     android:name="android.net.conn.CONNECTIVITY_CHANGE"
                     tools:ignore="BatteryLife" />

@@ -52,7 +52,8 @@ public class Publisher {
 
     public void publish() {
         if (!sendMessageViaCurrentConnection()) {
-            HyperLog.i(TAG, "Not connected to valid network, not sending messages");
+            HyperLog.i(TAG, "Not connected to valid network, waiting for re-connect");
+            scheduler.waitForNetworkReconnect();
             return;
         }
         try {

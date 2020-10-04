@@ -1,9 +1,7 @@
 package org.ostrya.presencepublisher;
 
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.os.Build;
 import android.util.Log;
 import androidx.preference.PreferenceManager;
@@ -18,7 +16,6 @@ import org.ostrya.presencepublisher.beacon.HyperlogLogger;
 import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.log.CustomLogFormat;
 import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
-import org.ostrya.presencepublisher.receiver.SystemBroadcastReceiver;
 import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 
 import java.util.Collections;
@@ -37,6 +34,8 @@ public class Application extends android.app.Application {
     public static final int MAIN_ACTIVITY_REQUEST_CODE = 6;
     public static final int START_BLUETOOTH_REQUEST_CODE = 7;
     public static final int ON_DEMAND_BLUETOOTH_REQUEST_CODE = 8;
+    public static final int NETWORK_PENDING_INTENT_REQUEST_CODE = 9;
+    public static final String NETWORK_PENDINT_INTENT_ACTION = "org.ostrya.presencepublisher.network_pending_intent";
 
     private BackgroundPowerSaver backgroundPowerSaver;
 
@@ -44,7 +43,6 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
         initLogger();
-        initNetworkReceiver();
         initBeaconManager();
         NotificationFactory.createNotificationChannel(this);
     }
@@ -58,15 +56,6 @@ public class Application extends android.app.Application {
         }
         Thread.setDefaultUncaughtExceptionHandler(
             new LogUncaughtExceptionHandler(this, Thread.getDefaultUncaughtExceptionHandler()));
-    }
-
-    @SuppressWarnings("deprecation")
-    private void initNetworkReceiver() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            SystemBroadcastReceiver receiver = new SystemBroadcastReceiver();
-            IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-            registerReceiver(receiver, filter);
-        }
     }
 
     private void initBeaconManager() {

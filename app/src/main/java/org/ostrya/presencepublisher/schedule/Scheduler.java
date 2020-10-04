@@ -6,24 +6,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkRequest;
 import android.os.BatteryManager;
 import android.os.Build;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.receiver.AlarmReceiver;
+import org.ostrya.presencepublisher.receiver.ConnectivityBroadcastReceiver;
 import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 import static android.app.AlarmManager.RTC_WAKEUP;
-import static org.ostrya.presencepublisher.Application.ALARM_REQUEST_CODE;
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+import static android.net.NetworkCapabilities.*;
+import static org.ostrya.presencepublisher.Application.*;
 import static org.ostrya.presencepublisher.receiver.AlarmReceiver.ALARM_ACTION;
 import static org.ostrya.presencepublisher.ui.preference.schedule.ChargingMessageSchedulePreference.CHARGING_MESSAGE_SCHEDULE;
 import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
 import static org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePreference.MESSAGE_SCHEDULE;
 import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
+import static org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider.*;
 
 public class Scheduler {
     private static final String TAG = "Scheduler";
@@ -54,6 +57,7 @@ public class Scheduler {
             int messageScheduleInMinutes = sharedPreferences.getInt(CHARGING_MESSAGE_SCHEDULE, 0);
             if (messageScheduleInMinutes > 0) {
                 scheduleFor(System.currentTimeMillis() + messageScheduleInMinutes * 60_000L, true);
+                return;
             }
         }
         int messageScheduleInMinutes = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
@@ -61,8 +65,45 @@ public class Scheduler {
                 messageScheduleInMinutes < 15);
     }
 
+    /**
+     * This is the counterpart to the broadcast receiver ConnectivityBroadcastReceiver registered in the manifest
+     * for Android 8+, where most implicit broadcasts are no longer delivered.
+     */
+    public void waitForNetworkReconnect() {
+        // for Android 8+, we need to register a callback here, as the ConnectivityBroadcastReceiver registered
+        // in the manifest no longer gets any broadcasts
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            HyperLog.d(TAG, "Register network callback");
+            ConnectivityManager connectivityManager = applicationContext.getSystemService(ConnectivityManager.class);
+            if (connectivityManager == null) {
+                HyperLog.w(TAG, "Unable to get connectivity manager, re-scheduling even when disconnected");
+                scheduleNext();
+                return;
+            }
+            NetworkRequest.Builder requestBuilder = new NetworkRequest.Builder()
+                    .addTransportType(TRANSPORT_ETHERNET)
+                    .addTransportType(TRANSPORT_VPN)
+                    .addTransportType(TRANSPORT_WIFI);
+            if (ConnectivityBroadcastReceiver.useMobile(applicationContext)) {
+                requestBuilder.addTransportType(TRANSPORT_CELLULAR);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                requestBuilder.addCapability(NET_CAPABILITY_NOT_SUSPENDED)
+                        .addCapability(NET_CAPABILITY_FOREGROUND);
+            }
+            NetworkRequest networkRequest = requestBuilder.build();
+            Intent intent = new Intent(applicationContext, ConnectivityBroadcastReceiver.class);
+            intent.setAction(NETWORK_PENDINT_INTENT_ACTION);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, NETWORK_PENDING_INTENT_REQUEST_CODE, intent, FLAG_UPDATE_CURRENT);
+            connectivityManager.registerNetworkCallback(networkRequest, pendingIntent);
+        }
+        sharedPreferences.edit().putLong(NEXT_SCHEDULE, WAITING_FOR_RECONNECT).apply();
+        NotificationManagerCompat.from(applicationContext)
+                .notify(NOTIFICATION_ID, NotificationFactory.getNotification(applicationContext, getLastSuccess(), WAITING_FOR_RECONNECT));
+    }
+
     private long getLastSuccess() {
-        return sharedPreferences.getLong(LAST_SUCCESS, 0);
+        return sharedPreferences.getLong(LAST_SUCCESS, UNDEFINED);
     }
 
     private void scheduleFor(long nextSchedule, boolean ignoreBattery) {
@@ -71,7 +112,7 @@ public class Scheduler {
             return;
         }
         alarmManager.cancel(scheduledIntent);
-        HyperLog.i(TAG, "Next run at " + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(new Date(nextSchedule)));
+        HyperLog.i(TAG, "Next run at " + getFormattedTimestamp(applicationContext, nextSchedule));
         sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
         NotificationManagerCompat.from(applicationContext)
                 .notify(NOTIFICATION_ID, NotificationFactory.getNotification(applicationContext, getLastSuccess(), nextSchedule));

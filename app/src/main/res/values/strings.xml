@@ -39,8 +39,8 @@
     <string name="battery_optimization_dialog_message">Please disable battery optimization. Otherwise, Android may doze this app and stop it from sending messages during standby.</string>
     <string name="tab_connection_title">Connection</string>
     <string name="tab_schedule_title">Schedule</string>
-    <string name="notification_last_ping" formatted="true">Last success: %1$s</string>
-    <string name="notification_next_ping" formatted="true">Scheduled for: %1$s</string>
+    <string name="notification_last_success" formatted="true">Last success: %1$s</string>
+    <string name="notification_next_schedule" formatted="true">Scheduled for: %1$s</string>
     <string name="use_tls_title">TLS</string>
     <string name="port_title">MQTT Port</string>
     <string name="port_summary" formatted="true">Defaults to 1883, or 8883 for TLS.%nCurrent value: %1$s</string>
@@ -90,4 +90,5 @@
     <string name="dialog_scan_beacons_title">Beacons in range</string>
     <string name="toast_scan_failed">Scanning for beacons failed</string>
     <string name="toast_logs_stored" formatted="true">Stored to \'%s\'</string>
+    <string name="value_network_reconnect">Waiting for network re-connect …</string>
 </resources>

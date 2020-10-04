@@ -11,13 +11,15 @@ import androidx.core.app.NotificationCompat;
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static org.ostrya.presencepublisher.Application.MAIN_ACTIVITY_REQUEST_CODE;
+import static org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider.getFormattedTimestamp;
 
 public class NotificationFactory {
+
+    private NotificationFactory() {
+        // private constructor for helper class
+    }
 
     public static void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -42,11 +44,11 @@ public class NotificationFactory {
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(context.getString(R.string.app_name))
-                .setContentText(getLastPing(context, lastSuccess))
+                .setContentText(getLastSuccess(context, lastSuccess))
                 .setContentIntent(pendingIntent)
                 .setStyle(new NotificationCompat.InboxStyle()
-                        .addLine(getLastPing(context, lastSuccess))
-                        .addLine(getNextPing(context, nextSchedule)))
+                        .addLine(getLastSuccess(context, lastSuccess))
+                        .addLine(getNextSchedule(context, nextSchedule)))
                 .setOnlyAlertOnce(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             notification = builder
@@ -59,19 +61,11 @@ public class NotificationFactory {
         return notification;
     }
 
-    private static String getLastPing(Context context, long lastSuccess) {
-        return context.getString(R.string.notification_last_ping, getFormattedTimestamp(context, lastSuccess));
+    private static String getLastSuccess(Context context, long lastSuccess) {
+        return context.getString(R.string.notification_last_success, getFormattedTimestamp(context, lastSuccess));
     }
 
-    private static String getNextPing(Context context, long nextSchedule) {
-        return context.getString(R.string.notification_next_ping, getFormattedTimestamp(context, nextSchedule));
+    private static String getNextSchedule(Context context, long nextSchedule) {
+        return context.getString(R.string.notification_next_schedule, getFormattedTimestamp(context, nextSchedule));
     }
-
-    private static String getFormattedTimestamp(Context context, long timestamp) {
-        if (timestamp == 0L) {
-            return context.getString(R.string.value_undefined);
-        }
-        return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(new Date(timestamp));
-    }
-
 }

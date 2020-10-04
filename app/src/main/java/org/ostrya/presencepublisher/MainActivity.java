@@ -116,8 +116,7 @@ public class MainActivity extends FragmentActivity {
             case SSID_LIST:
             case USERNAME:
             case USE_TLS:
-                HyperLog.i(TAG, "Changed parameter " + key);
-                new Scheduler(this).scheduleNow();
+                onChangedConnectionProperty(key);
                 break;
             case AUTOSTART:
             case LAST_SUCCESS:
@@ -125,11 +124,15 @@ public class MainActivity extends FragmentActivity {
                 break;
             default:
                 if (key.startsWith(WIFI_CONTENT_PREFIX)) {
-                    HyperLog.i(TAG, "Changed parameter " + key);
-                    new Scheduler(this).scheduleNow();
+                    onChangedConnectionProperty(key);
                 } else {
-                    HyperLog.v(TAG, "Ignoring unexpected value " + key);
+                    HyperLog.d(TAG, "Ignoring unexpected value " + key);
                 }
         }
+    }
+
+    private void onChangedConnectionProperty(String key) {
+        HyperLog.i(TAG, "Changed parameter " + key);
+        new Scheduler(this).scheduleNow();
     }
 }

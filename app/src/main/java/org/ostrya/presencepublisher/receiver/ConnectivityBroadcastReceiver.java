@@ -8,34 +8,38 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
+import org.ostrya.presencepublisher.Application;
 import org.ostrya.presencepublisher.schedule.Scheduler;
 
 import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
-import static org.ostrya.presencepublisher.ui.preference.schedule.AutostartPreference.AUTOSTART;
 
-public class SystemBroadcastReceiver extends BroadcastReceiver {
-    private static final String TAG = "SystemBroadcastReceiver";
+public class ConnectivityBroadcastReceiver extends BroadcastReceiver {
+    private static final String TAG = "ConnectivityBroadcastReceiver";
+
+    public static boolean useMobile(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)
+                && sharedPreferences.getBoolean(SEND_VIA_MOBILE_NETWORK, false);
+    }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onReceive(final Context context, final Intent intent) {
+    public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
             NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-            boolean useMobile = sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)
-                    && sharedPreferences.getBoolean(SEND_VIA_MOBILE_NETWORK, false);
             if (networkInfo != null && networkInfo.isConnected()
                     && (networkInfo.getType() == ConnectivityManager.TYPE_WIFI
                     || networkInfo.getType() == ConnectivityManager.TYPE_VPN
                     || networkInfo.getType() == ConnectivityManager.TYPE_ETHERNET
-                    || useMobile)) {
+                    || useMobile(context))) {
                 HyperLog.i(TAG, "Reacting to network change");
                 new Scheduler(context).scheduleNow();
             }
-        } else if (Intent.ACTION_BOOT_COMPLETED.equals(action) && sharedPreferences.getBoolean(AUTOSTART, false)) {
-            HyperLog.i(TAG, "Starting after boot");
+        } else if (Application.NETWORK_PENDINT_INTENT_ACTION.equals(action)
+                && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+            HyperLog.i(TAG, "Reacting to network change");
             new Scheduler(context).scheduleNow();
         }
     }
