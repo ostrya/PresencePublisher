@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
 import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.distance.ModelSpecificDistanceCalculator;
 import org.altbeacon.beacon.logging.LogManager;
@@ -28,13 +29,14 @@ import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoi
 
 public class Application extends android.app.Application {
     private static final String TAG = "Application";
-    public static final int PERMISSION_REQUEST_CODE = 1;
-    public static final int LOCATION_REQUEST_CODE = 2;
-    public static final int BATTERY_OPTIMIZATION_REQUEST_CODE = 3;
-    public static final int ALARM_REQUEST_CODE = 4;
-    public static final int MAIN_ACTIVITY_REQUEST_CODE = 5;
-    public static final int START_BLUETOOTH_REQUEST_CODE = 6;
-    public static final int ON_DEMAND_BLUETOOTH_REQUEST_CODE = 7;
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    public static final int BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE = 2;
+    public static final int LOCATION_REQUEST_CODE = 3;
+    public static final int BATTERY_OPTIMIZATION_REQUEST_CODE = 4;
+    public static final int ALARM_REQUEST_CODE = 5;
+    public static final int MAIN_ACTIVITY_REQUEST_CODE = 6;
+    public static final int START_BLUETOOTH_REQUEST_CODE = 7;
+    public static final int ON_DEMAND_BLUETOOTH_REQUEST_CODE = 8;
 
     private BackgroundPowerSaver backgroundPowerSaver;
 
@@ -43,7 +45,7 @@ public class Application extends android.app.Application {
         super.onCreate();
         initLogger();
         initNetworkReceiver();
-        initBeaconReceiver();
+        initBeaconManager();
         NotificationFactory.createNotificationChannel(this);
     }
 
@@ -67,13 +69,13 @@ public class Application extends android.app.Application {
         }
     }
 
-    private void initBeaconReceiver() {
+    private void initBeaconManager() {
         if (supportsBeacons()) {
             LogManager.setLogger(new HyperlogLogger());
             LogManager.setVerboseLoggingEnabled(BuildConfig.DEBUG);
             Beacon.setHardwareEqualityEnforced(true);
-            Beacon.setDistanceCalculator(new ModelSpecificDistanceCalculator(this, org.altbeacon.beacon.BeaconManager.getDistanceModelUpdateUrl()));
-            org.altbeacon.beacon.BeaconManager beaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(this);
+            Beacon.setDistanceCalculator(new ModelSpecificDistanceCalculator(this, BeaconManager.getDistanceModelUpdateUrl()));
+            BeaconManager beaconManager = BeaconManager.getInstanceForApplication(this);
             beaconManager.setBackgroundMode(true);
             List<BeaconParser> beaconParsers = beaconManager.getBeaconParsers();
             beaconParsers.add(new BeaconParser("iBeacon")
@@ -97,6 +99,6 @@ public class Application extends android.app.Application {
     }
 
     public boolean supportsBeacons() {
-        return Build.VERSION.SDK_INT >= 18 && getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
     }
 }

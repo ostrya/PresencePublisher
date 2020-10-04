@@ -31,11 +31,11 @@ fun isTagged(): Boolean {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
-        targetSdkVersion(29)
+        targetSdkVersion(30)
         versionCode = 29
         versionName = "2.1.1"
     }
@@ -107,9 +107,12 @@ dependencies {
     implementation("androidx.preference:preference:1.1.1")
     implementation("androidx.security:security-crypto:1.1.0-alpha02")
     implementation("com.hypertrack:hyperlog:0.0.10") {
-        exclude(group = "com.android.support")
         exclude(group = "com.android.volley")
     }
     implementation("org.altbeacon:android-beacon-library:2.17.1")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
+    testImplementation("junit:junit:4.13")
+    testImplementation("org.assertj:assertj-core:3.17.2")
+    testImplementation("org.mockito:mockito-inline:3.5.13")
+    testRuntimeOnly("com.android.volley:volley:1.1.1")
 }

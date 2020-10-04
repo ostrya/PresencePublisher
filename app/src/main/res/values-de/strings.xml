@@ -8,9 +8,13 @@
     <string name="message_schedule_title">Sendeperiode</string>
     <string name="message_schedule_summary">Zeit zwischen Benachrichtigungen in Minuten.</string>
     <string name="message_schedule_dialog_text">Die Periode auf unter 15 Minuten zu setzen wird den Batterieverbrauch erhöhen. Fortfahren?</string>
-    <string name="permission_dialog_title">Standortberechtigung</string>
-    <string name="permission_dialog_message">Bitte erlaube den dauerhaften Zugriff auf genaue Position. Andernfalls kann diese App den
+    <string name="location_permission_dialog_title">Standortberechtigung</string>
+    <string name="location_permission_dialog_message">Bitte erlaube den dauerhaften Zugriff auf genaue Position. Andernfalls kann diese App den
         Namen des aktuell verbundenen WLANs nicht bestimmen und Bluetooth-Beacons nicht finden.
+    </string>
+    <string name="background_location_permission_dialog_title">Standortzugriff im Hintergrund</string>
+    <string name="background_location_permission_dialog_message" formatted="true">Bitte erlaube dieser App den Zugriff auf deinen Standort im Hintergrund, indem du die Option \'%s\' in den Einstellungen wählst.
+        Andernfalls kann diese App den Namen des aktuell verbundenen WLANs nicht bestimmen und Bluetooth-Beacons nicht finden.
     </string>
     <string name="bluetooth_dialog_title">Bluetooth</string>
     <string name="bluetooth_dialog_message">Bitte schalte Bluetooth an, damit diese App nach Beacons suchen kann. Andernfalls

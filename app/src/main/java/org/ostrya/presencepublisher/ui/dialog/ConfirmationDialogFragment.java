@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.ui.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ public class ConfirmationDialogFragment extends DialogFragment {
     private Callback callback;
     private int titleId;
     private int messageId;
+    private String message;
 
     public static ConfirmationDialogFragment getInstance(final Callback callback, int titleId, int messageId) {
         ConfirmationDialogFragment fragment = new ConfirmationDialogFragment();
@@ -21,14 +23,27 @@ public class ConfirmationDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    public static ConfirmationDialogFragment getInstance(final Callback callback, int titleId, String message) {
+        ConfirmationDialogFragment fragment = new ConfirmationDialogFragment();
+        fragment.setCallback(callback);
+        fragment.setTitleId(titleId);
+        fragment.setMessage(message);
+        return fragment;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        Activity parent = requireActivity();
+        AlertDialog.Builder builder = new AlertDialog.Builder(parent);
         builder.setTitle(titleId)
-                .setMessage(messageId)
-                .setPositiveButton(R.string.dialog_ok, (dialog, id) -> callback.accept(true))
-                .setNegativeButton(R.string.dialog_cancel, (dialog, id) -> callback.accept(false));
+                .setPositiveButton(R.string.dialog_ok, (dialog, id) -> callback.accept(parent, true))
+                .setNegativeButton(R.string.dialog_cancel, (dialog, id) -> callback.accept(parent, false));
+        if (message != null) {
+            builder.setMessage(message);
+        } else {
+            builder.setMessage(messageId);
+        }
         return builder.create();
     }
 
@@ -44,7 +59,11 @@ public class ConfirmationDialogFragment extends DialogFragment {
         this.messageId = messageId;
     }
 
+    private void setMessage(String message) {
+        this.message = message;
+    }
+
     public interface Callback {
-        void accept(boolean ok);
+        void accept(Activity parent, boolean ok);
     }
 }

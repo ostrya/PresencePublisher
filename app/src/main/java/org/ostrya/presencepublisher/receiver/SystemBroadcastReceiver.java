@@ -39,5 +39,4 @@ public class SystemBroadcastReceiver extends BroadcastReceiver {
             new Scheduler(context).scheduleNow();
         }
     }
-
 }

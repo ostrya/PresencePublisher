@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.ui.preference.condition;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
@@ -48,7 +49,7 @@ public class WifiNetworkPreference extends TextPreferenceBase implements View.On
         return true;
     }
 
-    private void deleteOnContinue(boolean ok) {
+    private void deleteOnContinue(Activity unused, boolean ok) {
         if (ok) {
             Set<String> storedSsids = new HashSet<>(preference.getStringSet(SSID_LIST, Collections.emptySet()));
             storedSsids.remove(getTitle().toString());

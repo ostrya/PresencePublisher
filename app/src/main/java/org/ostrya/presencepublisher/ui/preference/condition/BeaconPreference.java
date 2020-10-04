@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.ui.preference.condition;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
@@ -47,7 +48,7 @@ public class BeaconPreference extends TextPreferenceBase implements View.OnLongC
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void deleteOnContinue(boolean ok) {
+    private void deleteOnContinue(Activity unused, boolean ok) {
         if (ok) {
             PresenceBeaconManager.getInstance().removeBeacon(getContext(), beaconId);
         }

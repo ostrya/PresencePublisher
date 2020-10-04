@@ -18,9 +18,13 @@
     <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>
     <string name="message_charging_schedule_title">Charging publish period</string>
     <string name="message_charging_schedule_summary">Publish period while device is charging.\nFor value = 0 the normal schedule is used.</string>
-    <string name="permission_dialog_title">Location permission</string>
-    <string name="permission_dialog_message">Please allow access to fine location all the time. Otherwise, this app will not be able to
+    <string name="location_permission_dialog_title">Location permission</string>
+    <string name="location_permission_dialog_message">Please allow access to fine location all the time. Otherwise, this app will not be able to
         retrieve the currently connected WiFi name or find Bluetooth beacons.
+    </string>
+    <string name="background_location_permission_dialog_title">Background location permission</string>
+    <string name="background_location_permission_dialog_message" formatted="true">Please allow this app to access location information from the background by selecting option \'%s\' in the settings.
+        Otherwise, this app will not be able to retrieve the currently connected WiFi name or find Bluetooth beacons.
     </string>
     <string name="bluetooth_dialog_title">Bluetooth</string>
     <string name="bluetooth_dialog_message">Please enable Bluetooth so that this app can scan for beacons. Otherwise,

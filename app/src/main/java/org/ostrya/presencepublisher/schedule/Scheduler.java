@@ -29,6 +29,7 @@ public class Scheduler {
     private static final String TAG = "Scheduler";
 
     private static final int NOTIFICATION_ID = 1;
+    public static final long NOW_DELAY = 1_000L;
 
     private final Context applicationContext;
     private final SharedPreferences sharedPreferences;
@@ -45,7 +46,7 @@ public class Scheduler {
     }
 
     public void scheduleNow() {
-        scheduleFor(System.currentTimeMillis() + 1_000L, false);
+        scheduleFor(System.currentTimeMillis() + NOW_DELAY, false);
     }
 
     public void scheduleNext() {
