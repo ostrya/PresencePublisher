@@ -4,12 +4,12 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("org.eclipse.jgit:org.eclipse.jgit:5.8.1.202007141445-r")
+        classpath("org.eclipse.jgit:org.eclipse.jgit:5.9.0.202009080501-r")
     }
 }
 
 plugins {
-    id("com.github.triplet.play") version "2.8.0"
+    id("com.github.triplet.play") version "2.8.1"
     id("com.jaredsburrows.license") version "0.8.80"
     id("com.android.application")
 }
