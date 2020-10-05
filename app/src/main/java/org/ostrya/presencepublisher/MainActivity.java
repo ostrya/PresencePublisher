@@ -26,6 +26,8 @@ import static org.ostrya.presencepublisher.ui.preference.connection.ClientCertif
 import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
 import static org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference.PASSWORD;
 import static org.ostrya.presencepublisher.ui.preference.connection.PortPreference.PORT;
+import static org.ostrya.presencepublisher.ui.preference.connection.QoSPreference.QOS_VALUE;
+import static org.ostrya.presencepublisher.ui.preference.connection.RetainFlagPreference.RETAIN_FLAG;
 import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
 import static org.ostrya.presencepublisher.ui.preference.connection.UsernamePreference.USERNAME;
 import static org.ostrya.presencepublisher.ui.preference.schedule.AutostartPreference.AUTOSTART;
@@ -110,6 +112,8 @@ public class MainActivity extends FragmentActivity {
             case PASSWORD:
             case PORT:
             case PRESENCE_TOPIC:
+            case QOS_VALUE:
+            case RETAIN_FLAG:
             case SEND_BATTERY_MESSAGE:
             case SEND_OFFLINE_MESSAGE:
             case SEND_VIA_MOBILE_NETWORK:

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="qos_descriptions">
+        <item>QoS 0: höchstens einmal</item>
+        <item>QoS 1: mindestens einmal</item>
+        <item>QoS 2: genau einmal (nicht von allen Brokern unterstützt)</item>
+    </string-array>
+</resources>

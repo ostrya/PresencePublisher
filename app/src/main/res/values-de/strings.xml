@@ -30,9 +30,13 @@
     <string name="notification_last_success" formatted="true">Letzter Erfolg: %1$s</string>
     <string name="notification_next_schedule" formatted="true">Geplant für: %1$s</string>
     <string name="use_tls_title">TLS</string>
+    <string name="use_tls_summary">Transportverschlüsselung verwenden?</string>
+    <string name="retain_flag_title">Retain-Flag</string>
+    <string name="retain_flag_summary">Soll der Broker Benachrichtigungen nach getrennter Verbindung speichern?</string>
+    <string name="qos_value_title">Quality of Service</string>
+    <string name="qos_value_summary" formatted="true">Benachrichtigungen werden mit diesem QoS gesendet.%nAktueller Wert: %1$s</string>
     <string name="port_title">MQTT Port</string>
     <string name="port_summary" formatted="true">Standardwert 1883, bzw. 8883 bei TLS.%nAktueller Wert: %1$s</string>
-    <string name="use_tls_summary">Transportverschlüsselung verwenden?</string>
     <string name="toast_invalid_input">Ungültige Eingabe!</string>
     <string name="check_connection_summary">Tippe hier, um eine Testbenachrichtigung zu senden.</string>
     <string name="check_connection_title">Verbindung prüfen</string>

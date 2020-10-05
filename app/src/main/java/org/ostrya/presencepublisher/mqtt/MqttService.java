@@ -3,6 +3,7 @@ package org.ostrya.presencepublisher.mqtt;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -19,6 +20,9 @@ import static org.ostrya.presencepublisher.ui.preference.connection.ClientCertif
 import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
 import static org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference.PASSWORD;
 import static org.ostrya.presencepublisher.ui.preference.connection.PortPreference.PORT;
+import static org.ostrya.presencepublisher.ui.preference.connection.QoSPreference.DEFAULT_VALUE;
+import static org.ostrya.presencepublisher.ui.preference.connection.QoSPreference.QOS_VALUE;
+import static org.ostrya.presencepublisher.ui.preference.connection.RetainFlagPreference.RETAIN_FLAG;
 import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
 import static org.ostrya.presencepublisher.ui.preference.connection.UsernamePreference.USERNAME;
 
@@ -42,6 +46,8 @@ public class MqttService {
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERTIFICATE, null);
         String login = sharedPreferences.getString(USERNAME, "");
         String password = securePreferences.getString(PASSWORD, "");
+        int qos = getQosFromString(sharedPreferences.getString(QOS_VALUE, null));
+        boolean retain = sharedPreferences.getBoolean(RETAIN_FLAG, false);
 
         MqttClient mqttClient = new MqttClient(getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence());
         MqttConnectOptions options = new MqttConnectOptions();
@@ -53,12 +59,15 @@ public class MqttService {
         if (tls) {
             options.setSocketFactory(factory.getSslSocketFactory(clientCertAlias));
         }
-        mqttClient.connect(options);
-        for (Message message : messages) {
-            mqttClient.publish(message.getTopic(), message.getContent().getBytes(Charset.forName("UTF-8")), 1, false);
+        try {
+            mqttClient.connect(options);
+            for (Message message : messages) {
+                mqttClient.publish(message.getTopic(), message.getContent().getBytes(Charset.forName("UTF-8")), qos, retain);
+            }
+        } finally {
+            mqttClient.disconnect(5);
+            mqttClient.close(true);
         }
-        mqttClient.disconnect(5);
-        mqttClient.close(true);
         HyperLog.i(TAG, "Sending messages was successful");
     }
 
@@ -68,5 +77,16 @@ public class MqttService {
         String protocolPrefix = tls ? "ssl://" : "tcp://";
         String portAppendix = port == null ? "" : ":" + port;
         return protocolPrefix + host + portAppendix;
+    }
+
+    private int getQosFromString(@Nullable String stringValue) {
+        if (stringValue != null) {
+            try {
+                return Integer.parseInt(stringValue);
+            } catch (NumberFormatException e) {
+                HyperLog.w(TAG, "Unable to parse QoS value " + stringValue);
+            }
+        }
+        return DEFAULT_VALUE;
     }
 }

@@ -42,9 +42,13 @@
     <string name="notification_last_success" formatted="true">Last success: %1$s</string>
     <string name="notification_next_schedule" formatted="true">Scheduled for: %1$s</string>
     <string name="use_tls_title">TLS</string>
+    <string name="use_tls_summary">Use transport encryption?</string>
+    <string name="retain_flag_title">Retain flag</string>
+    <string name="retain_flag_summary">Should the messages be retained in the broker after disconnect?</string>
+    <string name="qos_value_title">Quality of Service</string>
+    <string name="qos_value_summary" formatted="true">Which QoS to use for sending messages.%nCurrent value: %1$s</string>
     <string name="port_title">MQTT Port</string>
     <string name="port_summary" formatted="true">Defaults to 1883, or 8883 for TLS.%nCurrent value: %1$s</string>
-    <string name="use_tls_summary">Use transport encryption?</string>
     <string name="toast_invalid_input">Invalid input!</string>
     <string name="check_connection_summary">Click here to send test message.</string>
     <string name="check_connection_title">Check connection</string>
