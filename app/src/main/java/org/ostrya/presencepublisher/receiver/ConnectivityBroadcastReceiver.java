@@ -11,6 +11,9 @@ import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.Application;
 import org.ostrya.presencepublisher.schedule.Scheduler;
 
+import java.util.Collections;
+
+import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
 
@@ -19,8 +22,9 @@ public class ConnectivityBroadcastReceiver extends BroadcastReceiver {
 
     public static boolean useMobile(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)
-                && sharedPreferences.getBoolean(SEND_VIA_MOBILE_NETWORK, false);
+        return sharedPreferences.getBoolean(SEND_VIA_MOBILE_NETWORK, false)
+                && (sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)
+                || !sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()).isEmpty());
     }
 
     @SuppressWarnings("deprecation")
