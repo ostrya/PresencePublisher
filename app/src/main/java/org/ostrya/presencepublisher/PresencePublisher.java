@@ -24,13 +24,15 @@ import java.util.Set;
 
 import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
 
-public class Application extends android.app.Application {
-    private static final String TAG = "Application";
+public class PresencePublisher extends android.app.Application {
+    private static final String TAG = "PresencePublisher";
     public static final int ALARM_PENDING_INTENT_REQUEST_CODE = 1;
     public static final int NOTIFICATION_REQUEST_CODE = 2;
     public static final int NETWORK_PENDING_INTENT_REQUEST_CODE = 3;
-    public static final String NETWORK_PENDING_INTENT_ACTION = "org.ostrya.presencepublisher.network_pending_intent";
+    public static final String ALARM_ACTION = "org.ostrya.presencepublisher.ALARM";
+    public static final String NETWORK_PENDING_INTENT_ACTION = "org.ostrya.presencepublisher.NETWORK_PENDING_INTENT";
 
+    @SuppressWarnings("FieldCanBeLocal")
     private BackgroundPowerSaver backgroundPowerSaver;
 
     @Override

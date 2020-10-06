@@ -2,7 +2,7 @@ package org.ostrya.presencepublisher.message;
 
 import android.content.Context;
 import com.hypertrack.hyperlog.HyperLog;
-import org.ostrya.presencepublisher.Application;
+import org.ostrya.presencepublisher.PresencePublisher;
 import org.ostrya.presencepublisher.ui.preference.condition.BeaconPreference;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class BeaconMessageProvider extends AbstractMessageProvider {
 
     @Override
     public List<String> getMessageContents() {
-        if (!((Application) getApplicationContext()).supportsBeacons()
+        if (!((PresencePublisher) getApplicationContext()).supportsBeacons()
                 || getSharedPreferences().getStringSet(BEACON_LIST, Collections.emptySet()).isEmpty()) {
             return Collections.emptyList();
         }

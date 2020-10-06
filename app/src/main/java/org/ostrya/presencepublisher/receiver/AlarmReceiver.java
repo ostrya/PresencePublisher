@@ -6,8 +6,9 @@ import android.content.Intent;
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.mqtt.Publisher;
 
+import static org.ostrya.presencepublisher.PresencePublisher.ALARM_ACTION;
+
 public class AlarmReceiver extends BroadcastReceiver {
-    public static final String ALARM_ACTION = "org.ostrya.presencepublisher.ALARM";
 
     private static final String TAG = "AlarmReceiver";
 

@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.hypertrack.hyperlog.HyperLog;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
@@ -18,7 +19,11 @@ import static android.content.Context.WIFI_SERVICE;
 public class SsidUtil {
     private static final String TAG = "SsidUtil";
 
-    private static String normalizeSsid(final String ssid) {
+    private SsidUtil() {
+        // private constructor for helper class
+    }
+
+    private static String normalizeSsid(String ssid) {
         if (ssid == null) {
             return null;
         }
@@ -29,7 +34,7 @@ public class SsidUtil {
     }
 
     @Nullable
-    public static String getCurrentSsid(final Context context) {
+    public static String getCurrentSsid(Context context) {
         Context applicationContext = context.getApplicationContext();
         ConnectivityManager connectivityManager = (ConnectivityManager) applicationContext.getSystemService(CONNECTIVITY_SERVICE);
         WifiManager wifiManager = (WifiManager) applicationContext.getSystemService(WIFI_SERVICE);
@@ -55,33 +60,15 @@ public class SsidUtil {
         return "<unknown ssid>".equals(ssid) ? null : ssid;
     }
 
-    public static List<String> getKnownSsids(final Context context) {
+    public static List<String> getKnownSsids(Context context) {
         List<String> ssids = new ArrayList<>();
-        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifiManager == null) {
-            HyperLog.w(TAG, "Unable to get WifiManager");
-            return ssids;
-        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             //noinspection deprecation
-            List<WifiConfiguration> configuredNetworks = null;
-            try {
+            for (WifiConfiguration configuration : getConfiguredNetworks(context)) {
                 //noinspection deprecation
-                configuredNetworks = wifiManager.getConfiguredNetworks();
-            } catch (SecurityException e) {
-                HyperLog.w(TAG, "Not allowed to get configured networks. " +
-                        "As ACCESS_FINE_LOCATION was only added as required in Android Q, this should never happen");
-            }
-            if (configuredNetworks == null) {
-                HyperLog.w(TAG, "No wifi list found");
-            } else {
-                //noinspection deprecation
-                for (WifiConfiguration configuration : configuredNetworks) {
-                    //noinspection deprecation
-                    String ssid = normalizeSsid(configuration.SSID);
-                    if (ssid != null) {
-                        ssids.add(ssid);
-                    }
+                String ssid = normalizeSsid(configuration.SSID);
+                if (ssid != null) {
+                    ssids.add(ssid);
                 }
             }
         }
@@ -93,5 +80,21 @@ public class SsidUtil {
             }
         }
         return ssids;
+    }
+
+    @SuppressWarnings("deprecation")
+    private static List<WifiConfiguration> getConfiguredNetworks(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager == null) {
+            HyperLog.w(TAG, "Unable to get WifiManager");
+            return Collections.emptyList();
+        }
+        try {
+            return wifiManager.getConfiguredNetworks();
+        } catch (SecurityException e) {
+            HyperLog.w(TAG, "Not allowed to get configured networks. " +
+                    "As ACCESS_FINE_LOCATION was only added as required in Android Q, this should never happen");
+            return Collections.emptyList();
+        }
     }
 }

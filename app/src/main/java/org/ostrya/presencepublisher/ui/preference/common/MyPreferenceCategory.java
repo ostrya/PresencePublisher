@@ -9,10 +9,4 @@ public class MyPreferenceCategory extends PreferenceCategory {
         setTitle(titleId);
         setIconSpaceReserved(false);
     }
-
-    public MyPreferenceCategory(Context context, String title) {
-        super(context);
-        setTitle(title);
-        setIconSpaceReserved(false);
-    }
 }

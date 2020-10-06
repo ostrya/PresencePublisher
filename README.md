@@ -7,13 +7,13 @@
 [<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="75">](https://f-droid.org/packages/org.ostrya.presencepublisher)
 [<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="75" alt="Get it on Google Play">](https://play.google.com/store/apps/details?id=org.ostrya.presencepublisher&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1)
 
-A simple app that regularly publishes to a configurable MQTT topic whenever connected to a given WiFi network or in
+A simple app that regularly publishes to a configurable MQTT topic whenever connected to a given Wi-Fi network or in
 proximity to a Bluetooth beacon. This can be used to integrate the presence of your phone in home automation.
  
-Several networks and beacons can be configured at once and the message to be sent can be configured for each of them.
+Several networks and beacons can be configured at once, and the message to be sent can be configured for each of them.
 
 If your MQTT server is available on the internet, you can also choose to send an 'offline' message
-whenever you are not connected to any of the configured WiFi networks and not in range of any configured beacon.
+whenever you are not connected to any of the configured Wi-Fi networks and not in range of any configured beacon.
 
 As an additional feature, you can send the battery level of your device whenever a condition is met, so that you can
 recharge it before it turns off.
@@ -54,10 +54,10 @@ Make sure your PKCS#12 keystore file has the `.pfx` extension, otherwise Android
 
 ## Permissions
 
-* ACCESS_BACKGROUND_LOCATION: on Android 10+, necessary to retrieve SSID of connected WiFi while running in background
-* ACCESS_FINE_LOCATION: necessary to discover beacons; on Android 9+, necessary to retrieve SSID of connected WiFi
+* ACCESS_BACKGROUND_LOCATION: on Android 10+, necessary to retrieve SSID of connected Wi-Fi while running in background
+* ACCESS_FINE_LOCATION: necessary to discover beacons; on Android 9+, necessary to retrieve SSID of connected Wi-Fi
 * ACCESS_NETWORK_STATE: necessary to register network change listener
-* ACCESS_WIFI_STATE: necessary to retrieve SSID of connected WiFi
+* ACCESS_WIFI_STATE: necessary to retrieve SSID of connected Wi-Fi
 * BLUETOOTH: necessary to communicate with beacons
 * BLUETOOTH_ADMIN: necessary to discover beacons
 * INTERNET: only necessary if your MQTT server is not running locally

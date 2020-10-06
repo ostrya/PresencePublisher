@@ -51,6 +51,7 @@ class AndroidSslSocketFactoryFactory {
         }
     }
 
+    @Nullable
     private KeyManager[] getClientKeyManagers(String clientCertAlias) {
         try {
             PrivateKey privateKey = KeyChain.getPrivateKey(context, clientCertAlias);

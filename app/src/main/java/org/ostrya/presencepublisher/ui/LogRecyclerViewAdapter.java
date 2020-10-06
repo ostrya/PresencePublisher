@@ -39,13 +39,11 @@ public class LogRecyclerViewAdapter extends ListAdapter<DeviceLogModel, LogRecyc
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         DeviceLogModel item = getItem(position);
-        holder.item = item;
         holder.contentView.setText(item.getDeviceLog());
     }
 
     static final class ViewHolder extends RecyclerView.ViewHolder {
         final TextView contentView;
-        DeviceLogModel item;
 
         ViewHolder(View view) {
             super(view);

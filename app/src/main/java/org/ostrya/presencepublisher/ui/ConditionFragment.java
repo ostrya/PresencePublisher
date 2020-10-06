@@ -11,7 +11,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 import com.hypertrack.hyperlog.HyperLog;
-import org.ostrya.presencepublisher.Application;
+import org.ostrya.presencepublisher.PresencePublisher;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.contract.IntentActionContract;
 import org.ostrya.presencepublisher.ui.preference.common.ContentHelpDummy;
@@ -50,7 +50,7 @@ public class ConditionFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         context = getPreferenceManager().getContext();
-        boolean beaconsSupported = ((Application) context.getApplicationContext()).supportsBeacons();
+        boolean beaconsSupported = ((PresencePublisher) context.getApplicationContext()).supportsBeacons();
         SharedPreferences preference = getPreferenceManager().getSharedPreferences();
         currentNetworks = Collections.unmodifiableSet(preference.getStringSet(SSID_LIST, Collections.emptySet()));
         currentBeacons = Collections.unmodifiableSet(preference.getStringSet(BEACON_LIST, Collections.emptySet()));

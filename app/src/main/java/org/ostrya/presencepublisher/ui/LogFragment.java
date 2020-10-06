@@ -18,11 +18,9 @@ import java.io.File;
 
 public class LogFragment extends Fragment {
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public LogFragment() {
+        // Mandatory empty constructor for the fragment manager to instantiate the
+        // fragment (e.g. upon screen orientation changes).
     }
 
     private static void updateLogView(LogRecyclerViewAdapter adapter) {

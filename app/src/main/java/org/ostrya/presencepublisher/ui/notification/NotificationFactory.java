@@ -12,7 +12,7 @@ import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static org.ostrya.presencepublisher.Application.NOTIFICATION_REQUEST_CODE;
+import static org.ostrya.presencepublisher.PresencePublisher.NOTIFICATION_REQUEST_CODE;
 import static org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider.getFormattedTimestamp;
 
 public class NotificationFactory {

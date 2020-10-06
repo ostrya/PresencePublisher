@@ -14,6 +14,10 @@ public class SecurePreferencesHelper {
 
     private static final String FILENAME = "encryptedPreferences";
 
+    private SecurePreferencesHelper() {
+        // private constructor for helper class
+    }
+
     public static PreferenceDataStore getSecurePreferenceDataStore(Context context) {
         return new PreferenceDataStore() {
             @Override

@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 public class SetJoiner {
+    private SetJoiner() {
+        // private constructor for helper class
+    }
+
     public static String join(Set<String> values, String emptyValue) {
         if (values == null || values.isEmpty()) {
             return emptyValue;

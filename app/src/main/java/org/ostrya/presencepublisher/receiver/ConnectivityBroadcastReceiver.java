@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import com.hypertrack.hyperlog.HyperLog;
-import org.ostrya.presencepublisher.Application;
+import org.ostrya.presencepublisher.PresencePublisher;
 import org.ostrya.presencepublisher.schedule.Scheduler;
 
 public class ConnectivityBroadcastReceiver extends BroadcastReceiver {
@@ -22,7 +22,7 @@ public class ConnectivityBroadcastReceiver extends BroadcastReceiver {
                 HyperLog.i(TAG, "Reacting to network change");
                 new Scheduler(context).scheduleNow();
             }
-        } else if (Application.NETWORK_PENDING_INTENT_ACTION.equals(action)) {
+        } else if (PresencePublisher.NETWORK_PENDING_INTENT_ACTION.equals(action)) {
             HyperLog.i(TAG, "Reacting to network change");
             new Scheduler(context).scheduleNow();
         }

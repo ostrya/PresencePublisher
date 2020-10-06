@@ -20,20 +20,11 @@ public class EditTextDialog extends DialogFragment {
 
     private Callback callback;
     private int titleId;
-    private String text;
 
     public static EditTextDialog getInstance(final Callback callback, int titleId) {
         EditTextDialog fragment = new EditTextDialog();
         fragment.setCallback(callback);
         fragment.setTitleId(titleId);
-        return fragment;
-    }
-
-    public static EditTextDialog getInstance(final Callback callback, int titleId, String text) {
-        EditTextDialog fragment = new EditTextDialog();
-        fragment.setCallback(callback);
-        fragment.setTitleId(titleId);
-        fragment.setText(text);
         return fragment;
     }
 
@@ -50,7 +41,6 @@ public class EditTextDialog extends DialogFragment {
         if (editText != null) {
             editText.requestFocus();
             editText.setSelection(0);
-            editText.setText(text);
         }
 
         builder.setTitle(titleId)
@@ -79,10 +69,6 @@ public class EditTextDialog extends DialogFragment {
 
     private void setTitleId(int titleId) {
         this.titleId = titleId;
-    }
-
-    private void setText(String text) {
-        this.text = text;
     }
 
     public interface Callback {
