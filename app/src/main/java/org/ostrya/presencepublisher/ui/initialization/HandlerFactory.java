@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.initialization;
+package org.ostrya.presencepublisher.ui.initialization;
 
 import java.util.Queue;
 

@@ -12,7 +12,7 @@ import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static org.ostrya.presencepublisher.Application.MAIN_ACTIVITY_REQUEST_CODE;
+import static org.ostrya.presencepublisher.Application.NOTIFICATION_REQUEST_CODE;
 import static org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider.getFormattedTimestamp;
 
 public class NotificationFactory {
@@ -37,7 +37,7 @@ public class NotificationFactory {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent
-                = PendingIntent.getActivity(context, MAIN_ACTIVITY_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                = PendingIntent.getActivity(context, NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification;
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, context.getPackageName())

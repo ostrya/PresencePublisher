@@ -102,10 +102,12 @@ play {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.preference:preference:1.1.1")
     implementation("androidx.security:security-crypto:1.1.0-alpha02")
+    implementation("androidx.viewpager2:viewpager2:1.1.0-alpha01")
+    implementation("com.google.android.material:material:1.3.0-alpha03")
     implementation("com.hypertrack:hyperlog:0.0.10") {
         exclude(group = "com.android.volley")
     }

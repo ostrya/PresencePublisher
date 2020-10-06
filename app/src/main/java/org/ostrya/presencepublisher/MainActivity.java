@@ -1,18 +1,17 @@
 package org.ostrya.presencepublisher;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.hypertrack.hyperlog.HyperLog;
-import org.ostrya.presencepublisher.initialization.InitializationHandler;
 import org.ostrya.presencepublisher.schedule.Scheduler;
 import org.ostrya.presencepublisher.ui.MainPagerAdapter;
+import org.ostrya.presencepublisher.ui.initialization.InitializationHandler;
 
 import java.util.Collections;
 
@@ -52,9 +51,11 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), getApplicationContext());
-        ViewPager viewPager = findViewById(R.id.pager);
+        MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(this);
+        ViewPager2 viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(mainPagerAdapter);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        new TabLayoutMediator(tabLayout, viewPager, mainPagerAdapter).attach();
 
         locationServiceNeeded = ((Application) getApplication()).supportsBeacons()
                 // for WiFi name resolution
@@ -76,21 +77,6 @@ public class MainActivity extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(sharedPreferenceListener);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (grantResults.length > 0) {
-            handler.handleResult(this, requestCode, grantResults[0]);
-        } else {
-            HyperLog.w(TAG, "Permission request cancelled for request code " + requestCode);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        handler.handleResult(this, requestCode, resultCode);
     }
 
     public boolean isLocationServiceNeeded() {

@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.initialization;
+package org.ostrya.presencepublisher.ui.initialization;
 
 import org.ostrya.presencepublisher.MainActivity;
 
@@ -24,7 +24,5 @@ public interface InitializationHandler {
         return firstFactory.create(handlerChainQueue);
     }
 
-    void initialize(MainActivity context);
-
-    void handleResult(MainActivity context, int requestCode, int resultCode);
+    void initialize(MainActivity activity);
 }

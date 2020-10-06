@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.initialization;
+package org.ostrya.presencepublisher.ui.initialization;
 
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.MainActivity;
@@ -11,23 +11,28 @@ import java.util.concurrent.TimeUnit;
 
 import static org.ostrya.presencepublisher.schedule.Scheduler.NOW_DELAY;
 
-public class CreateSchedule extends AbstractChainedHandler {
+public class CreateSchedule extends AbstractChainedHandler<Void, Void> {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     protected CreateSchedule(Queue<HandlerFactory> handlerChain) {
-        super(-1, handlerChain);
+        super(null, handlerChain);
     }
 
     @Override
-    protected void doInitialize(MainActivity context) {
+    protected void doInitialize(MainActivity activity) {
         HyperLog.i(TAG, "Starting schedule now");
-        new Scheduler(context).scheduleNow();
+        new Scheduler(activity).scheduleNow();
         // make sure we don't re-schedule until the first run has happened
-        executorService.schedule(() -> finishInitialization(context), NOW_DELAY, TimeUnit.MILLISECONDS);
+        executorService.schedule(this::finishInitialization, NOW_DELAY, TimeUnit.MILLISECONDS);
     }
 
     @Override
-    protected void doHandleResult(MainActivity context, int resultCode) {
-        HyperLog.w(TAG, "Skipping unexpected result with request code -1");
+    protected void doHandleResult(Void result) {
+        HyperLog.w(TAG, "Skipping unexpected result");
+    }
+
+    @Override
+    protected String getName() {
+        return "CreateSchedule";
     }
 }

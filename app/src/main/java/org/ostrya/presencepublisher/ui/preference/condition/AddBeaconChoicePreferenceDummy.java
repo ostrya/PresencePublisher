@@ -3,8 +3,8 @@ package org.ostrya.presencepublisher.ui.preference.condition;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -17,7 +17,7 @@ import org.ostrya.presencepublisher.ui.dialog.BeaconScanDialogFragment;
 
 import java.util.Collections;
 
-import static org.ostrya.presencepublisher.Application.ON_DEMAND_BLUETOOTH_REQUEST_CODE;
+import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
 import static org.ostrya.presencepublisher.ui.dialog.BeaconScanDialogFragment.getInstance;
 
 public class AddBeaconChoicePreferenceDummy extends Preference {
@@ -26,7 +26,7 @@ public class AddBeaconChoicePreferenceDummy extends Preference {
     private static final String DUMMY = "beaconChoiceDummy";
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public AddBeaconChoicePreferenceDummy(Context context, Fragment fragment) {
+    public AddBeaconChoicePreferenceDummy(Context context, Fragment fragment, ActivityResultLauncher<String> intentLauncher) {
         super(context);
         setKey(DUMMY);
         setIcon(android.R.drawable.ic_menu_add);
@@ -39,8 +39,7 @@ public class AddBeaconChoicePreferenceDummy extends Preference {
             } else {
                 BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
                 if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
-                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    fragment.startActivityForResult(enableBtIntent, ON_DEMAND_BLUETOOTH_REQUEST_CODE);
+                    intentLauncher.launch(ACTION_REQUEST_ENABLE);
                     return true;
                 }
             }

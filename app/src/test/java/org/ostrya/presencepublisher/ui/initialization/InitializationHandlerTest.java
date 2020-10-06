@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.initialization;
+package org.ostrya.presencepublisher.ui.initialization;
 
 import android.os.PowerManager;
 import com.hypertrack.hyperlog.HyperLog;
@@ -10,7 +10,6 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.ostrya.presencepublisher.Application;
 import org.ostrya.presencepublisher.MainActivity;
 
 import java.util.LinkedList;
@@ -29,7 +28,7 @@ public class InitializationHandlerTest {
     @Mock
     PowerManager powerManager;
 
-    private final LinkedList<AbstractChainedHandler> handlerSpies = new LinkedList<>();
+    private final LinkedList<AbstractChainedHandler<?, ?>> handlerSpies = new LinkedList<>();
 
     private MockedStatic<HyperLog> staticLogMock;
 
@@ -49,30 +48,15 @@ public class InitializationHandlerTest {
                 .map(this::wrapAsSpy)
                 .collect(Collectors.toList());
 
-        InitializationHandler handler = InitializationHandler.getHandler(handlerChain);
+        InitializationHandler.getHandler(handlerChain);
 
         assertThat(handlerSpies).hasSize(6);
-        assertThat(handlerSpies.get(0)).isInstanceOf(EnsureLocationPermission.class)
-                .extracting(AbstractChainedHandler::getRequestCode)
-                .isEqualTo(Application.LOCATION_PERMISSION_REQUEST_CODE);
-        assertThat(handlerSpies.get(1)).isInstanceOf(EnsureBackgroundLocationPermission.class)
-                .extracting(AbstractChainedHandler::getRequestCode)
-                .isEqualTo(Application.BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE);
-        assertThat(handlerSpies.get(2)).isInstanceOf(EnsureLocationServiceEnabled.class)
-                .extracting(AbstractChainedHandler::getRequestCode)
-                .isEqualTo(Application.LOCATION_REQUEST_CODE);
-        assertThat(handlerSpies.get(3)).isInstanceOf(EnsureBluetoothServiceEnabled.class)
-                .extracting(AbstractChainedHandler::getRequestCode)
-                .isEqualTo(Application.START_BLUETOOTH_REQUEST_CODE);
-        assertThat(handlerSpies.get(4)).isInstanceOf(EnsureBatteryOptimizationDisabled.class)
-                .extracting(AbstractChainedHandler::getRequestCode)
-                .isEqualTo(Application.BATTERY_OPTIMIZATION_REQUEST_CODE);
-        assertThat(handlerSpies.get(5)).isInstanceOf(CreateSchedule.class)
-                .extracting(AbstractChainedHandler::getRequestCode)
-                .isEqualTo(-1);
-        assertThat(handlerSpies)
-                .extracting(AbstractChainedHandler::getRequestCode)
-                .doesNotHaveDuplicates();
+        assertThat(handlerSpies.get(0)).isInstanceOf(EnsureLocationPermission.class);
+        assertThat(handlerSpies.get(1)).isInstanceOf(EnsureBackgroundLocationPermission.class);
+        assertThat(handlerSpies.get(2)).isInstanceOf(EnsureLocationServiceEnabled.class);
+        assertThat(handlerSpies.get(3)).isInstanceOf(EnsureBluetoothServiceEnabled.class);
+        assertThat(handlerSpies.get(4)).isInstanceOf(EnsureBatteryOptimizationDisabled.class);
+        assertThat(handlerSpies.get(5)).isInstanceOf(CreateSchedule.class);
     }
 
     @Test
@@ -93,10 +77,6 @@ public class InitializationHandlerTest {
         InOrder inOrder = inOrder(handlerSpies.toArray());
         handlerSpies.forEach(handlerSpy -> inOrder.verify(handlerSpy).initialize(context));
 
-        handler.handleResult(context, -1, -2);
-        handlerSpies.forEach(handlerSpy -> inOrder.verify(handlerSpy).handleResult(context, -1, -2));
-        inOrder.verify(handlerSpies.getLast()).doHandleResult(context, -2);
-
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -105,7 +85,7 @@ public class InitializationHandlerTest {
             InitializationHandler spyHandler = spy(original.create(handlerChain));
             // as each handler creates all its next handlers in its constructor,
             // the spies are created in reverse order to the initial chain
-            handlerSpies.addFirst((AbstractChainedHandler) spyHandler);
+            handlerSpies.addFirst((AbstractChainedHandler<?, ?>) spyHandler);
             return spyHandler;
         };
     }

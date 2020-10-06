@@ -1,10 +1,10 @@
 package org.ostrya.presencepublisher.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
@@ -13,6 +13,7 @@ import androidx.preference.PreferenceScreen;
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.Application;
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.ui.contract.IntentActionContract;
 import org.ostrya.presencepublisher.ui.preference.common.ContentHelpDummy;
 import org.ostrya.presencepublisher.ui.preference.common.MyPreferenceCategory;
 import org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy;
@@ -27,7 +28,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.ostrya.presencepublisher.Application.ON_DEMAND_BLUETOOTH_REQUEST_CODE;
 import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
 import static org.ostrya.presencepublisher.ui.preference.condition.AddNetworkChoicePreferenceDummy.SSID_LIST;
 import static org.ostrya.presencepublisher.ui.preference.condition.BeaconPreference.BEACON_CONTENT_PREFIX;
@@ -79,7 +79,9 @@ public class ConditionFragment extends PreferenceFragmentCompat {
         beaconCategory.setOrderingAsAdded(false);
         // to make linter happy
         if (beaconsSupported && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            addBeaconChoice = new AddBeaconChoicePreferenceDummy(context, this);
+            ActivityResultLauncher<String> intentLauncher
+                    = registerForActivityResult(new IntentActionContract(), this::onActivityResult);
+            addBeaconChoice = new AddBeaconChoicePreferenceDummy(context, this, intentLauncher);
             for (String beaconId : currentBeacons) {
                 beaconCategory.addPreference(new BeaconPreference(context, beaconId, this));
             }
@@ -142,16 +144,11 @@ public class ConditionFragment extends PreferenceFragmentCompat {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        HyperLog.d(TAG, "Received result " + resultCode + " for " + requestCode);
-        if (requestCode == ON_DEMAND_BLUETOOTH_REQUEST_CODE && addBeaconChoice != null) {
+    private void onActivityResult(boolean result) {
+        HyperLog.d(TAG, "Received result " + result);
+        if (result && addBeaconChoice != null) {
             HyperLog.i(TAG, "Start scanning after enabling bluetooth");
             addBeaconChoice.getOnPreferenceClickListener().onPreferenceClick(addBeaconChoice);
         }
-    }
-
-    public interface RequestResultListener {
-        void onRequestResult(int requestCode, int resultCode);
     }
 }

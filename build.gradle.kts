@@ -17,6 +17,10 @@ allprojects {
         google()
         jcenter()
     }
+
+    tasks.withType<JavaCompile> {
+        options.isDeprecation = true
+    }
 }
 
 tasks.register<Delete>("clean") {

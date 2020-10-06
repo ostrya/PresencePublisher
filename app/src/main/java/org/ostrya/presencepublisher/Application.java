@@ -26,16 +26,10 @@ import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoi
 
 public class Application extends android.app.Application {
     private static final String TAG = "Application";
-    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    public static final int BACKGROUND_LOCATION_PERMISSION_REQUEST_CODE = 2;
-    public static final int LOCATION_REQUEST_CODE = 3;
-    public static final int BATTERY_OPTIMIZATION_REQUEST_CODE = 4;
-    public static final int ALARM_REQUEST_CODE = 5;
-    public static final int MAIN_ACTIVITY_REQUEST_CODE = 6;
-    public static final int START_BLUETOOTH_REQUEST_CODE = 7;
-    public static final int ON_DEMAND_BLUETOOTH_REQUEST_CODE = 8;
-    public static final int NETWORK_PENDING_INTENT_REQUEST_CODE = 9;
-    public static final String NETWORK_PENDINT_INTENT_ACTION = "org.ostrya.presencepublisher.network_pending_intent";
+    public static final int ALARM_PENDING_INTENT_REQUEST_CODE = 1;
+    public static final int NOTIFICATION_REQUEST_CODE = 2;
+    public static final int NETWORK_PENDING_INTENT_REQUEST_CODE = 3;
+    public static final String NETWORK_PENDING_INTENT_ACTION = "org.ostrya.presencepublisher.network_pending_intent";
 
     private BackgroundPowerSaver backgroundPowerSaver;
 

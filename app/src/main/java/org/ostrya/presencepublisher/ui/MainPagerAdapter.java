@@ -1,24 +1,22 @@
 package org.ostrya.presencepublisher.ui;
 
-import android.content.Context;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import org.ostrya.presencepublisher.R;
 
-public class MainPagerAdapter extends FragmentPagerAdapter {
-    private Context context;
+public class MainPagerAdapter extends FragmentStateAdapter implements TabLayoutMediator.TabConfigurationStrategy {
 
-    public MainPagerAdapter(FragmentManager fm, Context context) {
-        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        this.context = context;
+    public MainPagerAdapter(FragmentActivity activity) {
+        super(activity);
     }
 
-    @Override
     @NonNull
-    public Fragment getItem(int position) {
+    @Override
+    public Fragment createFragment(int position) {
         switch (position) {
             case 0:
             default:
@@ -35,25 +33,31 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return 5;
     }
 
-    @Nullable
     @Override
-    public CharSequence getPageTitle(int position) {
+    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+        int titleId;
         switch (position) {
             case 0:
-                return context.getString(R.string.tab_connection_title);
+            default:
+                titleId = R.string.tab_connection_title;
+                break;
             case 1:
-                return context.getString(R.string.tab_schedule_title);
+                titleId = R.string.tab_schedule_title;
+                break;
             case 2:
-                return context.getString(R.string.tab_condition_title);
+                titleId = R.string.tab_condition_title;
+                break;
             case 3:
-                return context.getString(R.string.tab_log_title);
+                titleId = R.string.tab_log_title;
+                break;
             case 4:
-                return context.getString(R.string.tab_licenses_title);
+                titleId = R.string.tab_licenses_title;
+                break;
         }
-        return null;
+        tab.setText(titleId);
     }
 }

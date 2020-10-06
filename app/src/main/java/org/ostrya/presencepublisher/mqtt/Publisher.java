@@ -28,7 +28,6 @@ import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTim
 public class Publisher {
     private static final String TAG = "Publisher";
 
-    private final Context applicationContext;
     private final SharedPreferences sharedPreferences;
     private final BatteryMessageProvider batteryMessageProvider;
     private final BeaconMessageProvider beaconMessageProvider;
@@ -39,7 +38,7 @@ public class Publisher {
     private final Scheduler scheduler;
 
     public Publisher(Context context) {
-        applicationContext = context.getApplicationContext();
+        Context applicationContext = context.getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         batteryMessageProvider = new BatteryMessageProvider(applicationContext);
         beaconMessageProvider = new BeaconMessageProvider(applicationContext);

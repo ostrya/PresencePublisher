@@ -17,11 +17,16 @@ import org.ostrya.presencepublisher.receiver.AlarmReceiver;
 import org.ostrya.presencepublisher.receiver.ConnectivityBroadcastReceiver;
 import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 
+import java.util.Collections;
+
 import static android.app.AlarmManager.RTC_WAKEUP;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.net.NetworkCapabilities.*;
 import static org.ostrya.presencepublisher.Application.*;
 import static org.ostrya.presencepublisher.receiver.AlarmReceiver.ALARM_ACTION;
+import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
+import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
 import static org.ostrya.presencepublisher.ui.preference.schedule.ChargingMessageSchedulePreference.CHARGING_MESSAGE_SCHEDULE;
 import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
 import static org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePreference.MESSAGE_SCHEDULE;
@@ -45,7 +50,7 @@ public class Scheduler {
         alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(applicationContext, AlarmReceiver.class);
         intent.setAction(ALARM_ACTION);
-        scheduledIntent = PendingIntent.getBroadcast(applicationContext, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        scheduledIntent = PendingIntent.getBroadcast(applicationContext, ALARM_PENDING_INTENT_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     public void scheduleNow() {
@@ -84,7 +89,7 @@ public class Scheduler {
                     .addTransportType(TRANSPORT_ETHERNET)
                     .addTransportType(TRANSPORT_VPN)
                     .addTransportType(TRANSPORT_WIFI);
-            if (ConnectivityBroadcastReceiver.useMobile(applicationContext)) {
+            if (useMobile()) {
                 requestBuilder.addTransportType(TRANSPORT_CELLULAR);
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -93,13 +98,19 @@ public class Scheduler {
             }
             NetworkRequest networkRequest = requestBuilder.build();
             Intent intent = new Intent(applicationContext, ConnectivityBroadcastReceiver.class);
-            intent.setAction(NETWORK_PENDINT_INTENT_ACTION);
+            intent.setAction(NETWORK_PENDING_INTENT_ACTION);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, NETWORK_PENDING_INTENT_REQUEST_CODE, intent, FLAG_UPDATE_CURRENT);
             connectivityManager.registerNetworkCallback(networkRequest, pendingIntent);
         }
         sharedPreferences.edit().putLong(NEXT_SCHEDULE, WAITING_FOR_RECONNECT).apply();
         NotificationManagerCompat.from(applicationContext)
                 .notify(NOTIFICATION_ID, NotificationFactory.getNotification(applicationContext, getLastSuccess(), WAITING_FOR_RECONNECT));
+    }
+
+    private boolean useMobile() {
+        return sharedPreferences.getBoolean(SEND_VIA_MOBILE_NETWORK, false)
+                && (sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)
+                || !sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()).isEmpty());
     }
 
     private long getLastSuccess() {
