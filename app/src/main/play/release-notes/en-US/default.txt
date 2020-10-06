@@ -1,7 +1,5 @@
-v2.1.1
-• Fixed NullPointerException when detecting some beacons (#25).
-
-v2.1.0
-• Added ability to configure publishing period separately when device is charging (#24).
-• Fixed issue with beacons that do not have a name (#22).
-• Fixed issue with publishing sometimes stopping (#23).
+v2.2.0
+• Added option to configure retain flag and QoS level of MQTT messages.
+• Updated App for Android 11.
+• Fixed a problem where scheduling was sometimes not resumed on network re-connect.
+• The next schedule information now changes when the app waits for a network re-connect.
