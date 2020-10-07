@@ -6,7 +6,7 @@ buildscript {
     dependencies {
         classpath("org.eclipse.jgit:org.eclipse.jgit:5.9.0.202009080501-r")
         // TODO: remove once upgraded version supports variantFilter out of the box
-        classpath("com.android.tools.build:gradle:4.0.1")
+        classpath("com.android.tools.build:gradle:4.0.2")
     }
 }
 
@@ -77,7 +77,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    buildToolsVersion("29.0.2")
+    buildToolsVersion("29.0.3")
 }
 
 val checkParameters by tasks.registering {
