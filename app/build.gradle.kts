@@ -5,6 +5,8 @@ buildscript {
     }
     dependencies {
         classpath("org.eclipse.jgit:org.eclipse.jgit:5.9.0.202009080501-r")
+        // TODO: remove once upgraded version supports variantFilter out of the box
+        classpath("com.android.tools.build:gradle:4.0.1")
     }
 }
 
@@ -28,6 +30,11 @@ fun getBuildVersionName(): String {
 
 fun isTagged(): Boolean {
     return git.status().call().isClean && getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))
+}
+
+fun hasCredentials(): Boolean {
+    val keystorePath: String? by project
+    return keystorePath != null
 }
 
 android {
@@ -62,6 +69,9 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("release")
         }
+    }
+    variantFilter {
+        ignore = buildType.name == "release" && !hasCredentials()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
