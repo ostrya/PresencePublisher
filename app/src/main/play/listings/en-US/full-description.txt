@@ -1,5 +1,5 @@
 This free open-source app regularly publishes to a configurable MQTT topic whenever
-connected to a given WiFi network or in proximity to a Bluetooth beacon.
+connected to a given Wi-Fi network or in proximity to a Bluetooth beacon.
 It can be used to integrate the presence of your phone in home automation.
 
 The app uses the built-in Android alarm manager, so notifications are sent
@@ -7,16 +7,16 @@ even if the phone is in stand-by. In addition to regularly scheduled checks,
 the app also reacts to changes in the network connection.
 
 The MQTT client supports anonymous and username / password authentication
-as well ass client certificate authentication. For more details on how to
+as well as client certificate authentication. For more details on how to
 configure certificate-based authentication, please have a look at
 https://github.com/ostrya/PresencePublisher/blob/master/README.md .
 
 <b>Permissions</b>
 
-• ACCESS_BACKGROUND_LOCATION: on Android 10+, necessary to retrieve SSID of connected WiFi while running in background
-• ACCESS_FINE_LOCATION: necessary to discover beacons; on Android 9+, necessary to retrieve SSID of connected WiFi
+• ACCESS_BACKGROUND_LOCATION: on Android 10+, necessary to retrieve SSID of connected Wi-Fi while running in background
+• ACCESS_FINE_LOCATION: necessary to discover beacons; on Android 9+, necessary to retrieve SSID of connected Wi-Fi
 • ACCESS_NETWORK_STATE: necessary to register network change listener
-• ACCESS_WIFI_STATE: necessary to retrieve SSID of connected WiFi
+• ACCESS_WIFI_STATE: necessary to retrieve SSID of connected Wi-Fi
 • BLUETOOTH: necessary to communicate with beacons
 • BLUETOOTH_ADMIN: necessary to discover beacons
 • INTERNET: only necessary if your MQTT server is not running locally

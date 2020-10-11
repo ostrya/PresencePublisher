@@ -1,1 +1,1 @@
-Regularly publish to an MQTT topic
+Publish your presence via MQTT

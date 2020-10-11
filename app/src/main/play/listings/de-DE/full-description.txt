@@ -1,0 +1,27 @@
+Diese freie Open-Source-App sendet regelmäßig Nachrichten an ein konfigurierbares
+MQTT-Topic, wann immer dein Handy mit einem vorgegebenen WLAN-Netzwerk verbunden
+oder in der Nähe eines Bluetooth-Beacons ist.
+Dies kann zur Integration der Anwesenheit deines Handys in der Heimautomatisierung
+eingesetzt werden.
+
+Die App benutzt den eingebauten Android Alarmdienst, sodass Nachrichten auch dann
+gesendet werden, wenn sich dein Gerät im Standby befindet. Neben Prüfungen in
+regelmäßigen Abständen reagiert die App auch auf Veränderungen in der Netzwerkverbindung.
+
+Der MQTT-Client unterstützt anonyme Kommunikation und Authentifikation über Benutzername
+und Passwort sowie über Client-Zertifikate. Mehr Details zum Einrichten von
+zertifikatsbasierter Authentifizierung findest du unter
+https://github.com/ostrya/PresencePublisher/blob/master/README.md .
+
+<b>Berechtigungen</b>
+
+• ACCESS_BACKGROUND_LOCATION: notwendig ab Android 10, um den Namen des verbundenen WLANs im Hintergrund zu erfassen
+• ACCESS_FINE_LOCATION: notwendig für das Finden von Bluetooth-Beacons; notwendig ab Android 9, um den Namen des verbundenen WLANs zu erfassen
+• ACCESS_NETWORK_STATE: notwendig für das Reagieren auf Netzwerk-Änderungen
+• ACCESS_WIFI_STATE: notwendig, um den Namen des verbundenen WLANs zu erfassen
+• BLUETOOTH: notwendig, um mit Bluetooth-Beacons zu kommunizieren
+• BLUETOOTH_ADMIN: notwendig, um unbekannte Bluetooth-Beacons zu finden
+• INTERNET: nur notwendig, wenn dein MQTT-Broker nicht im lokalen Netzwerk läuft
+• RECEIVE_BOOT_COMPLETED: notwendig, damit die App nach dem Neustart des Geräts automatisch starten kann
+• REQUEST_IGNORE_BATTERY_OPTIMIZATIONS: notwendig ab Android 6, um Batterieoptimierung zu deaktivieren
+• WRITE_EXTERNAL_STORAGE: nur in Android 4.0 - 4.3 notwendig, um nach Aufforderung Log-Dateien zu speichern
