@@ -32,9 +32,11 @@ fun isTagged(): Boolean {
     return git.status().call().isClean && getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))
 }
 
-fun hasCredentials(): Boolean {
+fun isMissingCredentials(): Boolean {
     val keystorePath: String? by project
-    return keystorePath != null
+    // this should get the release signing config in a way not detected by FDroid's signing key config stripping
+    val release: com.android.builder.model.SigningConfig? by android.signingConfigs
+    return release != null && keystorePath == null
 }
 
 android {
@@ -71,7 +73,9 @@ android {
         }
     }
     variantFilter {
-        ignore = buildType.name == "release" && !hasCredentials()
+        // on one hand, CI build should not attempt a release build due to missing signing key
+        // on the other hand, FDroid should still be able to build a release after stripping the signing key config
+        ignore = buildType.name == "release" && isMissingCredentials()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
