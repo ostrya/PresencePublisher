@@ -1,3 +1,6 @@
+v2.2.1
+• Improved wording to comply with Google Play background location policy.
+
 v2.2.0
 • Added option to configure retain flag and QoS level of MQTT messages.
 • Updated App for Android 11.
