@@ -2,20 +2,22 @@
 <resources>
     <string name="app_name">Presence Publisher</string>
     <string name="host_title">MQTT Host</string>
-    <string name="host_summary" formatted="true">IP-Adresse oder Hostname.%nAktueller Wert: %1$s</string>
-    <string name="presence_topic_title">Präsenz-Topic</string>
-    <string name="presence_topic_summary" formatted="true">Das Topic, zu dem Präsenznachrichten gesendet werden.%nAktueller Wert: %1$s</string>
+    <string name="host_summary" formatted="true">IP-Adresse oder Hostname%nAktueller Wert: %1$s</string>
+    <string name="presence_topic_title">Anwesenheits-Topic</string>
+    <string name="presence_topic_summary" formatted="true">Das Topic, zu dem Anwesenheitsnachrichten gesendet werden%nAktueller Wert: %1$s</string>
     <string name="message_schedule_title">Sendeperiode</string>
-    <string name="message_schedule_summary">Zeit zwischen Benachrichtigungen in Minuten.</string>
+    <string name="message_schedule_summary">Zeit zwischen Nachrichten in Minuten</string>
     <string name="message_schedule_dialog_text">Die Periode auf unter 15 Minuten zu setzen wird den Batterieverbrauch erhöhen. Fortfahren?</string>
     <string name="location_permission_dialog_title">Standortberechtigung</string>
-    <string name="location_permission_dialog_message">Bitte erlaube den dauerhaften Zugriff auf genaue Position. Andernfalls kann diese App den
+    <string name="location_permission_dialog_message">Bitte erlaube den Zugriff auf die genaue Position. Andernfalls kann diese App den
         Namen des aktuell verbundenen WLANs nicht bestimmen und Bluetooth-Beacons nicht finden.
     </string>
     <string name="background_location_permission_dialog_title">Standortzugriff im Hintergrund</string>
-    <string name="background_location_permission_dialog_message" formatted="true">Bitte erlaube dieser App den Zugriff auf deinen Standort im Hintergrund, indem du die Option \'%s\' in den Einstellungen wählst.
-        Andernfalls kann diese App den Namen des aktuell verbundenen WLANs nicht bestimmen und Bluetooth-Beacons nicht finden.
+    <string name="background_location_permission_dialog_message" formatted="true">%1$s erfasst Standortdaten, um den aktuell verbundenen WLAN-Namen zu erfahren und nahegelegene Bluetooth-Beacons zu finden, auch wenn die App geschlossen ist oder nicht verwendet wird.%n%n
+        Bitte erlaube dies, indem du im folgenden Dialog \'%2$s\' auswählst. Andernfalls kann diese App keine Anwesenheitsnachrichten senden.
     </string>
+    <!-- only needed for Android 10, where the BACKGROUND_LOCATION permission is introduced, but the option name is not exposed via PackageManager#getBackgroundPermissionOptionLabel() -->
+    <string name="background_location_permission_option_name">Immer zulassen</string>
     <string name="bluetooth_dialog_title">Bluetooth</string>
     <string name="bluetooth_dialog_message">Bitte schalte Bluetooth an, damit diese App nach Beacons suchen kann. Andernfalls
         wird die App keine Beacons finden.
@@ -32,41 +34,41 @@
     <string name="use_tls_title">TLS</string>
     <string name="use_tls_summary">Transportverschlüsselung verwenden?</string>
     <string name="retain_flag_title">Retain-Flag</string>
-    <string name="retain_flag_summary">Soll der Broker Benachrichtigungen nach getrennter Verbindung speichern?</string>
+    <string name="retain_flag_summary">Soll der Broker Nachrichten nach getrennter Verbindung speichern?</string>
     <string name="qos_value_title">Quality of Service</string>
-    <string name="qos_value_summary" formatted="true">Benachrichtigungen werden mit diesem QoS gesendet.%nAktueller Wert: %1$s</string>
+    <string name="qos_value_summary" formatted="true">Nachrichten werden mit diesem QoS gesendet%nAktueller Wert: %1$s</string>
     <string name="port_title">MQTT Port</string>
-    <string name="port_summary" formatted="true">Standardwert 1883, bzw. 8883 bei TLS.%nAktueller Wert: %1$s</string>
+    <string name="port_summary" formatted="true">Standardwert 1883, bzw. 8883 bei TLS%nAktueller Wert: %1$s</string>
     <string name="toast_invalid_input">Ungültige Eingabe!</string>
-    <string name="check_connection_summary">Tippe hier, um eine Testbenachrichtigung zu senden.</string>
+    <string name="check_connection_summary">Tippe hier, um eine Testnachricht zu senden</string>
     <string name="check_connection_title">Verbindung prüfen</string>
     <string name="dialog_check_connection_title">Prüfe Verbindung</string>
     <string name="dialog_check_connection_summary_waiting">Bitte warten. Dies kann bis zu 15 Sekunden dauern.</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Abbrechen</string>
-    <string name="dialog_check_connection_summary_success">Benachrichtigung erfolgreich gesendet.</string>
+    <string name="dialog_check_connection_summary_success">Nachricht erfolgreich gesendet.</string>
     <string name="value_undefined"><![CDATA[<nicht gesetzt>]]></string>
     <string name="autostart_summary">Soll diese App beim Boot starten?</string>
     <string name="dialog_check_connection_summary_failure" formatted="true">Verbindung fehlgeschlagen:%n%1$s</string>
     <string name="client_certificate_title">Client-Zertifikat</string>
-    <string name="client_certificate_summary">Das Client-Zertifikat, mit dem sich das Gerät authentifizieren soll.%nAktueller Wert: %1$s</string>
+    <string name="client_certificate_summary">Das Client-Zertifikat, mit dem sich das Gerät authentifizieren soll%nAktueller Wert: %1$s</string>
     <string name="last_success_title">Letzter Erfolg</string>
     <string name="next_schedule_title">Geplant für</string>
     <string name="username_title">MQTT Anmeldung</string>
-    <string name="username_summary" formatted="true">Anmeldung.%nAktueller Wert: %1$s</string>
+    <string name="username_summary" formatted="true">Anmeldung%nAktueller Wert: %1$s</string>
     <string name="password_title">MQTT Passwort</string>
-    <string name="password_summary" formatted="true">Passwort.%nAktueller Wert: %1$s</string>
-    <string name="send_offline_message_title">\'Keine Bedingung\'-Nachricht senden</string>
+    <string name="password_summary" formatted="true">Passwort%nAktueller Wert: %1$s</string>
+    <string name="send_offline_message_title">Abwesenheitsnachricht senden</string>
     <string name="send_offline_message_summary">Nachricht senden, wenn keine der obigen Bedingungen zutrifft</string>
-    <string name="send_via_mobile_network_title">Ohne WiFi senden</string>
+    <string name="send_via_mobile_network_title">Ohne WLAN senden</string>
     <string name="send_via_mobile_network_summary">Nachrichten notfalls über mobile Daten senden</string>
     <string name="tab_condition_title">Bedingungen</string>
     <string name="category_wifi">Ein Netzwerk ist verbunden</string>
     <string name="category_beacon_regions">In der Nähe eines Beacons</string>
     <string name="category_offline">Keine Bedingung ist erfüllt</string>
     <string name="content_summary" formatted="true">Aktueller Wert: %1$s</string>
-    <string name="offline_content_title">\'Keine Bedingung\'-Nachricht</string>
-    <string name="condition_help_summary">Für jede erfüllte Bedingung wird eine Nachricht gesendet. Klicken, um die gesendete Nachricht für eine Bedingung zu ändern. Lange klicken, um einen Eintrag zu löschen.</string>
+    <string name="offline_content_title">Abwesenheitsnachricht</string>
+    <string name="condition_help_summary">Für jede erfüllte Bedingung wird eine Nachricht gesendet. Tippe, um die gesendete Nachricht für eine Bedingung zu ändern. Berühre länger, um einen Eintrag zu löschen.</string>
     <string name="tab_log_title">Log</string>
     <string name="button_export">Exportieren</string>
     <string name="toast_no_logs">Keine Logs vorhanden</string>
@@ -76,19 +78,19 @@
     <string name="battery_topic_title">Batterie-Topic</string>
     <string name="battery_topic_summary" formatted="true">Das Topic, zu dem Batterienachrichten gesendet werden.%nAktueller Wert: %1$s</string>
     <string name="send_battery_message_title">Batteriestand senden</string>
-    <string name="send_battery_message_summary">Batteriestand in Prozent zusätzlich zu Präsenznachricht senden.</string>
+    <string name="send_battery_message_summary">Batteriestand in Prozent zusätzlich zu Anwesenheitsnachricht senden.</string>
     <string name="battery_optimization_dialog_title">Akku-Optimierung</string>
     <string name="battery_optimization_dialog_message">Bitte deaktiviere Akku-Optimierung für diese App. Andernfalls kann Android diese App anhalten, sodass keine Nachrichten im Standby gesendet werden.</string>
     <string name="add_network_title">Netzwerk hinzufügen</string>
-    <string name="add_network_summary">Tippe hier, um ein Netzwerk hinzuzufügen.</string>
+    <string name="add_network_summary">Tippe hier, um ein Netzwerk hinzuzufügen</string>
     <string name="remove_network_title">Netzwerk entfernen</string>
     <string name="remove_network_warning_message">Dieses Netzwerk wirklich entfernen?</string>
     <string name="enter_network">Anderes Netzwerk eingeben …</string>
     <string name="add_beacon_title">Beacon hinzufügen</string>
-    <string name="add_beacon_summary">Tippe hier, um ein Beacon hinzuzufügen.</string>
+    <string name="add_beacon_summary">Tippe hier, um ein Beacon hinzuzufügen</string>
     <string name="remove_region_title">Region entfernen</string>
     <string name="remove_region_warning_message">Diese Beacon-Region wirklich entfernen?</string>
-    <string name="no_bluetooth_explanation">Dein Gerät unterstützt keine Bluetooth-Beacons.</string>
+    <string name="no_bluetooth_explanation">Dein Gerät unterstützt keine Bluetooth-Beacons</string>
     <string name="dialog_scan_beacons_title">Beacons in der Nähe</string>
     <string name="toast_scan_failed">Beacon-Suche fehlgeschlagen</string>
     <string name="message_charging_schedule_title">Ladesendeperiode</string>

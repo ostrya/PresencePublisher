@@ -28,18 +28,17 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
                 != PackageManager.PERMISSION_GRANTED) {
             HyperLog.i(TAG, "Background location permission not yet granted, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
-            PackageManager pm = activity.getPackageManager();
 
-            ConfirmationDialogFragment fragment;
+            CharSequence optionName;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                fragment = ConfirmationDialogFragment.getInstance(this::onResult,
-                        R.string.background_location_permission_dialog_title,
-                        activity.getString(R.string.background_location_permission_dialog_message, pm.getBackgroundPermissionOptionLabel()));
+                PackageManager pm = activity.getPackageManager();
+                optionName = pm.getBackgroundPermissionOptionLabel();
             } else {
-                fragment = ConfirmationDialogFragment.getInstance(this::onResult,
-                        R.string.background_location_permission_dialog_title,
-                        R.string.location_permission_dialog_message);
+                optionName = activity.getString(R.string.background_location_permission_option_name);
             }
+            ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(this::onResult,
+                    R.string.background_location_permission_dialog_title,
+                    activity.getString(R.string.background_location_permission_dialog_message, activity.getString(R.string.app_name), optionName));
             fragment.show(fm, null);
         } else {
             finishInitialization();

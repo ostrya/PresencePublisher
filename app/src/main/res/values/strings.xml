@@ -1,31 +1,33 @@
 <resources>
     <string name="app_name">Presence Publisher</string>
     <string name="host_title">MQTT Host</string>
-    <string name="host_summary" formatted="true">IP address or hostname.%nCurrent value: %1$s</string>
+    <string name="host_summary" formatted="true">IP address or hostname%nCurrent value: %1$s</string>
     <string name="username_title">MQTT Login</string>
-    <string name="username_summary" formatted="true">User Login.%nCurrent value: %1$s</string>
+    <string name="username_summary" formatted="true">User Login%nCurrent value: %1$s</string>
     <string name="password_title">MQTT Password</string>
-    <string name="password_summary" formatted="true">User Password.%nCurrent value: %1$s</string>
+    <string name="password_summary" formatted="true">User Password%nCurrent value: %1$s</string>
     <string name="password_placeholder" translatable="false">••••••••</string>
     <string name="presence_topic_title">Presence Topic</string>
-    <string name="presence_topic_summary" formatted="true">The topic to publish presence messages to.%nCurrent value: %1$s</string>
+    <string name="presence_topic_summary" formatted="true">The topic to publish presence messages to%nCurrent value: %1$s</string>
     <string name="send_battery_message_title">Send battery level</string>
-    <string name="send_battery_message_summary">Send battery level percentage in addition to presence information.</string>
+    <string name="send_battery_message_summary">Send battery level percentage in addition to presence information</string>
     <string name="battery_topic_title">Battery Topic</string>
-    <string name="battery_topic_summary" formatted="true">The topic to publish battery level to.%nCurrent value: %1$s</string>
+    <string name="battery_topic_summary" formatted="true">The topic to publish battery level to%nCurrent value: %1$s</string>
     <string name="message_schedule_title">Publish period</string>
-    <string name="message_schedule_summary">The time between messages in minutes.</string>
+    <string name="message_schedule_summary">The time between messages in minutes</string>
     <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>
     <string name="message_charging_schedule_title">Charging publish period</string>
     <string name="message_charging_schedule_summary">Publish period while device is charging.\nFor value = 0 the normal schedule is used.</string>
     <string name="location_permission_dialog_title">Location permission</string>
-    <string name="location_permission_dialog_message">Please allow access to fine location all the time. Otherwise, this app will not be able to
-        retrieve the currently connected WiFi name or find Bluetooth beacons.
+    <string name="location_permission_dialog_message">Please allow access to fine location. Otherwise, this app will not be able to
+        retrieve the currently connected Wi-Fi name or find Bluetooth beacons.
     </string>
     <string name="background_location_permission_dialog_title">Background location permission</string>
-    <string name="background_location_permission_dialog_message" formatted="true">Please allow this app to access location information from the background by selecting option \'%s\' in the settings.
-        Otherwise, this app will not be able to retrieve the currently connected WiFi name or find Bluetooth beacons.
+    <string name="background_location_permission_dialog_message" formatted="true">%1$s collects location data to retrieve the currently connected Wi-Fi name and find Bluetooth beacons even when the app is closed or not in use.%n%n
+        Please allow this by selecting option \'%2$s\' in the upcoming dialog. Otherwise, this app will not be able to send presence messages.
     </string>
+    <!-- only needed for Android 10, where the BACKGROUND_LOCATION permission is introduced, but the option name is not exposed via PackageManager#getBackgroundPermissionOptionLabel() -->
+    <string name="background_location_permission_option_name">Allow all the time</string>
     <string name="bluetooth_dialog_title">Bluetooth</string>
     <string name="bluetooth_dialog_message">Please enable Bluetooth so that this app can scan for beacons. Otherwise,
         no beacons will be found.
@@ -33,7 +35,7 @@
     <string name="autostart_title">Autostart</string>
     <string name="location_dialog_title">Location service</string>
     <string name="location_dialog_message">Please enable location services (at least network-based) and keep them enabled.
-        Otherwise, this app will not be able to retrieve the currently connected WiFi name or find Bluetooth beacons.
+        Otherwise, this app will not be able to retrieve the currently connected Wi-Fi name or find Bluetooth beacons.
     </string>
     <string name="battery_optimization_dialog_title">Battery optimization</string>
     <string name="battery_optimization_dialog_message">Please disable battery optimization. Otherwise, Android may doze this app and stop it from sending messages during standby.</string>
@@ -46,11 +48,11 @@
     <string name="retain_flag_title">Retain flag</string>
     <string name="retain_flag_summary">Should the messages be retained in the broker after disconnect?</string>
     <string name="qos_value_title">Quality of Service</string>
-    <string name="qos_value_summary" formatted="true">Which QoS to use for sending messages.%nCurrent value: %1$s</string>
+    <string name="qos_value_summary" formatted="true">Which QoS to use for sending messages%nCurrent value: %1$s</string>
     <string name="port_title">MQTT Port</string>
-    <string name="port_summary" formatted="true">Defaults to 1883, or 8883 for TLS.%nCurrent value: %1$s</string>
+    <string name="port_summary" formatted="true">Defaults to 1883, or 8883 for TLS%nCurrent value: %1$s</string>
     <string name="toast_invalid_input">Invalid input!</string>
-    <string name="check_connection_summary">Click here to send test message.</string>
+    <string name="check_connection_summary">Click here to send a test message</string>
     <string name="check_connection_title">Check connection</string>
     <string name="dialog_check_connection_title">Testing connection</string>
     <string name="dialog_check_connection_summary_waiting">Please wait. This may take up to 15 seconds.</string>
@@ -61,19 +63,19 @@
     <string name="autostart_summary">Should this app start on boot?</string>
     <string name="dialog_check_connection_summary_failure" formatted="true">Connection failed:%n%1$s</string>
     <string name="client_certificate_title">Client certificate</string>
-    <string name="client_certificate_summary" formatted="true">Client certificate to authenticate this device.%nCurrent value: %1$s</string>
+    <string name="client_certificate_summary" formatted="true">Client certificate to authenticate this device%nCurrent value: %1$s</string>
     <string name="last_success_title">Last success</string>
     <string name="next_schedule_title">Scheduled for</string>
-    <string name="send_offline_message_title">Send \'no condition\' message</string>
+    <string name="send_offline_message_title">Send absence message</string>
     <string name="send_offline_message_summary">Send message when none of the above conditions match</string>
-    <string name="send_via_mobile_network_title">Send without WiFi</string>
+    <string name="send_via_mobile_network_title">Send without Wi-Fi</string>
     <string name="send_via_mobile_network_summary">Send messages via mobile network if necessary</string>
     <string name="tab_condition_title">Conditions</string>
     <string name="category_wifi">A network is connected</string>
     <string name="category_offline">None of the above matches</string>
     <string name="category_beacon_regions">Close to a beacon</string>
     <string name="content_summary" formatted="true">Current value: %1$s</string>
-    <string name="offline_content_title">\'No condition\' message</string>
+    <string name="offline_content_title">Absence message</string>
     <string name="condition_help_summary">For each fulfilled condition, a message is sent. Click to edit the message to be sent for a condition. Long-click to delete.</string>
     <string name="tab_log_title">Log</string>
     <string name="button_reload">Reload</string>
@@ -82,7 +84,7 @@
     <string name="toast_no_logs">No logs available</string>
     <string name="tab_licenses_title">Licenses</string>
     <string name="add_network_title">Add network</string>
-    <string name="add_network_summary">Click here to add a new network.</string>
+    <string name="add_network_summary">Click here to add a new network</string>
     <string name="remove_network_title">Remove network</string>
     <string name="remove_network_warning_message">Do you really want to remove this network?</string>
     <string name="enter_network">Enter other network …</string>
@@ -90,7 +92,7 @@
     <string name="add_beacon_summary">Click here to add a beacon</string>
     <string name="remove_region_title">Remove region</string>
     <string name="remove_region_warning_message">Do you really want to remove this beacon region?</string>
-    <string name="no_bluetooth_explanation">Your device does not support Bluetooth beacons.</string>
+    <string name="no_bluetooth_explanation">Your device does not support Bluetooth beacons</string>
     <string name="dialog_scan_beacons_title">Beacons in range</string>
     <string name="toast_scan_failed">Scanning for beacons failed</string>
     <string name="toast_logs_stored" formatted="true">Stored to \'%s\'</string>

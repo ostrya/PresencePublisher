@@ -58,7 +58,7 @@ public class MainActivity extends FragmentActivity {
         new TabLayoutMediator(tabLayout, viewPager, mainPagerAdapter).attach();
 
         locationServiceNeeded = ((PresencePublisher) getApplication()).supportsBeacons()
-                // for WiFi name resolution
+                // for Wi-Fi name resolution
                 || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceListener);
