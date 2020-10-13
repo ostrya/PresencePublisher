@@ -32,11 +32,24 @@ fun isTagged(): Boolean {
     return git.status().call().isClean && getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))
 }
 
-fun isMissingCredentials(): Boolean {
+fun isFDroidBuild(): Boolean {
+    // this is a hack to find out if we are built by FDroid
+    // value == true means FDroid build, value == false means normal build
+    var signingConfig = true
+
+    // the following line will be removed by FDroid
+    signingConfig = false
+
+    return signingConfig
+}
+
+fun isSigningKeyMissing(): Boolean {
     val keystorePath: String? by project
-    // this should get the release signing config in a way not detected by FDroid's signing key config stripping
-    val release: com.android.builder.model.SigningConfig? by android.signingConfigs
-    return release != null && keystorePath == null
+    return keystorePath == null
+}
+
+fun shouldSuppressReleaseBuild(): Boolean {
+    return isSigningKeyMissing() && !isFDroidBuild()
 }
 
 android {
@@ -49,7 +62,7 @@ android {
         versionName = "2.2.1"
     }
     signingConfigs {
-        create("release") {
+        register("release") {
             val keystorePath: String? by project
             val keystorePassword: String? by project
             val signkeyAlias: String? by project
@@ -61,21 +74,21 @@ android {
         }
     }
     buildTypes {
-        getByName("debug") {
+        named("debug") {
             applicationIdSuffix = ".debug"
             isDebuggable = true
             isMinifyEnabled = false
         }
-        getByName("release") {
+        named("release") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.named("release").get()
         }
     }
     variantFilter {
         // on one hand, CI build should not attempt a release build due to missing signing key
         // on the other hand, FDroid should still be able to build a release after stripping the signing key config
-        ignore = buildType.name == "release" && isMissingCredentials()
+        ignore = buildType.name == "release" && shouldSuppressReleaseBuild()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
