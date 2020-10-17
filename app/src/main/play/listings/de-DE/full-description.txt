@@ -10,8 +10,9 @@ regelmäßigen Abständen reagiert die App auch auf Veränderungen in der Netzwe
 
 Der MQTT-Client unterstützt anonyme Kommunikation und Authentifikation über Benutzername
 und Passwort sowie über Client-Zertifikate. Mehr Details zum Einrichten von
-zertifikatsbasierter Authentifizierung findest du unter
-https://github.com/ostrya/PresencePublisher/blob/master/README.md .
+zertifikatsbasierter Authentifizierung findest du
+<a href="https://github.com/ostrya/PresencePublisher/blob/master/README.md">im Readme</a>
+(auf Englisch).
 
 <b>Berechtigungen</b>
 

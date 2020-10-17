@@ -9,7 +9,7 @@ the app also reacts to changes in the network connection.
 The MQTT client supports anonymous and username / password authentication
 as well as client certificate authentication. For more details on how to
 configure certificate-based authentication, please have a look at
-https://github.com/ostrya/PresencePublisher/blob/master/README.md .
+<a href="https://github.com/ostrya/PresencePublisher/blob/master/README.md">the readme</a>.
 
 <b>Permissions</b>
 
