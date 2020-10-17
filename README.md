@@ -7,9 +7,10 @@
 [<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="75">](https://f-droid.org/packages/org.ostrya.presencepublisher)
 [<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="75" alt="Get it on Google Play">](https://play.google.com/store/apps/details?id=org.ostrya.presencepublisher&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1)
 
-A simple app that regularly publishes to a configurable MQTT topic whenever connected to a given Wi-Fi network or in
-proximity to a Bluetooth beacon. This can be used to integrate the presence of your phone in home automation.
- 
+Presence Publisher is a simple app that regularly publishes to a configurable MQTT topic whenever connected to a
+given Wi-Fi network or in proximity to a Bluetooth beacon. This can be used to integrate the presence of your phone
+in home automation.
+
 Several networks and beacons can be configured at once, and the message to be sent can be configured for each of them.
 
 If your MQTT server is available on the internet, you can also choose to send an 'offline' message
@@ -19,6 +20,9 @@ As an additional feature, you can send the battery level of your device whenever
 recharge it before it turns off.
 
 The app uses the built-in Android alarm manager, so notifications are sent even if the phone is in stand-by.
+
+For details on which data this app processes and how it does so, please have a look at the
+[privacy policy](legal/en/PRIVACY_POLICY.md).
 
 ## TLS with self-signed certificates
 
@@ -64,11 +68,3 @@ Make sure your PKCS#12 keystore file has the `.pfx` extension, otherwise Android
 * RECEIVE_BOOT_COMPLETED: necessary to start service on start-up
 * REQUEST_IGNORE_BATTERY_OPTIMIZATIONS: on Android 6+, necessary to request disabling battery optimization
 * WRITE_EXTERNAL_STORAGE: only necessary if you want to export log files in Android 4.0 - 4.3
-
-## Future ideas
-
-* more conditions when to send notification
-  * time ranges
-  * actual location
-  * ...
-* ...
