@@ -32,34 +32,14 @@ fun isTagged(): Boolean {
     return getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))
 }
 
-fun isFDroidBuild(): Boolean {
-    // this is a hack to find out if we are built by FDroid
-    // value == true means FDroid build, value == false means normal build
-    var signingConfig = true
-
-    // the following line will be removed by FDroid
-    signingConfig = false
-
-    return signingConfig
-}
-
-fun isSigningKeyMissing(): Boolean {
-    val keystorePath: String? by project
-    return keystorePath == null
-}
-
-fun shouldSuppressReleaseBuild(): Boolean {
-    return isSigningKeyMissing() && !isFDroidBuild()
-}
-
 android {
     compileSdkVersion(30)
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
         targetSdkVersion(30)
-        versionCode = 32
-        versionName = "2.2.2"
+        versionCode = 33
+        versionName = "2.2.3"
     }
     signingConfigs {
         register("release") {
@@ -82,13 +62,8 @@ android {
         named("release") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.named("release").get()
+            signingConfig = signingConfigs.named("release").orNull?.takeIf { it.isSigningReady }
         }
-    }
-    variantFilter {
-        // on one hand, CI build should not attempt a release build due to missing signing key
-        // on the other hand, FDroid should still be able to build a release after stripping the signing key config
-        ignore = buildType.name == "release" && shouldSuppressReleaseBuild()
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
