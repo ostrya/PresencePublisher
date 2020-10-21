@@ -29,7 +29,7 @@ fun getBuildVersionName(): String {
 }
 
 fun isTagged(): Boolean {
-    return git.status().call().isClean && getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))
+    return getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))
 }
 
 fun isFDroidBuild(): Boolean {
