@@ -38,8 +38,8 @@ android {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
         targetSdkVersion(30)
-        versionCode = 33
-        versionName = "2.2.3"
+        versionCode = 34
+        versionName = "2.2.4"
     }
     signingConfigs {
         register("release") {
@@ -62,7 +62,7 @@ android {
         named("release") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.named("release").orNull?.takeIf { it.isSigningReady }
+            signingConfig = signingConfigs.findByName("release")?.takeIf { it.isSigningReady }
         }
     }
     compileOptions {
