@@ -25,9 +25,12 @@ import static org.ostrya.presencepublisher.ui.preference.connection.QoSPreferenc
 import static org.ostrya.presencepublisher.ui.preference.connection.RetainFlagPreference.RETAIN_FLAG;
 import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
 import static org.ostrya.presencepublisher.ui.preference.connection.UsernamePreference.USERNAME;
+import static org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference.PRESENCE_TOPIC;
 
 public class MqttService {
     private static final String TAG = "MqttService";
+
+    private static final byte[] TEST_PAYLOAD = {0x74, 0x65, 0x73, 0x74};
 
     private final AndroidSslSocketFactoryFactory factory;
     private final SharedPreferences sharedPreferences;
@@ -40,6 +43,31 @@ public class MqttService {
         securePreferences = SecurePreferencesHelper.getSecurePreferences(applicationContext);
     }
 
+    public void sendTestMessage() throws MqttException {
+        HyperLog.i(TAG, "Sending test message to server");
+        boolean tls = sharedPreferences.getBoolean(USE_TLS, false);
+        String clientCertAlias = sharedPreferences.getString(CLIENT_CERTIFICATE, null);
+        String login = sharedPreferences.getString(USERNAME, "");
+        String password = securePreferences.getString(PASSWORD, "");
+        String topic = sharedPreferences.getString(PRESENCE_TOPIC, "test");
+
+        try (MqttClient mqttClient = new MqttClient(getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence())) {
+            MqttConnectOptions options = new MqttConnectOptions();
+            options.setConnectionTimeout(5);
+            if (!login.isEmpty() && !password.isEmpty()) {
+                options.setUserName(login);
+                options.setPassword(password.toCharArray());
+            }
+            if (tls) {
+                options.setSocketFactory(factory.getSslSocketFactory(clientCertAlias));
+            }
+            mqttClient.connect(options);
+            mqttClient.publish(topic, TEST_PAYLOAD, 1, false);
+            mqttClient.disconnect(5);
+        }
+        HyperLog.i(TAG, "Sending messages was successful");
+    }
+
     public void sendMessages(List<Message> messages) throws MqttException {
         HyperLog.i(TAG, "Sending " + messages.size() + " messages to server");
         boolean tls = sharedPreferences.getBoolean(USE_TLS, false);
@@ -49,24 +77,21 @@ public class MqttService {
         int qos = getQosFromString(sharedPreferences.getString(QOS_VALUE, null));
         boolean retain = sharedPreferences.getBoolean(RETAIN_FLAG, false);
 
-        MqttClient mqttClient = new MqttClient(getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence());
-        MqttConnectOptions options = new MqttConnectOptions();
-        options.setConnectionTimeout(5);
-        if (!login.isEmpty() && !password.isEmpty()) {
-            options.setUserName(login);
-            options.setPassword(password.toCharArray());
-        }
-        if (tls) {
-            options.setSocketFactory(factory.getSslSocketFactory(clientCertAlias));
-        }
-        try {
+        try (MqttClient mqttClient = new MqttClient(getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence())) {
+            MqttConnectOptions options = new MqttConnectOptions();
+            options.setConnectionTimeout(5);
+            if (!login.isEmpty() && !password.isEmpty()) {
+                options.setUserName(login);
+                options.setPassword(password.toCharArray());
+            }
+            if (tls) {
+                options.setSocketFactory(factory.getSslSocketFactory(clientCertAlias));
+            }
             mqttClient.connect(options);
             for (Message message : messages) {
                 mqttClient.publish(message.getTopic(), message.getContent().getBytes(Charset.forName("UTF-8")), qos, retain);
             }
-        } finally {
             mqttClient.disconnect(5);
-            mqttClient.close(true);
         }
         HyperLog.i(TAG, "Sending messages was successful");
     }

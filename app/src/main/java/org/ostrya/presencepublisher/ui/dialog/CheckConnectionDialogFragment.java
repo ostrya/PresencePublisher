@@ -13,12 +13,9 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.mqtt.MqttService;
 
-import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import static org.ostrya.presencepublisher.message.Message.messageForTopic;
 
 public class CheckConnectionDialogFragment extends DialogFragment {
     private static final String TAG = "CheckConnectionDialogFragment";
@@ -67,7 +64,7 @@ public class CheckConnectionDialogFragment extends DialogFragment {
         public void run() {
             String message;
             try {
-                mqttService.sendMessages(Collections.singletonList(messageForTopic("test").withContent("test")));
+                mqttService.sendTestMessage();
                 message = getResources().getString(R.string.dialog_check_connection_summary_success);
             } catch (MqttException | RuntimeException e) {
                 HyperLog.w(TAG, "Error while sending message", e);
