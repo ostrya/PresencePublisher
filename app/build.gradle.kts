@@ -1,3 +1,6 @@
+import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.revwalk.RevWalk
+
 // license plugin needs google repo, see https://github.com/jaredsburrows/gradle-license-plugin/issues/129
 buildscript {
     repositories {
@@ -16,11 +19,16 @@ plugins {
     id("com.android.application")
 }
 
-val git = org.eclipse.jgit.api.Git.open(rootDir)
+val git: Git = Git.open(rootDir)
 
 fun getBuildVersionCode(): Int {
+    val headWalk: RevWalk = git.log().call() as RevWalk
+    val head = headWalk.next()
     val tagList = git.tagList().call()
-    val tagCount = tagList.count { it.name.matches(Regex("refs/tags/v[1-9].*")) }
+    val tagCount = tagList.count {
+        it.name.matches(Regex("refs/tags/v[1-9].*"))
+                && headWalk.isMergedInto(headWalk.parseCommit(it.objectId), head)
+    }
     return if (isTagged()) tagCount else tagCount + 1
 }
 
@@ -38,7 +46,7 @@ android {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
         targetSdkVersion(30)
-        versionCode = 34
+        versionCode = 35
         versionName = "2.2.4"
     }
     signingConfigs {
@@ -119,4 +127,10 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.17.2")
     testImplementation("org.mockito:mockito-inline:3.5.13")
     testRuntimeOnly("com.android.volley:volley:1.1.1")
+}
+
+tasks.register("printVersion") {
+    doLast {
+        println("Version code: ${getBuildVersionCode()}, version name: ${getBuildVersionName()}")
+    }
 }
