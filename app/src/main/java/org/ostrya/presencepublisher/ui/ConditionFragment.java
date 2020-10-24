@@ -14,8 +14,8 @@ import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.PresencePublisher;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.contract.IntentActionContract;
-import org.ostrya.presencepublisher.ui.preference.common.ContentHelpDummy;
 import org.ostrya.presencepublisher.ui.preference.common.MyPreferenceCategory;
+import org.ostrya.presencepublisher.ui.preference.common.StringDummy;
 import org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy;
 import org.ostrya.presencepublisher.ui.preference.condition.AddNetworkChoicePreferenceDummy;
 import org.ostrya.presencepublisher.ui.preference.condition.BeaconPreference;
@@ -57,7 +57,7 @@ public class ConditionFragment extends PreferenceFragmentCompat {
 
         PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(context);
 
-        Preference contentHelp = new ContentHelpDummy(context, R.string.condition_help_summary);
+        Preference contentHelp = new StringDummy(context, R.string.condition_help_summary);
         Preference sendViaMobileNetwork = new SendViaMobileNetworkPreference(context);
         wifiCategory = new MyPreferenceCategory(context, R.string.category_wifi);
         beaconCategory = new MyPreferenceCategory(context, R.string.category_beacon_regions);
@@ -87,7 +87,7 @@ public class ConditionFragment extends PreferenceFragmentCompat {
             }
             beaconCategory.addPreference(addBeaconChoice);
         } else {
-            beaconCategory.addPreference(new ContentHelpDummy(context, R.string.no_bluetooth_explanation));
+            beaconCategory.addPreference(new StringDummy(context, R.string.no_bluetooth_explanation));
         }
 
         Preference offlineContent = new OfflineContentPreference(context);

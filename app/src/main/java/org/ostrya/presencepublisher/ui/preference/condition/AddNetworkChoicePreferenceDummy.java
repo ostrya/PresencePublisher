@@ -33,6 +33,7 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
         setDialogTitle(R.string.add_network_title);
         setSummary(R.string.add_network_summary);
         setIcon(android.R.drawable.ic_menu_add);
+        setPersistent(false);
         // show last
         setOrder(Integer.MAX_VALUE - 1);
         String[] entryValues = getCurrentEntries(sharedPreferences.getStringSet(SSID_LIST, Collections.emptySet()));

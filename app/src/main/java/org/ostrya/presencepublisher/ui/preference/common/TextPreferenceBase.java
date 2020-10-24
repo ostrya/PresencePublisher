@@ -15,7 +15,7 @@ public abstract class TextPreferenceBase extends EditTextPreference {
         setDialogTitle(titleId);
     }
 
-    public TextPreferenceBase(Context context, String key, Validator validator, String title) {
+    public TextPreferenceBase(Context context, String key, Validator validator, CharSequence title) {
         this(context, key, validator);
         setTitle(title);
         setDialogTitle(title);

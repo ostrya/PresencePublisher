@@ -1,6 +1,6 @@
 # Datenschutzerklärung
 
-Im Folgenden wird beschrieben, wie Presence Publisher deine persönlichen Daten erhebt
+Das folgende Dokument beschreibt, wie Presence Publisher deine persönlichen Daten erhebt
 und verarbeitet.
 
 ## Welche persönlichen Daten werden erhoben?

@@ -74,7 +74,7 @@
     <string name="toast_no_logs">Keine Logs vorhanden</string>
     <string name="button_reload">Neu laden</string>
     <string name="button_clear">Löschen</string>
-    <string name="tab_licenses_title">Lizenzen</string>
+    <string name="tab_about_title">Über</string>
     <string name="battery_topic_title">Batterie-Topic</string>
     <string name="battery_topic_summary" formatted="true">Das Topic, zu dem Batterienachrichten gesendet werden.%nAktueller Wert: %1$s</string>
     <string name="send_battery_message_title">Batteriestand senden</string>
@@ -97,4 +97,19 @@
     <string name="message_charging_schedule_summary">Sendeperiode, wenn das Gerät geladen wird.\nBei Wert = 0 wird die normale Periode benutzt.</string>
     <string name="toast_logs_stored" formatted="true">Gespeichert nach \'%s\'</string>
     <string name="value_network_reconnect">Warte auf Netzwerkverbindung …</string>
+    <string name="bundled_licenses_title">Lizenzen eingebundener Komponenten</string>
+    <string name="bundled_licenses_summary">Tippe hier, um Lizenzen der eingebundenen Komponenten zu sehen.</string>
+    <string name="privacy_title">Datenschutzerklärung</string>
+    <string name="privacy_summary">Tippe hier, um die Datenschutzerklärung dieser App im Browser zu öffnen.</string>
+    <string name="signature_title">Appsignatur</string>
+    <string name="source_repo_title">Quellcode</string>
+    <string name="version_code_title">Versionscode</string>
+    <string name="version_name_title">Versionsname</string>
+    <string name="build_type_title">Buildtyp</string>
+    <string name="app_id_title">App-ID</string>
+    <string name="category_build">Build-Information</string>
+    <string name="category_legal">Rechtliches</string>
+    <string name="dialog_close">Schließen</string>
+    <string name="source_repo_summary">Tippe hier, um den Quellcode in einem Browser zu öffnen.</string>
+    <string name="privacy_url">https://github.com/ostrya/PresencePublisher/blob/master/legal/de/PRIVACY_POLICY.md</string>
 </resources>

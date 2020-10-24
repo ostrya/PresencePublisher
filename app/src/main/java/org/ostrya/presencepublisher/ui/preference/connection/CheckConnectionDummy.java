@@ -2,22 +2,20 @@ package org.ostrya.presencepublisher.ui.preference.connection;
 
 import android.content.Context;
 import androidx.fragment.app.Fragment;
-import androidx.preference.Preference;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.dialog.CheckConnectionDialogFragment;
+import org.ostrya.presencepublisher.ui.preference.common.ClickDummy;
 
 import static org.ostrya.presencepublisher.ui.dialog.CheckConnectionDialogFragment.getInstance;
 
-public class CheckConnectionDummy extends Preference {
+public class CheckConnectionDummy extends ClickDummy {
     public CheckConnectionDummy(Context context, Fragment fragment) {
-        super(context);
-        setTitle(R.string.check_connection_title);
-        setSummary(R.string.check_connection_summary);
-        setIcon(R.drawable.ic_notification);
-        setOnPreferenceClickListener(prefs -> {
-            CheckConnectionDialogFragment instance = getInstance(context);
-            instance.show(fragment.getParentFragmentManager(), null);
-            return true;
-        });
+        super(context, R.drawable.ic_notification, R.string.check_connection_title, R.string.check_connection_summary, fragment);
+    }
+
+    @Override
+    protected void onClick() {
+        CheckConnectionDialogFragment instance = getInstance(getContext());
+        instance.show(getParentFragmentManager(), null);
     }
 }

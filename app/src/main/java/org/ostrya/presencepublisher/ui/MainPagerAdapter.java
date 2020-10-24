@@ -28,7 +28,7 @@ public class MainPagerAdapter extends FragmentStateAdapter implements TabLayoutM
             case 3:
                 return new LogFragment();
             case 4:
-                return new LicenseFragment();
+                return new AboutFragment();
         }
     }
 
@@ -55,7 +55,7 @@ public class MainPagerAdapter extends FragmentStateAdapter implements TabLayoutM
                 titleId = R.string.tab_log_title;
                 break;
             case 4:
-                titleId = R.string.tab_licenses_title;
+                titleId = R.string.tab_about_title;
                 break;
         }
         tab.setText(titleId);
