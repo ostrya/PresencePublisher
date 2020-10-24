@@ -24,6 +24,7 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
 import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
+import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 
 public class Publisher {
     private static final String TAG = "Publisher";
@@ -83,7 +84,7 @@ public class Publisher {
         if (result.isEmpty() && sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)) {
             result.addAll(offlineMessageProvider.getMessages());
         }
-        if (!result.isEmpty()) {
+        if (!result.isEmpty() && sharedPreferences.getBoolean(SEND_BATTERY_MESSAGE, false)) {
             result.addAll(batteryMessageProvider.getMessages());
         }
         return Collections.unmodifiableList(result);
