@@ -1,5 +1,7 @@
-v2.2.2
-• Fixed FDroid build (#27).
+v2.2.5
+• Add privacy policy link to app.
+• Add build information to app.
+• Never send test message persistently.
 
 v2.2.1
 • Improved wording to comply with Google Play background location policy.
