@@ -123,9 +123,9 @@ dependencies {
     }
     implementation("org.altbeacon:android-beacon-library:2.17.1")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
-    testImplementation("junit:junit:4.13")
+    testImplementation("junit:junit:4.13.1")
     testImplementation("org.assertj:assertj-core:3.17.2")
-    testImplementation("org.mockito:mockito-inline:3.5.13")
+    testImplementation("org.mockito:mockito-inline:3.5.15")
     testRuntimeOnly("com.android.volley:volley:1.1.1")
 }
 
