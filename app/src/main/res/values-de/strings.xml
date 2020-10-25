@@ -103,10 +103,7 @@
     <string name="privacy_summary">Tippe hier, um die Datenschutzerklärung dieser App im Browser zu öffnen.</string>
     <string name="signature_title">Appsignatur</string>
     <string name="source_repo_title">Quellcode</string>
-    <string name="version_code_title">Versionscode</string>
-    <string name="version_name_title">Versionsname</string>
-    <string name="build_type_title">Buildtyp</string>
-    <string name="app_id_title">App-ID</string>
+    <string name="version_title">Version</string>
     <string name="category_build">Build-Information</string>
     <string name="category_legal">Rechtliches</string>
     <string name="dialog_close">Schließen</string>

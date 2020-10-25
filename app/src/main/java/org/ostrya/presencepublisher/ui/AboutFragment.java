@@ -6,13 +6,11 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 import org.ostrya.presencepublisher.R;
-import org.ostrya.presencepublisher.ui.preference.about.AppIdPreferenceDummy;
-import org.ostrya.presencepublisher.ui.preference.about.BuildTypePreferenceDummy;
 import org.ostrya.presencepublisher.ui.preference.about.BundledLicensesPreferenceDummy;
 import org.ostrya.presencepublisher.ui.preference.about.PrivacyPreferenceDummy;
-import org.ostrya.presencepublisher.ui.preference.about.SourceRepositoryPreference;
-import org.ostrya.presencepublisher.ui.preference.about.VersionCodePreference;
-import org.ostrya.presencepublisher.ui.preference.about.VersionNamePreference;
+import org.ostrya.presencepublisher.ui.preference.about.SignaturePreferenceDummy;
+import org.ostrya.presencepublisher.ui.preference.about.SourceRepositoryPreferenceDummy;
+import org.ostrya.presencepublisher.ui.preference.about.VersionInfoPreferenceDummy;
 import org.ostrya.presencepublisher.ui.preference.common.MyPreferenceCategory;
 
 public class AboutFragment extends PreferenceFragmentCompat {
@@ -28,14 +26,12 @@ public class AboutFragment extends PreferenceFragmentCompat {
         screen.addPreference(legalCategory);
         screen.addPreference(appCategory);
 
-        legalCategory.addPreference(new SourceRepositoryPreference(context, this));
+        legalCategory.addPreference(new SourceRepositoryPreferenceDummy(context, this));
         legalCategory.addPreference(new BundledLicensesPreferenceDummy(context, this));
         legalCategory.addPreference(new PrivacyPreferenceDummy(context, this));
 
-        appCategory.addPreference(new AppIdPreferenceDummy(context));
-        appCategory.addPreference(new VersionNamePreference(context));
-        appCategory.addPreference(new VersionCodePreference(context));
-        appCategory.addPreference(new BuildTypePreferenceDummy(context));
+        appCategory.addPreference(new VersionInfoPreferenceDummy(context));
+        appCategory.addPreference(new SignaturePreferenceDummy(context));
 
         setPreferenceScreen(screen);
     }
