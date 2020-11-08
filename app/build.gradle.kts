@@ -46,8 +46,8 @@ android {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
         targetSdkVersion(30)
-        versionCode = 35
-        versionName = "2.2.5"
+        versionCode = 36
+        versionName = "2.2.6"
     }
     signingConfigs {
         register("release") {
@@ -124,8 +124,8 @@ dependencies {
     implementation("org.altbeacon:android-beacon-library:2.17.1")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.1")
-    testImplementation("org.assertj:assertj-core:3.17.2")
-    testImplementation("org.mockito:mockito-inline:3.5.15")
+    testImplementation("org.assertj:assertj-core:3.18.0")
+    testImplementation("org.mockito:mockito-inline:3.6.0")
     testRuntimeOnly("com.android.volley:volley:1.1.1")
 }
 
