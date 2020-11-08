@@ -11,6 +11,7 @@ import java.util.Objects;
 public interface InitializationHandler {
     List<HandlerFactory> HANDLER_CHAIN =
             Collections.unmodifiableList(Arrays.asList(
+                    EnsureLocationConsent::new,
                     EnsureLocationPermission::new,
                     EnsureBackgroundLocationPermission::new,
                     EnsureLocationServiceEnabled::new,

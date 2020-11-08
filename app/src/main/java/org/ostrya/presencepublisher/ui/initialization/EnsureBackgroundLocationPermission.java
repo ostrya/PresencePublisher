@@ -38,7 +38,7 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
             }
             ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(this::onResult,
                     R.string.background_location_permission_dialog_title,
-                    activity.getString(R.string.background_location_permission_dialog_message, activity.getString(R.string.app_name), optionName));
+                    activity.getString(R.string.background_location_permission_dialog_message, optionName));
             fragment.show(fm, null);
         } else {
             finishInitialization();

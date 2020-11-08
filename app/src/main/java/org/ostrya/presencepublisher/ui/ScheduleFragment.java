@@ -65,6 +65,8 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
+        lastSuccess.refresh();
+        nextSchedule.refresh();
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
     }
 

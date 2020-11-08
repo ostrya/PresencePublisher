@@ -15,6 +15,7 @@ import org.ostrya.presencepublisher.ui.initialization.InitializationHandler;
 
 import java.util.Collections;
 
+import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
 import static org.ostrya.presencepublisher.ui.preference.condition.AddNetworkChoicePreferenceDummy.SSID_LIST;
 import static org.ostrya.presencepublisher.ui.preference.condition.OfflineContentPreference.OFFLINE_CONTENT;
@@ -62,8 +63,6 @@ public class MainActivity extends FragmentActivity {
                 || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceListener);
-
-        handler.initialize(this);
     }
 
     @Override
@@ -112,6 +111,9 @@ public class MainActivity extends FragmentActivity {
             case LAST_SUCCESS:
             case NEXT_SCHEDULE:
                 break;
+            case LOCATION_CONSENT:
+                handleConsentChange();
+                break;
             default:
                 if (key.startsWith(WIFI_CONTENT_PREFIX)) {
                     onChangedConnectionProperty(key);
@@ -124,5 +126,15 @@ public class MainActivity extends FragmentActivity {
     private void onChangedConnectionProperty(String key) {
         HyperLog.i(TAG, "Changed parameter " + key);
         new Scheduler(this).scheduleNow();
+    }
+
+    private void handleConsentChange() {
+        if (sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
+            HyperLog.i(TAG, "User consented to location access, initializing.");
+            handler.initialize(this);
+        } else {
+            HyperLog.i(TAG, "User revoked location access consent, stopping schedule.");
+            new Scheduler(this).stopSchedule();
+        }
     }
 }

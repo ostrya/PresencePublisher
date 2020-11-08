@@ -23,6 +23,7 @@ import static android.app.AlarmManager.RTC_WAKEUP;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.net.NetworkCapabilities.*;
 import static org.ostrya.presencepublisher.PresencePublisher.*;
+import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
@@ -41,15 +42,19 @@ public class Scheduler {
     private final Context applicationContext;
     private final SharedPreferences sharedPreferences;
     private final AlarmManager alarmManager;
-    private final PendingIntent scheduledIntent;
+    private final PendingIntent pendingAlarmIntent;
+    private final PendingIntent pendingNetworkIntent;
 
     public Scheduler(Context context) {
         applicationContext = context.getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(applicationContext, AlarmReceiver.class);
-        intent.setAction(ALARM_ACTION);
-        scheduledIntent = PendingIntent.getBroadcast(applicationContext, ALARM_PENDING_INTENT_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        Intent alarmIntent = new Intent(applicationContext, AlarmReceiver.class);
+        alarmIntent.setAction(ALARM_ACTION);
+        pendingAlarmIntent = PendingIntent.getBroadcast(applicationContext, ALARM_PENDING_INTENT_REQUEST_CODE, alarmIntent, FLAG_UPDATE_CURRENT);
+        Intent networkIntent = new Intent(applicationContext, ConnectivityBroadcastReceiver.class);
+        networkIntent.setAction(NETWORK_PENDING_INTENT_ACTION);
+        pendingNetworkIntent = PendingIntent.getBroadcast(applicationContext, NETWORK_PENDING_INTENT_REQUEST_CODE, networkIntent, FLAG_UPDATE_CURRENT);
     }
 
     public void scheduleNow() {
@@ -67,6 +72,19 @@ public class Scheduler {
         int messageScheduleInMinutes = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
         scheduleFor(System.currentTimeMillis() + messageScheduleInMinutes * 60_000L,
                 messageScheduleInMinutes < 15);
+    }
+
+    public void stopSchedule() {
+        alarmManager.cancel(pendingAlarmIntent);
+        sharedPreferences.edit().remove(NEXT_SCHEDULE).apply();
+        NotificationManagerCompat.from(applicationContext).cancel(NOTIFICATION_ID);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ConnectivityManager connectivityManager = applicationContext.getSystemService(ConnectivityManager.class);
+            if (connectivityManager != null) {
+                connectivityManager.unregisterNetworkCallback(pendingNetworkIntent);
+            }
+        }
+
     }
 
     /**
@@ -96,10 +114,7 @@ public class Scheduler {
                         .addCapability(NET_CAPABILITY_FOREGROUND);
             }
             NetworkRequest networkRequest = requestBuilder.build();
-            Intent intent = new Intent(applicationContext, ConnectivityBroadcastReceiver.class);
-            intent.setAction(NETWORK_PENDING_INTENT_ACTION);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, NETWORK_PENDING_INTENT_REQUEST_CODE, intent, FLAG_UPDATE_CURRENT);
-            connectivityManager.registerNetworkCallback(networkRequest, pendingIntent);
+            connectivityManager.registerNetworkCallback(networkRequest, pendingNetworkIntent);
         }
         sharedPreferences.edit().putLong(NEXT_SCHEDULE, WAITING_FOR_RECONNECT).apply();
         NotificationManagerCompat.from(applicationContext)
@@ -117,23 +132,27 @@ public class Scheduler {
     }
 
     private void scheduleFor(long nextSchedule, boolean ignoreBattery) {
+        if (!sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
+            HyperLog.w(TAG, "Location consent not given, will not schedule anything.");
+            return;
+        }
         if (alarmManager == null) {
             HyperLog.e(TAG, "Unable to get alarm manager, cannot schedule!");
             return;
         }
-        alarmManager.cancel(scheduledIntent);
+        alarmManager.cancel(pendingAlarmIntent);
         HyperLog.i(TAG, "Next run at " + getFormattedTimestamp(applicationContext, nextSchedule));
         sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
         NotificationManagerCompat.from(applicationContext)
                 .notify(NOTIFICATION_ID, NotificationFactory.getNotification(applicationContext, getLastSuccess(), nextSchedule));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ignoreBattery) {
-                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(nextSchedule, scheduledIntent), scheduledIntent);
+                alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(nextSchedule, pendingAlarmIntent), pendingAlarmIntent);
             } else {
-                alarmManager.setAndAllowWhileIdle(RTC_WAKEUP, nextSchedule, scheduledIntent);
+                alarmManager.setAndAllowWhileIdle(RTC_WAKEUP, nextSchedule, pendingAlarmIntent);
             }
         } else {
-            alarmManager.set(RTC_WAKEUP, nextSchedule, scheduledIntent);
+            alarmManager.set(RTC_WAKEUP, nextSchedule, pendingAlarmIntent);
         }
     }
 

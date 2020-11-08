@@ -14,6 +14,8 @@ public class ConfirmationDialogFragment extends DialogFragment {
     private int titleId;
     private int messageId;
     private String message;
+    private int confirmId = R.string.dialog_ok;
+    private int cancelId = R.string.dialog_cancel;
 
     public static ConfirmationDialogFragment getInstance(final Callback callback, int titleId, int messageId) {
         ConfirmationDialogFragment fragment = new ConfirmationDialogFragment();
@@ -31,14 +33,22 @@ public class ConfirmationDialogFragment extends DialogFragment {
         return fragment;
     }
 
+    public void setConfirmId(int confirmId) {
+        this.confirmId = confirmId;
+    }
+
+    public void setCancelId(int cancelId) {
+        this.cancelId = cancelId;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Activity parent = requireActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(parent);
         builder.setTitle(titleId)
-                .setPositiveButton(R.string.dialog_ok, (dialog, id) -> callback.accept(parent, true))
-                .setNegativeButton(R.string.dialog_cancel, (dialog, id) -> callback.accept(parent, false));
+                .setPositiveButton(confirmId, (dialog, id) -> callback.accept(parent, true))
+                .setNegativeButton(cancelId, (dialog, id) -> callback.accept(parent, false));
         if (message != null) {
             builder.setMessage(message);
         } else {

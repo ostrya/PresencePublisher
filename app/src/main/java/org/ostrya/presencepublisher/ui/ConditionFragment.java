@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
 import static org.ostrya.presencepublisher.ui.preference.condition.AddNetworkChoicePreferenceDummy.SSID_LIST;
 import static org.ostrya.presencepublisher.ui.preference.condition.BeaconPreference.BEACON_CONTENT_PREFIX;
@@ -96,9 +97,10 @@ public class ConditionFragment extends PreferenceFragmentCompat {
 
         setPreferenceScreen(screen);
 
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
-
         offlineContent.setDependency(SEND_OFFLINE_MESSAGE);
+        screen.setEnabled(preference.getBoolean(LOCATION_CONSENT, false));
+
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
     }
 
     @Override
@@ -110,7 +112,9 @@ public class ConditionFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
+        SharedPreferences preferences = getPreferenceManager().getSharedPreferences();
+        getPreferenceScreen().setEnabled(preferences.getBoolean(LOCATION_CONSENT, false));
+        preferences.registerOnSharedPreferenceChangeListener(listener);
     }
 
     private void onPreferencesChanged(SharedPreferences sharedPreferences, String key) {
@@ -141,6 +145,9 @@ public class ConditionFragment extends PreferenceFragmentCompat {
             for (String remove : removed) {
                 beaconCategory.removePreferenceRecursively(BEACON_CONTENT_PREFIX + remove);
             }
+        } else if (LOCATION_CONSENT.equals(key)) {
+            SharedPreferences preferences = getPreferenceManager().getSharedPreferences();
+            getPreferenceScreen().setEnabled(preferences.getBoolean(LOCATION_CONSENT, false));
         }
     }
 

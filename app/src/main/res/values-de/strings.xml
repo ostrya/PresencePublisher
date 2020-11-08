@@ -13,11 +13,17 @@
         Namen des aktuell verbundenen WLANs nicht bestimmen und Bluetooth-Beacons nicht finden.
     </string>
     <string name="background_location_permission_dialog_title">Standortzugriff im Hintergrund</string>
-    <string name="background_location_permission_dialog_message" formatted="true">%1$s erfasst Standortdaten, um den aktuell verbundenen WLAN-Namen zu erfahren und nahegelegene Bluetooth-Beacons zu finden, auch wenn die App geschlossen ist oder nicht verwendet wird.%n%n
-        Bitte erlaube dies, indem du im folgenden Dialog \'%2$s\' auswählst. Andernfalls kann diese App keine Anwesenheitsnachrichten senden.
-    </string>
+    <string name="background_location_permission_dialog_message" formatted="true">Bitte erlaube den Zugriff auf deine Standortdaten im Hintergrund, indem du im folgenden Dialog \'%1$s\' auswählst. Andernfalls kann diese App keine Anwesenheitsnachrichten senden.</string>
     <!-- only needed for Android 10, where the BACKGROUND_LOCATION permission is introduced, but the option name is not exposed via PackageManager#getBackgroundPermissionOptionLabel() -->
     <string name="background_location_permission_option_name">Immer zulassen</string>
+    <string name="location_consent_title">Zugriff auf Standortdaten</string>
+    <string name="location_consent_dialog_summary" formatted="true">
+        Diese App erhebt Standortdaten, um das Erkennen deiner Gegenwart zu Hause zu aktivieren, auch wenn die App geschlossen ist oder nicht verwendet wird.%n%n
+        Um deine Gegenwart zu erkennen, wertet diese App den Namen des verbundenen WLANs aus und prüft auf bekannte Bluetooth-Beacons in der Nähe.%n%n
+        Um mehr darüber zu erfahren, wie deine Standortdaten erfasst und verarbeitet werden, schau dir bitte \'%1$s\' > \'%2$s\' an.%n%n
+        Du kannst diese Zustimmung jederzeit geben oder zurückziehen, wenn du zu \'%1$s\' > \'%3$s\' navigierst."
+    </string>
+    <string name="location_consent_summary">Erlaube dieser App, deine Standortdaten zu erfassen und zu verarbeiten.</string>
     <string name="bluetooth_dialog_title">Bluetooth</string>
     <string name="bluetooth_dialog_message">Bitte schalte Bluetooth an, damit diese App nach Beacons suchen kann. Andernfalls
         wird die App keine Beacons finden.
@@ -109,4 +115,6 @@
     <string name="dialog_close">Schließen</string>
     <string name="source_repo_summary">Tippe hier, um den Quellcode in einem Browser zu öffnen.</string>
     <string name="privacy_url">https://github.com/ostrya/PresencePublisher/blob/master/legal/de/PRIVACY_POLICY.md</string>
+    <string name="dialog_accept">Zustimmen</string>
+    <string name="dialog_decline">Ablehnen</string>
 </resources>

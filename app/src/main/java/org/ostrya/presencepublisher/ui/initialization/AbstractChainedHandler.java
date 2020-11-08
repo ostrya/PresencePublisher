@@ -66,6 +66,10 @@ abstract class AbstractChainedHandler<I, O> implements InitializationHandler {
         inProgress.compareAndSet(true, false);
     }
 
+    protected void cancelInitialization() {
+        inProgress.compareAndSet(true, false);
+    }
+
     protected ActivityResultLauncher<I> getLauncher() {
         return launcher;
     }

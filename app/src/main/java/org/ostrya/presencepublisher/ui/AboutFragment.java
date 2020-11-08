@@ -7,6 +7,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.preference.about.BundledLicensesPreferenceDummy;
+import org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference;
 import org.ostrya.presencepublisher.ui.preference.about.PrivacyPreferenceDummy;
 import org.ostrya.presencepublisher.ui.preference.about.SignaturePreferenceDummy;
 import org.ostrya.presencepublisher.ui.preference.about.SourceRepositoryPreferenceDummy;
@@ -29,6 +30,7 @@ public class AboutFragment extends PreferenceFragmentCompat {
         legalCategory.addPreference(new SourceRepositoryPreferenceDummy(context, this));
         legalCategory.addPreference(new BundledLicensesPreferenceDummy(context, this));
         legalCategory.addPreference(new PrivacyPreferenceDummy(context, this));
+        legalCategory.addPreference(new LocationConsentPreference(context));
 
         appCategory.addPreference(new VersionInfoPreferenceDummy(context));
         appCategory.addPreference(new SignaturePreferenceDummy(context));
