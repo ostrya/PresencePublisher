@@ -1,13 +1,4 @@
-v2.2.5
-• Add privacy policy link to app.
-• Add build information to app.
-• Never send test message persistently.
+v2.2.6
+• Add explicit consent for location access.
 
-v2.2.1
-• Improved wording to comply with Google Play background location policy.
-
-v2.2.0
-• Added option to configure retain flag and QoS level of MQTT messages.
-• Updated App for Android 11.
-• Fixed a problem where scheduling was sometimes not resumed on network re-connect.
-• The next schedule information now changes when the app waits for a network re-connect.
+IMPORTANT: You must start the app at least once after the update and give your consent, otherwise the app will stop working!
