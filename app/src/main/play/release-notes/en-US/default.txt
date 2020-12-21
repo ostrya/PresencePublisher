@@ -1,4 +1,2 @@
-v2.2.6
-• Add explicit consent for location access.
-
-IMPORTANT: You must start the app at least once after the update and give your consent, otherwise the app will stop working!
+v2.2.7
+• Improvements to comply with Google location access policy.
