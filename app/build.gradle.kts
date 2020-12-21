@@ -7,14 +7,12 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("org.eclipse.jgit:org.eclipse.jgit:5.9.0.202009080501-r")
-        // TODO: remove once upgraded version supports variantFilter out of the box
-        classpath("com.android.tools.build:gradle:4.0.2")
+        classpath("org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r")
     }
 }
 
 plugins {
-    id("com.github.triplet.play") version "2.8.1"
+    id("com.github.triplet.play") version "3.0.0"
     id("com.jaredsburrows.license") version "0.8.80"
     id("com.android.application")
 }
@@ -108,24 +106,24 @@ afterEvaluate {
 }
 
 play {
-    serviceAccountCredentials = file("../../google-key.json")
+    serviceAccountCredentials.set(file("../../google-key.json"))
 }
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.3.0-alpha02")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.preference:preference:1.1.1")
-    implementation("androidx.security:security-crypto:1.1.0-alpha02")
+    implementation("androidx.security:security-crypto:1.1.0-alpha03")
     implementation("androidx.viewpager2:viewpager2:1.1.0-alpha01")
-    implementation("com.google.android.material:material:1.3.0-alpha03")
+    implementation("com.google.android.material:material:1.3.0-beta01")
     implementation("com.hypertrack:hyperlog:0.0.10") {
         exclude(group = "com.android.volley")
     }
     implementation("org.altbeacon:android-beacon-library:2.17.1")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.1")
-    testImplementation("org.assertj:assertj-core:3.18.0")
-    testImplementation("org.mockito:mockito-inline:3.6.0")
+    testImplementation("org.assertj:assertj-core:3.18.1")
+    testImplementation("org.mockito:mockito-inline:3.6.28")
     testRuntimeOnly("com.android.volley:volley:1.1.1")
 }
 
