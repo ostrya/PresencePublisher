@@ -22,7 +22,7 @@ recharge it before it turns off.
 The app uses the built-in Android alarm manager, so notifications are sent even if the phone is in stand-by.
 
 For details on which data this app processes and how it does so, please have a look at the
-[privacy policy](legal/en/PRIVACY_POLICY.md).
+[privacy policy](docs/en/PRIVACY_POLICY.md).
 
 ## TLS with self-signed certificates
 
