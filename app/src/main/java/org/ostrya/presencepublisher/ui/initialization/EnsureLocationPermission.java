@@ -1,35 +1,41 @@
 package org.ostrya.presencepublisher.ui.initialization;
 
+import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 import com.hypertrack.hyperlog.HyperLog;
+import java.util.Queue;
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
-import java.util.Map;
-import java.util.Queue;
-
-public class EnsureLocationPermission extends AbstractChainedHandler<String[], Map<String, Boolean>> {
+public class EnsureLocationPermission extends AbstractChainedHandler<String, Boolean> {
     protected EnsureLocationPermission(Queue<HandlerFactory> handlerChain) {
-        super(new ActivityResultContracts.RequestMultiplePermissions(), handlerChain);
+        super(new ActivityResultContracts.RequestPermission(), handlerChain);
     }
 
     @Override
     protected void doInitialize(MainActivity activity) {
         if (activity.isLocationServiceNeeded()
-                && ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+                    && ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
             HyperLog.i(TAG, "Location permission not yet granted, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 
-            ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(this::onResult,
-                    R.string.location_permission_dialog_title, R.string.location_permission_dialog_message);
+            ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(
+                    this::onResult,
+                    R.string.location_permission_dialog_title,
+                    activity.getString(R.string.location_consent_dialog_summary,
+                            activity.getString(R.string.tab_about_title),
+                            activity.getString(R.string.privacy_title),
+                            activity.getString(R.string.location_consent_title),
+                            activity.getString(R.string.location_permission_dialog_message)));
             fragment.show(fm, null);
         } else {
             finishInitialization();
@@ -38,18 +44,21 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String[], M
 
     private void onResult(Activity parent, boolean ok) {
         if (ok) {
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-                getLauncher().launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION});
-            } else {
-                getLauncher().launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION});
-            }
+            PreferenceManager.getDefaultSharedPreferences(parent).edit()
+                    .putBoolean(LOCATION_CONSENT, true)
+                    .apply();
+            getLauncher().launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        } else {
+            HyperLog.i(getName(), "User did not give consent. Stopping any further actions.");
+            PreferenceManager.getDefaultSharedPreferences(parent).edit()
+                    .putBoolean(LOCATION_CONSENT, false)
+                    .apply();
+            cancelInitialization();
         }
     }
 
     @Override
-    protected void doHandleResult(Map<String, Boolean> resultMap) {
-        Boolean result = resultMap.get(Manifest.permission.ACCESS_FINE_LOCATION);
+    protected void doHandleResult(Boolean result) {
         if (result != null && result) {
             HyperLog.i(TAG, "Successfully granted location permission");
             finishInitialization();

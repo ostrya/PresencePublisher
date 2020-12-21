@@ -19,23 +19,20 @@
     <string name="message_charging_schedule_title">Charging publish period</string>
     <string name="message_charging_schedule_summary">Publish period while device is charging.\nFor value = 0 the normal schedule is used.</string>
     <string name="location_permission_dialog_title">Location permission</string>
-    <string name="location_permission_dialog_message">Please allow access to fine location. Otherwise, this app will not be able to
-        retrieve the currently connected Wi-Fi name or find Bluetooth beacons.
-    </string>
+    <string name="location_permission_dialog_message">Please allow access to your location information while using the app by confirming the next dialog.</string>
     <string name="background_location_permission_dialog_title">Background location permission</string>
-    <string name="background_location_permission_dialog_message" formatted="true">Please allow access to your location information in the background by selecting option \'%1$s\' in the upcoming dialog. Otherwise, this app will not be able to send presence messages.</string>
+    <string name="background_location_permission_dialog_message" formatted="true">Please allow access to your location information in the background by selecting option \'%1$s\' in the upcoming dialog.</string>
     <!-- only needed for Android 10, where the BACKGROUND_LOCATION permission is introduced, but the option name is not exposed via PackageManager#getBackgroundPermissionOptionLabel() -->
     <string name="background_location_permission_option_name">Allow all the time</string>
     <string name="location_consent_title">Location access</string>
     <string name="location_consent_dialog_summary" formatted="true">
-        This app collects location data to enable detecting your presence at home even when the app is closed or not in use.%n%n
+        This app collects location data to enable detecting your presence at home all the time, even when the app is closed or not in use.%n%n
         To detect your presence, this app retrieves the currently connected Wi-Fi name and checks for known Bluetooth beacons in range.%n%n
         For more information on how your location data is accessed and used, please have a look at \'%1$s\' > \'%2$s\'.%n%n
-        You can give or revoke this consent at any time by navigating to \'%1$s\' > \'%3$s\'."
+        You can give or revoke this consent at any time by navigating to \'%1$s\' > \'%3$s\'.%n%n
+        %4$s
     </string>
     <string name="location_consent_summary">Allow this app to access and process your location information.</string>
-    <string name="dialog_accept">Accept</string>
-    <string name="dialog_decline">Decline</string>
     <string name="bluetooth_dialog_title">Bluetooth</string>
     <string name="bluetooth_dialog_message">Please enable Bluetooth so that this app can scan for beacons. Otherwise,
         no beacons will be found.
@@ -116,7 +113,7 @@
     <string name="category_build">Build information</string>
     <string name="category_legal">Legal</string>
     <string name="dialog_close">Close</string>
-    <string name="privacy_url">https://github.com/ostrya/PresencePublisher/blob/master/legal/en/PRIVACY_POLICY.md</string>
+    <string name="privacy_url">https://ostrya.github.io/PresencePublisher/en/PRIVACY_POLICY.html</string>
     <string name="source_repo_url" translatable="false">https://github.com/ostrya/PresencePublisher/</string>
     <string name="version_summary" translatable="false">%1$s%n%2$s (%3$d) - %4$s</string>
 </resources>

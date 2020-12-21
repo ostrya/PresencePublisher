@@ -1,7 +1,18 @@
 package org.ostrya.presencepublisher.ui.initialization;
 
+import static android.content.Context.POWER_SERVICE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.spy;
+
 import android.os.PowerManager;
 import com.hypertrack.hyperlog.HyperLog;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,14 +22,6 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.ostrya.presencepublisher.MainActivity;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static android.content.Context.POWER_SERVICE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InitializationHandlerTest {
@@ -50,14 +53,13 @@ public class InitializationHandlerTest {
 
         InitializationHandler.getHandler(handlerChain);
 
-        assertThat(handlerSpies).hasSize(7);
-        assertThat(handlerSpies.get(0)).isInstanceOf(EnsureLocationConsent.class);
-        assertThat(handlerSpies.get(1)).isInstanceOf(EnsureLocationPermission.class);
-        assertThat(handlerSpies.get(2)).isInstanceOf(EnsureBackgroundLocationPermission.class);
-        assertThat(handlerSpies.get(3)).isInstanceOf(EnsureLocationServiceEnabled.class);
-        assertThat(handlerSpies.get(4)).isInstanceOf(EnsureBluetoothServiceEnabled.class);
-        assertThat(handlerSpies.get(5)).isInstanceOf(EnsureBatteryOptimizationDisabled.class);
-        assertThat(handlerSpies.get(6)).isInstanceOf(CreateSchedule.class);
+        assertThat(handlerSpies).hasSize(6);
+        assertThat(handlerSpies.get(0)).isInstanceOf(EnsureLocationPermission.class);
+        assertThat(handlerSpies.get(1)).isInstanceOf(EnsureBackgroundLocationPermission.class);
+        assertThat(handlerSpies.get(2)).isInstanceOf(EnsureLocationServiceEnabled.class);
+        assertThat(handlerSpies.get(3)).isInstanceOf(EnsureBluetoothServiceEnabled.class);
+        assertThat(handlerSpies.get(4)).isInstanceOf(EnsureBatteryOptimizationDisabled.class);
+        assertThat(handlerSpies.get(5)).isInstanceOf(CreateSchedule.class);
     }
 
     @Test
@@ -71,7 +73,7 @@ public class InitializationHandlerTest {
 
         InitializationHandler handler = InitializationHandler.getHandler(handlerChain);
         // scheduler needs too many android classes to mock properly for now
-        doNothing().when(handlerSpies.get(6)).initialize(context);
+        doNothing().when(handlerSpies.get(5)).initialize(context);
 
         handler.initialize(context);
 

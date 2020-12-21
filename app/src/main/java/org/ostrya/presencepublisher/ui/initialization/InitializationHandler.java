@@ -1,17 +1,15 @@
 package org.ostrya.presencepublisher.ui.initialization;
 
-import org.ostrya.presencepublisher.MainActivity;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import org.ostrya.presencepublisher.MainActivity;
 
 public interface InitializationHandler {
     List<HandlerFactory> HANDLER_CHAIN =
             Collections.unmodifiableList(Arrays.asList(
-                    EnsureLocationConsent::new,
                     EnsureLocationPermission::new,
                     EnsureBackgroundLocationPermission::new,
                     EnsureLocationServiceEnabled::new,
