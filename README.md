@@ -31,8 +31,12 @@ certificate via:
 
 * Android 4.0 - 7.1:
   * `Settings` → `Security` → `Install from SD card`
-* Android 8.0+:
+* Android 8.0 - 9.0:
   * `Settings` → `Security & location` → `Encryption & credentials` → `Install from SD card`
+* Android 10:
+  * `Security` → `Encryption & credentials` → `Install from SD card`
+* Android 11+:
+  * `Security` → `Encryption & credentials` → `Install a certificate` → `CA Certificate`
 
 ### Client certificates
 
@@ -55,6 +59,20 @@ to generate your client certificate:
 * `File` → `Save` → use the same password as above for the keystore
 
 Make sure your PKCS#12 keystore file has the `.pfx` extension, otherwise Android will not recognize it.
+
+To be able to select this client certificate in Presence Publisher, you first need to add it to
+the Android Keystore. This works similar to the process for the server certificate:
+
+* Android 4.0 - 7.1:
+  * `Settings` → `Security` → `Install from SD card`
+* Android 8.0 - 9.0:
+  * `Settings` → `Security & location` → `Encryption & credentials` → `Install from SD card`
+* Android 10:
+  * `Security` → `Encryption & credentials` → `Install from SD card`
+* Android 11+:
+  * `Security` → `Encryption & credentials` → `Install a certificate` → `VPN & app user certificate`
+
+After you have imported your client certificate, you will be able to choose it from the app.
 
 ## Permissions
 
