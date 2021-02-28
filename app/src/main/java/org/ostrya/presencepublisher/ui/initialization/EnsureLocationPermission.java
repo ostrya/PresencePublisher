@@ -1,30 +1,34 @@
 package org.ostrya.presencepublisher.ui.initialization;
 
-import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
+
 import com.hypertrack.hyperlog.HyperLog;
-import java.util.Queue;
+
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
+import java.util.Queue;
+
+import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
+
 public class EnsureLocationPermission extends AbstractChainedHandler<String, Boolean> {
-    protected EnsureLocationPermission(Queue<HandlerFactory> handlerChain) {
-        super(new ActivityResultContracts.RequestPermission(), handlerChain);
+    protected EnsureLocationPermission(MainActivity activity, Queue<HandlerFactory> handlerChain) {
+        super(activity, new ActivityResultContracts.RequestPermission(), handlerChain);
     }
 
     @Override
-    protected void doInitialize(MainActivity activity) {
+    protected void doInitialize() {
         if (activity.isLocationServiceNeeded()
-                    && ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+                && ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
             HyperLog.i(TAG, "Location permission not yet granted, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 

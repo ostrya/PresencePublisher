@@ -18,11 +18,11 @@ public interface InitializationHandler {
                     CreateSchedule::new
             ));
 
-    static InitializationHandler getHandler(List<HandlerFactory> handlerChain) {
+    static InitializationHandler getHandler(MainActivity activity, List<HandlerFactory> handlerChain) {
         LinkedList<HandlerFactory> handlerChainQueue = new LinkedList<>(handlerChain);
         HandlerFactory firstFactory = Objects.requireNonNull(handlerChainQueue.poll());
-        return firstFactory.create(handlerChainQueue);
+        return firstFactory.create(activity, handlerChainQueue);
     }
 
-    void initialize(MainActivity activity);
+    void initialize();
 }

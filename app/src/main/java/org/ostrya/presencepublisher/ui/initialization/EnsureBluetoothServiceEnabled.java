@@ -5,8 +5,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.os.Build;
+
 import androidx.fragment.app.FragmentManager;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.contract.IntentActionContract;
@@ -17,12 +20,12 @@ import java.util.Queue;
 import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
 
 public class EnsureBluetoothServiceEnabled extends AbstractChainedHandler<String, Boolean> {
-    protected EnsureBluetoothServiceEnabled(Queue<HandlerFactory> handlerChain) {
-        super(new IntentActionContract(), handlerChain);
+    protected EnsureBluetoothServiceEnabled(MainActivity activity, Queue<HandlerFactory> handlerChain) {
+        super(activity, new IntentActionContract(), handlerChain);
     }
 
     @Override
-    protected void doInitialize(MainActivity activity) {
+    protected void doInitialize() {
         if (activity.isLocationServiceNeeded()
                 // make linter happy
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2

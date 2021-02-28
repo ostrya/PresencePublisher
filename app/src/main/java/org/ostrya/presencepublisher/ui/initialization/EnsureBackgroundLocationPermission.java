@@ -1,29 +1,33 @@
 package org.ostrya.presencepublisher.ui.initialization;
 
-import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
+
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
+
 import com.hypertrack.hyperlog.HyperLog;
-import java.util.Queue;
+
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
+import java.util.Queue;
+
+import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
+
 public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<String, Boolean> {
-    protected EnsureBackgroundLocationPermission(Queue<HandlerFactory> handlerChain) {
-        super(new ActivityResultContracts.RequestPermission(), handlerChain);
+    protected EnsureBackgroundLocationPermission(MainActivity activity, Queue<HandlerFactory> handlerChain) {
+        super(activity, new ActivityResultContracts.RequestPermission(), handlerChain);
     }
 
     @Override
-    protected void doInitialize(MainActivity activity) {
+    protected void doInitialize() {
         if (activity.isLocationServiceNeeded()
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
                 && ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)

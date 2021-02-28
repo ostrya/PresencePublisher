@@ -2,8 +2,11 @@ package org.ostrya.presencepublisher.ui.initialization;
 
 import android.app.Activity;
 import android.location.LocationManager;
+
 import androidx.fragment.app.FragmentManager;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.contract.IntentActionContract;
@@ -15,12 +18,12 @@ import static android.content.Context.LOCATION_SERVICE;
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
 public class EnsureLocationServiceEnabled extends AbstractChainedHandler<String, Boolean> {
-    protected EnsureLocationServiceEnabled(Queue<HandlerFactory> handlerChain) {
-        super(new IntentActionContract(), handlerChain);
+    protected EnsureLocationServiceEnabled(MainActivity activity, Queue<HandlerFactory> handlerChain) {
+        super(activity, new IntentActionContract(), handlerChain);
     }
 
     @Override
-    protected void doInitialize(MainActivity activity) {
+    protected void doInitialize() {
         LocationManager locationManager = (LocationManager) activity.getSystemService(LOCATION_SERVICE);
         if (activity.isLocationServiceNeeded()
                 && (locationManager == null || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)

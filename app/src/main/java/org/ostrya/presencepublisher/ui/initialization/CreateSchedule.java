@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.ui.initialization;
 
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.schedule.Scheduler;
 
@@ -14,12 +15,12 @@ import static org.ostrya.presencepublisher.schedule.Scheduler.NOW_DELAY;
 public class CreateSchedule extends AbstractChainedHandler<Void, Void> {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-    protected CreateSchedule(Queue<HandlerFactory> handlerChain) {
-        super(null, handlerChain);
+    protected CreateSchedule(MainActivity activity, Queue<HandlerFactory> handlerChain) {
+        super(activity, null, handlerChain);
     }
 
     @Override
-    protected void doInitialize(MainActivity activity) {
+    protected void doInitialize() {
         HyperLog.i(TAG, "Starting schedule now");
         new Scheduler(activity).scheduleNow();
         // make sure we don't re-schedule until the first run has happened
