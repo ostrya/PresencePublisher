@@ -45,7 +45,7 @@ android {
         minSdkVersion(14)
         targetSdkVersion(30)
         versionCode = 38
-        versionName = "2.2.7"
+        versionName = "2.2.8"
     }
     signingConfigs {
         register("release") {
