@@ -51,7 +51,7 @@ public class InitializationHandlerTest {
                 .map(this::wrapAsSpy)
                 .collect(Collectors.toList());
 
-        InitializationHandler.getHandler(handlerChain);
+        InitializationHandler.getHandler(context, handlerChain);
 
         assertThat(handlerSpies).hasSize(6);
         assertThat(handlerSpies.get(0)).isInstanceOf(EnsureLocationPermission.class);
@@ -71,21 +71,21 @@ public class InitializationHandlerTest {
         doReturn(false).when(context).isLocationServiceNeeded();
         doReturn(powerManager).when(context).getSystemService(POWER_SERVICE);
 
-        InitializationHandler handler = InitializationHandler.getHandler(handlerChain);
+        InitializationHandler handler = InitializationHandler.getHandler(context, handlerChain);
         // scheduler needs too many android classes to mock properly for now
-        doNothing().when(handlerSpies.get(5)).initialize(context);
+        doNothing().when(handlerSpies.get(5)).initialize();
 
-        handler.initialize(context);
+        handler.initialize();
 
         InOrder inOrder = inOrder(handlerSpies.toArray());
-        handlerSpies.forEach(handlerSpy -> inOrder.verify(handlerSpy).initialize(context));
+        handlerSpies.forEach(handlerSpy -> inOrder.verify(handlerSpy).initialize());
 
         inOrder.verifyNoMoreInteractions();
     }
 
     HandlerFactory wrapAsSpy(HandlerFactory original) {
-        return handlerChain -> {
-            InitializationHandler spyHandler = spy(original.create(handlerChain));
+        return (activity, handlerChain) -> {
+            InitializationHandler spyHandler = spy(original.create(activity, handlerChain));
             // as each handler creates all its next handlers in its constructor,
             // the spies are created in reverse order to the initial chain
             handlerSpies.addFirst((AbstractChainedHandler<?, ?>) spyHandler);
