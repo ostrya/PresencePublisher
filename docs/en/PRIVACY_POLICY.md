@@ -1,5 +1,7 @@
 # Privacy policy
 
+*Effective March 1, 2021*
+
 The following document describes how Presence Publisher collects and uses your personal
 data.
 
@@ -56,3 +58,7 @@ cleaned up automatically.
 Presence Publisher does not share any personal information with any third party.
 Especially, it will never upload information about your location to any server other
 than the MQTT broker that you have configured.
+
+## Any more questions?
+
+If you have any further questions on how your data is processed, please contact me at `ostrya@mailbox.org`.

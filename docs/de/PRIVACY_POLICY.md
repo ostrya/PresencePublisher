@@ -1,5 +1,7 @@
 # Datenschutzerklärung
 
+*Inkrafttreten: 1. März 2021*
+
 Das folgende Dokument beschreibt, wie Presence Publisher deine persönlichen Daten erhebt
 und verarbeitet.
 
@@ -56,3 +58,8 @@ anderen Apps gelesen werden und wird nicht automatisch gelöscht.
 Presence Publisher gibt keinerlei persönliche Daten an irgend eine dritte Partei weiter.
 Insbesondere wird es niemals Informationen über deinen Standort an irgendeinen anderen
 Server laden als den von dir konfigurierten MQTT-Broker.
+
+## Weitere Fragen?
+
+Wenn du weitere Fragen dazu hast wie deine Daten verarbeitet werden, kontaktiere mich bitte unter
+`ostrya@mailbox.org`.
