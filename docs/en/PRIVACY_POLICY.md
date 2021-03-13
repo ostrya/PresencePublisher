@@ -1,13 +1,13 @@
 # Privacy policy
 
-*Effective March 1, 2021*
+*Effective March 13, 2021*
 
 The following document describes how Presence Publisher collects and uses your personal
 data.
 
-## Which personal data is collected?
+## Which data is collected?
 
-Presence Publisher regularly collects information about your location in the background,
+Presence Publisher regularly collects information about your device location in the background,
 even if it is not running. The following information is collected:
 
 * Whether the currently connected Wi-Fi network name matches a list of network
@@ -23,6 +23,9 @@ Once configured, Presence Publisher collects this information repeatedly with a
 configurable time period, but at least every 60 minutes. This collection happens
 even when the app is not running.
 
+Presence Publisher does not collect any data that would allow correlating the processed data
+as mentioned above to you as the user of the app.
+
 ## How is your data used?
 
 Presence Publisher uses the location information to send notification messages.
@@ -37,7 +40,10 @@ The following notifications based on your location can be configured:
 * If neither of the above conditions match, and you have requested a notification
   for this situation, the message configured for this situation will be sent.
 
-In addition, Presence Publisher stores an internal log. This log includes:
+Presence Publisher only uses this information to send corresponding messages to your
+MQTT broker.
+
+For debugging purposes, Presence Publisher stores an internal log. This log includes:
 
 * your configured Bluetooth beacons and Wi-Fi network names
 * times when you are connected to a configured Wi-Fi network, together with its name
@@ -55,10 +61,30 @@ cleaned up automatically.
 
 ## How is your data shared?
 
-Presence Publisher does not share any personal information with any third party.
-Especially, it will never upload information about your location to any server other
+Presence Publisher will never share any personal information with any third party.
+Especially, it will never upload information about your device location to any server other
 than the MQTT broker that you have configured.
+
+## Changes to the privacy policy
+
+This privacy policy may be updated from time to time, e.g. when new features are added to
+the app. The new policy will become effective immediately after its publication.
+
+## Your rights and choices
+
+Subject to applicable law, you have the right to request and receive all personal data
+processed by this app. In addition, you have the right to update and correct as well as
+delete this data. Furthermore, you have the right to withdraw your consent for processing
+the data either by disabling the corresponding checkbox in the app settings or by uninstalling
+the app. Please note that the app will not be able to offer its full functionality in this case.
+
+To exercise your rights and choices, please use the contact method below.
 
 ## Any more questions?
 
-If you have any further questions on how your data is processed, please contact me at `ostrya@mailbox.org`.
+If you have any questions on how your data is processed or if you want to exercise your rights
+and choices regarding the processed data, please contact me (the author of the app) at
+`ostrya@mailbox.org`.
+
+Messages and contact data of such requests will only be stored for the purpose of processing them
+and will be deleted 30 days after the communication ends or at latest after 6 months.
