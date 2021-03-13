@@ -1,2 +1,2 @@
-v2.2.7
-• Improvements to comply with Google location access policy.
+v2.2.8
+• Fix activity resume error.
