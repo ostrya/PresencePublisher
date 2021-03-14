@@ -38,6 +38,27 @@ certificate via:
 * Android 11+:
   * `Security` → `Encryption & credentials` → `Install a certificate` → `CA Certificate`
 
+Please note you need to have your certificate in DER format to be able to import it correctly. You can
+check this using:
+
+```bash
+openssl x509 -inform der -in server.crt -text
+```
+
+This should show you the correct certificate information. If you instead see something like `unable to load certificate`,
+the certificate is most likely formatted in PEM format and needs to be converted, e.g like this:
+
+```bash
+openssl x509 -inform pem -outform der -in server.crt -out server_der.crt
+```
+
+Alternatively, you can use the [KeyStore Explorer](https://keystore-explorer.org) to do the conversion:
+
+* `Create a new KeyStore` → choose `PKCS #12`
+* `Tools` → `Import Trusted Certificates` → open your certificate file and give it some alias
+* Right-click the entry → `Export` → `Export Certificate` → select export format `X.509` and uncheck `PEM`
+* afterwards, you can close the keystore without saving it
+
 ### Client certificates
 
 The Android keychain will only allow you to import a PKCS#12 keystore. If you have created a client certificate along
