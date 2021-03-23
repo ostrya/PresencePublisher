@@ -44,7 +44,7 @@ android {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
         targetSdkVersion(30)
-        versionCode = 40
+        versionCode = 41
         versionName = "2.2.9"
     }
     signingConfigs {
@@ -76,6 +76,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     buildToolsVersion("29.0.3")
+    lintOptions {
+        isAbortOnError = false
+    }
 }
 
 val checkParameters by tasks.registering {
