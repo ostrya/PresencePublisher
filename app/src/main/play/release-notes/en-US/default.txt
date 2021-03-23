@@ -1,2 +1,3 @@
-v2.2.8
-• Fix activity resume error.
+v2.2.9
+• automatically ask the user for consent to process location data if not set
+• Important: if you have updated from version 2.2.1 and the app no longer publishes, you need to give your consent once by opening the app.

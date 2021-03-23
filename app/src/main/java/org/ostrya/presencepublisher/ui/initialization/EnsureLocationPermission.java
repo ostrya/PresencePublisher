@@ -27,9 +27,11 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String, Boo
     @Override
     protected void doInitialize() {
         if (activity.isLocationServiceNeeded()
-                && ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            HyperLog.i(TAG, "Location permission not yet granted, asking user ...");
+                && (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                // for migration of pre-2.2.2 app versions, the consent needs to be confirmed once
+                || !PreferenceManager.getDefaultSharedPreferences(activity).getBoolean(LOCATION_CONSENT, false))) {
+            HyperLog.i(TAG, "Location permission / consent not yet granted, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 
             ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(
@@ -51,7 +53,10 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String, Boo
             PreferenceManager.getDefaultSharedPreferences(parent).edit()
                     .putBoolean(LOCATION_CONSENT, true)
                     .apply();
-            getLauncher().launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                getLauncher().launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
         } else {
             HyperLog.i(getName(), "User did not give consent. Stopping any further actions.");
             PreferenceManager.getDefaultSharedPreferences(parent).edit()
