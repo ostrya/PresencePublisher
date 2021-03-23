@@ -44,7 +44,7 @@ android {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
         targetSdkVersion(30)
-        versionCode = 40
+        versionCode = 41
         versionName = "2.2.9"
     }
     signingConfigs {
