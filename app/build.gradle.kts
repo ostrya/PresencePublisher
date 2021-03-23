@@ -7,12 +7,12 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r")
+        classpath("org.eclipse.jgit:org.eclipse.jgit:5.11.0.202103091610-r")
     }
 }
 
 plugins {
-    id("com.github.triplet.play") version "3.2.0"
+    id("com.github.triplet.play") version "3.3.0"
     id("com.jaredsburrows.license") version "0.8.90"
     id("com.android.application")
 }
@@ -124,7 +124,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.assertj:assertj-core:3.19.0")
     testImplementation("org.mockito:mockito-inline:3.8.0")
-    testRuntimeOnly("com.android.volley:volley:1.1.1")
+    testRuntimeOnly("com.android.volley:volley:1.2.0")
 }
 
 tasks.register("printVersion") {
