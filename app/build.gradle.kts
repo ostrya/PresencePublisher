@@ -76,6 +76,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     buildToolsVersion("29.0.3")
+    lintOptions {
+        isAbortOnError = false
+    }
 }
 
 val checkParameters by tasks.registering {
