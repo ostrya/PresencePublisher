@@ -40,7 +40,6 @@ public class ConditionFragment extends PreferenceFragmentCompat {
 
     private final SharedPreferences.OnSharedPreferenceChangeListener listener = this::onPreferencesChanged;
     private Context context;
-    private AddNetworkChoicePreferenceDummy addNetworkChoice;
     @Nullable
     private AddBeaconChoicePreferenceDummy addBeaconChoice;
     private PreferenceCategory wifiCategory;
@@ -71,11 +70,10 @@ public class ConditionFragment extends PreferenceFragmentCompat {
         screen.addPreference(offlineCategory);
 
         wifiCategory.setOrderingAsAdded(false);
-        addNetworkChoice = new AddNetworkChoicePreferenceDummy(context, preference, this);
         for (String ssid : currentNetworks) {
             wifiCategory.addPreference(new WifiNetworkPreference(context, ssid, preference, this));
         }
-        wifiCategory.addPreference(addNetworkChoice);
+        wifiCategory.addPreference(new AddNetworkChoicePreferenceDummy(context, preference, this));
 
         beaconCategory.setOrderingAsAdded(false);
         // to make linter happy
@@ -131,7 +129,6 @@ public class ConditionFragment extends PreferenceFragmentCompat {
             for (String remove : removed) {
                 wifiCategory.removePreferenceRecursively(WIFI_CONTENT_PREFIX + remove);
             }
-            addNetworkChoice.updateVisibleEntries(currentNetworks);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && BEACON_LIST.equals(key)) {
             Set<String> changedBeacons = Collections.unmodifiableSet(sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()));
             Set<String> removed = new HashSet<>(currentBeacons);
