@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 import org.ostrya.presencepublisher.ui.preference.schedule.AutostartPreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.BatteryTopicPreference;
@@ -14,21 +13,21 @@ import org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePrefer
 import org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference;
+import org.ostrya.presencepublisher.ui.util.AbstractConfigurationFragment;
 
 import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
 import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
 import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 
-public class ScheduleFragment extends PreferenceFragmentCompat {
-    private final SharedPreferences.OnSharedPreferenceChangeListener listener = this::onPreferencesChanged;
+public class ScheduleFragment extends AbstractConfigurationFragment {
     private LastSuccessTimestampPreference lastSuccess;
     private NextScheduleTimestampPreference nextSchedule;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        super.onCreatePreferences(savedInstanceState, rootKey);
         Context context = getPreferenceManager().getContext();
         PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(context);
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
 
         Preference messageSchedule = new MessageSchedulePreference(context);
         Preference chargingMessageSchedule = new ChargingMessageSchedulePreference(context);
@@ -57,20 +56,14 @@ public class ScheduleFragment extends PreferenceFragmentCompat {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(listener);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         lastSuccess.refresh();
         nextSchedule.refresh();
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
     }
 
-    private void onPreferencesChanged(SharedPreferences sharedPreferences, String key) {
+    @Override
+    protected void onPreferencesChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case LAST_SUCCESS:
                 lastSuccess.refresh();

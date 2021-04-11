@@ -8,7 +8,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 import com.hypertrack.hyperlog.HyperLog;
 import org.ostrya.presencepublisher.PresencePublisher;
@@ -23,6 +22,7 @@ import org.ostrya.presencepublisher.ui.preference.condition.OfflineContentPrefer
 import org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference;
 import org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference;
 import org.ostrya.presencepublisher.ui.preference.condition.WifiNetworkPreference;
+import org.ostrya.presencepublisher.ui.util.AbstractConfigurationFragment;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -35,11 +35,9 @@ import static org.ostrya.presencepublisher.ui.preference.condition.BeaconPrefere
 import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.condition.WifiNetworkPreference.WIFI_CONTENT_PREFIX;
 
-public class ConditionFragment extends PreferenceFragmentCompat {
+public class ConditionFragment extends AbstractConfigurationFragment {
     private static final String TAG = "ConditionFragment";
 
-    private final SharedPreferences.OnSharedPreferenceChangeListener listener = this::onPreferencesChanged;
-    private Context context;
     @Nullable
     private AddBeaconChoicePreferenceDummy addBeaconChoice;
     private PreferenceCategory wifiCategory;
@@ -49,7 +47,8 @@ public class ConditionFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        context = getPreferenceManager().getContext();
+        super.onCreatePreferences(savedInstanceState, rootKey);
+        Context context = getPreferenceManager().getContext();
         boolean beaconsSupported = ((PresencePublisher) context.getApplicationContext()).supportsBeacons();
         SharedPreferences preference = getPreferenceManager().getSharedPreferences();
         currentNetworks = Collections.unmodifiableSet(preference.getStringSet(SSID_LIST, Collections.emptySet()));
@@ -97,14 +96,6 @@ public class ConditionFragment extends PreferenceFragmentCompat {
 
         offlineContent.setDependency(SEND_OFFLINE_MESSAGE);
         screen.setEnabled(preference.getBoolean(LOCATION_CONSENT, false));
-
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     @Override
@@ -112,10 +103,11 @@ public class ConditionFragment extends PreferenceFragmentCompat {
         super.onResume();
         SharedPreferences preferences = getPreferenceManager().getSharedPreferences();
         getPreferenceScreen().setEnabled(preferences.getBoolean(LOCATION_CONSENT, false));
-        preferences.registerOnSharedPreferenceChangeListener(listener);
     }
 
-    private void onPreferencesChanged(SharedPreferences sharedPreferences, String key) {
+    @Override
+    protected void onPreferencesChanged(SharedPreferences sharedPreferences, String key) {
+        Context context = getPreferenceManager().getContext();
         if (SSID_LIST.equals(key)) {
             Set<String> changedNetworks = Collections.unmodifiableSet(sharedPreferences.getStringSet(SSID_LIST, Collections.emptySet()));
             Set<String> removed = new HashSet<>(currentNetworks);
@@ -143,8 +135,7 @@ public class ConditionFragment extends PreferenceFragmentCompat {
                 beaconCategory.removePreferenceRecursively(BEACON_CONTENT_PREFIX + remove);
             }
         } else if (LOCATION_CONSENT.equals(key)) {
-            SharedPreferences preferences = getPreferenceManager().getSharedPreferences();
-            getPreferenceScreen().setEnabled(preferences.getBoolean(LOCATION_CONSENT, false));
+            getPreferenceScreen().setEnabled(sharedPreferences.getBoolean(LOCATION_CONSENT, false));
         }
     }
 
