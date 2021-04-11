@@ -36,9 +36,6 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
         setPersistent(false);
         // show last
         setOrder(Integer.MAX_VALUE - 1);
-        String[] entryValues = getCurrentEntries(sharedPreferences.getStringSet(SSID_LIST, Collections.emptySet()));
-        setEntries(entryValues);
-        setEntryValues(entryValues);
         setOnPreferenceChangeListener((prefs, newValue) -> {
             if (addNew.equals(newValue)) {
                 EditTextDialog instance = EditTextDialog.getInstance(this::onEditText, R.string.add_network_title);
@@ -50,10 +47,12 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
         });
     }
 
-    public void updateVisibleEntries(Set<String> storedSsids) {
-        String[] currentEntryValues = getCurrentEntries(storedSsids);
-        setEntries(currentEntryValues);
-        setEntryValues(currentEntryValues);
+    @Override
+    public CharSequence[] getEntries() {
+        String[] entryValues = getCurrentEntries(sharedPreferences.getStringSet(SSID_LIST, Collections.emptySet()));
+        setEntries(entryValues);
+        setEntryValues(entryValues);
+        return super.getEntries();
     }
 
     private void onEditText(String newValue) {
