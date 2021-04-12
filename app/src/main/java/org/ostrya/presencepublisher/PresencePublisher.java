@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
 
 public class PresencePublisher extends android.app.Application {
     private static final String TAG = "PresencePublisher";
@@ -51,7 +51,7 @@ public class PresencePublisher extends android.app.Application {
             HyperLog.setLogLevel(Log.INFO);
         }
         Thread.setDefaultUncaughtExceptionHandler(
-            new LogUncaughtExceptionHandler(this, Thread.getDefaultUncaughtExceptionHandler()));
+                new LogUncaughtExceptionHandler(this, Thread.getDefaultUncaughtExceptionHandler()));
     }
 
     private void initBeaconManager() {

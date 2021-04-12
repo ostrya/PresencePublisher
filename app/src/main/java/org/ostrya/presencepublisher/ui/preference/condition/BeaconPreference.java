@@ -18,20 +18,17 @@ import static org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment.
 import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
 
 public class BeaconPreference extends TextPreferenceBase implements View.OnLongClickListener {
-    public static final String BEACON_CONTENT_PREFIX = "beacon.";
     public static final String DEFAULT_CONTENT_ONLINE = "online";
 
     private final Fragment fragment;
     private final String beaconId;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public BeaconPreference(Context context, String beaconId, Fragment fragment) {
-        super(context, BEACON_CONTENT_PREFIX + beaconId, new RegexValidator(".+"), beaconId);
+    public BeaconPreference(Context context, String key, String beaconId, Fragment fragment) {
+        super(context, key, new RegexValidator(".+"), beaconId);
         this.beaconId = beaconId;
         this.fragment = fragment;
         setDefaultValue(DEFAULT_CONTENT_ONLINE);
-        // order alphabetically
-        setOrder(0);
     }
 
     @Override

@@ -17,23 +17,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment.getInstance;
-import static org.ostrya.presencepublisher.ui.preference.condition.AddNetworkChoicePreferenceDummy.SSID_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.SSID_LIST;
 import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
 
 public class WifiNetworkPreference extends TextPreferenceBase implements View.OnLongClickListener {
-    public static final String WIFI_CONTENT_PREFIX = "wifi.";
     public static final String DEFAULT_CONTENT_ONLINE = "online";
 
     private final SharedPreferences preference;
     private final Fragment fragment;
 
-    public WifiNetworkPreference(Context context, String ssid, SharedPreferences preference, Fragment fragment) {
-        super(context, WIFI_CONTENT_PREFIX + ssid, new RegexValidator(".+"), ssid);
+    public WifiNetworkPreference(Context context, String key, String ssid, SharedPreferences preference, Fragment fragment) {
+        super(context, key, new RegexValidator(".+"), ssid);
         this.preference = preference;
         this.fragment = fragment;
         setDefaultValue(DEFAULT_CONTENT_ONLINE);
-        // order alphabetically
-        setOrder(0);
     }
 
     @Override

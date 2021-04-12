@@ -19,17 +19,15 @@ import java.util.Collections;
 
 import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
 import static org.ostrya.presencepublisher.ui.dialog.BeaconScanDialogFragment.getInstance;
+import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
 
 public class AddBeaconChoicePreferenceDummy extends ClickDummy {
-    public static final String BEACON_LIST = "beacons";
     private static final String TAG = "AddBeaconChoicePreferenceDummy";
 
     private final ActivityResultLauncher<String> intentLauncher;
 
     public AddBeaconChoicePreferenceDummy(Context context, Fragment fragment, ActivityResultLauncher<String> intentLauncher) {
         super(context, android.R.drawable.ic_menu_add, R.string.add_beacon_title, R.string.add_beacon_summary, fragment);
-        // show last
-        setOrder(Integer.MAX_VALUE - 1);
         this.intentLauncher = intentLauncher;
     }
 
