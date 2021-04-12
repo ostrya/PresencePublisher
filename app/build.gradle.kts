@@ -12,7 +12,7 @@ buildscript {
 }
 
 plugins {
-    id("com.github.triplet.play") version "3.3.0"
+    id("com.github.triplet.play") version "3.4.0"
     id("com.jaredsburrows.license") version "0.8.90"
     id("com.android.application")
 }
@@ -113,7 +113,7 @@ play {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.3.0-beta01")
+    implementation("androidx.appcompat:appcompat:1.3.0-rc01")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.preference:preference:1.1.1")
     implementation("androidx.security:security-crypto:1.1.0-alpha03")
@@ -126,7 +126,7 @@ dependencies {
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.assertj:assertj-core:3.19.0")
-    testImplementation("org.mockito:mockito-inline:3.8.0")
+    testImplementation("org.mockito:mockito-inline:3.9.0")
     testRuntimeOnly("com.android.volley:volley:1.2.0")
 }
 
