@@ -117,6 +117,7 @@ afterEvaluate {
 
 play {
     serviceAccountCredentials.set(file("../../google-key.json"))
+    defaultToAppBundles.set(true)
 }
 
 dependencies {
