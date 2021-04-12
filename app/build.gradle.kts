@@ -92,6 +92,13 @@ val checkParameters by tasks.registering {
     }
 }
 
+licenseReport {
+    generateCsvReport = false
+    generateHtmlReport = true
+    generateJsonReport = false
+    copyHtmlReportToAssets = true
+}
+
 afterEvaluate {
     val licenseDebugReport by tasks.existing
 
