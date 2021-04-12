@@ -9,7 +9,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.ostrya.presencepublisher.ui.preference.condition.AddNetworkChoicePreferenceDummy.SSID_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.SSID_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.WIFI_CONTENT_PREFIX;
 import static org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference.PRESENCE_TOPIC;
 
 public class WifiMessageProvider extends AbstractMessageProvider {
@@ -24,7 +25,7 @@ public class WifiMessageProvider extends AbstractMessageProvider {
         String ssid = getSsidIfMatching();
         if (ssid != null) {
             HyperLog.i(TAG, "Scheduling message for SSID " + ssid);
-            String onlineContent = getSharedPreferences().getString(WifiNetworkPreference.WIFI_CONTENT_PREFIX + ssid, WifiNetworkPreference.DEFAULT_CONTENT_ONLINE);
+            String onlineContent = getSharedPreferences().getString(WIFI_CONTENT_PREFIX + ssid, WifiNetworkPreference.DEFAULT_CONTENT_ONLINE);
             return Collections.singletonList(onlineContent);
         }
         return Collections.emptyList();

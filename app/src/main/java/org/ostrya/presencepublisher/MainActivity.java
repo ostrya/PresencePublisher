@@ -3,15 +3,12 @@ package org.ostrya.presencepublisher;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.schedule.Scheduler;
 import org.ostrya.presencepublisher.ui.MainPagerAdapter;
 import org.ostrya.presencepublisher.ui.initialization.InitializationHandler;
@@ -20,12 +17,13 @@ import java.util.Collections;
 
 import static org.ostrya.presencepublisher.ui.initialization.InitializationHandler.HANDLER_CHAIN;
 import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
-import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
-import static org.ostrya.presencepublisher.ui.preference.condition.AddNetworkChoicePreferenceDummy.SSID_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_CONTENT_PREFIX;
+import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
 import static org.ostrya.presencepublisher.ui.preference.condition.OfflineContentPreference.OFFLINE_CONTENT;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
-import static org.ostrya.presencepublisher.ui.preference.condition.WifiNetworkPreference.WIFI_CONTENT_PREFIX;
+import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.SSID_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.WIFI_CONTENT_PREFIX;
 import static org.ostrya.presencepublisher.ui.preference.connection.ClientCertificatePreference.CLIENT_CERTIFICATE;
 import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
 import static org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference.PASSWORD;
@@ -126,7 +124,7 @@ public class MainActivity extends FragmentActivity {
                 handleConsentChange();
                 break;
             default:
-                if (key.startsWith(WIFI_CONTENT_PREFIX)) {
+                if (key.startsWith(WIFI_CONTENT_PREFIX) || key.startsWith(BEACON_CONTENT_PREFIX)) {
                     onChangedConnectionProperty(key);
                 } else {
                     HyperLog.d(TAG, "Ignoring unexpected value " + key);

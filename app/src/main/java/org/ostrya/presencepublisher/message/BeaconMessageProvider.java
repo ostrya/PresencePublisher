@@ -10,8 +10,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.ostrya.presencepublisher.beacon.RegionMonitorNotifier.FOUND_BEACON_LIST;
-import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
-import static org.ostrya.presencepublisher.ui.preference.condition.BeaconPreference.BEACON_CONTENT_PREFIX;
+import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_CONTENT_PREFIX;
+import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
 import static org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference.PRESENCE_TOPIC;
 
 public class BeaconMessageProvider extends AbstractMessageProvider {

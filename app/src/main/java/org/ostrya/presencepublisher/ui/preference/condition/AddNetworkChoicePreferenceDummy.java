@@ -16,10 +16,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AddNetworkChoicePreferenceDummy extends ListPreference {
-    public static final String SSID_LIST = "ssids";
-    private static final String DUMMY = "networkChoiceDummy";
+import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.SSID_LIST;
 
+public class AddNetworkChoicePreferenceDummy extends ListPreference {
     private final Validator validator = new RegexValidator(".+");
     private final String addNew;
     private final SharedPreferences sharedPreferences;
@@ -28,14 +27,9 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
         super(context);
         this.addNew = context.getString(R.string.enter_network);
         this.sharedPreferences = sharedPreferences;
-        setKey(DUMMY);
         setTitle(R.string.add_network_title);
         setDialogTitle(R.string.add_network_title);
         setSummary(R.string.add_network_summary);
-        setIcon(android.R.drawable.ic_menu_add);
-        setPersistent(false);
-        // show last
-        setOrder(Integer.MAX_VALUE - 1);
         setOnPreferenceChangeListener((prefs, newValue) -> {
             if (addNew.equals(newValue)) {
                 EditTextDialog instance = EditTextDialog.getInstance(this::onEditText, R.string.add_network_title);

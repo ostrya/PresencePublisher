@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.ostrya.presencepublisher.beacon.RegionMonitorNotifier.FOUND_BEACON_LIST;
-import static org.ostrya.presencepublisher.ui.preference.condition.AddBeaconChoicePreferenceDummy.BEACON_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public final class PresenceBeaconManager {
