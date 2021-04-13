@@ -127,14 +127,14 @@ dependencies {
     implementation("androidx.security:security-crypto:1.1.0-alpha03")
     implementation("androidx.viewpager2:viewpager2:1.1.0-alpha01")
     implementation("com.google.android.material:material:1.3.0")
-    implementation("com.hypertrack:hyperlog:0.0.10") {
+    implementation("com.solusguard:hyperlog:1.2.1") {
         exclude(group = "com.android.volley")
     }
-    implementation("org.altbeacon:android-beacon-library:2.17.1")
+    implementation("org.altbeacon:android-beacon-library:2.19-beta")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.assertj:assertj-core:3.19.0")
-    testImplementation("org.mockito:mockito-inline:3.9.0")
+    testImplementation("org.mockito:mockito-inline:3.10.0")
     testRuntimeOnly("com.android.volley:volley:1.2.0")
 }
 
