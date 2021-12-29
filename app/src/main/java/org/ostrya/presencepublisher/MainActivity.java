@@ -17,13 +17,13 @@ import static org.ostrya.presencepublisher.ui.preference.connection.QoSPreferenc
 import static org.ostrya.presencepublisher.ui.preference.connection.RetainFlagPreference.RETAIN_FLAG;
 import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
 import static org.ostrya.presencepublisher.ui.preference.connection.UsernamePreference.USERNAME;
+import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
+import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_LIST;
+import static org.ostrya.presencepublisher.ui.preference.messages.MessageFormatPreference.MESSAGE_FORMAT_SETTING;
 import static org.ostrya.presencepublisher.ui.preference.schedule.AutostartPreference.AUTOSTART;
-import static org.ostrya.presencepublisher.ui.preference.schedule.BatteryTopicPreference.BATTERY_TOPIC;
 import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
 import static org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePreference.MESSAGE_SCHEDULE;
 import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
-import static org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference.PRESENCE_TOPIC;
-import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -103,22 +103,21 @@ public class MainActivity extends FragmentActivity {
     private void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
         switch (key) {
             case BEACON_LIST:
-            case BATTERY_TOPIC:
             case CLIENT_CERTIFICATE:
             case HOST:
             case MESSAGE_SCHEDULE:
+            case MESSAGE_LIST:
             case OFFLINE_CONTENT:
             case PASSWORD:
             case PORT:
-            case PRESENCE_TOPIC:
             case QOS_VALUE:
             case RETAIN_FLAG:
-            case SEND_BATTERY_MESSAGE:
             case SEND_OFFLINE_MESSAGE:
             case SEND_VIA_MOBILE_NETWORK:
             case SSID_LIST:
             case USERNAME:
             case USE_TLS:
+            case MESSAGE_FORMAT_SETTING:
                 onChangedConnectionProperty(key);
                 break;
             case AUTOSTART:
@@ -129,7 +128,9 @@ public class MainActivity extends FragmentActivity {
                 handleConsentChange();
                 break;
             default:
-                if (key.startsWith(WIFI_CONTENT_PREFIX) || key.startsWith(BEACON_CONTENT_PREFIX)) {
+                if (key.startsWith(WIFI_CONTENT_PREFIX)
+                        || key.startsWith(BEACON_CONTENT_PREFIX)
+                        || key.startsWith(MESSAGE_CONFIG_PREFIX)) {
                     onChangedConnectionProperty(key);
                 } else {
                     HyperLog.d(TAG, "Ignoring unexpected value " + key);

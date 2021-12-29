@@ -1,7 +1,6 @@
 package org.ostrya.presencepublisher.ui.preference.condition;
 
 import static org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment.getInstance;
-import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,16 +9,15 @@ import android.view.View;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceViewHolder;
 
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
-import org.ostrya.presencepublisher.ui.preference.common.TextPreferenceBase;
+import org.ostrya.presencepublisher.ui.preference.common.AbstractTextPreferenceEntry;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
 import org.ostrya.presencepublisher.ui.util.RegexValidator;
 
-public class BeaconPreference extends TextPreferenceBase implements View.OnLongClickListener {
+public class BeaconPreference extends AbstractTextPreferenceEntry {
     public static final String DEFAULT_CONTENT_ONLINE = "online";
 
     private final Fragment fragment;
@@ -31,12 +29,6 @@ public class BeaconPreference extends TextPreferenceBase implements View.OnLongC
         this.beaconId = beaconId;
         this.fragment = fragment;
         setDefaultValue(DEFAULT_CONTENT_ONLINE);
-    }
-
-    @Override
-    public void onBindViewHolder(PreferenceViewHolder holder) {
-        super.onBindViewHolder(holder);
-        holder.itemView.setOnLongClickListener(this);
     }
 
     @Override
@@ -59,6 +51,6 @@ public class BeaconPreference extends TextPreferenceBase implements View.OnLongC
 
     @Override
     protected void configureSummary() {
-        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.content_summary, STRING));
+        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.content_summary));
     }
 }

@@ -2,7 +2,6 @@ package org.ostrya.presencepublisher.ui.preference.condition;
 
 import static org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment.getInstance;
 import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.SSID_LIST;
-import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,11 +9,10 @@ import android.content.SharedPreferences;
 import android.view.View;
 
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceViewHolder;
 
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
-import org.ostrya.presencepublisher.ui.preference.common.TextPreferenceBase;
+import org.ostrya.presencepublisher.ui.preference.common.AbstractTextPreferenceEntry;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
 import org.ostrya.presencepublisher.ui.util.RegexValidator;
 
@@ -22,7 +20,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class WifiNetworkPreference extends TextPreferenceBase implements View.OnLongClickListener {
+public class WifiNetworkPreference extends AbstractTextPreferenceEntry {
     public static final String DEFAULT_CONTENT_ONLINE = "online";
 
     private final SharedPreferences preference;
@@ -38,12 +36,6 @@ public class WifiNetworkPreference extends TextPreferenceBase implements View.On
         this.preference = preference;
         this.fragment = fragment;
         setDefaultValue(DEFAULT_CONTENT_ONLINE);
-    }
-
-    @Override
-    public void onBindViewHolder(PreferenceViewHolder holder) {
-        super.onBindViewHolder(holder);
-        holder.itemView.setOnLongClickListener(this);
     }
 
     @Override
@@ -68,6 +60,6 @@ public class WifiNetworkPreference extends TextPreferenceBase implements View.On
 
     @Override
     protected void configureSummary() {
-        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.content_summary, STRING));
+        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.content_summary));
     }
 }

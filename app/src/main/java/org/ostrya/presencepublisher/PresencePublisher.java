@@ -1,6 +1,10 @@
 package org.ostrya.presencepublisher;
 
 import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
+import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
+import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_LIST;
+
+import static java.util.Collections.singletonList;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -21,9 +25,12 @@ import org.ostrya.presencepublisher.beacon.HyperlogLogger;
 import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.log.CustomLogFormat;
 import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
+import org.ostrya.presencepublisher.message.MessageItem;
 import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
+import org.ostrya.presencepublisher.ui.preference.messages.MessageConfiguration;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +43,11 @@ public class PresencePublisher extends android.app.Application {
     public static final String NETWORK_PENDING_INTENT_ACTION =
             "org.ostrya.presencepublisher.NETWORK_PENDING_INTENT";
 
+    // old preferences to be migrated
+    private static final String PRESENCE_TOPIC = "topic";
+    private static final String SEND_BATTERY_MESSAGE = "sendbatteryMessage";
+    private static final String BATTERY_TOPIC = "batteryTopic";
+
     @SuppressWarnings("FieldCanBeLocal")
     private BackgroundPowerSaver backgroundPowerSaver;
 
@@ -45,6 +57,7 @@ public class PresencePublisher extends android.app.Application {
         initLogger();
         initBeaconManager();
         NotificationFactory.createNotificationChannel(this);
+        migrateOldSettings();
     }
 
     private void initLogger() {
@@ -91,6 +104,38 @@ public class PresencePublisher extends android.app.Application {
                 backgroundPowerSaver = new BackgroundPowerSaver(this);
             }
         }
+    }
+
+    private void migrateOldSettings() {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preference.edit();
+        String presenceTopic = preference.getString(PRESENCE_TOPIC, null);
+        Set<String> messages =
+                new HashSet<>(preference.getStringSet(MESSAGE_LIST, Collections.emptySet()));
+        if (presenceTopic != null && !presenceTopic.isEmpty()) {
+            String messageName = getString(R.string.default_presence_message_name);
+            String value =
+                    MessageConfiguration.toRawValue(
+                            presenceTopic, singletonList(MessageItem.CONDITION_CONTENT));
+            editor.putString(MESSAGE_CONFIG_PREFIX + messageName, value);
+            messages.add(messageName);
+        }
+        String batteryTopic = preference.getString(BATTERY_TOPIC, null);
+        if (batteryTopic != null
+                && !batteryTopic.isEmpty()
+                && preference.getBoolean(SEND_BATTERY_MESSAGE, false)) {
+            String messageName = getString(R.string.default_battery_message_name);
+            String value =
+                    MessageConfiguration.toRawValue(
+                            batteryTopic, singletonList(MessageItem.BATTERY_LEVEL));
+            editor.putString(MESSAGE_CONFIG_PREFIX + messageName, value);
+            messages.add(messageName);
+        }
+        editor.putStringSet(MESSAGE_LIST, messages)
+                .remove(PRESENCE_TOPIC)
+                .remove(PRESENCE_TOPIC)
+                .remove(SEND_BATTERY_MESSAGE)
+                .apply();
     }
 
     public boolean supportsBeacons() {

@@ -1,7 +1,5 @@
 package org.ostrya.presencepublisher.ui.preference.connection;
 
-import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
-
 import android.content.Context;
 import android.security.KeyChain;
 
@@ -18,8 +16,7 @@ public class ClientCertificatePreference extends Preference {
         super(context);
         setKey(CLIENT_CERTIFICATE);
         setTitle(R.string.client_certificate_title);
-        setSummaryProvider(
-                new ExplanationSummaryProvider<>(R.string.client_certificate_summary, STRING));
+        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.client_certificate_summary));
         setIconSpaceReserved(false);
         setOnPreferenceClickListener(
                 prefs -> {

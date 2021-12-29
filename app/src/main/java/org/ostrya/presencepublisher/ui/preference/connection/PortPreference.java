@@ -1,7 +1,5 @@
 package org.ostrya.presencepublisher.ui.preference.connection;
 
-import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
-
 import android.content.Context;
 
 import org.ostrya.presencepublisher.R;
@@ -18,6 +16,6 @@ public class PortPreference extends TextPreferenceBase {
 
     @Override
     protected void configureSummary() {
-        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.port_summary, STRING));
+        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.port_summary));
     }
 }

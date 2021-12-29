@@ -3,8 +3,8 @@
     <string name="app_name">Presence Publisher</string>
     <string name="host_title">MQTT Host</string>
     <string name="host_summary" formatted="true">IP-Adresse oder Hostname%nAktueller Wert: %1$s</string>
-    <string name="presence_topic_title">Anwesenheits-Topic</string>
-    <string name="presence_topic_summary" formatted="true">Das Topic, zu dem Anwesenheitsnachrichten gesendet werden%nAktueller Wert: %1$s</string>
+    <string name="default_presence_message_name">Anwesenheitsnachricht</string>
+    <string name="default_battery_message_name">Batterie-Nachricht</string>
     <string name="message_schedule_title">Sendeperiode</string>
     <string name="message_schedule_summary">Zeit zwischen Nachrichten in Minuten</string>
     <string name="message_schedule_dialog_text">Die Periode auf unter 15 Minuten zu setzen wird den Batterieverbrauch erhöhen. Fortfahren?</string>
@@ -45,6 +45,11 @@
     <string name="port_title">MQTT Port</string>
     <string name="port_summary" formatted="true">Standardwert 1883, bzw. 8883 bei TLS%nAktueller Wert: %1$s</string>
     <string name="toast_invalid_input">Ungültige Eingabe!</string>
+    <string name="toast_invalid_number_input">Ungültige Zahl!</string>
+    <string name="toast_invalid_number_range" formatted="true">Ungültiger Wert! Muss zwischen %1$d und %2$d liegen.</string>
+    <string name="toast_empty_name">Name darf nicht leer sein!</string>
+    <string name="toast_empty_topic">Topic darf nicht leer sein!</string>
+    <string name="toast_empty_items">Mindestens ein Inhaltswert muss ausgewählt sein!</string>
     <string name="check_connection_summary">Tippe hier, um eine Testnachricht zu senden</string>
     <string name="check_connection_title">Verbindung prüfen</string>
     <string name="dialog_check_connection_title">Prüfe Verbindung</string>
@@ -73,17 +78,13 @@
     <string name="category_offline">Keine Bedingung ist erfüllt</string>
     <string name="content_summary" formatted="true">Aktueller Wert: %1$s</string>
     <string name="offline_content_title">Abwesenheitsnachricht</string>
-    <string name="condition_help_summary">Für jede erfüllte Bedingung wird eine Nachricht gesendet. Tippe, um die gesendete Nachricht für eine Bedingung zu ändern. Berühre länger, um einen Eintrag zu löschen.</string>
+    <string name="condition_help_summary">Für jede erfüllte Bedingung kann ein Nachrichteninhalt definiert werden. Tippe, um den Inhalt für eine Bedingung zu ändern. Berühre länger, um einen Eintrag zu löschen.</string>
     <string name="tab_log_title">Log</string>
     <string name="button_export">Exportieren</string>
     <string name="toast_no_logs">Keine Logs vorhanden</string>
     <string name="button_reload">Neu laden</string>
     <string name="button_clear">Löschen</string>
     <string name="tab_about_title">Über</string>
-    <string name="battery_topic_title">Batterie-Topic</string>
-    <string name="battery_topic_summary" formatted="true">Das Topic, zu dem Batterienachrichten gesendet werden.%nAktueller Wert: %1$s</string>
-    <string name="send_battery_message_title">Batteriestand senden</string>
-    <string name="send_battery_message_summary">Batteriestand in Prozent zusätzlich zu Anwesenheitsnachricht senden.</string>
     <string name="battery_optimization_dialog_title">Akku-Optimierung</string>
     <string name="battery_optimization_dialog_message">Bitte deaktiviere Akku-Optimierung für diese App. Andernfalls kann Android diese App anhalten, sodass keine Nachrichten im Standby gesendet werden.</string>
     <string name="add_network_title">Netzwerk hinzufügen</string>
@@ -114,4 +115,22 @@
     <string name="dialog_close">Schließen</string>
     <string name="source_repo_summary">Tippe hier, um den Quellcode in einem Browser zu öffnen.</string>
     <string name="privacy_url">https://ostrya.github.io/PresencePublisher/de/PRIVACY_POLICY.html</string>
+    <string name="tab_messages_title">Nachrichten</string>
+    <string name="category_common_settings">Allgemeine Einstellungen</string>
+    <string name="category_messages">Nachrichten</string>
+    <string name="add_message_title">Nachricht hinzufügen</string>
+    <string name="add_message_summary">Tippe hier, um eine Nachricht hinzuzufügen</string>
+    <string name="remove_message_title">Nachricht entfernen</string>
+    <string name="remove_message_warning_message">Diese Nachricht wirklich entfernen?</string>
+    <string name="message_summary" formatted="true">Aktuelles Topic: %1$s%nAktueller Inhalt:%n%2$s</string>
+    <string name="edit_message_title">Nachricht bearbeiten</string>
+    <string name="message_name_hint">Name</string>
+    <string name="message_topic_hint">Topic</string>
+    <string name="message_content_hint">Inhalt</string>
+    <string name="message_help_summary">Diese Liste von Nachrichten wird zum gegebenen Zeitplan versendet.\n\nTippe, um die Nachricht zu bearbeiten. Berühre länger, um einen Eintrag zu löschen.</string>
+    <string name="message_format_setting_title">Nachrichtenformat</string>
+    <string name="message_format_setting_summary" formatted="true">Das Format, in dem MQTT-Nachrichten versendet werden.%nAktueller Wert: %1$s</string>
+    <string name="message_format_help_summary">Für weitere Details über die verschiedenen Nachrichtenformate bitte hier klicken.</string>
+    <string name="message_format_help_title">Nachrichtenformatdetails</string>
+    <string name="message_format_help_intro">Angenommen, du hast eine Nachricht konfiguriert, die sowohl <b>condition_content</b> als auch <b>battery_level</b> enthält, du hast einen Batteriestand von 35% und du erfüllst gerade drei Bedingungen mit Inhalt \"content1\", \"content2\" and \"content3\", dann werden abhängig vom gewählten Format folgende Nachrichtentexte versandt:</string>
 </resources>

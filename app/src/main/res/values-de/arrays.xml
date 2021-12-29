@@ -5,4 +5,14 @@
         <item>QoS 1: mindestens einmal</item>
         <item>QoS 2: genau einmal (nicht von allen Brokern unterstützt)</item>
     </string-array>
+    <string-array name="message_format_descriptions">
+        <item>PLAINTEXT (eine Nachricht pro Inhaltswert)</item>
+        <item>CSV</item>
+        <item>JSON</item>
+        <item>YAML</item>
+    </string-array>
+    <string-array name="message_item_descriptions">
+        <item><b>condition_content</b>: Inhalt zutreffender Bedingungen. Eine Nachricht mit diesem Eintrag wird nur versendet, wenn mindestens eine Bedingung erfüllt ist.</item>
+        <item><b>battery_level</b>: Batteriestand in Prozent.</item>
+    </string-array>
 </resources>

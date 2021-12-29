@@ -10,4 +10,14 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+    <string-array name="message_format_descriptions">
+        <item>PLAINTEXT (one message per content item)</item>
+        <item>CSV</item>
+        <item>JSON</item>
+        <item>YAML</item>
+    </string-array>
+    <string-array name="message_item_descriptions">
+        <item><b>condition_content</b>: Content of matching conditions. A message containing this element will only be sent if at least one condition is fulfilled.</item>
+        <item><b>battery_level</b>: Battery level in percent.</item>
+    </string-array>
 </resources>
