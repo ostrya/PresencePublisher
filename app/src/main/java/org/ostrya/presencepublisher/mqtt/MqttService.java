@@ -26,7 +26,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.ostrya.presencepublisher.message.Message;
 import org.ostrya.presencepublisher.security.SecurePreferencesHelper;
 
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class MqttService {
@@ -96,12 +96,11 @@ public class MqttService {
             mqttClient.connect(options);
             for (Message message : messages) {
                 mqttClient.publish(
-                        message.getTopic(),
-                        message.getContent().getBytes(StandardCharsets.UTF_8),
-                        qos,
-                        retain);
+                        message.getTopic(), message.getContent().getBytes("UTF-8"), qos, retain);
             }
             mqttClient.disconnect(5);
+        } catch (UnsupportedEncodingException e) {
+            HyperLog.e(TAG, "Unable to find UTF-8 encoding", e);
         }
         HyperLog.i(TAG, "Sending messages was successful");
     }

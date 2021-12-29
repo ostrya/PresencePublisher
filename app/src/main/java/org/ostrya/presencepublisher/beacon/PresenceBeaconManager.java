@@ -14,8 +14,8 @@ import androidx.preference.PreferenceManager;
 
 import com.hypertrack.hyperlog.HyperLog;
 
+import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Region;
-import org.altbeacon.beacon.startup.RegionBootstrap;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +30,7 @@ public final class PresenceBeaconManager {
 
     @GuardedBy("this")
     @Nullable
-    private RegionBootstrap regionBootstrap;
+    private BeaconManager beaconManager;
 
     private PresenceBeaconManager() {}
 
@@ -44,8 +44,11 @@ public final class PresenceBeaconManager {
                 PreferenceManager.getDefaultSharedPreferences(applicationContext);
         List<Region> configuredScanRegions = getConfiguredScanRegions(sharedPreferences);
         RegionMonitorNotifier monitorNotifier = new RegionMonitorNotifier(sharedPreferences);
-        regionBootstrap =
-                new RegionBootstrap(applicationContext, monitorNotifier, configuredScanRegions);
+        beaconManager = BeaconManager.getInstanceForApplication(applicationContext);
+        beaconManager.addMonitorNotifier(monitorNotifier);
+        for (Region region : configuredScanRegions) {
+            beaconManager.startMonitoring(region);
+        }
     }
 
     private List<Region> getConfiguredScanRegions(SharedPreferences sharedPreferences) {
@@ -72,13 +75,13 @@ public final class PresenceBeaconManager {
 
         HyperLog.d(TAG, "Add scanning for beacon " + beaconId);
         Region region = new Region(beaconId, beacon.getAddress());
-        if (regionBootstrap == null) {
+        if (beaconManager == null) {
             HyperLog.d(TAG, "Start scanning for beacons");
+            beaconManager = BeaconManager.getInstanceForApplication(applicationContext);
             RegionMonitorNotifier monitorNotifier = new RegionMonitorNotifier(sharedPreferences);
-            regionBootstrap = new RegionBootstrap(applicationContext, monitorNotifier, region);
-        } else {
-            regionBootstrap.addRegion(region);
+            beaconManager.addMonitorNotifier(monitorNotifier);
         }
+        beaconManager.startMonitoring(region);
     }
 
     public synchronized void removeBeacon(Context context, String beaconId) {
@@ -100,13 +103,13 @@ public final class PresenceBeaconManager {
 
         HyperLog.d(TAG, "Remove scanning for beacon " + beaconId);
         Region region = new Region(beaconId, PresenceBeacon.beaconIdToAddress(beaconId));
-        if (regionBootstrap != null) {
+        if (beaconManager != null) {
+            beaconManager.stopMonitoring(region);
             if (storedBeacons.isEmpty()) {
                 HyperLog.i(TAG, "Disable scanning for beacons");
-                regionBootstrap.disable();
-                regionBootstrap = null;
-            } else {
-                regionBootstrap.removeRegion(region);
+                beaconManager.removeAllMonitorNotifiers();
+                beaconManager.shutdownIfIdle();
+                beaconManager = null;
             }
         }
     }

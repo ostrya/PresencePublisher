@@ -29,7 +29,7 @@ public class MessageConfigurationValidator implements Validator {
             return false;
         }
         if (messageConfiguration.getItems().isEmpty()) {
-            String text = context.getString(R.string.toast_empty_name);
+            String text = context.getString(R.string.toast_empty_items);
             Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             return false;
         }

@@ -65,20 +65,40 @@ public class Scheduler {
         alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
         Intent alarmIntent = new Intent(applicationContext, AlarmReceiver.class);
         alarmIntent.setAction(ALARM_ACTION);
-        pendingAlarmIntent =
-                PendingIntent.getBroadcast(
-                        applicationContext,
-                        ALARM_PENDING_INTENT_REQUEST_CODE,
-                        alarmIntent,
-                        FLAG_UPDATE_CURRENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingAlarmIntent =
+                    PendingIntent.getBroadcast(
+                            applicationContext,
+                            ALARM_PENDING_INTENT_REQUEST_CODE,
+                            alarmIntent,
+                            FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        } else {
+            //noinspection UnspecifiedImmutableFlag
+            pendingAlarmIntent =
+                    PendingIntent.getBroadcast(
+                            applicationContext,
+                            ALARM_PENDING_INTENT_REQUEST_CODE,
+                            alarmIntent,
+                            FLAG_UPDATE_CURRENT);
+        }
         Intent networkIntent = new Intent(applicationContext, ConnectivityBroadcastReceiver.class);
         networkIntent.setAction(NETWORK_PENDING_INTENT_ACTION);
-        pendingNetworkIntent =
-                PendingIntent.getBroadcast(
-                        applicationContext,
-                        NETWORK_PENDING_INTENT_REQUEST_CODE,
-                        networkIntent,
-                        FLAG_UPDATE_CURRENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingNetworkIntent =
+                    PendingIntent.getBroadcast(
+                            applicationContext,
+                            NETWORK_PENDING_INTENT_REQUEST_CODE,
+                            networkIntent,
+                            FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        } else {
+            //noinspection UnspecifiedImmutableFlag
+            pendingNetworkIntent =
+                    PendingIntent.getBroadcast(
+                            applicationContext,
+                            NETWORK_PENDING_INTENT_REQUEST_CODE,
+                            networkIntent,
+                            FLAG_UPDATE_CURRENT);
+        }
     }
 
     public void scheduleNow() {
@@ -186,6 +206,9 @@ public class Scheduler {
                                 applicationContext, getLastSuccess(), nextSchedule));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ignoreBattery) {
+                // according to the linter (and experimenting with the emulator), we don't seem to
+                // need the permission if we have power exemption
+                //noinspection MissingPermission
                 alarmManager.setAlarmClock(
                         new AlarmManager.AlarmClockInfo(nextSchedule, pendingAlarmIntent),
                         pendingAlarmIntent);

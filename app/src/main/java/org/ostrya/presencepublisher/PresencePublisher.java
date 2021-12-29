@@ -20,7 +20,6 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.distance.ModelSpecificDistanceCalculator;
 import org.altbeacon.beacon.logging.LogManager;
-import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 import org.ostrya.presencepublisher.beacon.HyperlogLogger;
 import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.log.CustomLogFormat;
@@ -47,9 +46,6 @@ public class PresencePublisher extends android.app.Application {
     private static final String PRESENCE_TOPIC = "topic";
     private static final String SEND_BATTERY_MESSAGE = "sendbatteryMessage";
     private static final String BATTERY_TOPIC = "batteryTopic";
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private BackgroundPowerSaver backgroundPowerSaver;
 
     @Override
     public void onCreate() {
@@ -80,7 +76,6 @@ public class PresencePublisher extends android.app.Application {
                     new ModelSpecificDistanceCalculator(
                             this, BeaconManager.getDistanceModelUpdateUrl()));
             BeaconManager beaconManager = BeaconManager.getInstanceForApplication(this);
-            beaconManager.setBackgroundMode(true);
             List<BeaconParser> beaconParsers = beaconManager.getBeaconParsers();
             beaconParsers.add(
                     new BeaconParser("iBeacon")
@@ -98,10 +93,6 @@ public class PresencePublisher extends android.app.Application {
                 PresenceBeaconManager.getInstance().initialize(this);
             } else {
                 HyperLog.i(TAG, "No beacons configured, not enabling background beacon scanning");
-                return;
-            }
-            if (Build.VERSION.SDK_INT >= 18) {
-                backgroundPowerSaver = new BackgroundPowerSaver(this);
             }
         }
     }

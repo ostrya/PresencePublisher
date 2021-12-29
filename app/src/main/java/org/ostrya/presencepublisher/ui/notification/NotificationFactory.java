@@ -43,12 +43,23 @@ public class NotificationFactory {
             Context context, long lastSuccess, long nextSchedule) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent =
-                PendingIntent.getActivity(
-                        context,
-                        NOTIFICATION_REQUEST_CODE,
-                        intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntent =
+                    PendingIntent.getActivity(
+                            context,
+                            NOTIFICATION_REQUEST_CODE,
+                            intent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            //noinspection UnspecifiedImmutableFlag
+            pendingIntent =
+                    PendingIntent.getActivity(
+                            context,
+                            NOTIFICATION_REQUEST_CODE,
+                            intent,
+                            PendingIntent.FLAG_UPDATE_CURRENT);
+        }
 
         Notification notification;
         NotificationCompat.Builder builder =

@@ -2,16 +2,12 @@ package org.ostrya.presencepublisher.ui.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.hypertrack.hyperlog.HyperLog;
 
 import org.altbeacon.beacon.Beacon;
-import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
@@ -35,7 +30,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-public class BeaconScanDialogFragment extends DialogFragment implements BeaconConsumer {
+public class BeaconScanDialogFragment extends DialogFragment {
     private static final String TAG = "BeaconScanDialogFragment";
     private static final String REGION_ID = "scan_region_id";
     private BeaconManager beaconManager;
@@ -76,6 +71,10 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
         recyclerView.setHasFixedSize(false);
         recyclerView.setItemAnimator(null);
 
+        HyperLog.i(TAG, "Starting to scan for beacons");
+        beaconManager.addRangeNotifier(scanCallback);
+        beaconManager.startRangingBeacons(region);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle(R.string.dialog_scan_beacons_title)
                 .setView(view)
@@ -92,7 +91,6 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
     public void onDestroyView() {
         super.onDestroyView();
         stopScan();
-        beaconManager.unbind(this);
     }
 
     private void onSelect(PresenceBeacon beacon) {
@@ -102,7 +100,6 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
 
     private void setBeaconManager(BeaconManager beaconManager) {
         this.beaconManager = beaconManager;
-        beaconManager.bind(this);
     }
 
     public void setScanCallback(ScanCallback scanCallback) {
@@ -122,44 +119,9 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
     }
 
     private void stopScan() {
-        try {
-            beaconManager.stopRangingBeaconsInRegion(region);
-        } catch (RemoteException e) {
-            HyperLog.e(TAG, "Unable to stop scanning for beacons", e);
-        }
-        beaconManager.setBackgroundMode(true);
+        beaconManager.stopRangingBeacons(region);
         beaconManager.removeRangeNotifier(scanCallback);
         progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onBeaconServiceConnect() {
-        try {
-            HyperLog.i(TAG, "Starting to scan for beacons");
-            beaconManager.setBackgroundMode(false);
-            beaconManager.addRangeNotifier(scanCallback);
-            beaconManager.startRangingBeaconsInRegion(region);
-        } catch (RemoteException e) {
-            HyperLog.e(TAG, "Unable to start scanning for beacons", e);
-            Toast.makeText(requireContext(), R.string.toast_scan_failed, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public Context getApplicationContext() {
-        return requireContext();
-    }
-
-    @Override
-    public void unbindService(ServiceConnection serviceConnection) {
-        HyperLog.i(TAG, "Unbinding from BeaconManager service");
-        requireActivity().unbindService(serviceConnection);
-    }
-
-    @Override
-    public boolean bindService(Intent intent, ServiceConnection serviceConnection, int i) {
-        HyperLog.i(TAG, "Binding to BeaconManager service");
-        return requireActivity().bindService(intent, serviceConnection, i);
     }
 
     public interface DialogCallback {
