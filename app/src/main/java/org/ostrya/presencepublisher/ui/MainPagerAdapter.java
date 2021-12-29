@@ -29,15 +29,17 @@ public class MainPagerAdapter extends FragmentStateAdapter
             case 2:
                 return new ConditionFragment();
             case 3:
-                return new LogFragment();
+                return new MessageFragment();
             case 4:
+                return new LogFragment();
+            case 5:
                 return new AboutFragment();
         }
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 6;
     }
 
     @Override
@@ -55,9 +57,12 @@ public class MainPagerAdapter extends FragmentStateAdapter
                 titleId = R.string.tab_condition_title;
                 break;
             case 3:
-                titleId = R.string.tab_log_title;
+                titleId = R.string.tab_messages_title;
                 break;
             case 4:
+                titleId = R.string.tab_log_title;
+                break;
+            case 5:
                 titleId = R.string.tab_about_title;
                 break;
         }

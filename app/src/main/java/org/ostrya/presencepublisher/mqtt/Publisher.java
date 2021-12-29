@@ -1,30 +1,26 @@
 package org.ostrya.presencepublisher.mqtt;
 
-import static android.content.Context.CONNECTIVITY_SERVICE;
-
-import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
-import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
+import static org.ostrya.presencepublisher.message.Message.messagesForTopic;
+import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
+import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_LIST;
+import static org.ostrya.presencepublisher.ui.preference.messages.MessageFormatPreference.MESSAGE_FORMAT_SETTING;
 import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
-import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
-import android.os.Build;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.preference.PreferenceManager;
 
 import com.hypertrack.hyperlog.HyperLog;
 
-import org.ostrya.presencepublisher.message.BatteryMessageProvider;
-import org.ostrya.presencepublisher.message.BeaconMessageProvider;
 import org.ostrya.presencepublisher.message.Message;
-import org.ostrya.presencepublisher.message.OfflineMessageProvider;
-import org.ostrya.presencepublisher.message.WifiMessageProvider;
+import org.ostrya.presencepublisher.message.MessageContext;
+import org.ostrya.presencepublisher.message.MessageFormat;
+import org.ostrya.presencepublisher.message.MessageItem;
+import org.ostrya.presencepublisher.network.NetworkService;
 import org.ostrya.presencepublisher.schedule.Scheduler;
+import org.ostrya.presencepublisher.ui.preference.messages.MessageConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,30 +29,37 @@ import java.util.List;
 public class Publisher {
     private static final String TAG = "Publisher";
 
+    private final MessageContext messageContext;
     private final SharedPreferences sharedPreferences;
-    private final BatteryMessageProvider batteryMessageProvider;
-    private final BeaconMessageProvider beaconMessageProvider;
-    private final OfflineMessageProvider offlineMessageProvider;
-    private final WifiMessageProvider wifiMessageProvider;
     private final MqttService mqttService;
-    private final ConnectivityManager connectivityManager;
+    private final NetworkService networkService;
     private final Scheduler scheduler;
 
     public Publisher(Context context) {
         Context applicationContext = context.getApplicationContext();
+        messageContext = new MessageContext(applicationContext);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-        batteryMessageProvider = new BatteryMessageProvider(applicationContext);
-        beaconMessageProvider = new BeaconMessageProvider(applicationContext);
-        offlineMessageProvider = new OfflineMessageProvider(applicationContext);
-        wifiMessageProvider = new WifiMessageProvider(applicationContext);
         mqttService = new MqttService(applicationContext);
-        connectivityManager =
-                (ConnectivityManager) applicationContext.getSystemService(CONNECTIVITY_SERVICE);
+        networkService = new NetworkService(applicationContext, sharedPreferences);
         scheduler = new Scheduler(applicationContext);
     }
 
+    @VisibleForTesting
+    Publisher(
+            MessageContext messageContext,
+            SharedPreferences sharedPreferences,
+            MqttService mqttService,
+            NetworkService networkService,
+            Scheduler scheduler) {
+        this.messageContext = messageContext;
+        this.sharedPreferences = sharedPreferences;
+        this.mqttService = mqttService;
+        this.networkService = networkService;
+        this.scheduler = scheduler;
+    }
+
     public void publish() {
-        if (!sendMessageViaCurrentConnection()) {
+        if (!networkService.sendMessageViaCurrentConnection()) {
             HyperLog.i(TAG, "Not connected to valid network, waiting for re-connect");
             scheduler.waitForNetworkReconnect();
             return;
@@ -84,53 +87,29 @@ public class Publisher {
     }
 
     private List<Message> getMessagesToSend() {
-        List<Message> result = new ArrayList<>(wifiMessageProvider.getMessages());
-        result.addAll(beaconMessageProvider.getMessages());
-        if (result.isEmpty() && sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)) {
-            result.addAll(offlineMessageProvider.getMessages());
-        }
-        if (!result.isEmpty() && sharedPreferences.getBoolean(SEND_BATTERY_MESSAGE, false)) {
-            result.addAll(batteryMessageProvider.getMessages());
-        }
-        return Collections.unmodifiableList(result);
-    }
-
-    private boolean sendMessageViaCurrentConnection() {
-        if (connectivityManager == null) {
-            HyperLog.e(TAG, "Connectivity Manager not found");
-            return false;
-        }
-        //noinspection deprecation
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        //noinspection deprecation
-        if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
-            return false;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            for (Network network : connectivityManager.getAllNetworks()) {
-                NetworkCapabilities networkCapabilities =
-                        connectivityManager.getNetworkCapabilities(network);
-                if (networkCapabilities != null
-                        && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                    return true;
+        List<Message> messages = new ArrayList<>();
+        MessageFormat messageFormat =
+                MessageFormat.fromStringOrDefault(
+                        sharedPreferences.getString(MESSAGE_FORMAT_SETTING, null),
+                        MessageFormat.PLAINTEXT);
+        for (String messageConfigName :
+                sharedPreferences.getStringSet(MESSAGE_LIST, Collections.emptySet())) {
+            MessageConfiguration messageConfiguration =
+                    MessageConfiguration.fromRawValue(
+                            sharedPreferences.getString(
+                                    MESSAGE_CONFIG_PREFIX + messageConfigName, null));
+            if (messageConfiguration == null) {
+                HyperLog.w(
+                        TAG,
+                        "No valid message configuration for config '" + messageConfigName + "'");
+            } else {
+                Message.MessageBuilder builder = messagesForTopic(messageConfiguration.getTopic());
+                for (MessageItem item : messageConfiguration.getItems()) {
+                    item.apply(messageContext, builder);
                 }
+                messages.addAll(builder.build(messageFormat));
             }
-            return sendViaMobile();
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //noinspection deprecation
-            return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI
-                    || activeNetworkInfo.getType() == ConnectivityManager.TYPE_VPN
-                    || activeNetworkInfo.getType() == ConnectivityManager.TYPE_ETHERNET
-                    || sendViaMobile();
-        } else {
-            //noinspection deprecation
-            return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI
-                    || activeNetworkInfo.getType() == ConnectivityManager.TYPE_ETHERNET
-                    || sendViaMobile();
         }
-    }
-
-    private boolean sendViaMobile() {
-        return sharedPreferences.getBoolean(SEND_VIA_MOBILE_NETWORK, false);
+        return Collections.unmodifiableList(messages);
     }
 }

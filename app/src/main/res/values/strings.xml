@@ -7,12 +7,8 @@
     <string name="password_title">MQTT Password</string>
     <string name="password_summary" formatted="true">User Password%nCurrent value: %1$s</string>
     <string name="password_placeholder" translatable="false">••••••••</string>
-    <string name="presence_topic_title">Presence Topic</string>
-    <string name="presence_topic_summary" formatted="true">The topic to publish presence messages to%nCurrent value: %1$s</string>
-    <string name="send_battery_message_title">Send battery level</string>
-    <string name="send_battery_message_summary">Send battery level percentage in addition to presence information</string>
-    <string name="battery_topic_title">Battery Topic</string>
-    <string name="battery_topic_summary" formatted="true">The topic to publish battery level to%nCurrent value: %1$s</string>
+    <string name="default_presence_message_name">Presence message</string>
+    <string name="default_battery_message_name">Battery message</string>
     <string name="message_schedule_title">Publish period</string>
     <string name="message_schedule_summary">The time between messages in minutes</string>
     <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>
@@ -57,6 +53,11 @@
     <string name="port_title">MQTT Port</string>
     <string name="port_summary" formatted="true">Defaults to 1883, or 8883 for TLS%nCurrent value: %1$s</string>
     <string name="toast_invalid_input">Invalid input!</string>
+    <string name="toast_invalid_number_input">Invalid number!</string>
+    <string name="toast_invalid_number_range" formatted="true">Invalid value! Must be between %1$d and %2$d.</string>
+    <string name="toast_empty_name">Name must not be empty!</string>
+    <string name="toast_empty_topic">Topic must not be empty!</string>
+    <string name="toast_empty_items">At least one content item must be selected!</string>
     <string name="check_connection_summary">Click here to send a test message</string>
     <string name="check_connection_title">Check connection</string>
     <string name="dialog_check_connection_title">Testing connection</string>
@@ -81,7 +82,7 @@
     <string name="category_beacon_regions">Close to a beacon</string>
     <string name="content_summary" formatted="true">Current value: %1$s</string>
     <string name="offline_content_title">Absence message</string>
-    <string name="condition_help_summary">For each fulfilled condition, a message is sent. Click to edit the message to be sent for a condition. Long-click to delete.</string>
+    <string name="condition_help_summary">For each fulfilled condition, a message content can be defined. Click to edit the content to be sent for a condition. Long-click to delete an entry.</string>
     <string name="tab_log_title">Log</string>
     <string name="button_reload">Reload</string>
     <string name="button_clear">Clear</string>
@@ -116,4 +117,22 @@
     <string name="privacy_url">https://ostrya.github.io/PresencePublisher/en/PRIVACY_POLICY.html</string>
     <string name="source_repo_url" translatable="false">https://github.com/ostrya/PresencePublisher/</string>
     <string name="version_summary" translatable="false">%1$s%n%2$s (%3$d) - %4$s</string>
+    <string name="tab_messages_title">Messages</string>
+    <string name="category_common_settings">Common settings</string>
+    <string name="category_messages">Messages</string>
+    <string name="add_message_title">Add message</string>
+    <string name="add_message_summary">Click here to add a message</string>
+    <string name="remove_message_title">Remove message</string>
+    <string name="remove_message_warning_message">Do you really want to remove this message?</string>
+    <string name="message_summary" formatted="true">Current topic: %1$s%nCurrent content:%n%2$s</string>
+    <string name="edit_message_title">Edit message</string>
+    <string name="message_name_hint">Name</string>
+    <string name="message_topic_hint">Topic</string>
+    <string name="message_content_hint">Content</string>
+    <string name="message_help_summary">This list of messages will be sent at the defined schedule.\n\nClick to edit a message. Long-click to delete an entry.</string>
+    <string name="message_format_setting_title">Message format</string>
+    <string name="message_format_setting_summary" formatted="true">The format to send MQTT messages in.%nCurrent value: %1$s</string>
+    <string name="message_format_help_summary">For more details concerning the different message formats, click here.</string>
+    <string name="message_format_help_title">Message format details</string>
+    <string name="message_format_help_intro">Assuming you have configured a message containing both <b>condition_content</b> and <b>battery_level</b>, you have a battery level of 35% and you are fulfilling three conditions with content \"content1\", \"content2\" and \"content3\", then the following message strings will be sent depending on the selected format:</string>
 </resources>

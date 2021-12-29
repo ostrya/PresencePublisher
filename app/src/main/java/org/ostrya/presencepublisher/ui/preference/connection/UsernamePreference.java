@@ -1,6 +1,5 @@
 package org.ostrya.presencepublisher.ui.preference.connection;
 
-import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
 
 import android.content.Context;
 
@@ -18,6 +17,6 @@ public class UsernamePreference extends TextPreferenceBase {
 
     @Override
     protected void configureSummary() {
-        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.username_summary, STRING));
+        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.username_summary));
     }
 }

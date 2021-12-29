@@ -6,22 +6,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 
 import android.os.PowerManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.ostrya.presencepublisher.MainActivity;
+import org.ostrya.presencepublisher.test.LogDisablerRule;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,23 +25,13 @@ import java.util.stream.Collectors;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InitializationHandlerTest {
-    @Mock MainActivity context;
+    @Rule public final LogDisablerRule logDisablerRule = new LogDisablerRule();
 
-    @Mock PowerManager powerManager;
+    @Mock private MainActivity context;
+
+    @Mock private PowerManager powerManager;
 
     private final LinkedList<AbstractChainedHandler<?, ?>> handlerSpies = new LinkedList<>();
-
-    private MockedStatic<HyperLog> staticLogMock;
-
-    @Before
-    public void disableLog() {
-        staticLogMock = mockStatic(HyperLog.class);
-    }
-
-    @After
-    public void reset() {
-        staticLogMock.close();
-    }
 
     @Test
     public void chain_is_set_up_correctly() {

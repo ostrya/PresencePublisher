@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.ListPreference;
 
 import org.ostrya.presencepublisher.R;
-import org.ostrya.presencepublisher.message.wifi.SsidUtil;
+import org.ostrya.presencepublisher.network.NetworkService;
 import org.ostrya.presencepublisher.ui.dialog.EditTextDialog;
 import org.ostrya.presencepublisher.ui.util.RegexValidator;
 import org.ostrya.presencepublisher.ui.util.Validator;
@@ -24,15 +24,18 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
     private final Validator validator = new RegexValidator(".+");
     private final String addNew;
     private final SharedPreferences sharedPreferences;
+    private final NetworkService networkService;
 
     public AddNetworkChoicePreferenceDummy(
             Context context, SharedPreferences sharedPreferences, Fragment fragment) {
         super(context);
         this.addNew = context.getString(R.string.enter_network);
         this.sharedPreferences = sharedPreferences;
+        this.networkService = new NetworkService(context, sharedPreferences);
         setTitle(R.string.add_network_title);
         setDialogTitle(R.string.add_network_title);
         setSummary(R.string.add_network_summary);
+        setIcon(android.R.drawable.ic_menu_add);
         setOnPreferenceChangeListener(
                 (prefs, newValue) -> {
                     if (addNew.equals(newValue)) {
@@ -58,7 +61,7 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
     }
 
     private void onEditText(String newValue) {
-        boolean result = this.validator.isValid(newValue);
+        boolean result = this.validator.isValid(getContext(), null, newValue);
         if (!result) {
             String text = getContext().getString(R.string.toast_invalid_input);
             Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
@@ -75,7 +78,7 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
     }
 
     private String[] getCurrentEntries(Set<String> storedSsids) {
-        List<String> knownSsids = SsidUtil.getKnownSsids(getContext());
+        List<String> knownSsids = networkService.getKnownSsids();
         knownSsids.removeAll(storedSsids);
         knownSsids.add(addNew);
         return knownSsids.toArray(new String[0]);

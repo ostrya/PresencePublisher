@@ -1,7 +1,5 @@
 package org.ostrya.presencepublisher.ui.preference.condition;
 
-import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
-
 import android.content.Context;
 
 import org.ostrya.presencepublisher.R;
@@ -20,6 +18,6 @@ public class OfflineContentPreference extends TextPreferenceBase {
 
     @Override
     protected void configureSummary() {
-        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.content_summary, STRING));
+        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.content_summary));
     }
 }

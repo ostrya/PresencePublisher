@@ -13,19 +13,9 @@ public class StringDummy extends Preference {
         setIconSpaceReserved(false);
     }
 
-    @Override
-    public void onBindViewHolder(PreferenceViewHolder holder) {
-        super.onBindViewHolder(holder);
-        TextView summaryView = (TextView) holder.findViewById(android.R.id.summary);
-        if (summaryView != null) {
-            summaryView.setMaxLines(Integer.MAX_VALUE);
-        }
-    }
-
-    public StringDummy(Context context, int titleId, int summaryId) {
+    public StringDummy(Context context, CharSequence summary) {
         super(context);
-        setTitle(titleId);
-        setSummary(summaryId);
+        setSummary(summary);
         setIconSpaceReserved(false);
     }
 
@@ -34,5 +24,14 @@ public class StringDummy extends Preference {
         setTitle(titleId);
         setSummary(summary);
         setIconSpaceReserved(false);
+    }
+
+    @Override
+    public void onBindViewHolder(PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
+        TextView summaryView = (TextView) holder.findViewById(android.R.id.summary);
+        if (summaryView != null) {
+            summaryView.setMaxLines(Integer.MAX_VALUE);
+        }
     }
 }

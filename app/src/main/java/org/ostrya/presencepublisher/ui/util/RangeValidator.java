@@ -1,5 +1,12 @@
 package org.ostrya.presencepublisher.ui.util;
 
+import android.content.Context;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+
+import org.ostrya.presencepublisher.R;
+
 public class RangeValidator implements Validator {
     private final long min;
     private final long max;
@@ -10,7 +17,7 @@ public class RangeValidator implements Validator {
     }
 
     @Override
-    public boolean isValid(String value) {
+    public boolean isValid(Context context, @Nullable String key, String value) {
         if (value == null || value.isEmpty()) {
             return true;
         }
@@ -18,8 +25,15 @@ public class RangeValidator implements Validator {
         try {
             parsed = Long.parseLong(value);
         } catch (NumberFormatException e) {
+            String text = context.getString(R.string.toast_invalid_number_input);
+            Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             return false;
         }
-        return parsed >= min && parsed <= max;
+        if (parsed >= min && parsed <= max) {
+            return true;
+        }
+        String text = context.getString(R.string.toast_invalid_number_range, min, max);
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+        return false;
     }
 }
