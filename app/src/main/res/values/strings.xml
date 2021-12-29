@@ -100,7 +100,6 @@
     <string name="remove_region_warning_message">Do you really want to remove this beacon region?</string>
     <string name="no_bluetooth_explanation">Your device does not support Bluetooth beacons</string>
     <string name="dialog_scan_beacons_title">Beacons in range</string>
-    <string name="toast_scan_failed">Scanning for beacons failed</string>
     <string name="toast_logs_stored" formatted="true">Stored to \'%s\'</string>
     <string name="value_network_reconnect">Waiting for network re-connect …</string>
     <string name="bundled_licenses_title">Bundled components\' licenses</string>
@@ -128,11 +127,10 @@
     <string name="edit_message_title">Edit message</string>
     <string name="message_name_hint">Name</string>
     <string name="message_topic_hint">Topic</string>
-    <string name="message_content_hint">Content</string>
     <string name="message_help_summary">This list of messages will be sent at the defined schedule.\n\nClick to edit a message. Long-click to delete an entry.</string>
     <string name="message_format_setting_title">Message format</string>
     <string name="message_format_setting_summary" formatted="true">The format to send MQTT messages in.%nCurrent value: %1$s</string>
     <string name="message_format_help_summary">For more details concerning the different message formats, click here.</string>
     <string name="message_format_help_title">Message format details</string>
-    <string name="message_format_help_intro">Assuming you have configured a message containing both <b>condition_content</b> and <b>battery_level</b>, you have a battery level of 35% and you are fulfilling three conditions with content \"content1\", \"content2\" and \"content3\", then the following message strings will be sent depending on the selected format:</string>
+    <string name="message_format_help_intro">Assuming you have configured a message containing both <b>condition_content</b> and <b>battery_level</b>, you have a battery level of 35 percent and you are fulfilling three conditions with content \"content1\", \"content2\" and \"content3\", then the following message strings will be sent depending on the selected format:</string>
 </resources>

@@ -98,7 +98,6 @@
     <string name="remove_region_warning_message">Diese Beacon-Region wirklich entfernen?</string>
     <string name="no_bluetooth_explanation">Dein Gerät unterstützt keine Bluetooth-Beacons</string>
     <string name="dialog_scan_beacons_title">Beacons in der Nähe</string>
-    <string name="toast_scan_failed">Beacon-Suche fehlgeschlagen</string>
     <string name="message_charging_schedule_title">Ladesendeperiode</string>
     <string name="message_charging_schedule_summary">Sendeperiode, wenn das Gerät geladen wird.\nBei Wert = 0 wird die normale Periode benutzt.</string>
     <string name="toast_logs_stored" formatted="true">Gespeichert nach \'%s\'</string>
@@ -126,11 +125,10 @@
     <string name="edit_message_title">Nachricht bearbeiten</string>
     <string name="message_name_hint">Name</string>
     <string name="message_topic_hint">Topic</string>
-    <string name="message_content_hint">Inhalt</string>
     <string name="message_help_summary">Diese Liste von Nachrichten wird zum gegebenen Zeitplan versendet.\n\nTippe, um die Nachricht zu bearbeiten. Berühre länger, um einen Eintrag zu löschen.</string>
     <string name="message_format_setting_title">Nachrichtenformat</string>
     <string name="message_format_setting_summary" formatted="true">Das Format, in dem MQTT-Nachrichten versendet werden.%nAktueller Wert: %1$s</string>
     <string name="message_format_help_summary">Für weitere Details über die verschiedenen Nachrichtenformate bitte hier klicken.</string>
     <string name="message_format_help_title">Nachrichtenformatdetails</string>
-    <string name="message_format_help_intro">Angenommen, du hast eine Nachricht konfiguriert, die sowohl <b>condition_content</b> als auch <b>battery_level</b> enthält, du hast einen Batteriestand von 35% und du erfüllst gerade drei Bedingungen mit Inhalt \"content1\", \"content2\" and \"content3\", dann werden abhängig vom gewählten Format folgende Nachrichtentexte versandt:</string>
+    <string name="message_format_help_intro">Angenommen, du hast eine Nachricht konfiguriert, die sowohl <b>condition_content</b> als auch <b>battery_level</b> enthält, du hast einen Batteriestand von 35 Prozent und du erfüllst gerade drei Bedingungen mit Inhalt \"content1\", \"content2\" and \"content3\", dann werden abhängig vom gewählten Format folgende Nachrichtentexte versandt:</string>
 </resources>

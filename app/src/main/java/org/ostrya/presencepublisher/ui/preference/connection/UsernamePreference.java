@@ -1,6 +1,5 @@
 package org.ostrya.presencepublisher.ui.preference.connection;
 
-
 import android.content.Context;
 
 import org.ostrya.presencepublisher.R;

@@ -145,7 +145,7 @@ public class NetworkService {
             HyperLog.w(
                     TAG,
                     "Not allowed to get configured networks. As ACCESS_FINE_LOCATION was only added"
-                        + " as required in Android Q, this should never happen");
+                            + " as required in Android Q, this should never happen");
             return Collections.emptyList();
         }
     }

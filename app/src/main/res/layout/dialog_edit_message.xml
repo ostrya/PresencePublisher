@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical|start"
+    android:orientation="vertical"
+    android:paddingLeft="?attr/dialogPreferredPadding"
+    android:paddingTop="@dimen/abc_dialog_padding_top_material"
+    android:paddingRight="?attr/dialogPreferredPadding">
 
-    <LinearLayout
+    <TextView
+        style="?android:attr/windowTitleStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|start|left"
-        android:orientation="vertical"
-        android:paddingLeft="?attr/dialogPreferredPadding"
-        android:paddingRight="?attr/dialogPreferredPadding"
-        android:paddingTop="@dimen/abc_dialog_padding_top_material">
+        android:layout_gravity="start"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/edit_message_title"
+        android:textAlignment="viewStart"
+        />
 
-        <TextView
-            android:singleLine="true"
-            android:ellipsize="end"
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/abc_dialog_title_divider_material" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/message_name_hint">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="viewStart"
-            android:text="@string/edit_message_title"
-            style="?android:attr/windowTitleStyle"
-            />
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <Space
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/message_topic_hint">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_topic"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/abc_dialog_title_divider_material" />
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/message_name_hint">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/message_topic_hint">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_topic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
 </LinearLayout>

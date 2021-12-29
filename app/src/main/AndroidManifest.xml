@@ -27,29 +27,33 @@
 
     <uses-sdk tools:overrideLibrary="androidx.security" />
 
+    <!-- just to be on the safe side, rtl support is not enabled (mainly because I didn't check what would be necessary) -->
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:name=".PresencePublisher"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="false"
         android:theme="@style/Theme.AppCompat"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:supportsRtl">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <receiver android:name=".receiver.AutostartReceiver">
+        <receiver android:name=".receiver.AutostartReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receiver.ConnectivityBroadcastReceiver">
+        <receiver android:name=".receiver.ConnectivityBroadcastReceiver" android:exported="true">
             <intent-filter>
                 <!-- only works until API level 25 -->
                 <action
