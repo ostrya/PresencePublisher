@@ -130,5 +130,5 @@
     <string name="message_format_setting_summary" formatted="true">Das Format, in dem MQTT-Nachrichten versendet werden.%nAktueller Wert: %1$s</string>
     <string name="message_format_help_summary">Für weitere Details über die verschiedenen Nachrichtenformate bitte hier klicken.</string>
     <string name="message_format_help_title">Nachrichtenformatdetails</string>
-    <string name="message_format_help_intro">Angenommen, du hast eine Nachricht konfiguriert, die sowohl <b>condition_content</b> als auch <b>battery_level</b> enthält, du hast einen Batteriestand von 35 Prozent und du erfüllst gerade drei Bedingungen mit Inhalt \"content1\", \"content2\" and \"content3\", dann werden abhängig vom gewählten Format folgende Nachrichtentexte versandt:</string>
+    <string name="message_format_help_intro">Angenommen, du hast eine Nachricht konfiguriert, die <b>conditionContent</b>, <b>connectedWifi</b> und <b>batteryLevel</b> enthält, du hast einen Batteriestand von 35 Prozent, bist mit einem WLAN mit SSID \"myWiFi\" verbunden und du erfüllst gerade zwei Bedingungen mit Inhalt \"contentA\" und \"contentB\", dann werden abhängig vom gewählten Format folgende Nachrichtentexte versandt:</string>
 </resources>

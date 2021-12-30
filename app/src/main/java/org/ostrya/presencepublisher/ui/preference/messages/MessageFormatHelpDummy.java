@@ -11,6 +11,7 @@ import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.message.ListEntry;
 import org.ostrya.presencepublisher.message.MessageFormat;
 import org.ostrya.presencepublisher.message.MessageItem;
+import org.ostrya.presencepublisher.message.NumberEntry;
 import org.ostrya.presencepublisher.message.StringEntry;
 import org.ostrya.presencepublisher.ui.dialog.ScrollableMessageFragment;
 import org.ostrya.presencepublisher.ui.preference.common.ClickDummy;
@@ -52,11 +53,13 @@ public class MessageFormatHelpDummy extends ClickDummy {
         List<String> messages =
                 messageFormat.formatContent(
                         Collections.singletonList(
-                                new StringEntry(MessageItem.BATTERY_LEVEL.getName(), "35")),
+                                new StringEntry(MessageItem.CONNECTED_WIFI.getName(), "myWiFi")),
+                        Collections.singletonList(
+                                new NumberEntry(MessageItem.BATTERY_LEVEL.getName(), 35)),
                         Collections.singletonList(
                                 new ListEntry(
                                         MessageItem.CONDITION_CONTENT.getName(),
-                                        Arrays.asList("content1", "content2", "content3"))));
+                                        Arrays.asList("contentA", "contentB"))));
         sb.append("<b>").append(messageFormat.name()).append("</b>").append("\n");
         for (String message : messages) {
             sb.append("<blockquote>").append(message).append("</blockquote>");

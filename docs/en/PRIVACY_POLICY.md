@@ -1,6 +1,6 @@
 # Privacy policy
 
-*Effective March 13, 2021*
+*Effective December 31, 2021*
 
 The following document describes how Presence Publisher collects and uses your personal
 data.
@@ -14,8 +14,10 @@ even if it is not running. The following information is collected:
   names that you have configured.
 * Whether any Bluetooth beacon that you have configured is in range of your
   Android device.
+* If you explicitly choose to send this information, your last known location
+  and currently connected Wi-Fi network name is collected.
 
-Presence Publisher does not process or store your GPS location. It also does not store
+Presence Publisher does not store your GPS location. It also does not store
 any information about Wi-Fi networks and Bluetooth beacons which are not explicitly
 configured by you.
 
@@ -42,6 +44,11 @@ The following notifications based on your location can be configured:
 
 Presence Publisher only uses this information to send corresponding messages to your
 MQTT broker.
+
+In addition to these messages which are sent depending on your location, you can also choose
+to send direct location information such as your current Wi-Fi name and your GPS location.
+Note that this information is only collected to be sent in these MQTT messages. It is not
+otherwise processed, stored or passed on.
 
 For debugging purposes, Presence Publisher stores an internal log. This log includes:
 

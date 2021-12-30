@@ -1,3 +1,3 @@
-v2.2.9
-• erfrage Nutzerzustimmung zur Verarbeitung von Standortdaten, falls nicht bereits gegeben
-• Wichtig: wenn du von Version 2.2.1 aktualisiert hast und die App keine Nachrichten sendet, musst du einmalig die App öffnen und der Verarbeitung zustimmen
+v2.3.0
+• Unterstützung für Android 12
+• dynamische Konfiguration von Nachrichten inklusive neuer Datenwerte, die gesended werden können

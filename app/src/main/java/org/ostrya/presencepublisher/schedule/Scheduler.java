@@ -29,11 +29,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkRequest;
-import android.os.BatteryManager;
 import android.os.Build;
 
 import androidx.core.app.NotificationManagerCompat;
@@ -105,16 +103,16 @@ public class Scheduler {
         scheduleFor(System.currentTimeMillis() + NOW_DELAY, false);
     }
 
-    public void scheduleNext() {
-        if (isCharging()) {
+    public long scheduleNext(boolean isCharging) {
+        if (isCharging) {
             int messageScheduleInMinutes = sharedPreferences.getInt(CHARGING_MESSAGE_SCHEDULE, 0);
             if (messageScheduleInMinutes > 0) {
-                scheduleFor(System.currentTimeMillis() + messageScheduleInMinutes * 60_000L, true);
-                return;
+                return scheduleFor(
+                        System.currentTimeMillis() + messageScheduleInMinutes * 60_000L, true);
             }
         }
         int messageScheduleInMinutes = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
-        scheduleFor(
+        return scheduleFor(
                 System.currentTimeMillis() + messageScheduleInMinutes * 60_000L,
                 messageScheduleInMinutes < 15);
     }
@@ -136,7 +134,7 @@ public class Scheduler {
      * This is the counterpart to the broadcast receiver ConnectivityBroadcastReceiver registered in
      * the manifest for Android 8+, where most implicit broadcasts are no longer delivered.
      */
-    public void waitForNetworkReconnect() {
+    public void waitForNetworkReconnect(boolean isCharging) {
         // for Android 8+, we need to register a callback here, as the ConnectivityBroadcastReceiver
         // registered
         // in the manifest no longer gets any broadcasts
@@ -148,7 +146,7 @@ public class Scheduler {
                 HyperLog.w(
                         TAG,
                         "Unable to get connectivity manager, re-scheduling even when disconnected");
-                scheduleNext();
+                scheduleNext(isCharging);
                 return;
             }
             NetworkRequest.Builder requestBuilder =
@@ -187,14 +185,14 @@ public class Scheduler {
         return sharedPreferences.getLong(LAST_SUCCESS, UNDEFINED);
     }
 
-    private void scheduleFor(long nextSchedule, boolean ignoreBattery) {
+    private long scheduleFor(long nextSchedule, boolean ignoreBattery) {
         if (!sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
             HyperLog.w(TAG, "Location consent not given, will not schedule anything.");
-            return;
+            return -1;
         }
         if (alarmManager == null) {
             HyperLog.e(TAG, "Unable to get alarm manager, cannot schedule!");
-            return;
+            return -2;
         }
         alarmManager.cancel(pendingAlarmIntent);
         HyperLog.i(TAG, "Next run at " + getFormattedTimestamp(applicationContext, nextSchedule));
@@ -218,16 +216,6 @@ public class Scheduler {
         } else {
             alarmManager.set(RTC_WAKEUP, nextSchedule, pendingAlarmIntent);
         }
-    }
-
-    private boolean isCharging() {
-        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        Intent batteryStatus = applicationContext.registerReceiver(null, filter);
-        if (batteryStatus == null) {
-            return false;
-        }
-        int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-        return status == BatteryManager.BATTERY_STATUS_CHARGING
-                || status == BatteryManager.BATTERY_STATUS_FULL;
+        return nextSchedule;
     }
 }

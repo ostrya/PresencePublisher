@@ -9,13 +9,12 @@ import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategoryS
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.annotation.VisibleForTesting;
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
 import com.hypertrack.hyperlog.HyperLog;
 
 import org.ostrya.presencepublisher.PresencePublisher;
-import org.ostrya.presencepublisher.network.NetworkService;
 import org.ostrya.presencepublisher.ui.preference.condition.BeaconPreference;
 import org.ostrya.presencepublisher.ui.preference.condition.OfflineContentPreference;
 import org.ostrya.presencepublisher.ui.preference.condition.WifiNetworkPreference;
@@ -28,29 +27,15 @@ import java.util.Set;
 public class ConditionContentProvider {
     private static final String TAG = "ConditionContentProvider";
 
-    private static final String KEY = MessageItem.CONDITION_CONTENT.getName();
-
     private final PresencePublisher applicationContext;
     private final SharedPreferences sharedPreferences;
-    private final NetworkService networkService;
 
     public ConditionContentProvider(Context applicationContext) {
         this.applicationContext = (PresencePublisher) applicationContext;
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-        this.networkService = new NetworkService(applicationContext, sharedPreferences);
     }
 
-    @VisibleForTesting
-    ConditionContentProvider(
-            PresencePublisher applicationContext,
-            SharedPreferences sharedPreferences,
-            NetworkService networkService) {
-        this.applicationContext = applicationContext;
-        this.sharedPreferences = sharedPreferences;
-        this.networkService = networkService;
-    }
-
-    public ListEntry getConditionContents() {
+    public List<String> getConditionContents(@Nullable String currentSsid) {
         List<String> contents = new ArrayList<>();
 
         // add beacons
@@ -68,7 +53,7 @@ public class ConditionContentProvider {
         }
 
         // add SSID
-        String ssid = getSsidIfMatching();
+        String ssid = getSsidIfMatching(currentSsid);
         if (ssid != null) {
             HyperLog.i(TAG, "Adding content for SSID " + ssid);
             String onlineContent =
@@ -88,25 +73,24 @@ public class ConditionContentProvider {
             contents.add(offlineContent);
         }
 
-        return new ListEntry(KEY, contents);
+        return contents;
     }
 
-    private String getSsidIfMatching() {
+    private String getSsidIfMatching(String currentSsid) {
         HyperLog.i(TAG, "Checking SSID");
-        String ssid = networkService.getCurrentSsid();
-        if (ssid == null) {
+        if (currentSsid == null) {
             HyperLog.i(TAG, "No SSID found");
             return null;
         }
         Set<String> targetSsids = sharedPreferences.getStringSet(SSID_LIST, Collections.emptySet());
-        if (targetSsids.contains(ssid)) {
+        if (targetSsids.contains(currentSsid)) {
             HyperLog.d(TAG, "Correct network found");
-            return ssid;
+            return currentSsid;
         } else {
             HyperLog.i(
                     TAG,
                     "'"
-                            + ssid
+                            + currentSsid
                             + "' does not match any desired network '"
                             + targetSsids
                             + "', skipping.");
