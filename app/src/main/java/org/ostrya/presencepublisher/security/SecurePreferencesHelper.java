@@ -3,10 +3,12 @@ package org.ostrya.presencepublisher.security;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceDataStore;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
+
 import com.hypertrack.hyperlog.HyperLog;
 
 public class SecurePreferencesHelper {
@@ -38,17 +40,16 @@ public class SecurePreferencesHelper {
     public static SharedPreferences getSecurePreferences(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                MasterKey masterKey = new MasterKey.Builder(context)
-                        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-                        .build();
-                return EncryptedSharedPreferences
-                        .create(
-                                context,
-                                FILENAME,
-                                masterKey,
-                                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-                        );
+                MasterKey masterKey =
+                        new MasterKey.Builder(context)
+                                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                                .build();
+                return EncryptedSharedPreferences.create(
+                        context,
+                        FILENAME,
+                        masterKey,
+                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
             } catch (Exception e) {
                 HyperLog.w(TAG, "Unable to get secure preferences", e);
                 throw new RuntimeException("Unable to get secure preferences");

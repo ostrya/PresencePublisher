@@ -2,6 +2,7 @@ package org.ostrya.presencepublisher.ui.preference.common;
 
 import android.content.Context;
 import android.widget.TextView;
+
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
 

@@ -1,10 +1,15 @@
 package org.ostrya.presencepublisher.ui;
 
+import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
+import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
+
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
+
 import org.ostrya.presencepublisher.ui.preference.connection.CheckConnectionDummy;
 import org.ostrya.presencepublisher.ui.preference.connection.ClientCertificatePreference;
 import org.ostrya.presencepublisher.ui.preference.connection.HostPreference;
@@ -14,9 +19,6 @@ import org.ostrya.presencepublisher.ui.preference.connection.QoSPreference;
 import org.ostrya.presencepublisher.ui.preference.connection.RetainFlagPreference;
 import org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference;
 import org.ostrya.presencepublisher.ui.preference.connection.UsernamePreference;
-
-import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
-import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
 
 public class ConnectionFragment extends PreferenceFragmentCompat {
 

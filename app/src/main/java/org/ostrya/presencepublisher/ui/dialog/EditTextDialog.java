@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.ostrya.presencepublisher.R;
 
 public class EditTextDialog extends DialogFragment {
@@ -45,13 +48,15 @@ public class EditTextDialog extends DialogFragment {
 
         builder.setTitle(titleId)
                 .setView(view)
-                .setPositiveButton(R.string.dialog_ok, (dialog, id) -> {
-                    if (editText != null) {
-                        callback.accept(editText.getText().toString());
-                    } else {
-                        HyperLog.e(TAG, "Unable to find edit text field");
-                    }
-                })
+                .setPositiveButton(
+                        R.string.dialog_ok,
+                        (dialog, id) -> {
+                            if (editText != null) {
+                                callback.accept(editText.getText().toString());
+                            } else {
+                                HyperLog.e(TAG, "Unable to find edit text field");
+                            }
+                        })
                 .setNegativeButton(R.string.dialog_cancel, null);
         AlertDialog alertDialog = builder.create();
 

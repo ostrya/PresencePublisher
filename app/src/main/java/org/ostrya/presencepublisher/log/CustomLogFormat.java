@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.log;
 
 import android.content.Context;
+
 import com.hypertrack.hyperlog.LogFormat;
 
 public class CustomLogFormat extends LogFormat {
@@ -9,8 +10,14 @@ public class CustomLogFormat extends LogFormat {
     }
 
     @Override
-    public String getFormattedLogMessage(String logLevelName, String tag, String message, String timeStamp,
-                                         String senderName, String osVersion, String deviceUUID) {
+    public String getFormattedLogMessage(
+            String logLevelName,
+            String tag,
+            String message,
+            String timeStamp,
+            String senderName,
+            String osVersion,
+            String deviceUUID) {
         return timeStamp + " [" + logLevelName + "/" + tag + "]: " + message;
     }
 }

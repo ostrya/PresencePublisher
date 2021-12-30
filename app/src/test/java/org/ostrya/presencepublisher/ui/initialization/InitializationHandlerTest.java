@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.ui.initialization;
 
 import static android.content.Context.POWER_SERVICE;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -9,10 +10,9 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 
 import android.os.PowerManager;
+
 import com.hypertrack.hyperlog.HyperLog;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,13 +23,15 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.ostrya.presencepublisher.MainActivity;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RunWith(MockitoJUnitRunner.class)
 public class InitializationHandlerTest {
-    @Mock
-    MainActivity context;
+    @Mock MainActivity context;
 
-    @Mock
-    PowerManager powerManager;
+    @Mock PowerManager powerManager;
 
     private final LinkedList<AbstractChainedHandler<?, ?>> handlerSpies = new LinkedList<>();
 
@@ -47,9 +49,10 @@ public class InitializationHandlerTest {
 
     @Test
     public void chain_is_set_up_correctly() {
-        List<HandlerFactory> handlerChain = InitializationHandler.HANDLER_CHAIN.stream()
-                .map(this::wrapAsSpy)
-                .collect(Collectors.toList());
+        List<HandlerFactory> handlerChain =
+                InitializationHandler.HANDLER_CHAIN.stream()
+                        .map(this::wrapAsSpy)
+                        .collect(Collectors.toList());
 
         InitializationHandler.getHandler(context, handlerChain);
 
@@ -64,9 +67,10 @@ public class InitializationHandlerTest {
 
     @Test
     public void all_states_are_passed() {
-        List<HandlerFactory> handlerChain = InitializationHandler.HANDLER_CHAIN.stream()
-                .map(this::wrapAsSpy)
-                .collect(Collectors.toList());
+        List<HandlerFactory> handlerChain =
+                InitializationHandler.HANDLER_CHAIN.stream()
+                        .map(this::wrapAsSpy)
+                        .collect(Collectors.toList());
 
         doReturn(false).when(context).isLocationServiceNeeded();
         doReturn(powerManager).when(context).getSystemService(POWER_SERVICE);

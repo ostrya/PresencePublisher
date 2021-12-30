@@ -1,20 +1,22 @@
 package org.ostrya.presencepublisher.message.wifi;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
+import static android.content.Context.WIFI_SERVICE;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+
 import androidx.annotation.Nullable;
+
 import com.hypertrack.hyperlog.HyperLog;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static android.content.Context.CONNECTIVITY_SERVICE;
-import static android.content.Context.WIFI_SERVICE;
 
 public class SsidUtil {
     private static final String TAG = "SsidUtil";
@@ -36,7 +38,8 @@ public class SsidUtil {
     @Nullable
     public static String getCurrentSsid(Context context) {
         Context applicationContext = context.getApplicationContext();
-        ConnectivityManager connectivityManager = (ConnectivityManager) applicationContext.getSystemService(CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) applicationContext.getSystemService(CONNECTIVITY_SERVICE);
         WifiManager wifiManager = (WifiManager) applicationContext.getSystemService(WIFI_SERVICE);
         String ssid = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -84,7 +87,9 @@ public class SsidUtil {
 
     @SuppressWarnings("deprecation")
     private static List<WifiConfiguration> getConfiguredNetworks(Context context) {
-        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager =
+                (WifiManager)
+                        context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifiManager == null) {
             HyperLog.w(TAG, "Unable to get WifiManager");
             return Collections.emptyList();
@@ -92,8 +97,10 @@ public class SsidUtil {
         try {
             return wifiManager.getConfiguredNetworks();
         } catch (SecurityException e) {
-            HyperLog.w(TAG, "Not allowed to get configured networks. " +
-                    "As ACCESS_FINE_LOCATION was only added as required in Android Q, this should never happen");
+            HyperLog.w(
+                    TAG,
+                    "Not allowed to get configured networks. As ACCESS_FINE_LOCATION was only added"
+                            + " as required in Android Q, this should never happen");
             return Collections.emptyList();
         }
     }

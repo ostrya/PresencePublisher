@@ -9,7 +9,6 @@ public class RangeValidator implements Validator {
         this.max = max;
     }
 
-
     @Override
     public boolean isValid(String value) {
         if (value == null || value.isEmpty()) {

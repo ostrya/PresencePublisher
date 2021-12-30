@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 import androidx.recyclerview.widget.SortedListAdapterCallback;
+
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.beacon.PresenceBeacon;
 
@@ -17,12 +19,15 @@ import java.util.Set;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.BeaconHolder> {
-    private final SortedList.Callback<PresenceBeacon> beaconBatchedCallback = new ListCallback(this);
-    private final SortedList<PresenceBeacon> foundBeacons = new SortedList<>(PresenceBeacon.class, beaconBatchedCallback);
+    private final SortedList.Callback<PresenceBeacon> beaconBatchedCallback =
+            new ListCallback(this);
+    private final SortedList<PresenceBeacon> foundBeacons =
+            new SortedList<>(PresenceBeacon.class, beaconBatchedCallback);
     private final BeaconScanDialogFragment.DialogCallback dialogCallback;
     private final Set<String> knownBeacons;
 
-    BeaconListAdapter(BeaconScanDialogFragment.DialogCallback dialogCallback, Set<String> knownBeacons) {
+    BeaconListAdapter(
+            BeaconScanDialogFragment.DialogCallback dialogCallback, Set<String> knownBeacons) {
         this.dialogCallback = dialogCallback;
         this.knownBeacons = knownBeacons;
     }
@@ -30,8 +35,9 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Be
     @NonNull
     @Override
     public BeaconHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_beacon, parent, false);
+        View view =
+                LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.fragment_beacon, parent, false);
         return new BeaconHolder(view);
     }
 
@@ -80,8 +86,10 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Be
             item = beacon;
             beaconType.setText(item.getType());
             beaconName.setText(item.getName());
-            beaconStrength.setText(String.format(beaconStrength.getTextLocale(), "%d dBm", item.getRssi()));
-            beaconDistance.setText(String.format(beaconDistance.getTextLocale(), "%.1f m", item.getDistance()));
+            beaconStrength.setText(
+                    String.format(beaconStrength.getTextLocale(), "%d dBm", item.getRssi()));
+            beaconDistance.setText(
+                    String.format(beaconDistance.getTextLocale(), "%.1f m", item.getDistance()));
             beaconAddress.setText(item.getAddress());
             itemView.setEnabled(enabled);
         }

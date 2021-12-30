@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -19,7 +20,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
@@ -43,11 +46,13 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
     private ProgressBar progressBar;
     private BeaconListAdapter adapter;
 
-    public static BeaconScanDialogFragment getInstance(Context context, DialogCallback dialogCallback, Set<String> knownBeacons) {
+    public static BeaconScanDialogFragment getInstance(
+            Context context, DialogCallback dialogCallback, Set<String> knownBeacons) {
         BeaconScanDialogFragment fragment = new BeaconScanDialogFragment();
         fragment.setScanCallback(fragment.new ScanCallback());
         fragment.setRegion(new Region(REGION_ID, null, null, null));
-        fragment.setBeaconManager(BeaconManager.getInstanceForApplication(context.getApplicationContext()));
+        fragment.setBeaconManager(
+                BeaconManager.getInstanceForApplication(context.getApplicationContext()));
         fragment.setDialogCallback(dialogCallback);
         fragment.setKnownBeacons(knownBeacons);
         return fragment;
@@ -74,10 +79,12 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle(R.string.dialog_scan_beacons_title)
                 .setView(view)
-                .setNegativeButton(R.string.dialog_cancel, (dialog, which) -> {
-                    stopScan();
-                    dialogCallback.accept(null);
-                });
+                .setNegativeButton(
+                        R.string.dialog_cancel,
+                        (dialog, which) -> {
+                            stopScan();
+                            dialogCallback.accept(null);
+                        });
         return builder.create();
     }
 
@@ -164,7 +171,9 @@ public class BeaconScanDialogFragment extends DialogFragment implements BeaconCo
         public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
             HyperLog.v(TAG, "Got callback from beacon scan for region " + region);
             for (Beacon beacon : beacons) {
-                if (beacon != null && beacon.getBluetoothAddress() != null && beacon.getParserIdentifier() != null) {
+                if (beacon != null
+                        && beacon.getBluetoothAddress() != null
+                        && beacon.getParserIdentifier() != null) {
                     HyperLog.d(TAG, "Found beacon " + beacon);
                     adapter.addBeacon(new PresenceBeacon(beacon));
                 } else {

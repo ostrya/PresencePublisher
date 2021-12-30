@@ -1,10 +1,16 @@
 package org.ostrya.presencepublisher.ui;
 
+import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
+import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
+import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.preference.Preference;
 import androidx.preference.PreferenceScreen;
+
 import org.ostrya.presencepublisher.ui.preference.schedule.AutostartPreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.BatteryTopicPreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.ChargingMessageSchedulePreference;
@@ -14,10 +20,6 @@ import org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestamp
 import org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference;
 import org.ostrya.presencepublisher.ui.util.AbstractConfigurationFragment;
-
-import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
-import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
-import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 
 public class ScheduleFragment extends AbstractConfigurationFragment {
     private LastSuccessTimestampPreference lastSuccess;

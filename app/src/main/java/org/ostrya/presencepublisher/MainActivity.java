@@ -1,20 +1,5 @@
 package org.ostrya.presencepublisher;
 
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.os.Bundle;
-import androidx.fragment.app.FragmentActivity;
-import androidx.preference.PreferenceManager;
-import androidx.viewpager2.widget.ViewPager2;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-import com.hypertrack.hyperlog.HyperLog;
-import org.ostrya.presencepublisher.schedule.Scheduler;
-import org.ostrya.presencepublisher.ui.MainPagerAdapter;
-import org.ostrya.presencepublisher.ui.initialization.InitializationHandler;
-
-import java.util.Collections;
-
 import static org.ostrya.presencepublisher.ui.initialization.InitializationHandler.HANDLER_CHAIN;
 import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_CONTENT_PREFIX;
@@ -40,10 +25,29 @@ import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTi
 import static org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference.PRESENCE_TOPIC;
 import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Bundle;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.hypertrack.hyperlog.HyperLog;
+
+import org.ostrya.presencepublisher.schedule.Scheduler;
+import org.ostrya.presencepublisher.ui.MainPagerAdapter;
+import org.ostrya.presencepublisher.ui.initialization.InitializationHandler;
+
+import java.util.Collections;
+
 public class MainActivity extends FragmentActivity {
     private static final String TAG = "MainActivity";
 
-    private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceListener = this::onSharedPreferenceChanged;
+    private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceListener =
+            this::onSharedPreferenceChanged;
     private InitializationHandler handler;
     private boolean locationServiceNeeded;
     private SharedPreferences sharedPreferences;
@@ -60,9 +64,10 @@ public class MainActivity extends FragmentActivity {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, viewPager, mainPagerAdapter).attach();
 
-        locationServiceNeeded = ((PresencePublisher) getApplication()).supportsBeacons()
-                // for Wi-Fi name resolution
-                || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
+        locationServiceNeeded =
+                ((PresencePublisher) getApplication()).supportsBeacons()
+                        // for Wi-Fi name resolution
+                        || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceListener);
         handler = InitializationHandler.getHandler(this, HANDLER_CHAIN);

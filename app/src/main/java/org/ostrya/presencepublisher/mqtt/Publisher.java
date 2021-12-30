@@ -1,5 +1,12 @@
 package org.ostrya.presencepublisher.mqtt;
 
+import static android.content.Context.CONNECTIVITY_SERVICE;
+
+import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
+import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
+import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
+import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -7,8 +14,11 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
+
 import androidx.preference.PreferenceManager;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.ostrya.presencepublisher.message.BatteryMessageProvider;
 import org.ostrya.presencepublisher.message.BeaconMessageProvider;
 import org.ostrya.presencepublisher.message.Message;
@@ -19,12 +29,6 @@ import org.ostrya.presencepublisher.schedule.Scheduler;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static android.content.Context.CONNECTIVITY_SERVICE;
-import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
-import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
-import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
-import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 
 public class Publisher {
     private static final String TAG = "Publisher";
@@ -46,7 +50,8 @@ public class Publisher {
         offlineMessageProvider = new OfflineMessageProvider(applicationContext);
         wifiMessageProvider = new WifiMessageProvider(applicationContext);
         mqttService = new MqttService(applicationContext);
-        connectivityManager = (ConnectivityManager) applicationContext.getSystemService(CONNECTIVITY_SERVICE);
+        connectivityManager =
+                (ConnectivityManager) applicationContext.getSystemService(CONNECTIVITY_SERVICE);
         scheduler = new Scheduler(applicationContext);
     }
 
@@ -103,8 +108,10 @@ public class Publisher {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             for (Network network : connectivityManager.getAllNetworks()) {
-                NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(network);
-                if (networkCapabilities != null && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                NetworkCapabilities networkCapabilities =
+                        connectivityManager.getNetworkCapabilities(network);
+                if (networkCapabilities != null
+                        && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
                     return true;
                 }
             }

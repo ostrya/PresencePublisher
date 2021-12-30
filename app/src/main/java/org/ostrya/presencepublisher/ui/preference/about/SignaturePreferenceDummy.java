@@ -6,7 +6,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Build;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.preference.common.StringDummy;
 
@@ -26,7 +28,11 @@ public class SignaturePreferenceDummy extends StringDummy {
         try {
             Signature[] signatures;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNING_CERTIFICATES);
+                PackageInfo info =
+                        context.getPackageManager()
+                                .getPackageInfo(
+                                        context.getPackageName(),
+                                        PackageManager.GET_SIGNING_CERTIFICATES);
                 if (info.signingInfo == null) {
                     signatures = null;
                 } else if (info.signingInfo.hasMultipleSigners()) {
@@ -60,15 +66,21 @@ public class SignaturePreferenceDummy extends StringDummy {
 
     @SuppressWarnings("deprecation")
     @SuppressLint("PackageManagerGetSignatures")
-    private static Signature[] getLegacySignatures(Context context) throws PackageManager.NameNotFoundException {
-        PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+    private static Signature[] getLegacySignatures(Context context)
+            throws PackageManager.NameNotFoundException {
+        PackageInfo info =
+                context.getPackageManager()
+                        .getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
         return info.signatures;
     }
 
     private static String signatureToString(Signature signature, String defaultValue) {
         try {
-            X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509")
-                    .generateCertificate(new ByteArrayInputStream(signature.toByteArray()));
+            X509Certificate cert =
+                    (X509Certificate)
+                            CertificateFactory.getInstance("X.509")
+                                    .generateCertificate(
+                                            new ByteArrayInputStream(signature.toByteArray()));
             return cert.toString();
         } catch (CertificateException e) {
             HyperLog.w(TAG, "Unable to instantiate X.509 certificate factory", e);

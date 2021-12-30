@@ -4,11 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.mqtt.MqttService;
@@ -65,22 +68,28 @@ public class CheckConnectionDialogFragment extends DialogFragment {
             String message;
             try {
                 mqttService.sendTestMessage();
-                message = getResources().getString(R.string.dialog_check_connection_summary_success);
+                message =
+                        getResources().getString(R.string.dialog_check_connection_summary_success);
             } catch (MqttException | RuntimeException e) {
                 HyperLog.w(TAG, "Error while sending message", e);
                 message = getErrorString(e);
             }
             final String result = message;
-            requireActivity().runOnUiThread(() -> {
-                alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL).setText(R.string.dialog_ok);
-                alertDialog.setMessage(result);
-            });
+            requireActivity()
+                    .runOnUiThread(
+                            () -> {
+                                alertDialog
+                                        .getButton(DialogInterface.BUTTON_NEUTRAL)
+                                        .setText(R.string.dialog_ok);
+                                alertDialog.setMessage(result);
+                            });
         }
 
         private String getErrorString(Throwable e) {
             String message;
             if (e instanceof MqttException) {
-                if (((MqttException) e).getReasonCode() == MqttException.REASON_CODE_CLIENT_EXCEPTION) {
+                if (((MqttException) e).getReasonCode()
+                        == MqttException.REASON_CODE_CLIENT_EXCEPTION) {
                     message = genericExceptionToString(e.getCause() == null ? e : e.getCause());
                 } else {
                     message = e.getLocalizedMessage();

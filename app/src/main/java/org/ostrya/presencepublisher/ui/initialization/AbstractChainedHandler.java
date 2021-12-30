@@ -13,13 +13,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 abstract class AbstractChainedHandler<I, O> implements InitializationHandler {
     protected static final String TAG = "AbstractChainedHandler";
-    @Nullable
-    private final InitializationHandler nextHandler;
+    @Nullable private final InitializationHandler nextHandler;
     private final AtomicBoolean inProgress = new AtomicBoolean(false);
     protected final MainActivity activity;
     private final ActivityResultLauncher<I> launcher;
 
-    protected AbstractChainedHandler(MainActivity activity, @Nullable ActivityResultContract<I, O> contract, Queue<HandlerFactory> handlerChain) {
+    protected AbstractChainedHandler(
+            MainActivity activity,
+            @Nullable ActivityResultContract<I, O> contract,
+            Queue<HandlerFactory> handlerChain) {
         this.activity = activity;
         this.launcher = this.activity.registerForActivityResult(contract, this::handleResult);
         HandlerFactory handlerFactory = handlerChain.poll();
@@ -46,7 +48,8 @@ abstract class AbstractChainedHandler<I, O> implements InitializationHandler {
         if (inProgress.get()) {
             doHandleResult(result);
         } else {
-            HyperLog.w(TAG, "Skipping result because initialization not in progress for " + getName());
+            HyperLog.w(
+                    TAG, "Skipping result because initialization not in progress for " + getName());
         }
     }
 

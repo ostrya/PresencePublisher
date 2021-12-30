@@ -1,13 +1,19 @@
 package org.ostrya.presencepublisher.beacon;
 
+import static org.ostrya.presencepublisher.beacon.RegionMonitorNotifier.FOUND_BEACON_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+
 import androidx.annotation.GuardedBy;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.preference.PreferenceManager;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.RegionBootstrap;
 
@@ -16,9 +22,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.ostrya.presencepublisher.beacon.RegionMonitorNotifier.FOUND_BEACON_LIST;
-import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public final class PresenceBeaconManager {
@@ -29,8 +32,7 @@ public final class PresenceBeaconManager {
     @Nullable
     private RegionBootstrap regionBootstrap;
 
-    private PresenceBeaconManager() {
-    }
+    private PresenceBeaconManager() {}
 
     public static PresenceBeaconManager getInstance() {
         return INSTANCE;
@@ -38,14 +40,17 @@ public final class PresenceBeaconManager {
 
     public synchronized void initialize(Context context) {
         Context applicationContext = context.getApplicationContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(applicationContext);
         List<Region> configuredScanRegions = getConfiguredScanRegions(sharedPreferences);
         RegionMonitorNotifier monitorNotifier = new RegionMonitorNotifier(sharedPreferences);
-        regionBootstrap = new RegionBootstrap(applicationContext, monitorNotifier, configuredScanRegions);
+        regionBootstrap =
+                new RegionBootstrap(applicationContext, monitorNotifier, configuredScanRegions);
     }
 
     private List<Region> getConfiguredScanRegions(SharedPreferences sharedPreferences) {
-        Set<String> beaconList = sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet());
+        Set<String> beaconList =
+                sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet());
         List<Region> scanRegions = new ArrayList<>(beaconList.size());
         for (String beaconId : beaconList) {
             String address = PresenceBeacon.beaconIdToAddress(beaconId);
@@ -57,8 +62,10 @@ public final class PresenceBeaconManager {
 
     public synchronized void addBeacon(Context context, PresenceBeacon beacon) {
         Context applicationContext = context.getApplicationContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-        Set<String> storedBeacons = new HashSet<>(sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()));
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        Set<String> storedBeacons =
+                new HashSet<>(sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()));
         String beaconId = beacon.toBeaconId();
         storedBeacons.add(beaconId);
         sharedPreferences.edit().putStringSet(BEACON_LIST, storedBeacons).apply();
@@ -76,12 +83,17 @@ public final class PresenceBeaconManager {
 
     public synchronized void removeBeacon(Context context, String beaconId) {
         Context applicationContext = context.getApplicationContext();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-        Set<String> storedBeacons = new HashSet<>(sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()));
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        Set<String> storedBeacons =
+                new HashSet<>(sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()));
         storedBeacons.remove(beaconId);
-        Set<String> foundBeacons = new HashSet<>(sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet()));
+        Set<String> foundBeacons =
+                new HashSet<>(
+                        sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet()));
         foundBeacons.remove(beaconId);
-        sharedPreferences.edit()
+        sharedPreferences
+                .edit()
                 .putStringSet(BEACON_LIST, storedBeacons)
                 .putStringSet(FOUND_BEACON_LIST, foundBeacons)
                 .apply();

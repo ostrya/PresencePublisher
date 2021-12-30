@@ -1,11 +1,13 @@
 package org.ostrya.presencepublisher.ui.preference.connection;
 
+import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
+
 import android.content.Context;
+
 import androidx.preference.ListPreference;
+
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
-
-import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
 
 public class QoSPreference extends ListPreference {
     public static final String QOS_VALUE = "qos";

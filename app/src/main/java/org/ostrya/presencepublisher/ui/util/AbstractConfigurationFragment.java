@@ -2,6 +2,7 @@ package org.ostrya.presencepublisher.ui.util;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.annotation.CallSuper;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -9,13 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractConfigurationFragment extends PreferenceFragmentCompat {
-    private final SharedPreferences.OnSharedPreferenceChangeListener ownListener = this::onPreferencesChanged;
-    private final List<SharedPreferences.OnSharedPreferenceChangeListener> listeners = new ArrayList<>();
+    private final SharedPreferences.OnSharedPreferenceChangeListener ownListener =
+            this::onPreferencesChanged;
+    private final List<SharedPreferences.OnSharedPreferenceChangeListener> listeners =
+            new ArrayList<>();
 
     @Override
     @CallSuper
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(ownListener);
+        getPreferenceManager()
+                .getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(ownListener);
     }
 
     @Override
@@ -42,7 +47,9 @@ public abstract class AbstractConfigurationFragment extends PreferenceFragmentCo
 
     public void addListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
         listeners.add(listener);
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(listener);
+        getPreferenceManager()
+                .getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(listener);
     }
 
     protected abstract void onPreferencesChanged(SharedPreferences preferences, String name);

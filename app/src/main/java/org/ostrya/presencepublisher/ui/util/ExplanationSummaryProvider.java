@@ -1,12 +1,15 @@
 package org.ostrya.presencepublisher.ui.util;
 
 import androidx.preference.Preference;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.ostrya.presencepublisher.R;
 
 import java.util.Collections;
 
-public class ExplanationSummaryProvider<T extends Preference> implements Preference.SummaryProvider<T> {
+public class ExplanationSummaryProvider<T extends Preference>
+        implements Preference.SummaryProvider<T> {
     private static final String TAG = "ExplanationSummaryProvider";
     private final int summaryId;
     private final PreferenceType type;
@@ -26,9 +29,15 @@ public class ExplanationSummaryProvider<T extends Preference> implements Prefere
         if (preference.hasKey()) {
             switch (type) {
                 case STRING:
-                    return preference.getSharedPreferences().getString(preference.getKey(), undefined);
+                    return preference
+                            .getSharedPreferences()
+                            .getString(preference.getKey(), undefined);
                 case LIST:
-                    return SetJoiner.join(preference.getSharedPreferences().getStringSet(preference.getKey(), Collections.emptySet()), undefined);
+                    return SetJoiner.join(
+                            preference
+                                    .getSharedPreferences()
+                                    .getStringSet(preference.getKey(), Collections.emptySet()),
+                            undefined);
                 default:
                     HyperLog.e(TAG, "Unexpected type received: " + type);
                     throw new IllegalArgumentException("Unexpected type");

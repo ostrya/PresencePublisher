@@ -2,7 +2,9 @@ package org.ostrya.presencepublisher.message;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import androidx.preference.PreferenceManager;
+
 import com.hypertrack.hyperlog.HyperLog;
 
 import java.util.ArrayList;

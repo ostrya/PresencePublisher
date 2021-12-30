@@ -1,10 +1,12 @@
 package org.ostrya.presencepublisher.beacon;
 
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.altbeacon.beacon.logging.Logger;
 
 public class HyperlogLogger implements Logger {
     private static final String BEACON_TAG_PREFIX = "altbeacon/";
+
     public void v(String tag, String message, Object... args) {
         HyperLog.v(BEACON_TAG_PREFIX + tag, formatString(message, args));
     }

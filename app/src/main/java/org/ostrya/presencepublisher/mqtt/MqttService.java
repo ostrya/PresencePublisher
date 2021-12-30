@@ -1,21 +1,5 @@
 package org.ostrya.presencepublisher.mqtt;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.provider.Settings;
-import androidx.annotation.Nullable;
-import androidx.preference.PreferenceManager;
-import com.hypertrack.hyperlog.HyperLog;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.ostrya.presencepublisher.message.Message;
-import org.ostrya.presencepublisher.security.SecurePreferencesHelper;
-
-import java.nio.charset.Charset;
-import java.util.List;
-
 import static org.ostrya.presencepublisher.ui.preference.connection.ClientCertificatePreference.CLIENT_CERTIFICATE;
 import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
 import static org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference.PASSWORD;
@@ -26,6 +10,25 @@ import static org.ostrya.presencepublisher.ui.preference.connection.RetainFlagPr
 import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
 import static org.ostrya.presencepublisher.ui.preference.connection.UsernamePreference.USERNAME;
 import static org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference.PRESENCE_TOPIC;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.provider.Settings;
+
+import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
+
+import com.hypertrack.hyperlog.HyperLog;
+
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.ostrya.presencepublisher.message.Message;
+import org.ostrya.presencepublisher.security.SecurePreferencesHelper;
+
+import java.nio.charset.Charset;
+import java.util.List;
 
 public class MqttService {
     private static final String TAG = "MqttService";
@@ -51,7 +54,9 @@ public class MqttService {
         String password = securePreferences.getString(PASSWORD, "");
         String topic = sharedPreferences.getString(PRESENCE_TOPIC, "test");
 
-        try (MqttClient mqttClient = new MqttClient(getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence())) {
+        try (MqttClient mqttClient =
+                new MqttClient(
+                        getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence())) {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setConnectionTimeout(5);
             if (!login.isEmpty() && !password.isEmpty()) {
@@ -77,7 +82,9 @@ public class MqttService {
         int qos = getQosFromString(sharedPreferences.getString(QOS_VALUE, null));
         boolean retain = sharedPreferences.getBoolean(RETAIN_FLAG, false);
 
-        try (MqttClient mqttClient = new MqttClient(getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence())) {
+        try (MqttClient mqttClient =
+                new MqttClient(
+                        getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence())) {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setConnectionTimeout(5);
             if (!login.isEmpty() && !password.isEmpty()) {
@@ -89,7 +96,11 @@ public class MqttService {
             }
             mqttClient.connect(options);
             for (Message message : messages) {
-                mqttClient.publish(message.getTopic(), message.getContent().getBytes(Charset.forName("UTF-8")), qos, retain);
+                mqttClient.publish(
+                        message.getTopic(),
+                        message.getContent().getBytes(Charset.forName("UTF-8")),
+                        qos,
+                        retain);
             }
             mqttClient.disconnect(5);
         }
