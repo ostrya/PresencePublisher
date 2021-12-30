@@ -15,10 +15,15 @@ public enum MessageFormat {
     PLAINTEXT {
         @Override
         public List<String> formatContent(
-                List<StringEntry> stringEntries, List<ListEntry> listEntries) {
+                List<StringEntry> stringEntries,
+                List<NumberEntry> numberEntries,
+                List<ListEntry> listEntries) {
             List<String> result = new ArrayList<>();
             for (StringEntry entry : stringEntries) {
                 result.add(entry.getValue());
+            }
+            for (NumberEntry entry : numberEntries) {
+                result.add(entry.getValue().toString());
             }
             for (ListEntry entry : listEntries) {
                 result.addAll(entry.getValues());
@@ -29,10 +34,23 @@ public enum MessageFormat {
     CSV {
         @Override
         public List<String> formatContent(
-                List<StringEntry> stringEntries, List<ListEntry> listEntries) {
+                List<StringEntry> stringEntries,
+                List<NumberEntry> numberEntries,
+                List<ListEntry> listEntries) {
             StringBuilder sb = new StringBuilder();
             boolean continuation = false;
             for (StringEntry entry : stringEntries) {
+                if (continuation) {
+                    sb.append(',');
+                }
+                sb.append('"')
+                        .append(entry.getName())
+                        .append('=')
+                        .append(entry.getValue())
+                        .append('"');
+                continuation = true;
+            }
+            for (NumberEntry entry : numberEntries) {
                 if (continuation) {
                     sb.append(',');
                 }
@@ -58,7 +76,9 @@ public enum MessageFormat {
     JSON {
         @Override
         public List<String> formatContent(
-                List<StringEntry> stringEntries, List<ListEntry> listEntries) {
+                List<StringEntry> stringEntries,
+                List<NumberEntry> numberEntries,
+                List<ListEntry> listEntries) {
             StringBuilder sb = new StringBuilder();
             sb.append('{').append('\n');
             boolean continuation = false;
@@ -75,6 +95,19 @@ public enum MessageFormat {
                         .append('"')
                         .append(entry.getValue())
                         .append('"');
+                continuation = true;
+            }
+            for (NumberEntry entry : numberEntries) {
+                if (continuation) {
+                    sb.append(',').append('\n');
+                }
+                sb.append("  ")
+                        .append('"')
+                        .append(entry.getName())
+                        .append('"')
+                        .append(':')
+                        .append(' ')
+                        .append(entry.getValue());
                 continuation = true;
             }
             for (ListEntry entry : listEntries) {
@@ -106,7 +139,9 @@ public enum MessageFormat {
     YAML {
         @Override
         public List<String> formatContent(
-                List<StringEntry> stringEntries, List<ListEntry> listEntries) {
+                List<StringEntry> stringEntries,
+                List<NumberEntry> numberEntries,
+                List<ListEntry> listEntries) {
             StringBuilder sb = new StringBuilder();
             boolean continuation = false;
             for (StringEntry entry : stringEntries) {
@@ -138,16 +173,18 @@ public enum MessageFormat {
 
     private static final String TAG = "MessageFormat";
 
-    public abstract List<String> formatContent(
-            List<StringEntry> stringEntries, List<ListEntry> listEntries);
-
     /**
      * Note: the values returned here must match with the descriptions given in {@link
-     * R.array.message_format_descriptions}
+     * #settingDescriptions()}
      */
     public static String[] settingValues() {
         return new String[] {PLAINTEXT.name(), CSV.name(), JSON.name(), YAML.name()};
     }
+
+    public abstract List<String> formatContent(
+            List<StringEntry> stringEntries,
+            List<NumberEntry> numberEntries,
+            List<ListEntry> listEntries);
 
     public static int settingDescriptions() {
         return R.array.message_format_descriptions;

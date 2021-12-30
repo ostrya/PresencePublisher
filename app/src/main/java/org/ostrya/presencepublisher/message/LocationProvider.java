@@ -1,0 +1,50 @@
+package org.ostrya.presencepublisher.message;
+
+import static org.ostrya.presencepublisher.message.MessageContext.UNKNOWN;
+
+import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+
+import com.hypertrack.hyperlog.HyperLog;
+
+import java.util.Locale;
+
+public class LocationProvider {
+    private static final String TAG = "LocationProvider";
+    private static final Criteria NO_CRITERIA = new Criteria();
+    // inspired from https://datatracker.ietf.org/doc/html/rfc5870
+    private static final String GEO_FORMAT = "geo:%f,%f;u=%f;timestamp=%d";
+    private final LocationManager locationManager;
+
+    public LocationProvider(Context applicationContext) {
+        locationManager =
+                (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
+    }
+
+    public String getLastKnownLocation() {
+        if (locationManager == null) {
+            HyperLog.w(TAG, "No location manager available, unable to get location");
+            return UNKNOWN;
+        }
+        // according to Javadoc, this will give us the provider with best accuracy
+        String provider = locationManager.getBestProvider(NO_CRITERIA, true);
+        if (provider == null) {
+            HyperLog.w(TAG, "Unable to get location provider");
+            return UNKNOWN;
+        }
+        Location location = locationManager.getLastKnownLocation(provider);
+        if (location == null) {
+            HyperLog.w(TAG, "No last known location found");
+            return UNKNOWN;
+        }
+        return String.format(
+                Locale.ROOT,
+                GEO_FORMAT,
+                location.getLatitude(),
+                location.getLongitude(),
+                location.getAccuracy(),
+                location.getTime() / 1000);
+    }
+}

@@ -1,10 +1,12 @@
 package org.ostrya.presencepublisher.mqtt;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
 import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_LIST;
@@ -21,14 +23,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.ostrya.presencepublisher.message.BatteryLevelProvider;
+import org.ostrya.presencepublisher.message.BatteryStatusProvider;
 import org.ostrya.presencepublisher.message.ConditionContentProvider;
-import org.ostrya.presencepublisher.message.ListEntry;
+import org.ostrya.presencepublisher.message.LocationProvider;
 import org.ostrya.presencepublisher.message.Message;
-import org.ostrya.presencepublisher.message.MessageContext;
 import org.ostrya.presencepublisher.message.MessageFormat;
 import org.ostrya.presencepublisher.message.MessageItem;
-import org.ostrya.presencepublisher.message.StringEntry;
 import org.ostrya.presencepublisher.network.NetworkService;
 import org.ostrya.presencepublisher.schedule.Scheduler;
 import org.ostrya.presencepublisher.test.LogDisablerRule;
@@ -45,12 +45,12 @@ public class PublisherTest {
     @Rule public final LogDisablerRule logDisablerRule = new LogDisablerRule();
 
     @Mock private SharedPreferences sharedPreferences;
-    @Mock private BatteryLevelProvider batteryLevelProvider;
+    @Mock private BatteryStatusProvider batteryStatusProvider;
     @Mock private ConditionContentProvider conditionContentProvider;
+    @Mock private LocationProvider locationProvider;
     @Mock private MqttService mqttService;
     @Mock private NetworkService networkService;
     @Mock private Scheduler scheduler;
-    @Mock private MessageContext messageContext;
 
     @Captor private ArgumentCaptor<List<Message>> messagesCaptor;
 
@@ -58,12 +58,16 @@ public class PublisherTest {
 
     @Before
     public void setup() {
-        when(messageContext.getBatteryLevelProvider()).thenReturn(batteryLevelProvider);
-        when(messageContext.getConditionContentProvider()).thenReturn(conditionContentProvider);
         when(sharedPreferences.getString(MESSAGE_FORMAT_SETTING, null)).thenReturn("PLAINTEXT");
         uut =
                 new Publisher(
-                        messageContext, sharedPreferences, mqttService, networkService, scheduler);
+                        batteryStatusProvider,
+                        conditionContentProvider,
+                        locationProvider,
+                        sharedPreferences,
+                        mqttService,
+                        networkService,
+                        scheduler);
     }
 
     @Test
@@ -73,13 +77,16 @@ public class PublisherTest {
         setupMessages(
                 new MessageConfiguration(
                         topic, Collections.singletonList(MessageItem.BATTERY_LEVEL)));
-        StringEntry entry = new StringEntry("key", "99");
-        lenient().when(batteryLevelProvider.getBatteryLevel()).thenReturn(entry);
+        int value = 99;
+        lenient().when(batteryStatusProvider.getBatteryLevelPercentage()).thenReturn(value);
+        when(batteryStatusProvider.isCharging()).thenReturn(false);
 
         uut.publish();
 
-        verifyNoInteractions(batteryLevelProvider, conditionContentProvider, mqttService);
-        verify(scheduler).waitForNetworkReconnect();
+        verify(batteryStatusProvider).isCharging();
+        verifyNoMoreInteractions(batteryStatusProvider);
+        verifyNoInteractions(conditionContentProvider, mqttService);
+        verify(scheduler).waitForNetworkReconnect(false);
     }
 
     @Test
@@ -88,11 +95,14 @@ public class PublisherTest {
         doReturn(Collections.emptySet())
                 .when(sharedPreferences)
                 .getStringSet(MESSAGE_LIST, Collections.emptySet());
+        when(batteryStatusProvider.isCharging()).thenReturn(true);
 
         uut.publish();
 
-        verifyNoInteractions(batteryLevelProvider, conditionContentProvider, mqttService);
-        verify(scheduler).scheduleNext();
+        verify(batteryStatusProvider).isCharging();
+        verifyNoMoreInteractions(batteryStatusProvider);
+        verifyNoInteractions(conditionContentProvider, mqttService);
+        verify(scheduler).scheduleNext(true);
     }
 
     @Test
@@ -102,20 +112,20 @@ public class PublisherTest {
         setupMessages(
                 new MessageConfiguration(
                         topic, Collections.singletonList(MessageItem.BATTERY_LEVEL)));
-        StringEntry entry = new StringEntry("key", "99");
-        when(batteryLevelProvider.getBatteryLevel()).thenReturn(entry);
+        int value = 99;
+        when(batteryStatusProvider.getBatteryLevelPercentage()).thenReturn(value);
 
         uut.publish();
 
         verifyNoInteractions(conditionContentProvider);
         verify(mqttService).sendMessages(messagesCaptor.capture());
-        verify(scheduler).scheduleNext();
+        verify(scheduler).scheduleNext(anyBoolean());
 
         List<Message> messages = messagesCaptor.getValue();
         assertThat(messages)
                 .containsExactlyElementsOf(
                         Message.messagesForTopic(topic)
-                                .withEntry(entry)
+                                .withEntry(MessageItem.BATTERY_LEVEL, value)
                                 .build(MessageFormat.PLAINTEXT));
     }
 
@@ -126,13 +136,15 @@ public class PublisherTest {
         setupMessages(
                 new MessageConfiguration(
                         topic, Collections.singletonList(MessageItem.CONDITION_CONTENT)));
-        when(conditionContentProvider.getConditionContents())
-                .thenReturn(new ListEntry("key", Collections.emptyList()));
+        when(conditionContentProvider.getConditionContents(null))
+                .thenReturn(Collections.emptyList());
 
         uut.publish();
 
-        verifyNoInteractions(batteryLevelProvider, mqttService);
-        verify(scheduler).scheduleNext();
+        verify(batteryStatusProvider).isCharging();
+        verifyNoMoreInteractions(batteryStatusProvider);
+        verifyNoInteractions(mqttService);
+        verify(scheduler).scheduleNext(anyBoolean());
     }
 
     @Test
@@ -146,20 +158,21 @@ public class PublisherTest {
         String content1 = "content1";
         String content2 = "content2";
         String content3 = "content3";
-        ListEntry entry = new ListEntry("key", Arrays.asList(content1, content2, content3));
-        when(conditionContentProvider.getConditionContents()).thenReturn(entry);
+        List<String> values = Arrays.asList(content1, content2, content3);
+        when(conditionContentProvider.getConditionContents(null)).thenReturn(values);
 
         uut.publish();
 
-        verifyNoInteractions(batteryLevelProvider);
+        verify(batteryStatusProvider).isCharging();
+        verifyNoMoreInteractions(batteryStatusProvider);
         verify(mqttService).sendMessages(messagesCaptor.capture());
-        verify(scheduler).scheduleNext();
+        verify(scheduler).scheduleNext(anyBoolean());
 
         List<Message> messages = messagesCaptor.getValue();
         assertThat(messages)
                 .containsExactlyInAnyOrderElementsOf(
                         Message.messagesForTopic(topic)
-                                .withEntry(entry)
+                                .withEntry(MessageItem.CONDITION_CONTENT, values)
                                 .build(MessageFormat.PLAINTEXT));
     }
 
@@ -178,22 +191,26 @@ public class PublisherTest {
         String content1 = "content1";
         String content2 = "content2";
         String content3 = "content3";
-        ListEntry entry1 = new ListEntry("key1", Arrays.asList(content1, content2, content3));
-        when(conditionContentProvider.getConditionContents()).thenReturn(entry1);
-        StringEntry entry2 = new StringEntry("key", "99");
-        when(batteryLevelProvider.getBatteryLevel()).thenReturn(entry2);
+        List<String> values = Arrays.asList(content1, content2, content3);
+        when(conditionContentProvider.getConditionContents(null)).thenReturn(values);
+        int value = 99;
+        when(batteryStatusProvider.getBatteryLevelPercentage()).thenReturn(value);
 
         uut.publish();
 
         verify(mqttService).sendMessages(messagesCaptor.capture());
-        verify(scheduler).scheduleNext();
+        verify(scheduler).scheduleNext(anyBoolean());
 
         List<Message> messages = messagesCaptor.getValue();
 
         List<Message> expected =
-                Message.messagesForTopic(topic1).withEntry(entry1).build(MessageFormat.PLAINTEXT);
+                Message.messagesForTopic(topic1)
+                        .withEntry(MessageItem.CONDITION_CONTENT, values)
+                        .build(MessageFormat.PLAINTEXT);
         expected.addAll(
-                Message.messagesForTopic(topic2).withEntry(entry2).build(MessageFormat.PLAINTEXT));
+                Message.messagesForTopic(topic2)
+                        .withEntry(MessageItem.BATTERY_LEVEL, value)
+                        .build(MessageFormat.PLAINTEXT));
         assertThat(messages).containsExactlyInAnyOrderElementsOf(expected);
     }
 

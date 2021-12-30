@@ -10,10 +10,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.VisibleForTesting;
+import androidx.core.util.Supplier;
 import androidx.preference.PreferenceManager;
 
 import com.hypertrack.hyperlog.HyperLog;
 
+import org.ostrya.presencepublisher.message.BatteryStatusProvider;
+import org.ostrya.presencepublisher.message.ConditionContentProvider;
+import org.ostrya.presencepublisher.message.LocationProvider;
 import org.ostrya.presencepublisher.message.Message;
 import org.ostrya.presencepublisher.message.MessageContext;
 import org.ostrya.presencepublisher.message.MessageFormat;
@@ -29,7 +33,9 @@ import java.util.List;
 public class Publisher {
     private static final String TAG = "Publisher";
 
-    private final MessageContext messageContext;
+    private final Supplier<BatteryStatusProvider> batteryStatusProviderSupplier;
+    private final ConditionContentProvider conditionContentProvider;
+    private final LocationProvider locationProvider;
     private final SharedPreferences sharedPreferences;
     private final MqttService mqttService;
     private final NetworkService networkService;
@@ -37,7 +43,9 @@ public class Publisher {
 
     public Publisher(Context context) {
         Context applicationContext = context.getApplicationContext();
-        messageContext = new MessageContext(applicationContext);
+        batteryStatusProviderSupplier = () -> new BatteryStatusProvider(applicationContext);
+        conditionContentProvider = new ConditionContentProvider(applicationContext);
+        locationProvider = new LocationProvider(applicationContext);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         mqttService = new MqttService(applicationContext);
         networkService = new NetworkService(applicationContext, sharedPreferences);
@@ -46,12 +54,16 @@ public class Publisher {
 
     @VisibleForTesting
     Publisher(
-            MessageContext messageContext,
+            BatteryStatusProvider batteryStatusProvider,
+            ConditionContentProvider conditionContentProvider,
+            LocationProvider locationProvider,
             SharedPreferences sharedPreferences,
             MqttService mqttService,
             NetworkService networkService,
             Scheduler scheduler) {
-        this.messageContext = messageContext;
+        this.batteryStatusProviderSupplier = () -> batteryStatusProvider;
+        this.locationProvider = locationProvider;
+        this.conditionContentProvider = conditionContentProvider;
         this.sharedPreferences = sharedPreferences;
         this.mqttService = mqttService;
         this.networkService = networkService;
@@ -59,34 +71,42 @@ public class Publisher {
     }
 
     public void publish() {
+        BatteryStatusProvider batteryStatusProvider = batteryStatusProviderSupplier.get();
         if (!networkService.sendMessageViaCurrentConnection()) {
             HyperLog.i(TAG, "Not connected to valid network, waiting for re-connect");
-            scheduler.waitForNetworkReconnect();
+            scheduler.waitForNetworkReconnect(batteryStatusProvider.isCharging());
             return;
         }
+
         try {
-            List<Message> messages = getMessagesToSend();
+            long next = scheduler.scheduleNext(batteryStatusProvider.isCharging());
+            MessageContext messageContext =
+                    new MessageContext(
+                            batteryStatusProvider,
+                            conditionContentProvider,
+                            locationProvider,
+                            networkService.getCurrentSsid(),
+                            next);
+            List<Message> messages = getMessagesToSend(messageContext);
             if (!messages.isEmpty()) {
-                doSend(messages);
+                doSend(messages, messageContext.getCurrentTimestamp());
             }
         } catch (RuntimeException e) {
             HyperLog.w(TAG, "Error while getting messages to send", e);
-        } finally {
-            scheduler.scheduleNext();
         }
     }
 
-    private void doSend(List<Message> messages) {
+    private void doSend(List<Message> messages, long currentTimestamp) {
         HyperLog.d(TAG, "Sending messages");
         try {
             mqttService.sendMessages(messages);
-            sharedPreferences.edit().putLong(LAST_SUCCESS, System.currentTimeMillis()).apply();
+            sharedPreferences.edit().putLong(LAST_SUCCESS, currentTimestamp).apply();
         } catch (Exception e) {
             HyperLog.w(TAG, "Error while sending messages", e);
         }
     }
 
-    private List<Message> getMessagesToSend() {
+    private List<Message> getMessagesToSend(MessageContext messageContext) {
         List<Message> messages = new ArrayList<>();
         MessageFormat messageFormat =
                 MessageFormat.fromStringOrDefault(
