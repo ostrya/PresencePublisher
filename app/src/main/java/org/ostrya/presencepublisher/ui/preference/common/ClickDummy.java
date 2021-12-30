@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.ui.preference.common;
 
 import android.content.Context;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;

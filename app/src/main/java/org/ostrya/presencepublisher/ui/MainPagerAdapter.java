@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
 import org.ostrya.presencepublisher.R;
 
-public class MainPagerAdapter extends FragmentStateAdapter implements TabLayoutMediator.TabConfigurationStrategy {
+public class MainPagerAdapter extends FragmentStateAdapter
+        implements TabLayoutMediator.TabConfigurationStrategy {
 
     public MainPagerAdapter(FragmentActivity activity) {
         super(activity);

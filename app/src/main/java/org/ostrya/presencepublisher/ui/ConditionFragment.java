@@ -1,14 +1,20 @@
 package org.ostrya.presencepublisher.ui;
 
+import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
+import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.ostrya.presencepublisher.PresencePublisher;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.contract.IntentActionContract;
@@ -21,9 +27,6 @@ import org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetwork
 import org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport;
 import org.ostrya.presencepublisher.ui.util.AbstractConfigurationFragment;
 
-import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
-import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
-
 public class ConditionFragment extends AbstractConfigurationFragment {
     private static final String TAG = "ConditionFragment";
 
@@ -33,14 +36,16 @@ public class ConditionFragment extends AbstractConfigurationFragment {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         super.onCreatePreferences(savedInstanceState, rootKey);
         Context context = getPreferenceManager().getContext();
-        boolean beaconsSupported = ((PresencePublisher) context.getApplicationContext()).supportsBeacons();
+        boolean beaconsSupported =
+                ((PresencePublisher) context.getApplicationContext()).supportsBeacons();
         SharedPreferences preference = getPreferenceManager().getSharedPreferences();
 
         WifiCategorySupport wifiSupport = new WifiCategorySupport(this);
         ActivityResultLauncher<String> intentLauncher;
         // to make linter happy
         if (beaconsSupported && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            intentLauncher = registerForActivityResult(new IntentActionContract(), this::onActivityResult);
+            intentLauncher =
+                    registerForActivityResult(new IntentActionContract(), this::onActivityResult);
         } else {
             intentLauncher = null;
         }
@@ -52,7 +57,8 @@ public class ConditionFragment extends AbstractConfigurationFragment {
         Preference sendViaMobileNetwork = new SendViaMobileNetworkPreference(context);
         PreferenceCategory wifiCategory = wifiSupport.getCategory();
         PreferenceCategory beaconCategory = beaconSupport.getCategory();
-        PreferenceCategory offlineCategory = new MyPreferenceCategory(context, R.string.category_offline);
+        PreferenceCategory offlineCategory =
+                new MyPreferenceCategory(context, R.string.category_offline);
 
         screen.addPreference(contentHelp);
         screen.addPreference(sendViaMobileNetwork);

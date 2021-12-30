@@ -2,9 +2,11 @@ package org.ostrya.presencepublisher.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
+
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.preference.about.BundledLicensesPreferenceDummy;
 import org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference;
@@ -21,7 +23,8 @@ public class AboutFragment extends PreferenceFragmentCompat {
 
         PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(context);
 
-        PreferenceCategory legalCategory = new MyPreferenceCategory(context, R.string.category_legal);
+        PreferenceCategory legalCategory =
+                new MyPreferenceCategory(context, R.string.category_legal);
         PreferenceCategory appCategory = new MyPreferenceCategory(context, R.string.category_build);
 
         screen.addPreference(legalCategory);

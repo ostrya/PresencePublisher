@@ -1,16 +1,17 @@
 package org.ostrya.presencepublisher.message;
 
+import static org.ostrya.presencepublisher.ui.preference.schedule.BatteryTopicPreference.BATTERY_TOPIC;
+import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
+
 import com.hypertrack.hyperlog.HyperLog;
 
 import java.util.Collections;
 import java.util.List;
-
-import static org.ostrya.presencepublisher.ui.preference.schedule.BatteryTopicPreference.BATTERY_TOPIC;
-import static org.ostrya.presencepublisher.ui.preference.schedule.SendBatteryMessagePreference.SEND_BATTERY_MESSAGE;
 
 public class BatteryMessageProvider extends AbstractMessageProvider {
     private static final String TAG = "BatteryMessageProvider";

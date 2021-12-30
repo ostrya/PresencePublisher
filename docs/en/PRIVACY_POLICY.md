@@ -14,7 +14,7 @@ even if it is not running. The following information is collected:
   names that you have configured.
 * Whether any Bluetooth beacon that you have configured is in range of your
   Android device.
-  
+
 Presence Publisher does not process or store your GPS location. It also does not store
 any information about Wi-Fi networks and Bluetooth beacons which are not explicitly
 configured by you.

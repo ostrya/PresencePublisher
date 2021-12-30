@@ -1,12 +1,13 @@
 package org.ostrya.presencepublisher.ui.preference.condition;
 
+import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
+
 import android.content.Context;
+
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.preference.common.TextPreferenceBase;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
 import org.ostrya.presencepublisher.ui.util.RegexValidator;
-
-import static org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider.PreferenceType.STRING;
 
 public class OfflineContentPreference extends TextPreferenceBase {
     public static final String OFFLINE_CONTENT = "offlineContent";

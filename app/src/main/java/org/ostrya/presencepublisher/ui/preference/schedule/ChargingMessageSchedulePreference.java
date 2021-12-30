@@ -1,7 +1,9 @@
 package org.ostrya.presencepublisher.ui.preference.schedule;
 
 import android.content.Context;
+
 import androidx.preference.SeekBarPreference;
+
 import org.ostrya.presencepublisher.R;
 
 public class ChargingMessageSchedulePreference extends SeekBarPreference {

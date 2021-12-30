@@ -1,12 +1,14 @@
 package org.ostrya.presencepublisher.receiver;
 
+import static org.ostrya.presencepublisher.PresencePublisher.ALARM_ACTION;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import com.hypertrack.hyperlog.HyperLog;
-import org.ostrya.presencepublisher.mqtt.Publisher;
 
-import static org.ostrya.presencepublisher.PresencePublisher.ALARM_ACTION;
+import com.hypertrack.hyperlog.HyperLog;
+
+import org.ostrya.presencepublisher.mqtt.Publisher;
 
 public class AlarmReceiver extends BroadcastReceiver {
 

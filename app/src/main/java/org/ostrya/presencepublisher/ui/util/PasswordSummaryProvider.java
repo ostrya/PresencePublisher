@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.ui.util;
 
 import androidx.preference.Preference;
+
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference;
 

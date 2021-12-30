@@ -2,10 +2,12 @@ package org.ostrya.presencepublisher.ui.preference.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceManager;
+
 import org.ostrya.presencepublisher.ui.util.AbstractConfigurationFragment;
 
 import java.util.Collections;
@@ -22,7 +24,13 @@ public abstract class AbstractDynamicPreferenceCategorySupport {
     private final EntryFactory entryFactory;
     private Set<String> entryKeys = null;
 
-    protected AbstractDynamicPreferenceCategorySupport(AbstractConfigurationFragment fragment, int categoryId, String listKey, String namespace, AdderFactory adderFactory, EntryFactory entryFactory) {
+    protected AbstractDynamicPreferenceCategorySupport(
+            AbstractConfigurationFragment fragment,
+            int categoryId,
+            String listKey,
+            String namespace,
+            AdderFactory adderFactory,
+            EntryFactory entryFactory) {
         this.preferenceManager = fragment.getPreferenceManager();
         Context context = preferenceManager.getContext();
         this.fragment = fragment;
@@ -48,7 +56,8 @@ public abstract class AbstractDynamicPreferenceCategorySupport {
         SharedPreferences preferences = preferenceManager.getSharedPreferences();
         entryKeys = preferences.getStringSet(listKey, Collections.emptySet());
         for (String key : entryKeys) {
-            Preference entry = entryFactory.create(context, namespace + key, key, preferences, fragment);
+            Preference entry =
+                    entryFactory.create(context, namespace + key, key, preferences, fragment);
             // order alphabetically
             entry.setOrder(0);
             category.addPreference(entry);
@@ -73,14 +82,22 @@ public abstract class AbstractDynamicPreferenceCategorySupport {
     }
 
     private synchronized void updateValues(SharedPreferences preferences) {
-        Set<String> changedEntryKeys = Collections.unmodifiableSet(preferences.getStringSet(listKey, Collections.emptySet()));
+        Set<String> changedEntryKeys =
+                Collections.unmodifiableSet(
+                        preferences.getStringSet(listKey, Collections.emptySet()));
         Set<String> removed = new HashSet<>(entryKeys);
         removed.removeAll(changedEntryKeys);
         Set<String> added = new HashSet<>(changedEntryKeys);
         added.removeAll(entryKeys);
         entryKeys = changedEntryKeys;
         for (String add : added) {
-            Preference entry = entryFactory.create(preferenceManager.getContext(), namespace + add, add, preferences, fragment);
+            Preference entry =
+                    entryFactory.create(
+                            preferenceManager.getContext(),
+                            namespace + add,
+                            add,
+                            preferences,
+                            fragment);
             // order alphabetically
             entry.setOrder(0);
             category.addPreference(entry);
@@ -100,6 +117,11 @@ public abstract class AbstractDynamicPreferenceCategorySupport {
 
     @FunctionalInterface
     public interface EntryFactory {
-        Preference create(Context context, String key, String title, SharedPreferences preferences, Fragment fragment);
+        Preference create(
+                Context context,
+                String key,
+                String title,
+                SharedPreferences preferences,
+                Fragment fragment);
     }
 }

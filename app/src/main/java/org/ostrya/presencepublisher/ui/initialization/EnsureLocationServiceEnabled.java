@@ -1,5 +1,8 @@
 package org.ostrya.presencepublisher.ui.initialization;
 
+import static android.content.Context.LOCATION_SERVICE;
+import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+
 import android.app.Activity;
 import android.location.LocationManager;
 
@@ -14,25 +17,29 @@ import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
 import java.util.Queue;
 
-import static android.content.Context.LOCATION_SERVICE;
-import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-
 public class EnsureLocationServiceEnabled extends AbstractChainedHandler<String, Boolean> {
-    protected EnsureLocationServiceEnabled(MainActivity activity, Queue<HandlerFactory> handlerChain) {
+    protected EnsureLocationServiceEnabled(
+            MainActivity activity, Queue<HandlerFactory> handlerChain) {
         super(activity, new IntentActionContract(), handlerChain);
     }
 
     @Override
     protected void doInitialize() {
-        LocationManager locationManager = (LocationManager) activity.getSystemService(LOCATION_SERVICE);
+        LocationManager locationManager =
+                (LocationManager) activity.getSystemService(LOCATION_SERVICE);
         if (activity.isLocationServiceNeeded()
-                && (locationManager == null || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)))) {
+                && (locationManager == null
+                        || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                                || locationManager.isProviderEnabled(
+                                        LocationManager.NETWORK_PROVIDER)))) {
             HyperLog.i(TAG, "Location service not yet enabled, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 
-            ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(this::onResult,
-                    R.string.location_dialog_title, R.string.location_dialog_message);
+            ConfirmationDialogFragment fragment =
+                    ConfirmationDialogFragment.getInstance(
+                            this::onResult,
+                            R.string.location_dialog_title,
+                            R.string.location_dialog_message);
             fragment.show(fm, null);
         } else {
             finishInitialization();

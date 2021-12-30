@@ -1,5 +1,7 @@
 package org.ostrya.presencepublisher.ui.initialization;
 
+import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
@@ -17,8 +19,6 @@ import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
 import java.util.Queue;
 
-import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
-
 public class EnsureLocationPermission extends AbstractChainedHandler<String, Boolean> {
     protected EnsureLocationPermission(MainActivity activity, Queue<HandlerFactory> handlerChain) {
         super(activity, new ActivityResultContracts.RequestPermission(), handlerChain);
@@ -27,21 +27,27 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String, Boo
     @Override
     protected void doInitialize() {
         if (activity.isLocationServiceNeeded()
-                && (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                // for migration of pre-2.2.2 app versions, the consent needs to be confirmed once
-                || !PreferenceManager.getDefaultSharedPreferences(activity).getBoolean(LOCATION_CONSENT, false))) {
+                && (ContextCompat.checkSelfPermission(
+                                        activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                                != PackageManager.PERMISSION_GRANTED
+                        // for migration of pre-2.2.2 app versions, the consent needs to be
+                        // confirmed once
+                        || !PreferenceManager.getDefaultSharedPreferences(activity)
+                                .getBoolean(LOCATION_CONSENT, false))) {
             HyperLog.i(TAG, "Location permission / consent not yet granted, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 
-            ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(
-                    this::onResult,
-                    R.string.location_permission_dialog_title,
-                    activity.getString(R.string.location_consent_dialog_summary,
-                            activity.getString(R.string.tab_about_title),
-                            activity.getString(R.string.privacy_title),
-                            activity.getString(R.string.location_consent_title),
-                            activity.getString(R.string.location_permission_dialog_message)));
+            ConfirmationDialogFragment fragment =
+                    ConfirmationDialogFragment.getInstance(
+                            this::onResult,
+                            R.string.location_permission_dialog_title,
+                            activity.getString(
+                                    R.string.location_consent_dialog_summary,
+                                    activity.getString(R.string.tab_about_title),
+                                    activity.getString(R.string.privacy_title),
+                                    activity.getString(R.string.location_consent_title),
+                                    activity.getString(
+                                            R.string.location_permission_dialog_message)));
             fragment.show(fm, null);
         } else {
             finishInitialization();
@@ -50,16 +56,19 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String, Boo
 
     private void onResult(Activity parent, boolean ok) {
         if (ok) {
-            PreferenceManager.getDefaultSharedPreferences(parent).edit()
+            PreferenceManager.getDefaultSharedPreferences(parent)
+                    .edit()
                     .putBoolean(LOCATION_CONSENT, true)
                     .apply();
-            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
+            if (ContextCompat.checkSelfPermission(
+                            activity, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 getLauncher().launch(Manifest.permission.ACCESS_FINE_LOCATION);
             }
         } else {
             HyperLog.i(getName(), "User did not give consent. Stopping any further actions.");
-            PreferenceManager.getDefaultSharedPreferences(parent).edit()
+            PreferenceManager.getDefaultSharedPreferences(parent)
+                    .edit()
                     .putBoolean(LOCATION_CONSENT, false)
                     .apply();
             cancelInitialization();

@@ -1,13 +1,16 @@
 package org.ostrya.presencepublisher.ui.util;
 
 import android.content.Context;
+
 import androidx.preference.Preference;
+
 import org.ostrya.presencepublisher.R;
 
 import java.text.DateFormat;
 import java.util.Date;
 
-public class TimestampSummaryProvider<T extends Preference> implements Preference.SummaryProvider<T> {
+public class TimestampSummaryProvider<T extends Preference>
+        implements Preference.SummaryProvider<T> {
     public static final long WAITING_FOR_RECONNECT = -1L;
     public static final long UNDEFINED = 0L;
 
@@ -18,7 +21,8 @@ public class TimestampSummaryProvider<T extends Preference> implements Preferenc
         } else if (timestamp == WAITING_FOR_RECONNECT) {
             return context.getString(R.string.value_network_reconnect);
         } else {
-            return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(new Date(timestamp));
+            return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
+                    .format(new Date(timestamp));
         }
     }
 

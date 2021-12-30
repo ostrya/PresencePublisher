@@ -9,6 +9,12 @@ public class WifiCategorySupport extends AbstractDynamicPreferenceCategorySuppor
     public static final String WIFI_CONTENT_PREFIX = "wifi.";
 
     public WifiCategorySupport(AbstractConfigurationFragment fragment) {
-        super(fragment, R.string.category_wifi, SSID_LIST, WIFI_CONTENT_PREFIX, AddNetworkChoicePreferenceDummy::new, WifiNetworkPreference::new);
+        super(
+                fragment,
+                R.string.category_wifi,
+                SSID_LIST,
+                WIFI_CONTENT_PREFIX,
+                AddNetworkChoicePreferenceDummy::new,
+                WifiNetworkPreference::new);
     }
 }

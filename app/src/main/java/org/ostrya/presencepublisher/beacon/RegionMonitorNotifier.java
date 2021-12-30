@@ -1,7 +1,9 @@
 package org.ostrya.presencepublisher.beacon;
 
 import android.content.SharedPreferences;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
 
@@ -21,7 +23,9 @@ public class RegionMonitorNotifier implements MonitorNotifier {
     @Override
     public void didEnterRegion(Region region) {
         String regionId = region.getUniqueId();
-        Set<String> foundRegions = new HashSet<>(sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet()));
+        Set<String> foundRegions =
+                new HashSet<>(
+                        sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet()));
         if (!foundRegions.contains(regionId)) {
 
             HyperLog.i(TAG, "Found ");
@@ -33,7 +37,9 @@ public class RegionMonitorNotifier implements MonitorNotifier {
     @Override
     public void didExitRegion(Region region) {
         String regionId = region.getUniqueId();
-        Set<String> foundRegions = new HashSet<>(sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet()));
+        Set<String> foundRegions =
+                new HashSet<>(
+                        sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet()));
         if (foundRegions.contains(regionId)) {
             foundRegions.remove(regionId);
             sharedPreferences.edit().putStringSet(FOUND_BEACON_LIST, foundRegions).apply();

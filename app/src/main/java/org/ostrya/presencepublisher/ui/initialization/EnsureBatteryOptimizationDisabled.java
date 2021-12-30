@@ -1,5 +1,8 @@
 package org.ostrya.presencepublisher.ui.initialization;
 
+import static android.content.Context.POWER_SERVICE;
+import static android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.Uri;
@@ -18,19 +21,21 @@ import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
 import java.util.Queue;
 
-import static android.content.Context.POWER_SERVICE;
-import static android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
-
 public class EnsureBatteryOptimizationDisabled extends AbstractChainedHandler<String, Boolean> {
-    protected EnsureBatteryOptimizationDisabled(MainActivity activity, Queue<HandlerFactory> handlerChain) {
-        super(activity, new IntentActionContract(
-                context -> Uri.fromParts("package", context.getPackageName(), null)), handlerChain);
+    protected EnsureBatteryOptimizationDisabled(
+            MainActivity activity, Queue<HandlerFactory> handlerChain) {
+        super(
+                activity,
+                new IntentActionContract(
+                        context -> Uri.fromParts("package", context.getPackageName(), null)),
+                handlerChain);
     }
 
     @Override
     protected void doInitialize() {
         PowerManager powerManager = (PowerManager) activity.getSystemService(POWER_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && powerManager != null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && powerManager != null
                 && !powerManager.isIgnoringBatteryOptimizations(activity.getPackageName())) {
             HyperLog.i(TAG, "Battery optimization not yet disabled, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
@@ -38,8 +43,11 @@ public class EnsureBatteryOptimizationDisabled extends AbstractChainedHandler<St
             // this app should fall under "task automation app" in
             // https://developer.android.com/training/monitoring-device-state/doze-standby.html#whitelisting-cases
             @SuppressLint("BatteryLife")
-            ConfirmationDialogFragment fragment = ConfirmationDialogFragment.getInstance(this::onResult,
-                    R.string.battery_optimization_dialog_title, R.string.battery_optimization_dialog_message);
+            ConfirmationDialogFragment fragment =
+                    ConfirmationDialogFragment.getInstance(
+                            this::onResult,
+                            R.string.battery_optimization_dialog_title,
+                            R.string.battery_optimization_dialog_message);
             fragment.show(fm, null);
         } else {
             finishInitialization();

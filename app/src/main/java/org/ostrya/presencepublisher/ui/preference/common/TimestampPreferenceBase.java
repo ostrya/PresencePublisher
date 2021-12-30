@@ -1,7 +1,9 @@
 package org.ostrya.presencepublisher.ui.preference.common;
 
 import android.content.Context;
+
 import androidx.preference.Preference;
+
 import org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider;
 
 public class TimestampPreferenceBase extends Preference {

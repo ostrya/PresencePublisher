@@ -3,8 +3,10 @@ package org.ostrya.presencepublisher.log;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.hypertrack.hyperlog.HyperLog;
 
 import java.util.Objects;
@@ -12,12 +14,12 @@ import java.util.Objects;
 public class LogUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
     private static final String TAG = "LogUncaughtExceptionHandler";
 
-    @NonNull
-    private final Context context;
-    @Nullable
-    private final Thread.UncaughtExceptionHandler originalHandler;
+    @NonNull private final Context context;
+    @Nullable private final Thread.UncaughtExceptionHandler originalHandler;
 
-    public LogUncaughtExceptionHandler(@NonNull final Context context, @Nullable Thread.UncaughtExceptionHandler originalHandler) {
+    public LogUncaughtExceptionHandler(
+            @NonNull final Context context,
+            @Nullable Thread.UncaughtExceptionHandler originalHandler) {
         this.context = Objects.requireNonNull(context);
         this.originalHandler = originalHandler;
     }

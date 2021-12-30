@@ -1,14 +1,22 @@
 package org.ostrya.presencepublisher.ui.preference.condition;
 
+import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
+
+import static org.ostrya.presencepublisher.ui.dialog.BeaconScanDialogFragment.getInstance;
+import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.os.Build;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.beacon.PresenceBeacon;
 import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
@@ -17,24 +25,27 @@ import org.ostrya.presencepublisher.ui.preference.common.ClickDummy;
 
 import java.util.Collections;
 
-import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
-import static org.ostrya.presencepublisher.ui.dialog.BeaconScanDialogFragment.getInstance;
-import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
-
 public class AddBeaconChoicePreferenceDummy extends ClickDummy {
     private static final String TAG = "AddBeaconChoicePreferenceDummy";
 
     private final ActivityResultLauncher<String> intentLauncher;
 
-    public AddBeaconChoicePreferenceDummy(Context context, Fragment fragment, ActivityResultLauncher<String> intentLauncher) {
-        super(context, android.R.drawable.ic_menu_add, R.string.add_beacon_title, R.string.add_beacon_summary, fragment);
+    public AddBeaconChoicePreferenceDummy(
+            Context context, Fragment fragment, ActivityResultLauncher<String> intentLauncher) {
+        super(
+                context,
+                android.R.drawable.ic_menu_add,
+                R.string.add_beacon_title,
+                R.string.add_beacon_summary,
+                fragment);
         this.intentLauncher = intentLauncher;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onClick() {
-        BluetoothManager bluetoothManager = (BluetoothManager) getContext().getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothManager bluetoothManager =
+                (BluetoothManager) getContext().getSystemService(Context.BLUETOOTH_SERVICE);
         if (bluetoothManager == null) {
             HyperLog.w(TAG, "Unable to get bluetooth manager");
         } else {
@@ -44,8 +55,11 @@ public class AddBeaconChoicePreferenceDummy extends ClickDummy {
                 return;
             }
         }
-        BeaconScanDialogFragment instance = getInstance(getContext(), this::onScanResult,
-                getSharedPreferences().getStringSet(BEACON_LIST, Collections.emptySet()));
+        BeaconScanDialogFragment instance =
+                getInstance(
+                        getContext(),
+                        this::onScanResult,
+                        getSharedPreferences().getStringSet(BEACON_LIST, Collections.emptySet()));
         instance.show(getParentFragmentManager(), null);
     }
 

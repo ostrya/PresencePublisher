@@ -1,17 +1,19 @@
 package org.ostrya.presencepublisher.message;
 
+import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.SSID_LIST;
+import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.WIFI_CONTENT_PREFIX;
+import static org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference.PRESENCE_TOPIC;
+
 import android.content.Context;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.ostrya.presencepublisher.message.wifi.SsidUtil;
 import org.ostrya.presencepublisher.ui.preference.condition.WifiNetworkPreference;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.SSID_LIST;
-import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.WIFI_CONTENT_PREFIX;
-import static org.ostrya.presencepublisher.ui.preference.schedule.PresenceTopicPreference.PRESENCE_TOPIC;
 
 public class WifiMessageProvider extends AbstractMessageProvider {
     private static final String TAG = "WifiMessageProvider";
@@ -25,7 +27,11 @@ public class WifiMessageProvider extends AbstractMessageProvider {
         String ssid = getSsidIfMatching();
         if (ssid != null) {
             HyperLog.i(TAG, "Scheduling message for SSID " + ssid);
-            String onlineContent = getSharedPreferences().getString(WIFI_CONTENT_PREFIX + ssid, WifiNetworkPreference.DEFAULT_CONTENT_ONLINE);
+            String onlineContent =
+                    getSharedPreferences()
+                            .getString(
+                                    WIFI_CONTENT_PREFIX + ssid,
+                                    WifiNetworkPreference.DEFAULT_CONTENT_ONLINE);
             return Collections.singletonList(onlineContent);
         }
         return Collections.emptyList();
@@ -38,12 +44,19 @@ public class WifiMessageProvider extends AbstractMessageProvider {
             HyperLog.i(TAG, "No SSID found");
             return null;
         }
-        Set<String> targetSsids = getSharedPreferences().getStringSet(SSID_LIST, Collections.emptySet());
+        Set<String> targetSsids =
+                getSharedPreferences().getStringSet(SSID_LIST, Collections.emptySet());
         if (targetSsids.contains(ssid)) {
             HyperLog.d(TAG, "Correct network found");
             return ssid;
         } else {
-            HyperLog.i(TAG, "'" + ssid + "' does not match any desired network '" + targetSsids + "', skipping.");
+            HyperLog.i(
+                    TAG,
+                    "'"
+                            + ssid
+                            + "' does not match any desired network '"
+                            + targetSsids
+                            + "', skipping.");
             return null;
         }
     }

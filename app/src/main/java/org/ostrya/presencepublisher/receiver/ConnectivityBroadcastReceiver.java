@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
 import com.hypertrack.hyperlog.HyperLog;
+
 import org.ostrya.presencepublisher.PresencePublisher;
 import org.ostrya.presencepublisher.schedule.Scheduler;
 
@@ -17,7 +19,8 @@ public class ConnectivityBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
-            NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+            NetworkInfo networkInfo =
+                    intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
             if (networkInfo != null && networkInfo.isConnected()) {
                 HyperLog.i(TAG, "Reacting to network change");
                 new Scheduler(context).scheduleNow();

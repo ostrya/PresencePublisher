@@ -3,10 +3,12 @@ package org.ostrya.presencepublisher.ui.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
 import org.ostrya.presencepublisher.R;
 
 public class ConfirmationDialogFragment extends DialogFragment {
@@ -17,7 +19,8 @@ public class ConfirmationDialogFragment extends DialogFragment {
     private int confirmId = R.string.dialog_ok;
     private int cancelId = R.string.dialog_cancel;
 
-    public static ConfirmationDialogFragment getInstance(final Callback callback, int titleId, int messageId) {
+    public static ConfirmationDialogFragment getInstance(
+            final Callback callback, int titleId, int messageId) {
         ConfirmationDialogFragment fragment = new ConfirmationDialogFragment();
         fragment.setCallback(callback);
         fragment.setTitleId(titleId);
@@ -25,7 +28,8 @@ public class ConfirmationDialogFragment extends DialogFragment {
         return fragment;
     }
 
-    public static ConfirmationDialogFragment getInstance(final Callback callback, int titleId, String message) {
+    public static ConfirmationDialogFragment getInstance(
+            final Callback callback, int titleId, String message) {
         ConfirmationDialogFragment fragment = new ConfirmationDialogFragment();
         fragment.setCallback(callback);
         fragment.setTitleId(titleId);

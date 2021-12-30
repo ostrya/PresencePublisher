@@ -4,16 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.hypertrack.hyperlog.HyperLog;
 
 public class IntentActionContract extends ActivityResultContract<String, Boolean> {
     private static final String TAG = "IntentActionContract";
     private final UriFactory uriFactory;
-    @Nullable
-    private String action = null;
+    @Nullable private String action = null;
 
     public IntentActionContract() {
         this.uriFactory = context -> null;
