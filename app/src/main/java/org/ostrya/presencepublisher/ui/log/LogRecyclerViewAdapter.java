@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.ui;
+package org.ostrya.presencepublisher.ui.log;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,28 +10,25 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hypertrack.hyperlog.DeviceLogModel;
-
 import org.ostrya.presencepublisher.R;
 
 public class LogRecyclerViewAdapter
-        extends ListAdapter<DeviceLogModel, LogRecyclerViewAdapter.ViewHolder> {
-    private static final DiffUtil.ItemCallback<DeviceLogModel> CALLBACK =
-            new DiffUtil.ItemCallback<DeviceLogModel>() {
+        extends ListAdapter<LogItem, LogRecyclerViewAdapter.ViewHolder> {
+    private static final DiffUtil.ItemCallback<LogItem> CALLBACK =
+            new DiffUtil.ItemCallback<LogItem>() {
                 @Override
-                public boolean areItemsTheSame(
-                        @NonNull DeviceLogModel oldItem, @NonNull DeviceLogModel newItem) {
+                public boolean areItemsTheSame(@NonNull LogItem oldItem, @NonNull LogItem newItem) {
                     return oldItem.getId() == newItem.getId();
                 }
 
                 @Override
                 public boolean areContentsTheSame(
-                        @NonNull DeviceLogModel oldItem, @NonNull DeviceLogModel newItem) {
-                    return oldItem.getDeviceLog().equals(newItem.getDeviceLog());
+                        @NonNull LogItem oldItem, @NonNull LogItem newItem) {
+                    return oldItem.getLine().equals(newItem.getLine());
                 }
             };
 
-    LogRecyclerViewAdapter() {
+    public LogRecyclerViewAdapter() {
         super(CALLBACK);
     }
 
@@ -46,8 +43,8 @@ public class LogRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        DeviceLogModel item = getItem(position);
-        holder.contentView.setText(item.getDeviceLog());
+        LogItem item = getItem(position);
+        holder.contentView.setText(item.getLine());
     }
 
     static final class ViewHolder extends RecyclerView.ViewHolder {

@@ -12,9 +12,8 @@ import android.content.SharedPreferences;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.PresencePublisher;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.preference.condition.BeaconPreference;
 import org.ostrya.presencepublisher.ui.preference.condition.OfflineContentPreference;
 import org.ostrya.presencepublisher.ui.preference.condition.WifiNetworkPreference;
@@ -40,10 +39,10 @@ public class ConditionContentProvider {
 
         // add beacons
         if (applicationContext.supportsBeacons()) {
-            HyperLog.i(TAG, "Checking found beacons");
+            DatabaseLogger.i(TAG, "Checking found beacons");
             for (String beaconId :
                     sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet())) {
-                HyperLog.i(TAG, "Adding content for beacon " + beaconId);
+                DatabaseLogger.i(TAG, "Adding content for beacon " + beaconId);
                 String content =
                         sharedPreferences.getString(
                                 BEACON_CONTENT_PREFIX + beaconId,
@@ -55,7 +54,7 @@ public class ConditionContentProvider {
         // add SSID
         String ssid = getSsidIfMatching(currentSsid);
         if (ssid != null) {
-            HyperLog.i(TAG, "Adding content for SSID " + ssid);
+            DatabaseLogger.i(TAG, "Adding content for SSID " + ssid);
             String onlineContent =
                     sharedPreferences.getString(
                             WIFI_CONTENT_PREFIX + ssid,
@@ -65,7 +64,7 @@ public class ConditionContentProvider {
 
         // add offline message
         if (contents.isEmpty() && sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)) {
-            HyperLog.i(TAG, "Scheduling offline message");
+            DatabaseLogger.i(TAG, "Scheduling offline message");
             String offlineContent =
                     sharedPreferences.getString(
                             OfflineContentPreference.OFFLINE_CONTENT,
@@ -77,17 +76,17 @@ public class ConditionContentProvider {
     }
 
     private String getSsidIfMatching(String currentSsid) {
-        HyperLog.i(TAG, "Checking SSID");
+        DatabaseLogger.i(TAG, "Checking SSID");
         if (currentSsid == null) {
-            HyperLog.i(TAG, "No SSID found");
+            DatabaseLogger.i(TAG, "No SSID found");
             return null;
         }
         Set<String> targetSsids = sharedPreferences.getStringSet(SSID_LIST, Collections.emptySet());
         if (targetSsids.contains(currentSsid)) {
-            HyperLog.d(TAG, "Correct network found");
+            DatabaseLogger.d(TAG, "Correct network found");
             return currentSsid;
         } else {
-            HyperLog.i(
+            DatabaseLogger.i(
                     TAG,
                     "'"
                             + currentSsid

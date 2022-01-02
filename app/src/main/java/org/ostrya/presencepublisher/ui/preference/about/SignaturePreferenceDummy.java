@@ -7,9 +7,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Build;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.preference.common.StringDummy;
 
 import java.io.ByteArrayInputStream;
@@ -44,7 +43,7 @@ public class SignaturePreferenceDummy extends StringDummy {
                 signatures = getLegacySignatures(context);
             }
             if (signatures == null) {
-                HyperLog.i(TAG, "No signing info found");
+                DatabaseLogger.i(TAG, "No signing info found");
                 return context.getString(R.string.value_undefined);
             }
             boolean moreThanOne = false;
@@ -59,7 +58,7 @@ public class SignaturePreferenceDummy extends StringDummy {
             }
             return sb.toString();
         } catch (PackageManager.NameNotFoundException e) {
-            HyperLog.w(TAG, "Unable to find this package", e);
+            DatabaseLogger.w(TAG, "Unable to find this package", e);
             return context.getString(R.string.value_undefined);
         }
     }
@@ -83,7 +82,7 @@ public class SignaturePreferenceDummy extends StringDummy {
                                             new ByteArrayInputStream(signature.toByteArray()));
             return cert.toString();
         } catch (CertificateException e) {
-            HyperLog.w(TAG, "Unable to instantiate X.509 certificate factory", e);
+            DatabaseLogger.w(TAG, "Unable to instantiate X.509 certificate factory", e);
             return defaultValue;
         }
     }

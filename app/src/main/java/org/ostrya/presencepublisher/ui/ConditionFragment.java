@@ -13,10 +13,9 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.PresencePublisher;
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.contract.IntentActionContract;
 import org.ostrya.presencepublisher.ui.preference.common.MyPreferenceCategory;
 import org.ostrya.presencepublisher.ui.preference.common.StringDummy;
@@ -93,9 +92,9 @@ public class ConditionFragment extends AbstractConfigurationFragment {
     }
 
     private void onActivityResult(boolean result) {
-        HyperLog.d(TAG, "Received result " + result);
+        DatabaseLogger.d(TAG, "Received result " + result);
         if (result && beaconSupport != null) {
-            HyperLog.i(TAG, "Start scanning after enabling bluetooth");
+            DatabaseLogger.i(TAG, "Start scanning after enabling bluetooth");
             beaconSupport.clickAdd();
         }
     }

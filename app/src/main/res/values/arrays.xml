@@ -26,4 +26,9 @@
         <item><b>currentTimestamp</b>: The timestamp when this message was generated in seconds since 1970–01–01.</item>
         <item><b>nextScheduledTimestamp</b>: The timestamp when the next message is scheduled in seconds since 1970–01–01.</item>
     </string-array>
+    <string-array name="log_type_descriptions">
+        <item>Sent messages</item>
+        <item>Detected conditions</item>
+        <item>Developer log</item>
+    </string-array>
 </resources>

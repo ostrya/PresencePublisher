@@ -3,9 +3,8 @@ package org.ostrya.presencepublisher.message;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -195,7 +194,7 @@ public enum MessageFormat {
         try {
             return MessageFormat.valueOf(rawValue);
         } catch (IllegalArgumentException e) {
-            HyperLog.w(
+            DatabaseLogger.w(
                     TAG,
                     "Invalid setting '"
                             + rawValue

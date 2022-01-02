@@ -7,8 +7,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import java.util.Objects;
 
 public class LogUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
@@ -27,7 +25,7 @@ public class LogUncaughtExceptionHandler implements Thread.UncaughtExceptionHand
     @Override
     public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
         final String message = t + " crashed due to " + Log.getStackTraceString(e);
-        HyperLog.e(TAG, message);
+        DatabaseLogger.e(TAG, message);
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, message);

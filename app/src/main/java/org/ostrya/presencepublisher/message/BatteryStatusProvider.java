@@ -9,7 +9,7 @@ import android.os.BatteryManager;
 
 import androidx.annotation.Nullable;
 
-import com.hypertrack.hyperlog.HyperLog;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 public class BatteryStatusProvider {
     private static final String TAG = "BatteryStatusProvider";
@@ -21,7 +21,7 @@ public class BatteryStatusProvider {
     public BatteryStatusProvider(Context applicationContext) {
         Intent batteryStatusIntent = getBatteryStatusIntent(applicationContext);
         if (batteryStatusIntent == null) {
-            HyperLog.w(TAG, "No battery status received, returning fallback value");
+            DatabaseLogger.w(TAG, "No battery status received, returning fallback value");
             batteryStatus = UNKNOWN;
             batteryLevelPercentage = -1;
             plugStatus = UNKNOWN;
@@ -30,7 +30,7 @@ public class BatteryStatusProvider {
             int scale = batteryStatusIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
             if (level == -1 || scale == -1) {
-                HyperLog.w(TAG, "Invalid level " + level + " or scale " + scale);
+                DatabaseLogger.w(TAG, "Invalid level " + level + " or scale " + scale);
                 batteryLevelPercentage = -1;
             } else {
                 batteryLevelPercentage = (int) (level / (0.01f * scale));
@@ -77,7 +77,7 @@ public class BatteryStatusProvider {
 
     @Nullable
     private static Intent getBatteryStatusIntent(Context context) {
-        HyperLog.i(TAG, "Retrieving battery value");
+        DatabaseLogger.i(TAG, "Retrieving battery value");
         IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         return context.registerReceiver(null, filter);
     }

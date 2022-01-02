@@ -17,12 +17,11 @@ import android.provider.Settings;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.message.Message;
 import org.ostrya.presencepublisher.security.SecurePreferencesHelper;
 
@@ -46,7 +45,7 @@ public class MqttService {
     }
 
     public void sendTestMessage() throws MqttException {
-        HyperLog.i(TAG, "Sending test message to server");
+        DatabaseLogger.i(TAG, "Sending test message to server");
         boolean tls = sharedPreferences.getBoolean(USE_TLS, false);
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERTIFICATE, null);
         String login = sharedPreferences.getString(USERNAME, "");
@@ -69,11 +68,11 @@ public class MqttService {
             mqttClient.publish(topic, TEST_PAYLOAD, 1, false);
             mqttClient.disconnect(5);
         }
-        HyperLog.i(TAG, "Sending messages was successful");
+        DatabaseLogger.i(TAG, "Sending messages was successful");
     }
 
     public void sendMessages(List<Message> messages) throws MqttException {
-        HyperLog.i(TAG, "Sending " + messages.size() + " messages to server");
+        DatabaseLogger.i(TAG, "Sending " + messages.size() + " messages to server");
         boolean tls = sharedPreferences.getBoolean(USE_TLS, false);
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERTIFICATE, null);
         String login = sharedPreferences.getString(USERNAME, "");
@@ -97,12 +96,13 @@ public class MqttService {
             for (Message message : messages) {
                 mqttClient.publish(
                         message.getTopic(), message.getContent().getBytes("UTF-8"), qos, retain);
+                DatabaseLogger.logMessage(message);
             }
             mqttClient.disconnect(5);
         } catch (UnsupportedEncodingException e) {
-            HyperLog.e(TAG, "Unable to find UTF-8 encoding", e);
+            DatabaseLogger.e(TAG, "Unable to find UTF-8 encoding", e);
         }
-        HyperLog.i(TAG, "Sending messages was successful");
+        DatabaseLogger.i(TAG, "Sending messages was successful");
     }
 
     private String getMqttUrl(boolean tls) {
@@ -118,7 +118,7 @@ public class MqttService {
             try {
                 return Integer.parseInt(stringValue);
             } catch (NumberFormatException e) {
-                HyperLog.w(TAG, "Unable to parse QoS value " + stringValue);
+                DatabaseLogger.w(TAG, "Unable to parse QoS value " + stringValue);
             }
         }
         return DEFAULT_VALUE;

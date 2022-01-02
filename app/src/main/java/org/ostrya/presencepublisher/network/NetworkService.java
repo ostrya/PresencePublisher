@@ -17,7 +17,7 @@ import android.os.Build;
 
 import androidx.annotation.Nullable;
 
-import com.hypertrack.hyperlog.HyperLog;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +40,7 @@ public class NetworkService {
 
     public boolean sendMessageViaCurrentConnection() {
         if (connectivityManager == null) {
-            HyperLog.e(TAG, "Connectivity Manager not found");
+            DatabaseLogger.e(TAG, "Connectivity Manager not found");
             return false;
         }
         //noinspection deprecation
@@ -92,13 +92,13 @@ public class NetworkService {
         String ssid = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             if (wifiManager == null) {
-                HyperLog.e(TAG, "No wifi manager");
+                DatabaseLogger.e(TAG, "No wifi manager");
             } else {
                 ssid = normalizeSsid(wifiManager.getConnectionInfo().getSSID());
             }
         } else {
             if (connectivityManager == null) {
-                HyperLog.e(TAG, "Connectivity Manager not found");
+                DatabaseLogger.e(TAG, "Connectivity Manager not found");
             } else {
                 //noinspection deprecation
                 NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -108,7 +108,11 @@ public class NetworkService {
                 }
             }
         }
-        return "<unknown ssid>".equals(ssid) ? null : ssid;
+        if ("<unknown ssid>".equals(ssid)) {
+            return null;
+        }
+        DatabaseLogger.logDetection("Detected SSID: " + ssid);
+        return ssid;
     }
 
     public List<String> getKnownSsids() {
@@ -124,7 +128,7 @@ public class NetworkService {
             }
         }
         if (ssids.isEmpty()) {
-            HyperLog.w(TAG, "No known networks found");
+            DatabaseLogger.w(TAG, "No known networks found");
             String currentSsid = getCurrentSsid();
             if (currentSsid != null) {
                 ssids.add(currentSsid);
@@ -136,13 +140,13 @@ public class NetworkService {
     @SuppressWarnings("deprecation")
     private List<WifiConfiguration> getConfiguredNetworks() {
         if (wifiManager == null) {
-            HyperLog.w(TAG, "Unable to get WifiManager");
+            DatabaseLogger.w(TAG, "Unable to get WifiManager");
             return Collections.emptyList();
         }
         try {
             return wifiManager.getConfiguredNetworks();
         } catch (SecurityException e) {
-            HyperLog.w(
+            DatabaseLogger.w(
                     TAG,
                     "Not allowed to get configured networks. As ACCESS_FINE_LOCATION was only added"
                             + " as required in Android Q, this should never happen");

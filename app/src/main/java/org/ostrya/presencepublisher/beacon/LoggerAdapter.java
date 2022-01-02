@@ -1,50 +1,49 @@
 package org.ostrya.presencepublisher.beacon;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.altbeacon.beacon.logging.Logger;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
-public class HyperlogLogger implements Logger {
+public class LoggerAdapter implements Logger {
     private static final String BEACON_TAG_PREFIX = "altbeacon/";
 
     public void v(String tag, String message, Object... args) {
-        HyperLog.v(BEACON_TAG_PREFIX + tag, formatString(message, args));
+        DatabaseLogger.v(BEACON_TAG_PREFIX + tag, formatString(message, args));
     }
 
     public void v(Throwable t, String tag, String message, Object... args) {
-        HyperLog.v(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
+        DatabaseLogger.v(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
     }
 
     public void d(String tag, String message, Object... args) {
-        HyperLog.d(BEACON_TAG_PREFIX + tag, formatString(message, args));
+        DatabaseLogger.d(BEACON_TAG_PREFIX + tag, formatString(message, args));
     }
 
     public void d(Throwable t, String tag, String message, Object... args) {
-        HyperLog.d(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
+        DatabaseLogger.d(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
     }
 
     public void i(String tag, String message, Object... args) {
-        HyperLog.i(BEACON_TAG_PREFIX + tag, formatString(message, args));
+        DatabaseLogger.i(BEACON_TAG_PREFIX + tag, formatString(message, args));
     }
 
     public void i(Throwable t, String tag, String message, Object... args) {
-        HyperLog.i(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
+        DatabaseLogger.i(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
     }
 
     public void w(String tag, String message, Object... args) {
-        HyperLog.w(BEACON_TAG_PREFIX + tag, formatString(message, args));
+        DatabaseLogger.w(BEACON_TAG_PREFIX + tag, formatString(message, args));
     }
 
     public void w(Throwable t, String tag, String message, Object... args) {
-        HyperLog.w(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
+        DatabaseLogger.w(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
     }
 
     public void e(String tag, String message, Object... args) {
-        HyperLog.e(BEACON_TAG_PREFIX + tag, formatString(message, args));
+        DatabaseLogger.e(BEACON_TAG_PREFIX + tag, formatString(message, args));
     }
 
     public void e(Throwable t, String tag, String message, Object... args) {
-        HyperLog.e(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
+        DatabaseLogger.e(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
     }
 
     private String formatString(String message, Object... args) {

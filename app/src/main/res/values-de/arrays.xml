@@ -21,4 +21,9 @@
         <item><b>currentTimestamp</b>: Der Zeitstempel in Sekunden seit dem 1. 1. 1970, zu dem diese Nachricht generiert worden ist.</item>
         <item><b>nextScheduledTimestamp</b>: Der Zeitstempel in Sekunden seit dem 1. 1. 1970, für den die nächste Nachricht geplant ist.</item>
     </string-array>
+    <string-array name="log_type_descriptions">
+        <item>Gesendete Nachrichten</item>
+        <item>Erkannte Bedingungen</item>
+        <item>Entwicklerlog</item>
+    </string-array>
 </resources>

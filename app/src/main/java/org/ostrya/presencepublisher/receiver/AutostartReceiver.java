@@ -9,8 +9,7 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.schedule.Scheduler;
 
 public class AutostartReceiver extends BroadcastReceiver {
@@ -24,7 +23,7 @@ public class AutostartReceiver extends BroadcastReceiver {
         if ((Intent.ACTION_BOOT_COMPLETED.equals(action)
                         || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action))
                 && sharedPreferences.getBoolean(AUTOSTART, false)) {
-            HyperLog.i(TAG, "Auto-start app");
+            DatabaseLogger.i(TAG, "Auto-start app");
             new Scheduler(context).scheduleNow();
         }
     }

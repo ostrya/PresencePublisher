@@ -17,14 +17,13 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.beacon.PresenceBeacon;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 import java.util.Collection;
 import java.util.Set;
@@ -71,7 +70,7 @@ public class BeaconScanDialogFragment extends DialogFragment {
         recyclerView.setHasFixedSize(false);
         recyclerView.setItemAnimator(null);
 
-        HyperLog.i(TAG, "Starting to scan for beacons");
+        DatabaseLogger.i(TAG, "Starting to scan for beacons");
         beaconManager.addRangeNotifier(scanCallback);
         beaconManager.startRangingBeacons(region);
 
@@ -131,15 +130,15 @@ public class BeaconScanDialogFragment extends DialogFragment {
     private class ScanCallback implements RangeNotifier {
         @Override
         public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-            HyperLog.v(TAG, "Got callback from beacon scan for region " + region);
+            DatabaseLogger.v(TAG, "Got callback from beacon scan for region " + region);
             for (Beacon beacon : beacons) {
                 if (beacon != null
                         && beacon.getBluetoothAddress() != null
                         && beacon.getParserIdentifier() != null) {
-                    HyperLog.d(TAG, "Found beacon " + beacon);
+                    DatabaseLogger.d(TAG, "Found beacon " + beacon);
                     adapter.addBeacon(new PresenceBeacon(beacon));
                 } else {
-                    HyperLog.w(TAG, "Beacon " + beacon + " is incomplete");
+                    DatabaseLogger.w(TAG, "Beacon " + beacon + " is incomplete");
                 }
             }
         }

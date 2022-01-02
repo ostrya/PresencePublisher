@@ -14,9 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 public class EditTextDialog extends DialogFragment {
     private static final String TAG = "EditTextDialog";
@@ -54,7 +53,7 @@ public class EditTextDialog extends DialogFragment {
                             if (editText != null) {
                                 callback.accept(editText.getText().toString());
                             } else {
-                                HyperLog.e(TAG, "Unable to find edit text field");
+                                DatabaseLogger.e(TAG, "Unable to find edit text field");
                             }
                         })
                 .setNegativeButton(R.string.dialog_cancel, null);

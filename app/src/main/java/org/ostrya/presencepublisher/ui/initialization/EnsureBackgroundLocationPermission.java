@@ -13,10 +13,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
 import java.util.Queue;
@@ -34,7 +33,8 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
                 && ContextCompat.checkSelfPermission(
                                 activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
-            HyperLog.i(TAG, "Background location permission not yet granted, asking user ...");
+            DatabaseLogger.i(
+                    TAG, "Background location permission not yet granted, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 
             CharSequence optionName;
@@ -72,7 +72,7 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
                     .apply();
             getLauncher().launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
         } else {
-            HyperLog.i(getName(), "User did not give consent. Stopping any further actions.");
+            DatabaseLogger.i(getName(), "User did not give consent. Stopping any further actions.");
             PreferenceManager.getDefaultSharedPreferences(parent)
                     .edit()
                     .putBoolean(LOCATION_CONSENT, false)
@@ -84,10 +84,10 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
     @Override
     protected void doHandleResult(Boolean result) {
         if (result) {
-            HyperLog.i(TAG, "Successfully granted background location permission");
+            DatabaseLogger.i(TAG, "Successfully granted background location permission");
             finishInitialization();
         } else {
-            HyperLog.w(TAG, "Background location not granted, stopping initialization");
+            DatabaseLogger.w(TAG, "Background location not granted, stopping initialization");
         }
     }
 

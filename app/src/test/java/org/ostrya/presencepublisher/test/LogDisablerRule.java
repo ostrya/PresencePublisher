@@ -2,17 +2,16 @@ package org.ostrya.presencepublisher.test;
 
 import static org.mockito.Mockito.mockStatic;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.junit.rules.ExternalResource;
 import org.mockito.MockedStatic;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 public class LogDisablerRule extends ExternalResource {
-    private MockedStatic<HyperLog> staticLogMock;
+    private MockedStatic<DatabaseLogger> staticLogMock;
 
     @Override
     protected void before() {
-        staticLogMock = mockStatic(HyperLog.class);
+        staticLogMock = mockStatic(DatabaseLogger.class);
     }
 
     @Override

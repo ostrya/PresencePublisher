@@ -9,7 +9,7 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.hypertrack.hyperlog.HyperLog;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 public class IntentActionContract extends ActivityResultContract<String, Boolean> {
     private static final String TAG = "IntentActionContract";
@@ -33,7 +33,7 @@ public class IntentActionContract extends ActivityResultContract<String, Boolean
 
     @Override
     public Boolean parseResult(int resultCode, @Nullable Intent intent) {
-        HyperLog.d(TAG, "Received result code " + resultCode + " for action " + action);
+        DatabaseLogger.d(TAG, "Received result code " + resultCode + " for action " + action);
         return resultCode == Activity.RESULT_OK;
     }
 
