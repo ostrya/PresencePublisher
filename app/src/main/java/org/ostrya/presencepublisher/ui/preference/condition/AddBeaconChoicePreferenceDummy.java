@@ -15,11 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.beacon.PresenceBeacon;
 import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.dialog.BeaconScanDialogFragment;
 import org.ostrya.presencepublisher.ui.preference.common.ClickDummy;
 
@@ -47,7 +46,7 @@ public class AddBeaconChoicePreferenceDummy extends ClickDummy {
         BluetoothManager bluetoothManager =
                 (BluetoothManager) getContext().getSystemService(Context.BLUETOOTH_SERVICE);
         if (bluetoothManager == null) {
-            HyperLog.w(TAG, "Unable to get bluetooth manager");
+            DatabaseLogger.w(TAG, "Unable to get bluetooth manager");
         } else {
             BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
             if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {

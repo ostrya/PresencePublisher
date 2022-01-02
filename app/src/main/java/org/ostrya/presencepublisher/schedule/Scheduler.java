@@ -37,8 +37,7 @@ import android.os.Build;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.receiver.AlarmReceiver;
 import org.ostrya.presencepublisher.receiver.ConnectivityBroadcastReceiver;
 import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
@@ -139,11 +138,11 @@ public class Scheduler {
         // registered
         // in the manifest no longer gets any broadcasts
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            HyperLog.d(TAG, "Register network callback");
+            DatabaseLogger.d(TAG, "Register network callback");
             ConnectivityManager connectivityManager =
                     applicationContext.getSystemService(ConnectivityManager.class);
             if (connectivityManager == null) {
-                HyperLog.w(
+                DatabaseLogger.w(
                         TAG,
                         "Unable to get connectivity manager, re-scheduling even when disconnected");
                 scheduleNext(isCharging);
@@ -187,15 +186,16 @@ public class Scheduler {
 
     private long scheduleFor(long nextSchedule, boolean ignoreBattery) {
         if (!sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
-            HyperLog.w(TAG, "Location consent not given, will not schedule anything.");
+            DatabaseLogger.w(TAG, "Location consent not given, will not schedule anything.");
             return -1;
         }
         if (alarmManager == null) {
-            HyperLog.e(TAG, "Unable to get alarm manager, cannot schedule!");
+            DatabaseLogger.e(TAG, "Unable to get alarm manager, cannot schedule!");
             return -2;
         }
         alarmManager.cancel(pendingAlarmIntent);
-        HyperLog.i(TAG, "Next run at " + getFormattedTimestamp(applicationContext, nextSchedule));
+        DatabaseLogger.i(
+                TAG, "Next run at " + getFormattedTimestamp(applicationContext, nextSchedule));
         sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
         NotificationManagerCompat.from(applicationContext)
                 .notify(

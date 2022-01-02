@@ -7,7 +7,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 
-import com.hypertrack.hyperlog.HyperLog;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 import java.util.Locale;
 
@@ -25,18 +25,18 @@ public class LocationProvider {
 
     public String getLastKnownLocation() {
         if (locationManager == null) {
-            HyperLog.w(TAG, "No location manager available, unable to get location");
+            DatabaseLogger.w(TAG, "No location manager available, unable to get location");
             return UNKNOWN;
         }
         // according to Javadoc, this will give us the provider with best accuracy
         String provider = locationManager.getBestProvider(NO_CRITERIA, true);
         if (provider == null) {
-            HyperLog.w(TAG, "Unable to get location provider");
+            DatabaseLogger.w(TAG, "Unable to get location provider");
             return UNKNOWN;
         }
         Location location = locationManager.getLastKnownLocation(provider);
         if (location == null) {
-            HyperLog.w(TAG, "No last known location found");
+            DatabaseLogger.w(TAG, "No last known location found");
             return UNKNOWN;
         }
         return String.format(

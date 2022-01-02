@@ -35,8 +35,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.hypertrack.hyperlog.HyperLog;
 
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.schedule.Scheduler;
 import org.ostrya.presencepublisher.ui.MainPagerAdapter;
 import org.ostrya.presencepublisher.ui.initialization.InitializationHandler;
@@ -54,7 +54,7 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        HyperLog.d(TAG, "Creating activity");
+        DatabaseLogger.d(TAG, "Creating activity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -133,22 +133,22 @@ public class MainActivity extends FragmentActivity {
                         || key.startsWith(MESSAGE_CONFIG_PREFIX)) {
                     onChangedConnectionProperty(key);
                 } else {
-                    HyperLog.d(TAG, "Ignoring unexpected value " + key);
+                    DatabaseLogger.d(TAG, "Ignoring unexpected value " + key);
                 }
         }
     }
 
     private void onChangedConnectionProperty(String key) {
-        HyperLog.i(TAG, "Changed parameter " + key);
+        DatabaseLogger.i(TAG, "Changed parameter " + key);
         new Scheduler(this).scheduleNow();
     }
 
     private void handleConsentChange() {
         if (sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
-            HyperLog.i(TAG, "User consented to location access, initializing.");
+            DatabaseLogger.i(TAG, "User consented to location access, initializing.");
             handler.initialize();
         } else {
-            HyperLog.i(TAG, "User revoked location access consent, stopping schedule.");
+            DatabaseLogger.i(TAG, "User revoked location access consent, stopping schedule.");
             new Scheduler(this).stopSchedule();
         }
     }

@@ -81,8 +81,6 @@
     <string name="condition_help_summary">Für jede erfüllte Bedingung kann ein Nachrichteninhalt definiert werden. Tippe, um den Inhalt für eine Bedingung zu ändern. Berühre länger, um einen Eintrag zu löschen.</string>
     <string name="tab_log_title">Log</string>
     <string name="button_export">Exportieren</string>
-    <string name="toast_no_logs">Keine Logs vorhanden</string>
-    <string name="button_reload">Neu laden</string>
     <string name="button_clear">Löschen</string>
     <string name="tab_about_title">Über</string>
     <string name="battery_optimization_dialog_title">Akku-Optimierung</string>
@@ -101,6 +99,7 @@
     <string name="message_charging_schedule_title">Ladesendeperiode</string>
     <string name="message_charging_schedule_summary">Sendeperiode, wenn das Gerät geladen wird.\nBei Wert = 0 wird die normale Periode benutzt.</string>
     <string name="toast_logs_stored" formatted="true">Gespeichert nach \'%s\'</string>
+    <string name="toast_logs_not_stored">Fehler beim Exportieren des Logs</string>
     <string name="value_network_reconnect">Warte auf Netzwerkverbindung …</string>
     <string name="bundled_licenses_title">Lizenzen eingebundener Komponenten</string>
     <string name="bundled_licenses_summary">Tippe hier, um Lizenzen der eingebundenen Komponenten zu sehen.</string>
@@ -131,4 +130,5 @@
     <string name="message_format_help_summary">Für weitere Details über die verschiedenen Nachrichtenformate bitte hier klicken.</string>
     <string name="message_format_help_title">Nachrichtenformatdetails</string>
     <string name="message_format_help_intro">Angenommen, du hast eine Nachricht konfiguriert, die <b>conditionContent</b>, <b>connectedWifi</b> und <b>batteryLevel</b> enthält, du hast einen Batteriestand von 35 Prozent, bist mit einem WLAN mit SSID \"myWiFi\" verbunden und du erfüllst gerade zwei Bedingungen mit Inhalt \"contentA\" und \"contentB\", dann werden abhängig vom gewählten Format folgende Nachrichtentexte versandt:</string>
+    <string name="log_type_label">Logtyp</string>
 </resources>

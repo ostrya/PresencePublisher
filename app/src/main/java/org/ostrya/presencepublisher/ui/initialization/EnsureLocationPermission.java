@@ -11,10 +11,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
 import java.util.Queue;
@@ -34,7 +33,7 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String, Boo
                         // confirmed once
                         || !PreferenceManager.getDefaultSharedPreferences(activity)
                                 .getBoolean(LOCATION_CONSENT, false))) {
-            HyperLog.i(TAG, "Location permission / consent not yet granted, asking user ...");
+            DatabaseLogger.i(TAG, "Location permission / consent not yet granted, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 
             ConfirmationDialogFragment fragment =
@@ -66,7 +65,7 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String, Boo
                 getLauncher().launch(Manifest.permission.ACCESS_FINE_LOCATION);
             }
         } else {
-            HyperLog.i(getName(), "User did not give consent. Stopping any further actions.");
+            DatabaseLogger.i(getName(), "User did not give consent. Stopping any further actions.");
             PreferenceManager.getDefaultSharedPreferences(parent)
                     .edit()
                     .putBoolean(LOCATION_CONSENT, false)
@@ -78,10 +77,10 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String, Boo
     @Override
     protected void doHandleResult(Boolean result) {
         if (result != null && result) {
-            HyperLog.i(TAG, "Successfully granted location permission");
+            DatabaseLogger.i(TAG, "Successfully granted location permission");
             finishInitialization();
         } else {
-            HyperLog.w(TAG, "Location not granted, stopping initialization");
+            DatabaseLogger.w(TAG, "Location not granted, stopping initialization");
         }
     }
 

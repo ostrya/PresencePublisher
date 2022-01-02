@@ -6,8 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.hypertrack.hyperlog.HyperLog;
-
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.mqtt.Publisher;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -18,7 +17,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (ALARM_ACTION.equals(action)) {
-            HyperLog.i(TAG, "Alarm broadcast received");
+            DatabaseLogger.i(TAG, "Alarm broadcast received");
             PendingResult pendingResult = goAsync();
             new Thread(() -> publish(context, pendingResult)).start();
         }

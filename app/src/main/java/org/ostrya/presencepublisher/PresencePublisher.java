@@ -13,16 +13,14 @@ import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.distance.ModelSpecificDistanceCalculator;
 import org.altbeacon.beacon.logging.LogManager;
-import org.ostrya.presencepublisher.beacon.HyperlogLogger;
+import org.ostrya.presencepublisher.beacon.LoggerAdapter;
 import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
-import org.ostrya.presencepublisher.log.CustomLogFormat;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
 import org.ostrya.presencepublisher.message.MessageItem;
 import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
@@ -57,11 +55,10 @@ public class PresencePublisher extends android.app.Application {
     }
 
     private void initLogger() {
-        HyperLog.initialize(this, new CustomLogFormat(this));
         if (BuildConfig.DEBUG) {
-            HyperLog.setLogLevel(Log.VERBOSE);
+            DatabaseLogger.initialize(this, Log.VERBOSE);
         } else {
-            HyperLog.setLogLevel(Log.INFO);
+            DatabaseLogger.initialize(this, Log.INFO);
         }
         Thread.setDefaultUncaughtExceptionHandler(
                 new LogUncaughtExceptionHandler(this, Thread.getDefaultUncaughtExceptionHandler()));
@@ -69,7 +66,7 @@ public class PresencePublisher extends android.app.Application {
 
     private void initBeaconManager() {
         if (supportsBeacons()) {
-            LogManager.setLogger(new HyperlogLogger());
+            LogManager.setLogger(new LoggerAdapter());
             LogManager.setVerboseLoggingEnabled(BuildConfig.DEBUG);
             Beacon.setHardwareEqualityEnforced(true);
             Beacon.setDistanceCalculator(
@@ -89,10 +86,11 @@ public class PresencePublisher extends android.app.Application {
             Set<String> beacons =
                     sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet());
             if (!beacons.isEmpty()) {
-                HyperLog.i(TAG, "Enabling beacon scanning for " + beacons);
+                DatabaseLogger.i(TAG, "Enabling beacon scanning for " + beacons);
                 PresenceBeaconManager.getInstance().initialize(this);
             } else {
-                HyperLog.i(TAG, "No beacons configured, not enabling background beacon scanning");
+                DatabaseLogger.i(
+                        TAG, "No beacons configured, not enabling background beacon scanning");
             }
         }
     }

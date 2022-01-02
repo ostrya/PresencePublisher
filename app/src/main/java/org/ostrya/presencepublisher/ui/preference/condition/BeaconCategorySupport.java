@@ -9,9 +9,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.preference.common.AbstractDynamicPreferenceCategorySupport;
 import org.ostrya.presencepublisher.ui.preference.common.StringDummy;
 import org.ostrya.presencepublisher.ui.util.AbstractConfigurationFragment;
@@ -54,7 +53,7 @@ public class BeaconCategorySupport extends AbstractDynamicPreferenceCategorySupp
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             return new BeaconPreference(context, key, title, fragment);
         } else {
-            HyperLog.w(
+            DatabaseLogger.w(
                     TAG,
                     "Should never happen: tried to create beacon entries on incompatible devices!");
             return new StringDummy(context, R.string.no_bluetooth_explanation);

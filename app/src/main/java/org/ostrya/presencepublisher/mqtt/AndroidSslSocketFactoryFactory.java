@@ -5,7 +5,7 @@ import android.security.KeyChain;
 
 import androidx.annotation.Nullable;
 
-import com.hypertrack.hyperlog.HyperLog;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -38,7 +38,7 @@ class AndroidSslSocketFactoryFactory {
                     TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             KeyStore androidCAStore = KeyStore.getInstance("AndroidCAStore");
             if (androidCAStore == null) {
-                HyperLog.w(TAG, "Unable to load CA keystore");
+                DatabaseLogger.w(TAG, "Unable to load CA keystore");
                 return null;
             }
             androidCAStore.load(null);
@@ -54,7 +54,7 @@ class AndroidSslSocketFactoryFactory {
                 | KeyManagementException
                 | CertificateException
                 | IOException e) {
-            HyperLog.w(TAG, "Unable to get socket factory", e);
+            DatabaseLogger.w(TAG, "Unable to get socket factory", e);
             return null;
         }
     }
@@ -74,7 +74,7 @@ class AndroidSslSocketFactoryFactory {
             keyManagerFactory.init(customKeyStore, pwdArray);
             return keyManagerFactory.getKeyManagers();
         } catch (Exception e) {
-            HyperLog.w(TAG, "Unable to initialize client key store", e);
+            DatabaseLogger.w(TAG, "Unable to initialize client key store", e);
             return null;
         }
     }

@@ -12,10 +12,9 @@ import android.os.PowerManager;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.contract.IntentActionContract;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
@@ -37,7 +36,7 @@ public class EnsureBatteryOptimizationDisabled extends AbstractChainedHandler<St
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                 && powerManager != null
                 && !powerManager.isIgnoringBatteryOptimizations(activity.getPackageName())) {
-            HyperLog.i(TAG, "Battery optimization not yet disabled, asking user ...");
+            DatabaseLogger.i(TAG, "Battery optimization not yet disabled, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 
             // this app should fall under "task automation app" in
@@ -65,10 +64,10 @@ public class EnsureBatteryOptimizationDisabled extends AbstractChainedHandler<St
     @Override
     protected void doHandleResult(Boolean result) {
         if (result) {
-            HyperLog.i(TAG, "Battery optimization has successfully been disabled");
+            DatabaseLogger.i(TAG, "Battery optimization has successfully been disabled");
             finishInitialization();
         } else {
-            HyperLog.w(TAG, "User has cancelled disabling battery optimization");
+            DatabaseLogger.w(TAG, "User has cancelled disabling battery optimization");
         }
     }
 

@@ -13,8 +13,7 @@ import androidx.annotation.VisibleForTesting;
 import androidx.core.util.Supplier;
 import androidx.preference.PreferenceManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.message.BatteryStatusProvider;
 import org.ostrya.presencepublisher.message.ConditionContentProvider;
 import org.ostrya.presencepublisher.message.LocationProvider;
@@ -73,7 +72,7 @@ public class Publisher {
     public void publish() {
         BatteryStatusProvider batteryStatusProvider = batteryStatusProviderSupplier.get();
         if (!networkService.sendMessageViaCurrentConnection()) {
-            HyperLog.i(TAG, "Not connected to valid network, waiting for re-connect");
+            DatabaseLogger.i(TAG, "Not connected to valid network, waiting for re-connect");
             scheduler.waitForNetworkReconnect(batteryStatusProvider.isCharging());
             return;
         }
@@ -92,17 +91,17 @@ public class Publisher {
                 doSend(messages, messageContext.getCurrentTimestamp());
             }
         } catch (RuntimeException e) {
-            HyperLog.w(TAG, "Error while getting messages to send", e);
+            DatabaseLogger.w(TAG, "Error while getting messages to send", e);
         }
     }
 
     private void doSend(List<Message> messages, long currentTimestamp) {
-        HyperLog.d(TAG, "Sending messages");
+        DatabaseLogger.d(TAG, "Sending messages");
         try {
             mqttService.sendMessages(messages);
             sharedPreferences.edit().putLong(LAST_SUCCESS, currentTimestamp).apply();
         } catch (Exception e) {
-            HyperLog.w(TAG, "Error while sending messages", e);
+            DatabaseLogger.w(TAG, "Error while sending messages", e);
         }
     }
 
@@ -119,7 +118,7 @@ public class Publisher {
                             sharedPreferences.getString(
                                     MESSAGE_CONFIG_PREFIX + messageConfigName, null));
             if (messageConfiguration == null) {
-                HyperLog.w(
+                DatabaseLogger.w(
                         TAG,
                         "No valid message configuration for config '" + messageConfigName + "'");
             } else {

@@ -8,10 +8,9 @@ import android.location.LocationManager;
 
 import androidx.fragment.app.FragmentManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.contract.IntentActionContract;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
@@ -32,7 +31,7 @@ public class EnsureLocationServiceEnabled extends AbstractChainedHandler<String,
                         || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                                 || locationManager.isProviderEnabled(
                                         LocationManager.NETWORK_PROVIDER)))) {
-            HyperLog.i(TAG, "Location service not yet enabled, asking user ...");
+            DatabaseLogger.i(TAG, "Location service not yet enabled, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 
             ConfirmationDialogFragment fragment =
@@ -55,10 +54,10 @@ public class EnsureLocationServiceEnabled extends AbstractChainedHandler<String,
     @Override
     protected void doHandleResult(Boolean result) {
         if (result) {
-            HyperLog.i(TAG, "Location service has successfully been started");
+            DatabaseLogger.i(TAG, "Location service has successfully been started");
             finishInitialization();
         } else {
-            HyperLog.w(TAG, "User has cancelled starting location service");
+            DatabaseLogger.w(TAG, "User has cancelled starting location service");
         }
     }
 

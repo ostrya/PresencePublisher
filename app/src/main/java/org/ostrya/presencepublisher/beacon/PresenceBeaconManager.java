@@ -12,10 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.preference.PreferenceManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Region;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +56,7 @@ public final class PresenceBeaconManager {
         List<Region> scanRegions = new ArrayList<>(beaconList.size());
         for (String beaconId : beaconList) {
             String address = PresenceBeacon.beaconIdToAddress(beaconId);
-            HyperLog.d(TAG, "Registering scan region for beacon " + beaconId);
+            DatabaseLogger.d(TAG, "Registering scan region for beacon " + beaconId);
             scanRegions.add(new Region(beaconId, address));
         }
         return scanRegions;
@@ -73,10 +72,10 @@ public final class PresenceBeaconManager {
         storedBeacons.add(beaconId);
         sharedPreferences.edit().putStringSet(BEACON_LIST, storedBeacons).apply();
 
-        HyperLog.d(TAG, "Add scanning for beacon " + beaconId);
+        DatabaseLogger.d(TAG, "Add scanning for beacon " + beaconId);
         Region region = new Region(beaconId, beacon.getAddress());
         if (beaconManager == null) {
-            HyperLog.d(TAG, "Start scanning for beacons");
+            DatabaseLogger.d(TAG, "Start scanning for beacons");
             beaconManager = BeaconManager.getInstanceForApplication(applicationContext);
             RegionMonitorNotifier monitorNotifier = new RegionMonitorNotifier(sharedPreferences);
             beaconManager.addMonitorNotifier(monitorNotifier);
@@ -101,12 +100,12 @@ public final class PresenceBeaconManager {
                 .putStringSet(FOUND_BEACON_LIST, foundBeacons)
                 .apply();
 
-        HyperLog.d(TAG, "Remove scanning for beacon " + beaconId);
+        DatabaseLogger.d(TAG, "Remove scanning for beacon " + beaconId);
         Region region = new Region(beaconId, PresenceBeacon.beaconIdToAddress(beaconId));
         if (beaconManager != null) {
             beaconManager.stopMonitoring(region);
             if (storedBeacons.isEmpty()) {
-                HyperLog.i(TAG, "Disable scanning for beacons");
+                DatabaseLogger.i(TAG, "Disable scanning for beacons");
                 beaconManager.removeAllMonitorNotifiers();
                 beaconManager.shutdownIfIdle();
                 beaconManager = null;

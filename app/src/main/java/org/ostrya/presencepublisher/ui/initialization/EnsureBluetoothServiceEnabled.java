@@ -10,10 +10,9 @@ import android.os.Build;
 
 import androidx.fragment.app.FragmentManager;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.contract.IntentActionContract;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
@@ -34,12 +33,12 @@ public class EnsureBluetoothServiceEnabled extends AbstractChainedHandler<String
             BluetoothManager bluetoothManager =
                     (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
             if (bluetoothManager == null) {
-                HyperLog.w(
+                DatabaseLogger.w(
                         TAG, "Unable to get bluetooth manager, continuing initialization anyway");
             } else {
                 BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
                 if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
-                    HyperLog.d(TAG, "Bluetooth service not yet enabled, asking user ...");
+                    DatabaseLogger.d(TAG, "Bluetooth service not yet enabled, asking user ...");
                     FragmentManager fm = activity.getSupportFragmentManager();
 
                     ConfirmationDialogFragment fragment =
@@ -64,10 +63,10 @@ public class EnsureBluetoothServiceEnabled extends AbstractChainedHandler<String
     @Override
     protected void doHandleResult(Boolean result) {
         if (result) {
-            HyperLog.i(TAG, "Bluetooth service has successfully been started");
+            DatabaseLogger.i(TAG, "Bluetooth service has successfully been started");
             finishInitialization();
         } else {
-            HyperLog.w(TAG, "User has cancelled starting bluetooth service");
+            DatabaseLogger.w(TAG, "User has cancelled starting bluetooth service");
         }
     }
 

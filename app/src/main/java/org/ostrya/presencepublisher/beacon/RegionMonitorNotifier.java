@@ -2,10 +2,9 @@ package org.ostrya.presencepublisher.beacon;
 
 import android.content.SharedPreferences;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -27,8 +26,8 @@ public class RegionMonitorNotifier implements MonitorNotifier {
                 new HashSet<>(
                         sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet()));
         if (!foundRegions.contains(regionId)) {
-
-            HyperLog.i(TAG, "Found ");
+            DatabaseLogger.i(TAG, "Found " + regionId);
+            DatabaseLogger.logDetection("Found beacon: " + regionId);
             foundRegions.add(regionId);
             sharedPreferences.edit().putStringSet(FOUND_BEACON_LIST, foundRegions).apply();
         }
@@ -42,6 +41,8 @@ public class RegionMonitorNotifier implements MonitorNotifier {
                         sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet()));
         if (foundRegions.contains(regionId)) {
             foundRegions.remove(regionId);
+            DatabaseLogger.i(TAG, "Lost " + regionId);
+            DatabaseLogger.logDetection("Lost beacon: " + regionId);
             sharedPreferences.edit().putStringSet(FOUND_BEACON_LIST, foundRegions).apply();
         }
     }

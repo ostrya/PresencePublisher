@@ -4,9 +4,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.Nullable;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.MainActivity;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
+import org.ostrya.presencepublisher.ui.contract.DummyActivityResultLauncher;
 
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -23,7 +23,11 @@ abstract class AbstractChainedHandler<I, O> implements InitializationHandler {
             @Nullable ActivityResultContract<I, O> contract,
             Queue<HandlerFactory> handlerChain) {
         this.activity = activity;
-        this.launcher = this.activity.registerForActivityResult(contract, this::handleResult);
+        if (contract != null) {
+            this.launcher = this.activity.registerForActivityResult(contract, this::handleResult);
+        } else {
+            this.launcher = new DummyActivityResultLauncher<>();
+        }
         HandlerFactory handlerFactory = handlerChain.poll();
         if (handlerFactory != null) {
             this.nextHandler = handlerFactory.create(activity, handlerChain);
@@ -35,10 +39,10 @@ abstract class AbstractChainedHandler<I, O> implements InitializationHandler {
     @Override
     public void initialize() {
         if (inProgress.compareAndSet(false, true)) {
-            HyperLog.i(TAG, "Running initialization for " + getName());
+            DatabaseLogger.i(TAG, "Running initialization for " + getName());
             doInitialize();
         } else {
-            HyperLog.d(TAG, "Skipping initialization, already in progress for " + getName());
+            DatabaseLogger.d(TAG, "Skipping initialization, already in progress for " + getName());
         }
     }
 
@@ -48,7 +52,7 @@ abstract class AbstractChainedHandler<I, O> implements InitializationHandler {
         if (inProgress.get()) {
             doHandleResult(result);
         } else {
-            HyperLog.w(
+            DatabaseLogger.w(
                     TAG, "Skipping result because initialization not in progress for " + getName());
         }
     }

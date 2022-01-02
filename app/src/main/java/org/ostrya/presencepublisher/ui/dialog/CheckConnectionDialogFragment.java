@@ -10,10 +10,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.mqtt.MqttService;
 
 import java.util.concurrent.ExecutorService;
@@ -71,7 +70,7 @@ public class CheckConnectionDialogFragment extends DialogFragment {
                 message =
                         getResources().getString(R.string.dialog_check_connection_summary_success);
             } catch (MqttException | RuntimeException e) {
-                HyperLog.w(TAG, "Error while sending message", e);
+                DatabaseLogger.w(TAG, "Error while sending message", e);
                 message = getErrorString(e);
             }
             final String result = message;

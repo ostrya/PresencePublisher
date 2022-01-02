@@ -16,9 +16,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.hypertrack.hyperlog.HyperLog;
 
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.message.MessageItem;
 import org.ostrya.presencepublisher.ui.preference.messages.MessageConfiguration;
 
@@ -111,12 +111,12 @@ public class EditMessageDialog extends DialogFragment {
                                 }
                                 callback.accept(newName, newValue);
                             } else {
-                                HyperLog.e(TAG, "Unable to find edit text fields");
+                                DatabaseLogger.e(TAG, "Unable to find edit text fields");
                             }
                         })
                 .setNegativeButton(R.string.dialog_cancel, null)
                 .setMultiChoiceItems(
-                        MessageItem.settingsDescriptions(),
+                        MessageItem.settingDescriptions(),
                         selectedItems,
                         (dialog, which, isChecked) -> {
                             // it looks like the selectedItems array is directly manipulated in the

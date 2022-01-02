@@ -6,9 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
-import com.hypertrack.hyperlog.HyperLog;
-
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 public enum MessageItem {
     CONDITION_CONTENT {
@@ -99,7 +98,7 @@ public enum MessageItem {
 
     /**
      * Note: the values returned here must match with the descriptions given in {@link
-     * #settingsDescriptions()}
+     * #settingDescriptions()}
      */
     public static MessageItem[] settingValues() {
         return new MessageItem[] {
@@ -120,7 +119,7 @@ public enum MessageItem {
         return name;
     }
 
-    public static int settingsDescriptions() {
+    public static int settingDescriptions() {
         return R.array.message_item_descriptions;
     }
 
@@ -129,7 +128,7 @@ public enum MessageItem {
         try {
             return MessageItem.valueOf(rawValue);
         } catch (IllegalArgumentException e) {
-            HyperLog.w(
+            DatabaseLogger.w(
                     TAG,
                     "Invalid setting '"
                             + rawValue

@@ -84,10 +84,8 @@
     <string name="offline_content_title">Absence message</string>
     <string name="condition_help_summary">For each fulfilled condition, a message content can be defined. Click to edit the content to be sent for a condition. Long-click to delete an entry.</string>
     <string name="tab_log_title">Log</string>
-    <string name="button_reload">Reload</string>
     <string name="button_clear">Clear</string>
     <string name="button_export">Export</string>
-    <string name="toast_no_logs">No logs available</string>
     <string name="tab_about_title">About</string>
     <string name="add_network_title">Add network</string>
     <string name="add_network_summary">Click here to add a new network</string>
@@ -101,6 +99,7 @@
     <string name="no_bluetooth_explanation">Your device does not support Bluetooth beacons</string>
     <string name="dialog_scan_beacons_title">Beacons in range</string>
     <string name="toast_logs_stored" formatted="true">Stored to \'%s\'</string>
+    <string name="toast_logs_not_stored">Error while exporting log</string>
     <string name="value_network_reconnect">Waiting for network re-connect …</string>
     <string name="bundled_licenses_title">Bundled components\' licenses</string>
     <string name="bundled_licenses_summary">Click here to view licenses of bundled components.</string>
@@ -133,4 +132,5 @@
     <string name="message_format_help_summary">For more details concerning the different message formats, click here.</string>
     <string name="message_format_help_title">Message format details</string>
     <string name="message_format_help_intro">Assuming you have configured a message containing <b>conditionContent</b>, <b>connectedWifi</b> and <b>batteryLevel</b>, you have a battery level of 35 percent, you are connected to a WiFi with SSID \"myWiFi\" and you are fulfilling two conditions with content \"contentA\" and \"contentB\", then the following message strings will be sent depending on the selected format:</string>
+    <string name="log_type_label">Log type</string>
 </resources>

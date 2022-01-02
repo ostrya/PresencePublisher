@@ -9,7 +9,7 @@ import androidx.preference.PreferenceDataStore;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 
-import com.hypertrack.hyperlog.HyperLog;
+import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 public class SecurePreferencesHelper {
     private static final String TAG = "SecurePreferencesHelper";
@@ -51,7 +51,7 @@ public class SecurePreferencesHelper {
                         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
             } catch (Exception e) {
-                HyperLog.w(TAG, "Unable to get secure preferences", e);
+                DatabaseLogger.w(TAG, "Unable to get secure preferences", e);
                 throw new RuntimeException("Unable to get secure preferences");
             }
         } else {
