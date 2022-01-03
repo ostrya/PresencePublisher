@@ -1,3 +1,4 @@
 v2.3.0
 • support for Android 12
 • dynamic message configuration supporting additional values that can be sent
+• improved logging

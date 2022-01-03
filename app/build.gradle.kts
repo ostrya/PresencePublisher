@@ -1,7 +1,5 @@
 import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.diff.DiffFormatter
 import org.eclipse.jgit.revwalk.RevWalk
-import org.eclipse.jgit.treewalk.FileTreeIterator
 import org.eclipse.jgit.treewalk.filter.PathFilter
 
 // license plugin needs google repo, see https://github.com/jaredsburrows/gradle-license-plugin/issues/129
@@ -48,7 +46,7 @@ android {
         minSdkVersion(14)
         targetSdkVersion(31)
         versionCode = 41
-        versionName = "2.2.9"
+        versionName = "2.3.0"
         javaCompileOptions {
             annotationProcessorOptions {
                 argument("room.schemaLocation", "$projectDir/schemas")
