@@ -16,11 +16,13 @@ import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
+import java.util.Map;
 import java.util.Queue;
 
-public class EnsureLocationPermission extends AbstractChainedHandler<String, Boolean> {
+public class EnsureLocationPermission
+        extends AbstractChainedHandler<String[], Map<String, Boolean>> {
     protected EnsureLocationPermission(MainActivity activity, Queue<HandlerFactory> handlerChain) {
-        super(activity, new ActivityResultContracts.RequestPermission(), handlerChain);
+        super(activity, new ActivityResultContracts.RequestMultiplePermissions(), handlerChain);
     }
 
     @Override
@@ -62,7 +64,12 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String, Boo
             if (ContextCompat.checkSelfPermission(
                             activity, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
-                getLauncher().launch(Manifest.permission.ACCESS_FINE_LOCATION);
+                getLauncher()
+                        .launch(
+                                new String[] {
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION
+                                });
             }
         } else {
             DatabaseLogger.i(getName(), "User did not give consent. Stopping any further actions.");
@@ -75,8 +82,9 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String, Boo
     }
 
     @Override
-    protected void doHandleResult(Boolean result) {
-        if (result != null && result) {
+    protected void doHandleResult(Map<String, Boolean> result) {
+        if (result != null
+                && Boolean.TRUE.equals(result.get(Manifest.permission.ACCESS_FINE_LOCATION))) {
             DatabaseLogger.i(TAG, "Successfully granted location permission");
             finishInitialization();
         } else {
