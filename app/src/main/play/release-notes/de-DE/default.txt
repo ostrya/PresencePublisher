@@ -1,3 +1,4 @@
 v2.3.0
 • Unterstützung für Android 12
-• dynamische Konfiguration von Nachrichten inklusive neuer Datenwerte, die gesended werden können
+• dynamische Konfiguration von Nachrichten inklusive neuer Datenwerte, die gesendet werden können
+• verbessertes Logging
