@@ -1,5 +1,8 @@
 import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.diff.DiffFormatter
 import org.eclipse.jgit.revwalk.RevWalk
+import org.eclipse.jgit.treewalk.FileTreeIterator
+import org.eclipse.jgit.treewalk.filter.PathFilter
 
 // license plugin needs google repo, see https://github.com/jaredsburrows/gradle-license-plugin/issues/129
 buildscript {
@@ -114,6 +117,11 @@ afterEvaluate {
         dependsOn(licenseDebugReport)
         doLast {
             if (git.status().addPath("app/src/main/assets/open_source_licenses.html").call().hasUncommittedChanges()) {
+                git.diff()
+                    .setPathFilter(PathFilter.create("app/src/main/assets/open_source_licenses.html"))
+                    .setOutputStream(System.out)
+                    .setShowNameAndStatusOnly(false)
+                    .call()
                 throw InvalidUserDataException("License file has changed, please commit new version first")
             }
         }
