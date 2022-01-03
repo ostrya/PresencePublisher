@@ -1,3 +1,6 @@
+v2.3.1
+• Fix des Google-Releases
+
 v2.3.0
 • Unterstützung für Android 12
 • dynamische Konfiguration von Nachrichten inklusive neuer Datenwerte, die gesendet werden können

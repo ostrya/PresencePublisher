@@ -45,8 +45,8 @@ android {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
         targetSdkVersion(31)
-        versionCode = 41
-        versionName = "2.3.0"
+        versionCode = 42
+        versionName = "2.3.1"
         javaCompileOptions {
             annotationProcessorOptions {
                 argument("room.schemaLocation", "$projectDir/schemas")
