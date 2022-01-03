@@ -1,6 +1,6 @@
 # Datenschutzerklärung
 
-*Inkrafttreten: 13. März 2021*
+*Inkrafttreten: 03. Januar 2022*
 
 Das folgende Dokument beschreibt, wie Presence Publisher deine persönlichen Daten erhebt
 und verarbeitet.
@@ -14,8 +14,10 @@ selbst wenn es nicht ausgeführt wird. Folgende Informationen werden erhoben:
   konfigurierten Netzwerknamen vorkommt.
 * Ob eines der Bluetooth-Beacons, die du konfiguriert hast, sich in der Reichweite
   deines Android-Gerätes befindet.
+* Nur falls du dies explizit konfigurierst: der zuletzt bekannte Standort deines Gerätes sowie
+  der aktuell verbundene WLAN-Name.
 
-Presence Publisher erfasst und verarbeitet niemals deinen GPS-Standort. Auch speichert es
+Presence Publisher speichert niemals deinen GPS-Standort. Auch speichert es
 keine Information über WLAN-Netzwerke und Bluetooth-Beacons die nicht vorher von dir
 konfiguriert worden sind.
 
@@ -43,11 +45,19 @@ Folgende Nachrichten auf Basis deines Standorts können konfiguriert werden:
 Presence Publisher verwendet diese Daten nur, um entsprechende Nachrichten an deinen MQTT-Broker
 zu versenden.
 
+Zusätzlich zu den Nachrichten auf Basis deines Standorts kannst du auch konfigurieren, dass
+direkte Standortinformationen wie dein letzter GPS-Standort und der aktuelle WLAN-Name versendet
+werden. Diese Informationen werden ausschließlich erfasst, um sie in diesen MQTT-Nachrichten zu
+versenden. Sie werden abgesehen vom Logging (siehe nächster Absatz) auf keine andere Weise
+verarbeitet, gespeichert oder weitergegeben.
+
 Zum Zweck der Fehleranalyse führt Presence Publisher ein internes Log. Diese Log enthält:
 
 * die von dir konfigurierten Bluetooth-Beacons und Netzwerknamen
 * Zeiten, in denen du mit einem konfigurierten WLAN-Netzwerk verbunden bist, zusammen mit dessen Namen
 * Zeiten, in denen du in Reichweite zu einem konfigurierten Bluetooth-Beacon bist, zusammen mit seinem Namen
+* Nachrichten, die an deinen MQTT-Broker versendet worden sind. Bitte beachte: Sofern du diese Werte zum Versenden
+  konfiguriert hast, enthält das Log auch den jeweils verbundenen WLAN-Namen sowie den zuletzt bekannten Standort.
 
 Diese Logdaten können in Presence Publisher eingesehen werden. Sie sind jedoch nicht von
 außen zugreifbar. Presence Publisher speichert die Logdaten für 7 Tage. Logeinträge, die älter
