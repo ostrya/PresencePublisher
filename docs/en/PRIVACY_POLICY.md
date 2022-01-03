@@ -1,6 +1,6 @@
 # Privacy policy
 
-*Effective December 31, 2021*
+*Effective January 03, 2022*
 
 The following document describes how Presence Publisher collects and uses your personal
 data.
@@ -47,14 +47,16 @@ MQTT broker.
 
 In addition to these messages which are sent depending on your location, you can also choose
 to send direct location information such as your current Wi-Fi name and your GPS location.
-Note that this information is only collected to be sent in these MQTT messages. It is not
-otherwise processed, stored or passed on.
+This information is only collected to be sent in these MQTT messages. Apart from logging
+(see next paragraph), it is not otherwise processed, stored or passed on.
 
 For debugging purposes, Presence Publisher stores an internal log. This log includes:
 
 * your configured Bluetooth beacons and Wi-Fi network names
 * times when you are connected to a configured Wi-Fi network, together with its name
 * times when you are in range of a configured Bluetooth beacon, together with its name
+* messages which have been sent to your MQTT Broker. Please note: If you configured those values
+  to be sent, the log will also contain the currently connected Wi-Fi name and the last known location.
 
 This log information can be viewed from within Presence Publisher, but is not accessible
 from the outside. Presence Publisher will keep logs for 7 days. It will automatically delete
