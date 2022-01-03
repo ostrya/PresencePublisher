@@ -45,7 +45,7 @@ android {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
         targetSdkVersion(31)
-        versionCode = 42
+        versionCode = 43
         versionName = "2.3.1"
         javaCompileOptions {
             annotationProcessorOptions {
