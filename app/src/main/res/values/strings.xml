@@ -15,7 +15,8 @@
     <string name="message_charging_schedule_title">Charging publish period</string>
     <string name="message_charging_schedule_summary">Publish period while device is charging.\nFor value = 0 the normal schedule is used.</string>
     <string name="location_permission_dialog_title">Location permission</string>
-    <string name="location_permission_dialog_message">Please allow access to your location information while using the app by confirming the next dialog.</string>
+    <string name="location_permission_dialog_message">Please allow access to your precise location information while using the app by confirming the next dialog.</string>
+    <string name="location_permission_dialog_confirm_no_fine_location" formatted="true">You did not allow access to the precise location. Without it, this app cannot access your Wi-Fi name or any Bluetooth tokens and will not send any message. Would you like to reconsider and change the permission settings? You will need to navigate to \'Permissions\' → \'Location\' and enable \'%s\', and starting with Android 12 also \'Use precise location\'.</string>
     <string name="background_location_permission_dialog_title">Background location permission</string>
     <string name="background_location_permission_dialog_message" formatted="true">Please allow access to your location information in the background by selecting option \'%1$s\' in the upcoming dialog.</string>
     <!-- only needed for Android 10, where the BACKGROUND_LOCATION permission is introduced, but the option name is not exposed via PackageManager#getBackgroundPermissionOptionLabel() -->
@@ -64,6 +65,8 @@
     <string name="dialog_check_connection_summary_waiting">Please wait. This may take up to 15 seconds.</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
     <string name="dialog_check_connection_summary_success">Message successfully sent.</string>
     <string name="value_undefined"><![CDATA[<undefined>]]></string>
     <string name="autostart_summary">Should this app start on boot?</string>
