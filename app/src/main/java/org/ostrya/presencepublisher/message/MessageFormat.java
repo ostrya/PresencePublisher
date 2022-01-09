@@ -149,6 +149,13 @@ public enum MessageFormat {
                 sb.append(entry.getName()).append(':').append(' ').append(entry.getValue());
                 continuation = true;
             }
+            for (NumberEntry entry : numberEntries) {
+                if (continuation) {
+                    sb.append('\n');
+                }
+                sb.append(entry.getName()).append(':').append(' ').append(entry.getValue());
+                continuation = true;
+            }
             for (ListEntry entry : listEntries) {
                 if (continuation) {
                     sb.append('\n');
