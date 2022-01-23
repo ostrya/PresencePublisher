@@ -1,6 +1,6 @@
 # Presence Publisher
 
-[![Android CI](https://github.com/ostrya/presencepublisher/workflows/Android%20CI/badge.svg?branch=master)](https://github.com/ostrya/PresencePublisher/actions?query=branch%3Amaster)
+[![Android CI](https://github.com/ostrya/presencepublisher/workflows/Android%20CI/badge.svg?branch=main)](https://github.com/ostrya/PresencePublisher/actions?query=branch%3Amain)
 [![Github release date](https://img.shields.io/github/release-date/ostrya/presencepublisher.svg?logo=github) ![Github release](https://img.shields.io/github/release/ostrya/presencepublisher.svg?logo=github)](https://github.com/ostrya/PresencePublisher/releases)
 [![F-Droid release](https://img.shields.io/f-droid/v/org.ostrya.presencepublisher.svg)](https://f-droid.org/packages/org.ostrya.presencepublisher)
 

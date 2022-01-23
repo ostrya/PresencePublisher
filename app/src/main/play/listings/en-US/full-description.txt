@@ -9,7 +9,7 @@ the app also reacts to changes in the network connection.
 The MQTT client supports anonymous and username / password authentication
 as well as client certificate authentication. For more details on how to
 configure certificate-based authentication, please have a look at
-<a href="https://github.com/ostrya/PresencePublisher/blob/master/README.md">https://github.com/ostrya/PresencePublisher/blob/master/README.md</a>.
+<a href="https://github.com/ostrya/PresencePublisher/blob/main/README.md">https://github.com/ostrya/PresencePublisher/blob/main/README.md</a>.
 
 If you want to know more about how this app processes your location data,
 please have a look at the privacy policy at <a href="https://ostrya.github.io/PresencePublisher/en/PRIVACY_POLICY.html">https://ostrya.github.io/PresencePublisher/en/PRIVACY_POLICY.html</a>.
