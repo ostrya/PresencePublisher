@@ -45,7 +45,7 @@ android {
         applicationId = "org.ostrya.presencepublisher"
         minSdkVersion(14)
         targetSdkVersion(31)
-        versionCode = 43
+        versionCode = 44
         versionName = "2.3.2"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -132,9 +132,9 @@ play {
 }
 
 dependencies {
-    val room_version = "2.4.0"
+    val room_version = "2.4.1"
 
-    implementation("androidx.appcompat:appcompat:1.4.0")
+    implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.preference:preference:1.1.1")
     implementation("androidx.room:room-guava:$room_version")
@@ -142,14 +142,13 @@ dependencies {
     implementation("androidx.security:security-crypto:1.1.0-alpha03")
     implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
     implementation("androidx.work:work-runtime:2.7.1")
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("com.google.android.material:material:1.5.0")
     implementation("com.google.guava:listenablefuture:1.0")
     implementation("org.altbeacon:android-beacon-library:2.19.3")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.assertj:assertj-core:3.21.0")
+    testImplementation("org.assertj:assertj-core:3.22.0")
     testImplementation("org.mockito:mockito-inline:4.2.0")
-    testRuntimeOnly("com.android.volley:volley:1.2.1")
 
     annotationProcessor("androidx.room:room-compiler:$room_version")
 }
