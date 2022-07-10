@@ -44,6 +44,7 @@ android {
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
         minSdk = 14
+        multiDexEnabled = true
         targetSdk = 32
         versionCode = 44
         versionName = "2.3.2"
@@ -136,6 +137,7 @@ dependencies {
 
     implementation("androidx.appcompat:appcompat:1.4.2")
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.preference:preference:1.2.0")
     implementation("androidx.room:room-guava:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")

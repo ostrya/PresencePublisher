@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.multidex.MultiDexApplication;
 import androidx.preference.PreferenceManager;
 
 import org.altbeacon.beacon.Beacon;
@@ -31,7 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class PresencePublisher extends android.app.Application {
+public class PresencePublisher extends MultiDexApplication {
     private static final String TAG = "PresencePublisher";
     public static final int ALARM_PENDING_INTENT_REQUEST_CODE = 1;
     public static final int NOTIFICATION_REQUEST_CODE = 2;
