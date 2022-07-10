@@ -32,6 +32,7 @@ public class BeaconPreference extends AbstractTextPreferenceEntry {
     }
 
     @Override
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public boolean onLongClick(View v) {
         ConfirmationDialogFragment instance =
                 getInstance(
