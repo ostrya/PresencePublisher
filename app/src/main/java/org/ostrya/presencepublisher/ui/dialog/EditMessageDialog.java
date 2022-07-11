@@ -7,8 +7,6 @@ import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditMessageDialog extends DialogFragment {
-    private static final String TAG = "EditTextDialog";
+    private static final String TAG = "EditMessageDialog";
 
     private Callback callback;
     @Nullable private String name;
@@ -74,11 +72,10 @@ public class EditMessageDialog extends DialogFragment {
             editTopic.setText(topic);
         }
 
-        // need to set a custom title layout to show input fields on top of the selection items
-        // see android/platforms/android-30/data/res/layout/alert_dialog_material.xml
-        builder.setCustomTitle(view)
+        builder.setView(view)
+                .setTitle(R.string.edit_message_title_1)
                 .setPositiveButton(
-                        R.string.dialog_ok,
+                        R.string.dialog_next,
                         (dialog, id) -> {
                             if (editName != null && editTopic != null) {
                                 Editable nameText = editName.getText();
@@ -97,39 +94,50 @@ public class EditMessageDialog extends DialogFragment {
                                     newTopic = topicText.toString();
                                 }
 
-                                List<MessageItem> items = new ArrayList<>();
-                                for (int i = 0; i < selectedItems.length; i++) {
-                                    if (selectedItems[i]) {
-                                        items.add(MessageItem.settingValues()[i]);
-                                    }
-                                }
-                                String newValue;
-                                if (newTopic == null) {
-                                    newValue = null;
+                                if (newTopic != null) {
+                                    // As the list of message contents is quite long, it is split
+                                    // to a second selection dialog. This also removes the need for
+                                    // fiddling with the auto-generated dialog not showing the soft
+                                    // keyboard properly.
+                                    showDialogPart2(context, newName, newTopic);
                                 } else {
-                                    newValue = MessageConfiguration.toRawValue(newTopic, items);
+                                    callback.accept(newName, null);
                                 }
-                                callback.accept(newName, newValue);
                             } else {
                                 DatabaseLogger.e(TAG, "Unable to find edit text fields");
                             }
                         })
-                .setNegativeButton(R.string.dialog_cancel, null)
+                .setNegativeButton(R.string.dialog_cancel, null);
+
+        return builder.create();
+    }
+
+    private void showDialogPart2(Context context, String newName, String newTopic) {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.edit_message_title_2)
                 .setMultiChoiceItems(
                         MessageItem.settingDescriptions(),
                         selectedItems,
                         (dialog, which, isChecked) -> {
                             // it looks like the selectedItems array is directly manipulated in the
                             // dialog, so no further action is necessary
-                        });
-        AlertDialog alertDialog = builder.create();
+                        })
+                .setPositiveButton(
+                        R.string.dialog_ok,
+                        (dialog, id) -> {
+                            List<MessageItem> items = new ArrayList<>();
+                            for (int i = 0; i < selectedItems.length; i++) {
+                                if (selectedItems[i]) {
+                                    items.add(MessageItem.settingValues()[i]);
+                                }
+                            }
 
-        Window window = alertDialog.getWindow();
-        if (window != null) {
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-
-        return alertDialog;
+                            String newValue = MessageConfiguration.toRawValue(newTopic, items);
+                            callback.accept(newName, newValue);
+                        })
+                .setNegativeButton(R.string.dialog_cancel, null)
+                .create()
+                .show();
     }
 
     private void setCallback(Callback callback) {

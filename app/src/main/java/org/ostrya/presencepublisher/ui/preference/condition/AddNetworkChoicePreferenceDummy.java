@@ -11,7 +11,7 @@ import androidx.preference.ListPreference;
 
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.network.NetworkService;
-import org.ostrya.presencepublisher.ui.dialog.EditTextDialog;
+import org.ostrya.presencepublisher.ui.dialog.EditNetworkDialog;
 import org.ostrya.presencepublisher.ui.util.RegexValidator;
 import org.ostrya.presencepublisher.ui.util.Validator;
 
@@ -39,8 +39,8 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
         setOnPreferenceChangeListener(
                 (prefs, newValue) -> {
                     if (addNew.equals(newValue)) {
-                        EditTextDialog instance =
-                                EditTextDialog.getInstance(
+                        EditNetworkDialog instance =
+                                EditNetworkDialog.getInstance(
                                         this::onEditText, R.string.add_network_title);
                         instance.show(fragment.getParentFragmentManager(), null);
                     } else {

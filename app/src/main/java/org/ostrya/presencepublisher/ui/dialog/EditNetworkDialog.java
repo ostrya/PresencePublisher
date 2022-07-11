@@ -17,14 +17,14 @@ import androidx.fragment.app.DialogFragment;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 
-public class EditTextDialog extends DialogFragment {
-    private static final String TAG = "EditTextDialog";
+public class EditNetworkDialog extends DialogFragment {
+    private static final String TAG = "EditNetworkDialog";
 
     private Callback callback;
     private int titleId;
 
-    public static EditTextDialog getInstance(final Callback callback, int titleId) {
-        EditTextDialog fragment = new EditTextDialog();
+    public static EditNetworkDialog getInstance(final Callback callback, int titleId) {
+        EditNetworkDialog fragment = new EditNetworkDialog();
         fragment.setCallback(callback);
         fragment.setTitleId(titleId);
         return fragment;
@@ -37,7 +37,7 @@ public class EditTextDialog extends DialogFragment {
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         ViewGroup root = requireActivity().findViewById(android.R.id.content);
-        View view = inflater.inflate(R.layout.dialog_edit_text, root, false);
+        View view = inflater.inflate(R.layout.dialog_edit_network, root, false);
 
         EditText editText = view.findViewById(android.R.id.edit);
         if (editText != null) {
