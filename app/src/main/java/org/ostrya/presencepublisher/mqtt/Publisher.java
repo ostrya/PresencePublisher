@@ -14,6 +14,7 @@ import androidx.core.util.Supplier;
 import androidx.preference.PreferenceManager;
 
 import org.ostrya.presencepublisher.log.DatabaseLogger;
+import org.ostrya.presencepublisher.message.AlarmclockTimestampProvider;
 import org.ostrya.presencepublisher.message.BatteryStatusProvider;
 import org.ostrya.presencepublisher.message.ConditionContentProvider;
 import org.ostrya.presencepublisher.message.LocationProvider;
@@ -32,6 +33,7 @@ import java.util.List;
 public class Publisher {
     private static final String TAG = "Publisher";
 
+    private final AlarmclockTimestampProvider alarmclockTimestampProvider;
     private final Supplier<BatteryStatusProvider> batteryStatusProviderSupplier;
     private final ConditionContentProvider conditionContentProvider;
     private final LocationProvider locationProvider;
@@ -42,6 +44,7 @@ public class Publisher {
 
     public Publisher(Context context) {
         Context applicationContext = context.getApplicationContext();
+        alarmclockTimestampProvider = new AlarmclockTimestampProvider(applicationContext);
         batteryStatusProviderSupplier = () -> new BatteryStatusProvider(applicationContext);
         conditionContentProvider = new ConditionContentProvider(applicationContext);
         locationProvider = new LocationProvider(applicationContext);
@@ -53,6 +56,7 @@ public class Publisher {
 
     @VisibleForTesting
     Publisher(
+            AlarmclockTimestampProvider alarmclockTimestampProvider,
             BatteryStatusProvider batteryStatusProvider,
             ConditionContentProvider conditionContentProvider,
             LocationProvider locationProvider,
@@ -60,6 +64,7 @@ public class Publisher {
             MqttService mqttService,
             NetworkService networkService,
             Scheduler scheduler) {
+        this.alarmclockTimestampProvider = alarmclockTimestampProvider;
         this.batteryStatusProviderSupplier = () -> batteryStatusProvider;
         this.locationProvider = locationProvider;
         this.conditionContentProvider = conditionContentProvider;
@@ -81,6 +86,7 @@ public class Publisher {
             long next = scheduler.scheduleNext(batteryStatusProvider.isCharging());
             MessageContext messageContext =
                     new MessageContext(
+                            alarmclockTimestampProvider,
                             batteryStatusProvider,
                             conditionContentProvider,
                             locationProvider,

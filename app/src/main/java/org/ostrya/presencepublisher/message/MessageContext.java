@@ -6,6 +6,7 @@ public class MessageContext {
 
     public static final String UNKNOWN = "N/A";
 
+    private final AlarmclockTimestampProvider alarmclockTimestampProvider;
     private final BatteryStatusProvider batteryStatusProvider;
     private final ConditionContentProvider conditionContentProvider;
     private final LocationProvider locationProvider;
@@ -14,17 +15,23 @@ public class MessageContext {
     private final long nextTimestamp;
 
     public MessageContext(
+            AlarmclockTimestampProvider alarmclockTimestampProvider,
             BatteryStatusProvider batteryStatusProvider,
             ConditionContentProvider conditionContentProvider,
             LocationProvider locationProvider,
             @Nullable String currentSsid,
             long nextTimestamp) {
+        this.alarmclockTimestampProvider = alarmclockTimestampProvider;
         this.batteryStatusProvider = batteryStatusProvider;
         this.conditionContentProvider = conditionContentProvider;
         this.locationProvider = locationProvider;
         this.currentSsid = currentSsid;
         this.currentTimestamp = System.currentTimeMillis();
         this.nextTimestamp = nextTimestamp;
+    }
+
+    public AlarmclockTimestampProvider getAlarmclockTimestampProvider() {
+        return alarmclockTimestampProvider;
     }
 
     public BatteryStatusProvider getBatteryStatusProvider() {

@@ -67,6 +67,18 @@ public enum MessageItem {
             long nextTimestamp = messageContext.getNextTimestamp();
             builder.withEntry(this, nextTimestamp > 0L ? nextTimestamp / 1000 : nextTimestamp);
         }
+    },
+    NEXT_ALARMCLOCK_TIMESTAMP {
+        @Override
+        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+            long nextAlarmclockTimestamp =
+                    messageContext.getAlarmclockTimestampProvider().getNextAlarmclockTimestamp();
+            builder.withEntry(
+                    this,
+                    nextAlarmclockTimestamp > 0L
+                            ? nextAlarmclockTimestamp / 1000
+                            : nextAlarmclockTimestamp);
+        }
     };
 
     private static final String TAG = "MessageItem";
@@ -109,7 +121,8 @@ public enum MessageItem {
             CONNECTED_WIFI,
             GEO_LOCATION,
             CURRENT_TIMESTAMP,
-            NEXT_SCHEDULED_TIMESTAMP
+            NEXT_SCHEDULED_TIMESTAMP,
+            NEXT_ALARMCLOCK_TIMESTAMP
         };
     }
 

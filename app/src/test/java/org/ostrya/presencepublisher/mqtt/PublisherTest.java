@@ -23,6 +23,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.ostrya.presencepublisher.message.AlarmclockTimestampProvider;
 import org.ostrya.presencepublisher.message.BatteryStatusProvider;
 import org.ostrya.presencepublisher.message.ConditionContentProvider;
 import org.ostrya.presencepublisher.message.LocationProvider;
@@ -45,6 +46,7 @@ public class PublisherTest {
     @Rule public final LogDisablerRule logDisablerRule = new LogDisablerRule();
 
     @Mock private SharedPreferences sharedPreferences;
+    @Mock private AlarmclockTimestampProvider alarmclockTimestampProvider;
     @Mock private BatteryStatusProvider batteryStatusProvider;
     @Mock private ConditionContentProvider conditionContentProvider;
     @Mock private LocationProvider locationProvider;
@@ -61,6 +63,7 @@ public class PublisherTest {
         when(sharedPreferences.getString(MESSAGE_FORMAT_SETTING, null)).thenReturn("PLAINTEXT");
         uut =
                 new Publisher(
+                        alarmclockTimestampProvider,
                         batteryStatusProvider,
                         conditionContentProvider,
                         locationProvider,
