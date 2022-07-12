@@ -53,8 +53,9 @@ public class DatabaseLogger {
         WorkManager.getInstance(applicationContext)
                 .enqueueUniquePeriodicWork(
                         TAG,
-                        ExistingPeriodicWorkPolicy.KEEP,
-                        new PeriodicWorkRequest.Builder(CleanupWorker.class, 1, TimeUnit.DAYS)
+                        ExistingPeriodicWorkPolicy.REPLACE,
+                        new PeriodicWorkRequest.Builder(
+                                        CleanupWorker.class, 1, TimeUnit.DAYS, 1, TimeUnit.HOURS)
                                 .build());
     }
 
