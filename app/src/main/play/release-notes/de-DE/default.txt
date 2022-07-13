@@ -1,10 +1,4 @@
-v2.3.2
-• Bugfix für YAML-Format
-
-v2.3.1
-• Fix des Google-Releases
-
-v2.3.0
-• Unterstützung für Android 12
-• dynamische Konfiguration von Nachrichten inklusive neuer Datenwerte, die gesendet werden können
-• verbessertes Logging
+v2.4.0
+• Bugfix für die Eingabe von Nachrichtentopics
+• Verwendung von WorkManager statt Alarmen, um robuster Nachrichten versenden zu können
+• neuer Nachrichteninhalt: nächste Weckerzeit

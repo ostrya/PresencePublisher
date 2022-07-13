@@ -4,7 +4,7 @@ oder in der Nähe eines Bluetooth-Beacons ist.
 Dies kann zur Integration der Anwesenheit deines Handys in der Heimautomatisierung
 eingesetzt werden.
 
-Die App benutzt den eingebauten Android Alarmdienst, sodass Nachrichten auch dann
+Die App benutzt die AndroidX WorkManager Bibliothek, sodass Nachrichten auch dann
 gesendet werden, wenn sich dein Gerät im Standby befindet. Neben Prüfungen in
 regelmäßigen Abständen reagiert die App auch auf Veränderungen in der Netzwerkverbindung.
 
