@@ -36,7 +36,7 @@ fun getBuildVersionName(): String {
 }
 
 fun isTagged(): Boolean {
-    return getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))
+    return getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+(?:-alpha[0-9]*|-beta[0-9]*)?"))
 }
 
 android {
