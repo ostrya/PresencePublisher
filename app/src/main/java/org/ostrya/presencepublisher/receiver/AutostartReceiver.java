@@ -24,7 +24,7 @@ public class AutostartReceiver extends BroadcastReceiver {
                         || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action))
                 && sharedPreferences.getBoolean(AUTOSTART, false)) {
             DatabaseLogger.i(TAG, "Auto-start app");
-            new Scheduler(context).scheduleNow();
+            new Scheduler(context).startSchedule();
         }
     }
 }

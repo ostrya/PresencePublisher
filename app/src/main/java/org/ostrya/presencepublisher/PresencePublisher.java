@@ -3,6 +3,8 @@ package org.ostrya.presencepublisher;
 import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
 import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
 import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_LIST;
+import static org.ostrya.presencepublisher.ui.preference.schedule.ChargingMessageSchedulePreference.CHARGING_MESSAGE_SCHEDULE;
+import static org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePreference.MESSAGE_SCHEDULE;
 
 import static java.util.Collections.singletonList;
 
@@ -34,12 +36,8 @@ import java.util.Set;
 
 public class PresencePublisher extends MultiDexApplication {
     private static final String TAG = "PresencePublisher";
-    public static final int ALARM_PENDING_INTENT_REQUEST_CODE = 1;
+    public static final int NOTIFICATION_ID = 1;
     public static final int NOTIFICATION_REQUEST_CODE = 2;
-    public static final int NETWORK_PENDING_INTENT_REQUEST_CODE = 3;
-    public static final String ALARM_ACTION = "org.ostrya.presencepublisher.ALARM";
-    public static final String NETWORK_PENDING_INTENT_ACTION =
-            "org.ostrya.presencepublisher.NETWORK_PENDING_INTENT";
 
     // old preferences to be migrated
     private static final String PRESENCE_TOPIC = "topic";
@@ -51,7 +49,7 @@ public class PresencePublisher extends MultiDexApplication {
         super.onCreate();
         initLogger();
         initBeaconManager();
-        NotificationFactory.createNotificationChannel(this);
+        new NotificationFactory(this).createNotificationChannel();
         migrateOldSettings();
     }
 
@@ -120,6 +118,16 @@ public class PresencePublisher extends MultiDexApplication {
                             batteryTopic, singletonList(MessageItem.BATTERY_LEVEL));
             editor.putString(MESSAGE_CONFIG_PREFIX + messageName, value);
             messages.add(messageName);
+        }
+        int chargingMessageSchedule = preference.getInt(CHARGING_MESSAGE_SCHEDULE, 0);
+        if (chargingMessageSchedule > 0 && chargingMessageSchedule < 5) {
+            DatabaseLogger.w(TAG, "Migrating charging schedule to 5 minutes.");
+            editor.putInt(CHARGING_MESSAGE_SCHEDULE, 5);
+        }
+        int messageSchedule = preference.getInt(MESSAGE_SCHEDULE, 15);
+        if (messageSchedule < 5) {
+            DatabaseLogger.w(TAG, "Migrating message schedule to 5 minutes.");
+            editor.putInt(MESSAGE_SCHEDULE, 5);
         }
         editor.putStringSet(MESSAGE_LIST, messages)
                 .remove(PRESENCE_TOPIC)

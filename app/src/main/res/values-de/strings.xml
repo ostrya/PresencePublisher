@@ -103,9 +103,9 @@
     <string name="dialog_scan_beacons_title">Beacons in der Nähe</string>
     <string name="message_charging_schedule_title">Ladesendeperiode</string>
     <string name="message_charging_schedule_summary">Sendeperiode, wenn das Gerät geladen wird.\nBei Wert = 0 wird die normale Periode benutzt.</string>
+    <string name="charging_message_schedule_dialog_text">Die Periode darf nicht unter 5 Minuten gesetzt werden. Auf 5 Minuten setzen?</string>
     <string name="toast_logs_stored" formatted="true">Gespeichert nach \'%s\'</string>
     <string name="toast_logs_not_stored">Fehler beim Exportieren des Logs</string>
-    <string name="value_network_reconnect">Warte auf Netzwerkverbindung …</string>
     <string name="bundled_licenses_title">Lizenzen eingebundener Komponenten</string>
     <string name="bundled_licenses_summary">Tippe hier, um Lizenzen der eingebundenen Komponenten zu sehen.</string>
     <string name="privacy_title">Datenschutzerklärung</string>

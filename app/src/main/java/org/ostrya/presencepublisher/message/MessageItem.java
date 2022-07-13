@@ -13,30 +13,25 @@ public enum MessageItem {
     CONDITION_CONTENT {
         @Override
         public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
-            builder.withEntry(
-                    this,
-                    messageContext
-                            .getConditionContentProvider()
-                            .getConditionContents(messageContext.getCurrentSsid()));
+            builder.withEntry(this, messageContext.getConditionContents());
         }
     },
     BATTERY_LEVEL {
         @Override
         public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
-            builder.withEntry(
-                    this, messageContext.getBatteryStatusProvider().getBatteryLevelPercentage());
+            builder.withEntry(this, messageContext.getBatteryStatus().getBatteryLevelPercentage());
         }
     },
     CHARGING_STATE {
         @Override
         public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
-            builder.withEntry(this, messageContext.getBatteryStatusProvider().getBatteryStatus());
+            builder.withEntry(this, messageContext.getBatteryStatus().getBatteryStatus());
         }
     },
     PLUG_STATE {
         @Override
         public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
-            builder.withEntry(this, messageContext.getBatteryStatusProvider().getPlugStatus());
+            builder.withEntry(this, messageContext.getBatteryStatus().getPlugStatus());
         }
     },
     CONNECTED_WIFI {
@@ -52,7 +47,7 @@ public enum MessageItem {
     GEO_LOCATION {
         @Override
         public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
-            builder.withEntry(this, messageContext.getLocationProvider().getLastKnownLocation());
+            builder.withEntry(this, messageContext.getLastKnownLocation());
         }
     },
     CURRENT_TIMESTAMP {
@@ -64,15 +59,14 @@ public enum MessageItem {
     NEXT_SCHEDULED_TIMESTAMP {
         @Override
         public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
-            long nextTimestamp = messageContext.getNextTimestamp();
+            long nextTimestamp = messageContext.getEstimatedNextTimestamp();
             builder.withEntry(this, nextTimestamp > 0L ? nextTimestamp / 1000 : nextTimestamp);
         }
     },
     NEXT_ALARMCLOCK_TIMESTAMP {
         @Override
         public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
-            long nextAlarmclockTimestamp =
-                    messageContext.getAlarmclockTimestampProvider().getNextAlarmclockTimestamp();
+            long nextAlarmclockTimestamp = messageContext.getNextAlarmclockTimestamp();
             builder.withEntry(
                     this,
                     nextAlarmclockTimestamp > 0L

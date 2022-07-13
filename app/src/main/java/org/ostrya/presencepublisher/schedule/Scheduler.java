@@ -1,175 +1,145 @@
 package org.ostrya.presencepublisher.schedule;
 
-import static android.app.AlarmManager.RTC_WAKEUP;
-import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
-import static android.net.NetworkCapabilities.NET_CAPABILITY_FOREGROUND;
-import static android.net.NetworkCapabilities.NET_CAPABILITY_NOT_SUSPENDED;
-import static android.net.NetworkCapabilities.TRANSPORT_CELLULAR;
-import static android.net.NetworkCapabilities.TRANSPORT_ETHERNET;
-import static android.net.NetworkCapabilities.TRANSPORT_VPN;
-import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
-
-import static org.ostrya.presencepublisher.PresencePublisher.ALARM_ACTION;
-import static org.ostrya.presencepublisher.PresencePublisher.ALARM_PENDING_INTENT_REQUEST_CODE;
-import static org.ostrya.presencepublisher.PresencePublisher.NETWORK_PENDING_INTENT_ACTION;
-import static org.ostrya.presencepublisher.PresencePublisher.NETWORK_PENDING_INTENT_REQUEST_CODE;
+import static org.ostrya.presencepublisher.PresencePublisher.NOTIFICATION_ID;
 import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
 import static org.ostrya.presencepublisher.ui.preference.schedule.ChargingMessageSchedulePreference.CHARGING_MESSAGE_SCHEDULE;
-import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
 import static org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePreference.MESSAGE_SCHEDULE;
-import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
-import static org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider.UNDEFINED;
-import static org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider.WAITING_FOR_RECONNECT;
-import static org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider.getFormattedTimestamp;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkRequest;
-import android.os.Build;
 
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import org.ostrya.presencepublisher.log.DatabaseLogger;
-import org.ostrya.presencepublisher.receiver.AlarmReceiver;
-import org.ostrya.presencepublisher.receiver.ConnectivityBroadcastReceiver;
-import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 public class Scheduler {
     private static final String TAG = "Scheduler";
 
-    private static final int NOTIFICATION_ID = 1;
+    private static final String ID = "PublisherWork";
+    private static final String ID2 = "PublisherWork2";
+    private static final String ID3 = "PublisherWork3";
+    private static final String CID = "ChargingPublisherWork";
+    private static final String CID2 = "ChargingPublisherWork2";
+    private static final String CID3 = "ChargingPublisherWork3";
+
     public static final long NOW_DELAY = 1_000L;
 
     private final Context applicationContext;
     private final SharedPreferences sharedPreferences;
-    private final AlarmManager alarmManager;
-    private final PendingIntent pendingAlarmIntent;
-    private final PendingIntent pendingNetworkIntent;
+    private final WorkManager workManager;
 
     public Scheduler(Context context) {
         applicationContext = context.getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-        alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
-        Intent alarmIntent = new Intent(applicationContext, AlarmReceiver.class);
-        alarmIntent.setAction(ALARM_ACTION);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            pendingAlarmIntent =
-                    PendingIntent.getBroadcast(
-                            applicationContext,
-                            ALARM_PENDING_INTENT_REQUEST_CODE,
-                            alarmIntent,
-                            FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
-        } else {
-            //noinspection UnspecifiedImmutableFlag
-            pendingAlarmIntent =
-                    PendingIntent.getBroadcast(
-                            applicationContext,
-                            ALARM_PENDING_INTENT_REQUEST_CODE,
-                            alarmIntent,
-                            FLAG_UPDATE_CURRENT);
-        }
-        Intent networkIntent = new Intent(applicationContext, ConnectivityBroadcastReceiver.class);
-        networkIntent.setAction(NETWORK_PENDING_INTENT_ACTION);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            pendingNetworkIntent =
-                    PendingIntent.getBroadcast(
-                            applicationContext,
-                            NETWORK_PENDING_INTENT_REQUEST_CODE,
-                            networkIntent,
-                            FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
-        } else {
-            //noinspection UnspecifiedImmutableFlag
-            pendingNetworkIntent =
-                    PendingIntent.getBroadcast(
-                            applicationContext,
-                            NETWORK_PENDING_INTENT_REQUEST_CODE,
-                            networkIntent,
-                            FLAG_UPDATE_CURRENT);
-        }
+        workManager = WorkManager.getInstance(applicationContext);
     }
 
-    public void scheduleNow() {
-        scheduleFor(System.currentTimeMillis() + NOW_DELAY, false);
-    }
-
-    public long scheduleNext(boolean isCharging) {
-        if (isCharging) {
-            int messageScheduleInMinutes = sharedPreferences.getInt(CHARGING_MESSAGE_SCHEDULE, 0);
-            if (messageScheduleInMinutes > 0) {
-                return scheduleFor(
-                        System.currentTimeMillis() + messageScheduleInMinutes * 60_000L, true);
-            }
+    public void startSchedule() {
+        if (!sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
+            DatabaseLogger.w(TAG, "Location consent not given, will not schedule anything.");
+            return;
         }
         int messageScheduleInMinutes = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
-        return scheduleFor(
-                System.currentTimeMillis() + messageScheduleInMinutes * 60_000L,
-                messageScheduleInMinutes < 15);
+        boolean useMobile = useMobile();
+        scheduleWorker(messageScheduleInMinutes, useMobile, false);
+        int chargingScheduleInMinutes = sharedPreferences.getInt(CHARGING_MESSAGE_SCHEDULE, 0);
+        if (chargingScheduleInMinutes > 0) {
+            scheduleWorker(chargingScheduleInMinutes, useMobile, true);
+        }
+    }
+
+    private void scheduleWorker(int scheduleInMinutes, boolean useMobile, boolean chargingOnly) {
+        Constraints.Builder constraintsBuilder = new Constraints.Builder();
+        if (chargingOnly) {
+            constraintsBuilder.setRequiresCharging(true);
+        }
+        if (useMobile) {
+            constraintsBuilder.setRequiredNetworkType(NetworkType.CONNECTED);
+        } else {
+            constraintsBuilder.setRequiredNetworkType(NetworkType.UNMETERED);
+        }
+        Constraints constraints = constraintsBuilder.build();
+        if (scheduleInMinutes >= 15) {
+            workManager.enqueueUniquePeriodicWork(
+                    chargingOnly ? CID : ID,
+                    ExistingPeriodicWorkPolicy.REPLACE,
+                    new PeriodicWorkRequest.Builder(
+                                    PublishingWorker.class, scheduleInMinutes, TimeUnit.MINUTES)
+                            .setConstraints(constraints)
+                            .build());
+        } else if (scheduleInMinutes >= 8) {
+            workManager.enqueueUniquePeriodicWork(
+                    chargingOnly ? CID : ID,
+                    ExistingPeriodicWorkPolicy.REPLACE,
+                    new PeriodicWorkRequest.Builder(
+                                    PublishingWorker.class,
+                                    scheduleInMinutes * 2L,
+                                    TimeUnit.MINUTES)
+                            .setConstraints(constraints)
+                            .build());
+            workManager.enqueueUniquePeriodicWork(
+                    chargingOnly ? CID2 : ID2,
+                    ExistingPeriodicWorkPolicy.REPLACE,
+                    new PeriodicWorkRequest.Builder(
+                                    PublishingWorker.class,
+                                    scheduleInMinutes * 2L,
+                                    TimeUnit.MINUTES)
+                            .setInitialDelay(scheduleInMinutes, TimeUnit.MINUTES)
+                            .setConstraints(constraints)
+                            .build());
+        } else {
+            workManager.enqueueUniquePeriodicWork(
+                    chargingOnly ? CID : ID,
+                    ExistingPeriodicWorkPolicy.REPLACE,
+                    new PeriodicWorkRequest.Builder(
+                                    PublishingWorker.class,
+                                    scheduleInMinutes * 3L,
+                                    TimeUnit.MINUTES)
+                            .setConstraints(constraints)
+                            .build());
+            workManager.enqueueUniquePeriodicWork(
+                    chargingOnly ? CID2 : ID2,
+                    ExistingPeriodicWorkPolicy.REPLACE,
+                    new PeriodicWorkRequest.Builder(
+                                    PublishingWorker.class,
+                                    scheduleInMinutes * 3L,
+                                    TimeUnit.MINUTES)
+                            .setInitialDelay(scheduleInMinutes, TimeUnit.MINUTES)
+                            .setConstraints(constraints)
+                            .build());
+            workManager.enqueueUniquePeriodicWork(
+                    chargingOnly ? CID3 : ID3,
+                    ExistingPeriodicWorkPolicy.REPLACE,
+                    new PeriodicWorkRequest.Builder(
+                                    PublishingWorker.class,
+                                    scheduleInMinutes * 3L,
+                                    TimeUnit.MINUTES)
+                            .setInitialDelay(scheduleInMinutes * 2L, TimeUnit.MINUTES)
+                            .setConstraints(constraints)
+                            .build());
+        }
+        NotificationManagerCompat.from(applicationContext).cancel(NOTIFICATION_ID);
     }
 
     public void stopSchedule() {
-        alarmManager.cancel(pendingAlarmIntent);
-        sharedPreferences.edit().remove(NEXT_SCHEDULE).apply();
-        NotificationManagerCompat.from(applicationContext).cancel(NOTIFICATION_ID);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ConnectivityManager connectivityManager =
-                    applicationContext.getSystemService(ConnectivityManager.class);
-            if (connectivityManager != null) {
-                connectivityManager.unregisterNetworkCallback(pendingNetworkIntent);
-            }
-        }
-    }
-
-    /**
-     * This is the counterpart to the broadcast receiver ConnectivityBroadcastReceiver registered in
-     * the manifest for Android 8+, where most implicit broadcasts are no longer delivered.
-     */
-    public void waitForNetworkReconnect(boolean isCharging) {
-        // for Android 8+, we need to register a callback here, as the ConnectivityBroadcastReceiver
-        // registered
-        // in the manifest no longer gets any broadcasts
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            DatabaseLogger.d(TAG, "Register network callback");
-            ConnectivityManager connectivityManager =
-                    applicationContext.getSystemService(ConnectivityManager.class);
-            if (connectivityManager == null) {
-                DatabaseLogger.w(
-                        TAG,
-                        "Unable to get connectivity manager, re-scheduling even when disconnected");
-                scheduleNext(isCharging);
-                return;
-            }
-            NetworkRequest.Builder requestBuilder =
-                    new NetworkRequest.Builder()
-                            .addTransportType(TRANSPORT_ETHERNET)
-                            .addTransportType(TRANSPORT_VPN)
-                            .addTransportType(TRANSPORT_WIFI);
-            if (useMobile()) {
-                requestBuilder.addTransportType(TRANSPORT_CELLULAR);
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                requestBuilder
-                        .addCapability(NET_CAPABILITY_NOT_SUSPENDED)
-                        .addCapability(NET_CAPABILITY_FOREGROUND);
-            }
-            NetworkRequest networkRequest = requestBuilder.build();
-            connectivityManager.registerNetworkCallback(networkRequest, pendingNetworkIntent);
-        }
-        sharedPreferences.edit().putLong(NEXT_SCHEDULE, WAITING_FOR_RECONNECT).apply();
-        NotificationManagerCompat.from(applicationContext)
-                .notify(
-                        NOTIFICATION_ID,
-                        NotificationFactory.getNotification(
-                                applicationContext, getLastSuccess(), WAITING_FOR_RECONNECT));
+        workManager.cancelUniqueWork(ID);
+        workManager.cancelUniqueWork(ID2);
+        workManager.cancelUniqueWork(ID3);
+        workManager.cancelUniqueWork(CID);
+        workManager.cancelUniqueWork(CID2);
+        workManager.cancelUniqueWork(CID3);
     }
 
     private boolean useMobile() {
@@ -178,44 +148,5 @@ public class Scheduler {
                         || !sharedPreferences
                                 .getStringSet(BEACON_LIST, Collections.emptySet())
                                 .isEmpty());
-    }
-
-    private long getLastSuccess() {
-        return sharedPreferences.getLong(LAST_SUCCESS, UNDEFINED);
-    }
-
-    private long scheduleFor(long nextSchedule, boolean ignoreBattery) {
-        if (!sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
-            DatabaseLogger.w(TAG, "Location consent not given, will not schedule anything.");
-            return -1;
-        }
-        if (alarmManager == null) {
-            DatabaseLogger.e(TAG, "Unable to get alarm manager, cannot schedule!");
-            return -2;
-        }
-        alarmManager.cancel(pendingAlarmIntent);
-        DatabaseLogger.i(
-                TAG, "Next run at " + getFormattedTimestamp(applicationContext, nextSchedule));
-        sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
-        NotificationManagerCompat.from(applicationContext)
-                .notify(
-                        NOTIFICATION_ID,
-                        NotificationFactory.getNotification(
-                                applicationContext, getLastSuccess(), nextSchedule));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ignoreBattery) {
-                // according to the linter (and experimenting with the emulator), we don't seem to
-                // need the permission if we have power exemption
-                //noinspection MissingPermission
-                alarmManager.setAlarmClock(
-                        new AlarmManager.AlarmClockInfo(nextSchedule, pendingAlarmIntent),
-                        pendingAlarmIntent);
-            } else {
-                alarmManager.setAndAllowWhileIdle(RTC_WAKEUP, nextSchedule, pendingAlarmIntent);
-            }
-        } else {
-            alarmManager.set(RTC_WAKEUP, nextSchedule, pendingAlarmIntent);
-        }
-        return nextSchedule;
     }
 }

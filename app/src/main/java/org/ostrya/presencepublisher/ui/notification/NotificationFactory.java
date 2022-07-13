@@ -2,6 +2,7 @@ package org.ostrya.presencepublisher.ui.notification;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
+import static org.ostrya.presencepublisher.PresencePublisher.NOTIFICATION_ID;
 import static org.ostrya.presencepublisher.PresencePublisher.NOTIFICATION_REQUEST_CODE;
 import static org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider.getFormattedTimestamp;
 
@@ -14,40 +15,45 @@ import android.content.Intent;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
 
 public class NotificationFactory {
+    private final Context applicationContext;
+    private final NotificationManagerCompat notificationManager;
 
-    private NotificationFactory() {
-        // private constructor for helper class
+    public NotificationFactory(Context applicationContext) {
+        this.applicationContext = applicationContext;
+        this.notificationManager = NotificationManagerCompat.from(applicationContext);
     }
 
-    public static void createNotificationChannel(Context context) {
+    public void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager =
-                    context.getSystemService(NotificationManager.class);
             if (notificationManager != null) {
                 NotificationChannel channel =
                         new NotificationChannel(
-                                context.getPackageName(),
-                                context.getString(R.string.app_name),
+                                applicationContext.getPackageName(),
+                                applicationContext.getString(R.string.app_name),
                                 NotificationManager.IMPORTANCE_DEFAULT);
                 notificationManager.createNotificationChannel(channel);
             }
         }
     }
 
-    public static Notification getNotification(
-            Context context, long lastSuccess, long nextSchedule) {
-        Intent intent = new Intent(context, MainActivity.class);
+    public void setNotification(long lastSuccess, long nextSchedule) {
+        notificationManager.notify(NOTIFICATION_ID, getNotification(lastSuccess, nextSchedule));
+    }
+
+    private Notification getNotification(long lastSuccess, long nextSchedule) {
+        Intent intent = new Intent(applicationContext, MainActivity.class);
         intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             pendingIntent =
                     PendingIntent.getActivity(
-                            context,
+                            applicationContext,
                             NOTIFICATION_REQUEST_CODE,
                             intent,
                             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
@@ -55,7 +61,7 @@ public class NotificationFactory {
             //noinspection UnspecifiedImmutableFlag
             pendingIntent =
                     PendingIntent.getActivity(
-                            context,
+                            applicationContext,
                             NOTIFICATION_REQUEST_CODE,
                             intent,
                             PendingIntent.FLAG_UPDATE_CURRENT);
@@ -63,16 +69,17 @@ public class NotificationFactory {
 
         Notification notification;
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context, context.getPackageName())
+                new NotificationCompat.Builder(
+                                applicationContext, applicationContext.getPackageName())
                         .setOngoing(true)
                         .setSmallIcon(R.drawable.ic_notification)
-                        .setContentTitle(context.getString(R.string.app_name))
-                        .setContentText(getLastSuccess(context, lastSuccess))
+                        .setContentTitle(applicationContext.getString(R.string.app_name))
+                        .setContentText(getLastSuccess(applicationContext, lastSuccess))
                         .setContentIntent(pendingIntent)
                         .setStyle(
                                 new NotificationCompat.InboxStyle()
-                                        .addLine(getLastSuccess(context, lastSuccess))
-                                        .addLine(getNextSchedule(context, nextSchedule)))
+                                        .addLine(getLastSuccess(applicationContext, lastSuccess))
+                                        .addLine(getNextSchedule(applicationContext, nextSchedule)))
                         .setOnlyAlertOnce(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             notification = builder.setCategory(Notification.CATEGORY_STATUS).build();

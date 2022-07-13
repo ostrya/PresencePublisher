@@ -5,25 +5,21 @@ import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategor
 import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_LIST;
 import static org.ostrya.presencepublisher.ui.preference.messages.MessageFormatPreference.MESSAGE_FORMAT_SETTING;
 import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
+import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.VisibleForTesting;
-import androidx.core.util.Supplier;
 import androidx.preference.PreferenceManager;
 
 import org.ostrya.presencepublisher.log.DatabaseLogger;
-import org.ostrya.presencepublisher.message.AlarmclockTimestampProvider;
-import org.ostrya.presencepublisher.message.BatteryStatusProvider;
-import org.ostrya.presencepublisher.message.ConditionContentProvider;
-import org.ostrya.presencepublisher.message.LocationProvider;
 import org.ostrya.presencepublisher.message.Message;
 import org.ostrya.presencepublisher.message.MessageContext;
+import org.ostrya.presencepublisher.message.MessageContextProvider;
 import org.ostrya.presencepublisher.message.MessageFormat;
 import org.ostrya.presencepublisher.message.MessageItem;
-import org.ostrya.presencepublisher.network.NetworkService;
-import org.ostrya.presencepublisher.schedule.Scheduler;
+import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 import org.ostrya.presencepublisher.ui.preference.messages.MessageConfiguration;
 
 import java.util.ArrayList;
@@ -33,82 +29,53 @@ import java.util.List;
 public class Publisher {
     private static final String TAG = "Publisher";
 
-    private final AlarmclockTimestampProvider alarmclockTimestampProvider;
-    private final Supplier<BatteryStatusProvider> batteryStatusProviderSupplier;
-    private final ConditionContentProvider conditionContentProvider;
-    private final LocationProvider locationProvider;
+    private final MessageContextProvider messageContextProvider;
+    private final NotificationFactory notificationFactory;
     private final SharedPreferences sharedPreferences;
     private final MqttService mqttService;
-    private final NetworkService networkService;
-    private final Scheduler scheduler;
 
     public Publisher(Context context) {
         Context applicationContext = context.getApplicationContext();
-        alarmclockTimestampProvider = new AlarmclockTimestampProvider(applicationContext);
-        batteryStatusProviderSupplier = () -> new BatteryStatusProvider(applicationContext);
-        conditionContentProvider = new ConditionContentProvider(applicationContext);
-        locationProvider = new LocationProvider(applicationContext);
+        messageContextProvider = new MessageContextProvider(applicationContext);
+        notificationFactory = new NotificationFactory(applicationContext);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         mqttService = new MqttService(applicationContext);
-        networkService = new NetworkService(applicationContext, sharedPreferences);
-        scheduler = new Scheduler(applicationContext);
     }
 
     @VisibleForTesting
     Publisher(
-            AlarmclockTimestampProvider alarmclockTimestampProvider,
-            BatteryStatusProvider batteryStatusProvider,
-            ConditionContentProvider conditionContentProvider,
-            LocationProvider locationProvider,
+            MessageContextProvider messageContextProvider,
+            NotificationFactory notificationFactory,
             SharedPreferences sharedPreferences,
-            MqttService mqttService,
-            NetworkService networkService,
-            Scheduler scheduler) {
-        this.alarmclockTimestampProvider = alarmclockTimestampProvider;
-        this.batteryStatusProviderSupplier = () -> batteryStatusProvider;
-        this.locationProvider = locationProvider;
-        this.conditionContentProvider = conditionContentProvider;
+            MqttService mqttService) {
+        this.messageContextProvider = messageContextProvider;
+        this.notificationFactory = notificationFactory;
         this.sharedPreferences = sharedPreferences;
         this.mqttService = mqttService;
-        this.networkService = networkService;
-        this.scheduler = scheduler;
     }
 
-    public void publish() {
-        BatteryStatusProvider batteryStatusProvider = batteryStatusProviderSupplier.get();
-        if (!networkService.sendMessageViaCurrentConnection()) {
-            DatabaseLogger.i(TAG, "Not connected to valid network, waiting for re-connect");
-            scheduler.waitForNetworkReconnect(batteryStatusProvider.isCharging());
-            return;
-        }
-
-        try {
-            long next = scheduler.scheduleNext(batteryStatusProvider.isCharging());
-            MessageContext messageContext =
-                    new MessageContext(
-                            alarmclockTimestampProvider,
-                            batteryStatusProvider,
-                            conditionContentProvider,
-                            locationProvider,
-                            networkService.getCurrentSsid(),
-                            next);
-            List<Message> messages = getMessagesToSend(messageContext);
-            if (!messages.isEmpty()) {
-                doSend(messages, messageContext.getCurrentTimestamp());
+    public boolean publish() {
+        MessageContext messageContext = messageContextProvider.getContext();
+        long lastSuccessTimestamp = messageContext.getLastSuccessTimestamp();
+        long currentTimestamp = messageContext.getCurrentTimestamp();
+        long estimatedNextTimestamp = messageContext.getEstimatedNextTimestamp();
+        sharedPreferences.edit().putLong(NEXT_SCHEDULE, estimatedNextTimestamp).apply();
+        List<Message> messages = getMessagesToSend(messageContext);
+        if (!messages.isEmpty()) {
+            DatabaseLogger.d(TAG, "Sending messages");
+            try {
+                mqttService.sendMessages(messages);
+            } catch (Exception e) {
+                DatabaseLogger.w(TAG, "Error while sending messages", e);
+                notificationFactory.setNotification(lastSuccessTimestamp, estimatedNextTimestamp);
+                return false;
             }
-        } catch (RuntimeException e) {
-            DatabaseLogger.w(TAG, "Error while getting messages to send", e);
-        }
-    }
-
-    private void doSend(List<Message> messages, long currentTimestamp) {
-        DatabaseLogger.d(TAG, "Sending messages");
-        try {
-            mqttService.sendMessages(messages);
             sharedPreferences.edit().putLong(LAST_SUCCESS, currentTimestamp).apply();
-        } catch (Exception e) {
-            DatabaseLogger.w(TAG, "Error while sending messages", e);
+            notificationFactory.setNotification(currentTimestamp, estimatedNextTimestamp);
+        } else {
+            notificationFactory.setNotification(lastSuccessTimestamp, estimatedNextTimestamp);
         }
+        return true;
     }
 
     private List<Message> getMessagesToSend(MessageContext messageContext) {

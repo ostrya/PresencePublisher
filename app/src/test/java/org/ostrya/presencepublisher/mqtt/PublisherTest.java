@@ -1,16 +1,16 @@
 package org.ostrya.presencepublisher.mqtt;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
 import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_LIST;
 import static org.ostrya.presencepublisher.ui.preference.messages.MessageFormatPreference.MESSAGE_FORMAT_SETTING;
+import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
 
 import android.content.SharedPreferences;
 
@@ -23,16 +23,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.ostrya.presencepublisher.message.AlarmclockTimestampProvider;
-import org.ostrya.presencepublisher.message.BatteryStatusProvider;
-import org.ostrya.presencepublisher.message.ConditionContentProvider;
-import org.ostrya.presencepublisher.message.LocationProvider;
+import org.ostrya.presencepublisher.message.BatteryStatus;
 import org.ostrya.presencepublisher.message.Message;
+import org.ostrya.presencepublisher.message.MessageContext;
+import org.ostrya.presencepublisher.message.MessageContextProvider;
 import org.ostrya.presencepublisher.message.MessageFormat;
 import org.ostrya.presencepublisher.message.MessageItem;
-import org.ostrya.presencepublisher.network.NetworkService;
-import org.ostrya.presencepublisher.schedule.Scheduler;
 import org.ostrya.presencepublisher.test.LogDisablerRule;
+import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 import org.ostrya.presencepublisher.ui.preference.messages.MessageConfiguration;
 
 import java.util.Arrays;
@@ -46,83 +44,67 @@ public class PublisherTest {
     @Rule public final LogDisablerRule logDisablerRule = new LogDisablerRule();
 
     @Mock private SharedPreferences sharedPreferences;
-    @Mock private AlarmclockTimestampProvider alarmclockTimestampProvider;
-    @Mock private BatteryStatusProvider batteryStatusProvider;
-    @Mock private ConditionContentProvider conditionContentProvider;
-    @Mock private LocationProvider locationProvider;
+    @Mock private SharedPreferences.Editor editor;
+    @Mock private MessageContextProvider messageContextProvider;
+    @Mock private MessageContext messageContext;
+    @Mock private NotificationFactory notificationFactory;
     @Mock private MqttService mqttService;
-    @Mock private NetworkService networkService;
-    @Mock private Scheduler scheduler;
 
     @Captor private ArgumentCaptor<List<Message>> messagesCaptor;
 
     private Publisher uut;
 
+    private long oldTimestamp;
+    private long currentTimestamp;
+    private long nextTimestamp;
+
     @Before
     public void setup() {
+        when(messageContextProvider.getContext()).thenReturn(messageContext);
         when(sharedPreferences.getString(MESSAGE_FORMAT_SETTING, null)).thenReturn("PLAINTEXT");
+        when(sharedPreferences.edit()).thenReturn(editor);
+        when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
+        currentTimestamp = (long) (Math.random() * 100) + 1;
+        nextTimestamp = currentTimestamp + 1;
+        oldTimestamp = currentTimestamp - 1;
+        when(messageContext.getLastSuccessTimestamp()).thenReturn(oldTimestamp);
+        when(messageContext.getCurrentTimestamp()).thenReturn(currentTimestamp);
+        when(messageContext.getEstimatedNextTimestamp()).thenReturn(nextTimestamp);
         uut =
                 new Publisher(
-                        alarmclockTimestampProvider,
-                        batteryStatusProvider,
-                        conditionContentProvider,
-                        locationProvider,
+                        messageContextProvider,
+                        notificationFactory,
                         sharedPreferences,
-                        mqttService,
-                        networkService,
-                        scheduler);
+                        mqttService);
     }
 
     @Test
-    public void publish_does_nothing_if_not_connected_to_valid_network() {
-        when(networkService.sendMessageViaCurrentConnection()).thenReturn(false);
-        String topic = "topic";
-        setupMessages(
-                new MessageConfiguration(
-                        topic, Collections.singletonList(MessageItem.BATTERY_LEVEL)));
-        int value = 99;
-        lenient().when(batteryStatusProvider.getBatteryLevelPercentage()).thenReturn(value);
-        when(batteryStatusProvider.isCharging()).thenReturn(false);
-
-        uut.publish();
-
-        verify(batteryStatusProvider).isCharging();
-        verifyNoMoreInteractions(batteryStatusProvider);
-        verifyNoInteractions(conditionContentProvider, mqttService);
-        verify(scheduler).waitForNetworkReconnect(false);
-    }
-
-    @Test
-    public void publish_does_nothing_if_no_messages_configured() {
-        when(networkService.sendMessageViaCurrentConnection()).thenReturn(true);
+    public void publish_sends_nothing_if_no_messages_configured() {
         doReturn(Collections.emptySet())
                 .when(sharedPreferences)
                 .getStringSet(MESSAGE_LIST, Collections.emptySet());
-        when(batteryStatusProvider.isCharging()).thenReturn(true);
 
         uut.publish();
 
-        verify(batteryStatusProvider).isCharging();
-        verifyNoMoreInteractions(batteryStatusProvider);
-        verifyNoInteractions(conditionContentProvider, mqttService);
-        verify(scheduler).scheduleNext(true);
+        verifyNoInteractions(mqttService);
+        verify(notificationFactory).setNotification(oldTimestamp, nextTimestamp);
+        verify(editor).putLong(NEXT_SCHEDULE, nextTimestamp);
     }
 
     @Test
     public void publish_correctly_sends_message_with_battery_item() throws MqttException {
-        when(networkService.sendMessageViaCurrentConnection()).thenReturn(true);
         String topic = "topic";
         setupMessages(
                 new MessageConfiguration(
                         topic, Collections.singletonList(MessageItem.BATTERY_LEVEL)));
         int value = 99;
-        when(batteryStatusProvider.getBatteryLevelPercentage()).thenReturn(value);
+        when(messageContext.getBatteryStatus()).thenReturn(new BatteryStatus("foo", value, "bar"));
 
         uut.publish();
 
-        verifyNoInteractions(conditionContentProvider);
         verify(mqttService).sendMessages(messagesCaptor.capture());
-        verify(scheduler).scheduleNext(anyBoolean());
+        verify(notificationFactory).setNotification(currentTimestamp, nextTimestamp);
+        verify(editor).putLong(NEXT_SCHEDULE, nextTimestamp);
 
         List<Message> messages = messagesCaptor.getValue();
         assertThat(messages)
@@ -134,26 +116,22 @@ public class PublisherTest {
 
     @Test
     public void publish_sends_no_message_with_condition_item_without_valid_condition_contents() {
-        when(networkService.sendMessageViaCurrentConnection()).thenReturn(true);
         String topic = "topic";
         setupMessages(
                 new MessageConfiguration(
                         topic, Collections.singletonList(MessageItem.CONDITION_CONTENT)));
-        when(conditionContentProvider.getConditionContents(null))
-                .thenReturn(Collections.emptyList());
+        when(messageContext.getConditionContents()).thenReturn(Collections.emptyList());
 
         uut.publish();
 
-        verify(batteryStatusProvider).isCharging();
-        verifyNoMoreInteractions(batteryStatusProvider);
         verifyNoInteractions(mqttService);
-        verify(scheduler).scheduleNext(anyBoolean());
+        verify(notificationFactory).setNotification(oldTimestamp, nextTimestamp);
+        verify(editor).putLong(NEXT_SCHEDULE, nextTimestamp);
     }
 
     @Test
     public void publish_correctly_sends_individual_messages_with_condition_items()
             throws MqttException {
-        when(networkService.sendMessageViaCurrentConnection()).thenReturn(true);
         String topic = "topic";
         setupMessages(
                 new MessageConfiguration(
@@ -162,14 +140,13 @@ public class PublisherTest {
         String content2 = "content2";
         String content3 = "content3";
         List<String> values = Arrays.asList(content1, content2, content3);
-        when(conditionContentProvider.getConditionContents(null)).thenReturn(values);
+        when(messageContext.getConditionContents()).thenReturn(values);
 
         uut.publish();
 
-        verify(batteryStatusProvider).isCharging();
-        verifyNoMoreInteractions(batteryStatusProvider);
         verify(mqttService).sendMessages(messagesCaptor.capture());
-        verify(scheduler).scheduleNext(anyBoolean());
+        verify(notificationFactory).setNotification(currentTimestamp, nextTimestamp);
+        verify(editor).putLong(NEXT_SCHEDULE, nextTimestamp);
 
         List<Message> messages = messagesCaptor.getValue();
         assertThat(messages)
@@ -183,7 +160,6 @@ public class PublisherTest {
     public void
             publish_correctly_sends_individual_messages_with_condition_placeholder_and_separate_message_with_battery_placeholder()
                     throws MqttException {
-        doReturn(true).when(networkService).sendMessageViaCurrentConnection();
         String topic1 = "topic1";
         String topic2 = "topic2";
         setupMessages(
@@ -195,14 +171,15 @@ public class PublisherTest {
         String content2 = "content2";
         String content3 = "content3";
         List<String> values = Arrays.asList(content1, content2, content3);
-        when(conditionContentProvider.getConditionContents(null)).thenReturn(values);
+        when(messageContext.getConditionContents()).thenReturn(values);
         int value = 99;
-        when(batteryStatusProvider.getBatteryLevelPercentage()).thenReturn(value);
+        when(messageContext.getBatteryStatus()).thenReturn(new BatteryStatus("foo", value, "bar"));
 
         uut.publish();
 
         verify(mqttService).sendMessages(messagesCaptor.capture());
-        verify(scheduler).scheduleNext(anyBoolean());
+        verify(notificationFactory).setNotification(currentTimestamp, nextTimestamp);
+        verify(editor).putLong(NEXT_SCHEDULE, nextTimestamp);
 
         List<Message> messages = messagesCaptor.getValue();
 

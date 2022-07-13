@@ -3,13 +3,8 @@ package org.ostrya.presencepublisher.network;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.WIFI_SERVICE;
 
-import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
-
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
@@ -26,55 +21,14 @@ import java.util.List;
 public class NetworkService {
     private static final String TAG = "NetworkHelper";
 
-    private final SharedPreferences sharedPreferences;
     private final ConnectivityManager connectivityManager;
     private final WifiManager wifiManager;
 
-    public NetworkService(Context context, SharedPreferences sharedPreferences) {
-        this.sharedPreferences = sharedPreferences;
+    public NetworkService(Context context) {
         Context applicationContext = context.getApplicationContext();
         this.connectivityManager =
                 (ConnectivityManager) applicationContext.getSystemService(CONNECTIVITY_SERVICE);
         this.wifiManager = (WifiManager) applicationContext.getSystemService(WIFI_SERVICE);
-    }
-
-    public boolean sendMessageViaCurrentConnection() {
-        if (connectivityManager == null) {
-            DatabaseLogger.e(TAG, "Connectivity Manager not found");
-            return false;
-        }
-        //noinspection deprecation
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        //noinspection deprecation
-        if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
-            return false;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            for (Network network : connectivityManager.getAllNetworks()) {
-                NetworkCapabilities networkCapabilities =
-                        connectivityManager.getNetworkCapabilities(network);
-                if (networkCapabilities != null
-                        && networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                    return true;
-                }
-            }
-            return sendViaMobile();
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //noinspection deprecation
-            return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI
-                    || activeNetworkInfo.getType() == ConnectivityManager.TYPE_VPN
-                    || activeNetworkInfo.getType() == ConnectivityManager.TYPE_ETHERNET
-                    || sendViaMobile();
-        } else {
-            //noinspection deprecation
-            return activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI
-                    || activeNetworkInfo.getType() == ConnectivityManager.TYPE_ETHERNET
-                    || sendViaMobile();
-        }
-    }
-
-    private boolean sendViaMobile() {
-        return sharedPreferences.getBoolean(SEND_VIA_MOBILE_NETWORK, false);
     }
 
     private String normalizeSsid(String ssid) {

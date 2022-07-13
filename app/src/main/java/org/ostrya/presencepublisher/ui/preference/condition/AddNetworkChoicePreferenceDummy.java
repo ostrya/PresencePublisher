@@ -31,7 +31,7 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
         super(context);
         this.addNew = context.getString(R.string.enter_network);
         this.sharedPreferences = sharedPreferences;
-        this.networkService = new NetworkService(context, sharedPreferences);
+        this.networkService = new NetworkService(context);
         setTitle(R.string.add_network_title);
         setDialogTitle(R.string.add_network_title);
         setSummary(R.string.add_network_summary);

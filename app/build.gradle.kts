@@ -145,7 +145,7 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
     implementation("androidx.work:work-runtime:2.7.1")
     implementation("com.google.android.material:material:1.6.1")
-    implementation("com.google.guava:listenablefuture:1.0")
+    implementation("com.google.guava:guava:31.1-android")
     implementation("org.altbeacon:android-beacon-library:2.19.4")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")

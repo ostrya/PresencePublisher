@@ -2,48 +2,53 @@ package org.ostrya.presencepublisher.message;
 
 import androidx.annotation.Nullable;
 
-public class MessageContext {
+import java.util.List;
 
+public class MessageContext {
     public static final String UNKNOWN = "N/A";
 
-    private final AlarmclockTimestampProvider alarmclockTimestampProvider;
-    private final BatteryStatusProvider batteryStatusProvider;
-    private final ConditionContentProvider conditionContentProvider;
-    private final LocationProvider locationProvider;
+    private final long nextAlarmclockTimestamp;
+    private final BatteryStatus batteryStatus;
+    private final List<String> conditionContents;
+    private final String lastKnownLocation;
     @Nullable private final String currentSsid;
+    private final long lastSuccessTimestamp;
     private final long currentTimestamp;
-    private final long nextTimestamp;
+    private final long estimatedNextTimestamp;
 
-    public MessageContext(
-            AlarmclockTimestampProvider alarmclockTimestampProvider,
-            BatteryStatusProvider batteryStatusProvider,
-            ConditionContentProvider conditionContentProvider,
-            LocationProvider locationProvider,
-            @Nullable String currentSsid,
-            long nextTimestamp) {
-        this.alarmclockTimestampProvider = alarmclockTimestampProvider;
-        this.batteryStatusProvider = batteryStatusProvider;
-        this.conditionContentProvider = conditionContentProvider;
-        this.locationProvider = locationProvider;
+    MessageContext(
+            long nextAlarmclockTimestamp,
+            BatteryStatus batteryStatus,
+            List<String> conditionContents,
+            String lastKnownLocation,
+            long lastSuccessTimestamp,
+            long currentTimestamp,
+            long estimatedNextTimestamp,
+            @Nullable String currentSsid) {
+        this.nextAlarmclockTimestamp = nextAlarmclockTimestamp;
+        this.batteryStatus = batteryStatus;
+        this.conditionContents = conditionContents;
+        this.lastKnownLocation = lastKnownLocation;
+        this.lastSuccessTimestamp = lastSuccessTimestamp;
+        this.currentTimestamp = currentTimestamp;
+        this.estimatedNextTimestamp = estimatedNextTimestamp;
         this.currentSsid = currentSsid;
-        this.currentTimestamp = System.currentTimeMillis();
-        this.nextTimestamp = nextTimestamp;
     }
 
-    public AlarmclockTimestampProvider getAlarmclockTimestampProvider() {
-        return alarmclockTimestampProvider;
+    public long getNextAlarmclockTimestamp() {
+        return nextAlarmclockTimestamp;
     }
 
-    public BatteryStatusProvider getBatteryStatusProvider() {
-        return batteryStatusProvider;
+    public BatteryStatus getBatteryStatus() {
+        return batteryStatus;
     }
 
-    public ConditionContentProvider getConditionContentProvider() {
-        return conditionContentProvider;
+    public List<String> getConditionContents() {
+        return conditionContents;
     }
 
-    public LocationProvider getLocationProvider() {
-        return locationProvider;
+    public String getLastKnownLocation() {
+        return lastKnownLocation;
     }
 
     @Nullable
@@ -51,11 +56,15 @@ public class MessageContext {
         return currentSsid;
     }
 
+    public long getLastSuccessTimestamp() {
+        return lastSuccessTimestamp;
+    }
+
     public long getCurrentTimestamp() {
         return currentTimestamp;
     }
 
-    public long getNextTimestamp() {
-        return nextTimestamp;
+    public long getEstimatedNextTimestamp() {
+        return estimatedNextTimestamp;
     }
 }

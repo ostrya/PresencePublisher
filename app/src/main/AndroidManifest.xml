@@ -52,17 +52,6 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".receiver.ConnectivityBroadcastReceiver" android:exported="true">
-            <intent-filter>
-                <!-- only works until API level 25 -->
-                <action
-                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
-                    tools:ignore="BatteryLife" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".receiver.AlarmReceiver" />
     </application>
 
 </manifest>

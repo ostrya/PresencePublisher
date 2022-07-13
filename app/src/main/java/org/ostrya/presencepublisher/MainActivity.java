@@ -140,7 +140,7 @@ public class MainActivity extends FragmentActivity {
 
     private void onChangedConnectionProperty(String key) {
         DatabaseLogger.i(TAG, "Changed parameter " + key);
-        new Scheduler(this).scheduleNow();
+        new Scheduler(this).startSchedule();
     }
 
     private void handleConsentChange() {
