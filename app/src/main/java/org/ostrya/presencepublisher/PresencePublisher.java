@@ -33,11 +33,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class PresencePublisher extends MultiDexApplication {
     private static final String TAG = "PresencePublisher";
     public static final int NOTIFICATION_ID = 1;
     public static final int NOTIFICATION_REQUEST_CODE = 2;
+
+    public static final String MQTT_CLIENT_ID = "mqttClientId";
 
     // old preferences to be migrated
     private static final String PRESENCE_TOPIC = "topic";
@@ -50,6 +53,7 @@ public class PresencePublisher extends MultiDexApplication {
         initLogger();
         initBeaconManager();
         new NotificationFactory(this).createNotificationChannel();
+        initClientId();
         migrateOldSettings();
     }
 
@@ -91,6 +95,14 @@ public class PresencePublisher extends MultiDexApplication {
                 DatabaseLogger.i(
                         TAG, "No beacons configured, not enabling background beacon scanning");
             }
+        }
+    }
+
+    private void initClientId() {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!preference.contains(MQTT_CLIENT_ID)) {
+            DatabaseLogger.i(TAG, "Generating persistent client ID");
+            preference.edit().putString(MQTT_CLIENT_ID, UUID.randomUUID().toString()).apply();
         }
     }
 
