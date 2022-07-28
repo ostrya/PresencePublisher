@@ -37,8 +37,11 @@ import java.util.UUID;
 
 public class PresencePublisher extends MultiDexApplication {
     private static final String TAG = "PresencePublisher";
-    public static final int NOTIFICATION_ID = 1;
+    public static final int STATUS_NOTIFICATION_ID = 1;
     public static final int NOTIFICATION_REQUEST_CODE = 2;
+    public static final int PROGRESS_NOTIFICATION_ID = 3;
+
+    public static final Object LOCK = new Object();
 
     public static final String MQTT_CLIENT_ID = "mqttClientId";
 
@@ -52,7 +55,7 @@ public class PresencePublisher extends MultiDexApplication {
         super.onCreate();
         initLogger();
         initBeaconManager();
-        new NotificationFactory(this).createNotificationChannel();
+        new NotificationFactory(this).createNotificationChannels();
         initClientId();
         migrateOldSettings();
     }

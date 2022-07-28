@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Presence Publisher</string>
     <string name="host_title">MQTT Host</string>
     <string name="host_summary" formatted="true">IP-Adresse oder Hostname%nAktueller Wert: %1$s</string>
     <string name="default_presence_message_name">Anwesenheitsnachricht</string>
@@ -103,7 +102,6 @@
     <string name="dialog_scan_beacons_title">Beacons in der Nähe</string>
     <string name="message_charging_schedule_title">Ladesendeperiode</string>
     <string name="message_charging_schedule_summary">Sendeperiode, wenn das Gerät geladen wird.\nBei Wert = 0 wird die normale Periode benutzt.</string>
-    <string name="charging_message_schedule_dialog_text">Die Periode darf nicht unter 5 Minuten gesetzt werden. Auf 5 Minuten setzen?</string>
     <string name="toast_logs_stored" formatted="true">Gespeichert nach \'%s\'</string>
     <string name="toast_logs_not_stored">Fehler beim Exportieren des Logs</string>
     <string name="bundled_licenses_title">Lizenzen eingebundener Komponenten</string>
@@ -137,4 +135,10 @@
     <string name="message_format_help_title">Nachrichtenformatdetails</string>
     <string name="message_format_help_intro">Angenommen, du hast eine Nachricht konfiguriert, die <b>conditionContent</b>, <b>connectedWifi</b> und <b>batteryLevel</b> enthält, du hast einen Batteriestand von 35 Prozent, bist mit einem WLAN mit SSID \"myWiFi\" verbunden und du erfüllst gerade zwei Bedingungen mit Inhalt \"contentA\" und \"contentB\", dann werden abhängig vom gewählten Format folgende Nachrichtentexte versandt:</string>
     <string name="log_type_label">Logtyp</string>
+    <string name="progress_notification">Versenden läuft</string>
+    <string name="progress_channel">Fortschrittsbenachrichtigung</string>
+    <string name="status_channel">Statusbenachrichtigung</string>
+    <string name="run_now_title">Jetzt starten</string>
+    <string name="run_now_summary">Prüfe jetzt alle Bedingungen und versende konfigurierte Nachrichten.</string>
+    <string name="run_now_toast">Gestartet …</string>
 </resources>

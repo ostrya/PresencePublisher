@@ -86,8 +86,7 @@ public class PublisherTest {
 
         uut.publish();
 
-        verifyNoInteractions(mqttService);
-        verify(notificationFactory).setNotification(oldTimestamp, nextTimestamp);
+        verifyNoInteractions(mqttService, notificationFactory);
         verify(editor).putLong(NEXT_SCHEDULE, nextTimestamp);
     }
 
@@ -103,7 +102,7 @@ public class PublisherTest {
         uut.publish();
 
         verify(mqttService).sendMessages(messagesCaptor.capture());
-        verify(notificationFactory).setNotification(currentTimestamp, nextTimestamp);
+        verify(notificationFactory).updateStatusNotification(currentTimestamp, nextTimestamp);
         verify(editor).putLong(NEXT_SCHEDULE, nextTimestamp);
 
         List<Message> messages = messagesCaptor.getValue();
@@ -124,8 +123,7 @@ public class PublisherTest {
 
         uut.publish();
 
-        verifyNoInteractions(mqttService);
-        verify(notificationFactory).setNotification(oldTimestamp, nextTimestamp);
+        verifyNoInteractions(mqttService, notificationFactory);
         verify(editor).putLong(NEXT_SCHEDULE, nextTimestamp);
     }
 
@@ -145,7 +143,7 @@ public class PublisherTest {
         uut.publish();
 
         verify(mqttService).sendMessages(messagesCaptor.capture());
-        verify(notificationFactory).setNotification(currentTimestamp, nextTimestamp);
+        verify(notificationFactory).updateStatusNotification(currentTimestamp, nextTimestamp);
         verify(editor).putLong(NEXT_SCHEDULE, nextTimestamp);
 
         List<Message> messages = messagesCaptor.getValue();
@@ -178,7 +176,7 @@ public class PublisherTest {
         uut.publish();
 
         verify(mqttService).sendMessages(messagesCaptor.capture());
-        verify(notificationFactory).setNotification(currentTimestamp, nextTimestamp);
+        verify(notificationFactory).updateStatusNotification(currentTimestamp, nextTimestamp);
         verify(editor).putLong(NEXT_SCHEDULE, nextTimestamp);
 
         List<Message> messages = messagesCaptor.getValue();

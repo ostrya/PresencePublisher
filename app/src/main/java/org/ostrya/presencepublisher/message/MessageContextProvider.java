@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.message;
 
 import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
+import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,7 +17,6 @@ public class MessageContextProvider {
     private final LocationProvider locationProvider;
     private final NetworkService networkService;
     private final SharedPreferences preferences;
-    private final ScheduleProvider scheduleProvider;
 
     public MessageContextProvider(Context applicationContext) {
         this.alarmclockTimestampProvider = new AlarmclockTimestampProvider(applicationContext);
@@ -25,22 +25,19 @@ public class MessageContextProvider {
         this.locationProvider = new LocationProvider(applicationContext);
         this.networkService = new NetworkService(applicationContext);
         this.preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-        this.scheduleProvider = new ScheduleProvider(applicationContext);
     }
 
     public MessageContext getContext() {
         long currentTimestamp = System.currentTimeMillis();
         String currentSsid = networkService.getCurrentSsid();
-        BatteryStatus currentBatteryStatus = batteryStatusProvider.getCurrentBatteryStatus();
         return new MessageContext(
                 alarmclockTimestampProvider.getNextAlarmclockTimestamp(),
-                currentBatteryStatus,
+                batteryStatusProvider.getCurrentBatteryStatus(),
                 conditionContentProvider.getConditionContents(currentSsid),
                 locationProvider.getLastKnownLocation(),
                 preferences.getLong(LAST_SUCCESS, 0L),
                 currentTimestamp,
-                scheduleProvider.getEstimatedNextTimestamp(
-                        currentTimestamp, currentBatteryStatus.isCharging()),
+                preferences.getLong(NEXT_SCHEDULE, 0L),
                 currentSsid);
     }
 }

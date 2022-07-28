@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Presence Publisher</string>
+    <string name="app_name" translatable="false">Presence Publisher</string>
     <string name="host_title">MQTT Host</string>
     <string name="host_summary" formatted="true">IP address or hostname%nCurrent value: %1$s</string>
     <string name="username_title">MQTT Login</string>
@@ -14,7 +14,6 @@
     <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>
     <string name="message_charging_schedule_title">Charging publish period</string>
     <string name="message_charging_schedule_summary">Publish period while device is charging.\nFor value = 0 the normal schedule is used.</string>
-    <string name="charging_message_schedule_dialog_text">Setting the interval lower than 5 minutes is not allowed. Set the value to 5 minutes?</string>
     <string name="location_permission_dialog_title">Location permission</string>
     <string name="location_permission_dialog_message">Please allow access to your precise location information while using the app by confirming the next dialog.</string>
     <string name="location_permission_dialog_confirm_no_fine_location" formatted="true">You did not allow access to the precise location. Without it, this app cannot access your Wi-Fi name or any Bluetooth tokens and will not send any message. Would you like to reconsider and change the permission settings? You will need to navigate to \'Permissions\' → \'Location\' and enable \'%s\', and starting with Android 12 also \'Use precise location\'.</string>
@@ -139,4 +138,10 @@
     <string name="message_format_help_title">Message format details</string>
     <string name="message_format_help_intro">Assuming you have configured a message containing <b>conditionContent</b>, <b>connectedWifi</b> and <b>batteryLevel</b>, you have a battery level of 35 percent, you are connected to a WiFi with SSID \"myWiFi\" and you are fulfilling two conditions with content \"contentA\" and \"contentB\", then the following message strings will be sent depending on the selected format:</string>
     <string name="log_type_label">Log type</string>
+    <string name="progress_notification">Publishing in progress</string>
+    <string name="progress_channel">Progress notification</string>
+    <string name="status_channel">Status notification</string>
+    <string name="run_now_title">Run now</string>
+    <string name="run_now_summary">Check conditions now and send configured messages.</string>
+    <string name="run_now_toast">Running now …</string>
 </resources>

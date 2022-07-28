@@ -2,8 +2,8 @@ package org.ostrya.presencepublisher.ui.notification;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-import static org.ostrya.presencepublisher.PresencePublisher.NOTIFICATION_ID;
 import static org.ostrya.presencepublisher.PresencePublisher.NOTIFICATION_REQUEST_CODE;
+import static org.ostrya.presencepublisher.PresencePublisher.STATUS_NOTIFICATION_ID;
 import static org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider.getFormattedTimestamp;
 
 import android.app.Notification;
@@ -21,6 +21,8 @@ import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
 
 public class NotificationFactory {
+    private static final String PROGRESS_CHANNEL_ID = "progress";
+    private static final String STATUS_CHANNEL_ID = "status";
     private final Context applicationContext;
     private final NotificationManagerCompat notificationManager;
 
@@ -29,24 +31,50 @@ public class NotificationFactory {
         this.notificationManager = NotificationManagerCompat.from(applicationContext);
     }
 
-    public void createNotificationChannel() {
+    public void createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (notificationManager != null) {
-                NotificationChannel channel =
+                NotificationChannel progressChannel =
                         new NotificationChannel(
-                                applicationContext.getPackageName(),
-                                applicationContext.getString(R.string.app_name),
+                                PROGRESS_CHANNEL_ID,
+                                applicationContext.getString(R.string.progress_channel),
+                                NotificationManager.IMPORTANCE_LOW);
+                notificationManager.createNotificationChannel(progressChannel);
+                NotificationChannel statusChannel =
+                        new NotificationChannel(
+                                STATUS_CHANNEL_ID,
+                                applicationContext.getString(R.string.status_channel),
                                 NotificationManager.IMPORTANCE_DEFAULT);
-                notificationManager.createNotificationChannel(channel);
+                notificationManager.createNotificationChannel(statusChannel);
             }
         }
     }
 
-    public void setNotification(long lastSuccess, long nextSchedule) {
-        notificationManager.notify(NOTIFICATION_ID, getNotification(lastSuccess, nextSchedule));
+    public void updateStatusNotification(long lastSuccess, long nextSchedule) {
+        notificationManager.notify(
+                STATUS_NOTIFICATION_ID, getStatusNotification(lastSuccess, nextSchedule));
     }
 
-    private Notification getNotification(long lastSuccess, long nextSchedule) {
+    public Notification getProgressNotification() {
+        Notification notification;
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(
+                                applicationContext, applicationContext.getPackageName())
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setContentTitle(applicationContext.getString(R.string.app_name))
+                        .setContentText(
+                                applicationContext.getString(R.string.progress_notification))
+                        .setSilent(true)
+                        .setOnlyAlertOnce(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setCategory(Notification.CATEGORY_PROGRESS);
+        }
+        notification = builder.build();
+
+        return notification;
+    }
+
+    private Notification getStatusNotification(long lastSuccess, long nextSchedule) {
         Intent intent = new Intent(applicationContext, MainActivity.class);
         intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent;
@@ -69,8 +97,7 @@ public class NotificationFactory {
 
         Notification notification;
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(
-                                applicationContext, applicationContext.getPackageName())
+                new NotificationCompat.Builder(applicationContext, STATUS_CHANNEL_ID)
                         .setOngoing(true)
                         .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(applicationContext.getString(R.string.app_name))
@@ -82,10 +109,10 @@ public class NotificationFactory {
                                         .addLine(getNextSchedule(applicationContext, nextSchedule)))
                         .setOnlyAlertOnce(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            notification = builder.setCategory(Notification.CATEGORY_STATUS).build();
-        } else {
-            notification = builder.build();
+            builder.setCategory(Notification.CATEGORY_STATUS);
         }
+
+        notification = builder.build();
         return notification;
     }
 
