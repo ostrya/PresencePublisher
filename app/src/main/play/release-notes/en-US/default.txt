@@ -1,4 +1,4 @@
 v2.4.0
 • bugfix for entering message topics
-• using WorkManager instead of built-in alarmns to send messages more robustly
+• using WorkManager instead of built-in alarms to send messages more robustly
 • new message content: next alarm clock time
