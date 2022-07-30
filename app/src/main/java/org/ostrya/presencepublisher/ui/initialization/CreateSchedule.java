@@ -22,7 +22,7 @@ public class CreateSchedule extends AbstractChainedHandler<Void, Void> {
     @Override
     protected void doInitialize() {
         DatabaseLogger.i(TAG, "Starting schedule now");
-        new Scheduler(activity).scheduleNow();
+        new Scheduler(activity).startSchedule();
         // make sure we don't re-schedule until the first run has happened
         executorService.schedule(this::finishInitialization, NOW_DELAY, TimeUnit.MILLISECONDS);
     }

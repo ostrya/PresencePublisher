@@ -1,10 +1,4 @@
-v2.3.2
-• bug fix for YAML format
-
-v2.3.1
-• fix for Google release
-
-v2.3.0
-• support for Android 12
-• dynamic message configuration supporting additional values that can be sent
-• improved logging
+v2.4.0
+• bugfix for entering message topics
+• using WorkManager instead of built-in alarmns to send messages more robustly
+• new message content: next alarm clock time

@@ -2,7 +2,7 @@ This free open-source app regularly publishes to a configurable MQTT topic whene
 connected to a given Wi-Fi network or in proximity to a Bluetooth beacon.
 It can be used to integrate the presence of your phone in home automation.
 
-The app uses the built-in Android alarm manager, so notifications are sent
+The app uses the AndroidX WorkManager library, so notifications are sent
 even if the phone is in stand-by. In addition to regularly scheduled checks,
 the app also reacts to changes in the network connection.
 

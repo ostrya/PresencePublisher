@@ -14,20 +14,24 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 public class BatteryStatusProvider {
     private static final String TAG = "BatteryStatusProvider";
 
-    private final String batteryStatus;
-    private final int batteryLevelPercentage;
-    private final String plugStatus;
+    private static final BatteryStatus UNKNOWN =
+            new BatteryStatus(MessageContext.UNKNOWN, -1, MessageContext.UNKNOWN);
+
+    private final Context applicationContext;
 
     public BatteryStatusProvider(Context applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    public BatteryStatus getCurrentBatteryStatus() {
         Intent batteryStatusIntent = getBatteryStatusIntent(applicationContext);
         if (batteryStatusIntent == null) {
             DatabaseLogger.w(TAG, "No battery status received, returning fallback value");
-            batteryStatus = UNKNOWN;
-            batteryLevelPercentage = -1;
-            plugStatus = UNKNOWN;
+            return UNKNOWN;
         } else {
             int level = batteryStatusIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = batteryStatusIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+            int batteryLevelPercentage;
 
             if (level == -1 || scale == -1) {
                 DatabaseLogger.w(TAG, "Invalid level " + level + " or scale " + scale);
@@ -37,6 +41,7 @@ public class BatteryStatusProvider {
             }
 
             int status = batteryStatusIntent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+            String batteryStatus;
             switch (status) {
                 case BatteryManager.BATTERY_STATUS_CHARGING:
                     batteryStatus = "CHARGING";
@@ -53,11 +58,12 @@ public class BatteryStatusProvider {
                 case BatteryManager.BATTERY_STATUS_UNKNOWN:
                 case -1:
                 default:
-                    batteryStatus = UNKNOWN;
+                    batteryStatus = MessageContext.UNKNOWN;
                     break;
             }
 
             int plugged = batteryStatusIntent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+            String plugStatus;
             switch (plugged) {
                 case BatteryManager.BATTERY_PLUGGED_AC:
                     plugStatus = "AC";
@@ -69,9 +75,10 @@ public class BatteryStatusProvider {
                     plugStatus = "WIRELESS";
                     break;
                 default:
-                    plugStatus = UNKNOWN;
+                    plugStatus = MessageContext.UNKNOWN;
                     break;
             }
+            return new BatteryStatus(batteryStatus, batteryLevelPercentage, plugStatus);
         }
     }
 
@@ -80,21 +87,5 @@ public class BatteryStatusProvider {
         DatabaseLogger.i(TAG, "Retrieving battery value");
         IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         return context.registerReceiver(null, filter);
-    }
-
-    public int getBatteryLevelPercentage() {
-        return batteryLevelPercentage;
-    }
-
-    public String getBatteryStatus() {
-        return batteryStatus;
-    }
-
-    public String getPlugStatus() {
-        return plugStatus;
-    }
-
-    public boolean isCharging() {
-        return !UNKNOWN.equals(plugStatus);
     }
 }

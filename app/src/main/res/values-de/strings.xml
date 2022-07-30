@@ -59,6 +59,7 @@
     <string name="dialog_cancel">Abbrechen</string>
     <string name="dialog_yes">Ja</string>
     <string name="dialog_no">Nein</string>
+    <string name="dialog_next">Weiter</string>
     <string name="dialog_check_connection_summary_success">Nachricht erfolgreich gesendet.</string>
     <string name="value_undefined"><![CDATA[<nicht gesetzt>]]></string>
     <string name="autostart_summary">Soll diese App beim Boot starten?</string>
@@ -93,6 +94,7 @@
     <string name="remove_network_title">Netzwerk entfernen</string>
     <string name="remove_network_warning_message">Dieses Netzwerk wirklich entfernen?</string>
     <string name="enter_network">Anderes Netzwerk eingeben …</string>
+    <string name="network_hint">Netzwerkname</string>
     <string name="add_beacon_title">Beacon hinzufügen</string>
     <string name="add_beacon_summary">Tippe hier, um ein Beacon hinzuzufügen</string>
     <string name="remove_region_title">Region entfernen</string>
@@ -101,9 +103,9 @@
     <string name="dialog_scan_beacons_title">Beacons in der Nähe</string>
     <string name="message_charging_schedule_title">Ladesendeperiode</string>
     <string name="message_charging_schedule_summary">Sendeperiode, wenn das Gerät geladen wird.\nBei Wert = 0 wird die normale Periode benutzt.</string>
+    <string name="charging_message_schedule_dialog_text">Die Periode darf nicht unter 5 Minuten gesetzt werden. Auf 5 Minuten setzen?</string>
     <string name="toast_logs_stored" formatted="true">Gespeichert nach \'%s\'</string>
     <string name="toast_logs_not_stored">Fehler beim Exportieren des Logs</string>
-    <string name="value_network_reconnect">Warte auf Netzwerkverbindung …</string>
     <string name="bundled_licenses_title">Lizenzen eingebundener Komponenten</string>
     <string name="bundled_licenses_summary">Tippe hier, um Lizenzen der eingebundenen Komponenten zu sehen.</string>
     <string name="privacy_title">Datenschutzerklärung</string>
@@ -124,7 +126,8 @@
     <string name="remove_message_title">Nachricht entfernen</string>
     <string name="remove_message_warning_message">Diese Nachricht wirklich entfernen?</string>
     <string name="message_summary" formatted="true">Aktuelles Topic: %1$s%nAktueller Inhalt:%n%2$s</string>
-    <string name="edit_message_title">Nachricht bearbeiten</string>
+    <string name="edit_message_title_1">Nachricht bearbeiten (1)</string>
+    <string name="edit_message_title_2">Nachricht bearbeiten (2)</string>
     <string name="message_name_hint">Name</string>
     <string name="message_topic_hint">Topic</string>
     <string name="message_help_summary">Diese Liste von Nachrichten wird zum gegebenen Zeitplan versendet.\n\nTippe, um die Nachricht zu bearbeiten. Berühre länger, um einen Eintrag zu löschen.</string>

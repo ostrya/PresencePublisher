@@ -14,6 +14,7 @@
     <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>
     <string name="message_charging_schedule_title">Charging publish period</string>
     <string name="message_charging_schedule_summary">Publish period while device is charging.\nFor value = 0 the normal schedule is used.</string>
+    <string name="charging_message_schedule_dialog_text">Setting the interval lower than 5 minutes is not allowed. Set the value to 5 minutes?</string>
     <string name="location_permission_dialog_title">Location permission</string>
     <string name="location_permission_dialog_message">Please allow access to your precise location information while using the app by confirming the next dialog.</string>
     <string name="location_permission_dialog_confirm_no_fine_location" formatted="true">You did not allow access to the precise location. Without it, this app cannot access your Wi-Fi name or any Bluetooth tokens and will not send any message. Would you like to reconsider and change the permission settings? You will need to navigate to \'Permissions\' → \'Location\' and enable \'%s\', and starting with Android 12 also \'Use precise location\'.</string>
@@ -67,6 +68,7 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
+    <string name="dialog_next">Next</string>
     <string name="dialog_check_connection_summary_success">Message successfully sent.</string>
     <string name="value_undefined"><![CDATA[<undefined>]]></string>
     <string name="autostart_summary">Should this app start on boot?</string>
@@ -91,6 +93,7 @@
     <string name="button_export">Export</string>
     <string name="tab_about_title">About</string>
     <string name="add_network_title">Add network</string>
+    <string name="network_hint">Network name</string>
     <string name="add_network_summary">Click here to add a new network</string>
     <string name="remove_network_title">Remove network</string>
     <string name="remove_network_warning_message">Do you really want to remove this network?</string>
@@ -103,7 +106,6 @@
     <string name="dialog_scan_beacons_title">Beacons in range</string>
     <string name="toast_logs_stored" formatted="true">Stored to \'%s\'</string>
     <string name="toast_logs_not_stored">Error while exporting log</string>
-    <string name="value_network_reconnect">Waiting for network re-connect …</string>
     <string name="bundled_licenses_title">Bundled components\' licenses</string>
     <string name="bundled_licenses_summary">Click here to view licenses of bundled components.</string>
     <string name="privacy_title">Privacy policy</string>
@@ -126,7 +128,8 @@
     <string name="remove_message_title">Remove message</string>
     <string name="remove_message_warning_message">Do you really want to remove this message?</string>
     <string name="message_summary" formatted="true">Current topic: %1$s%nCurrent content:%n%2$s</string>
-    <string name="edit_message_title">Edit message</string>
+    <string name="edit_message_title_1">Edit message (1)</string>
+    <string name="edit_message_title_2">Edit message (2)</string>
     <string name="message_name_hint">Name</string>
     <string name="message_topic_hint">Topic</string>
     <string name="message_help_summary">This list of messages will be sent at the defined schedule.\n\nClick to edit a message. Long-click to delete an entry.</string>

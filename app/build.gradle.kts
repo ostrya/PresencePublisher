@@ -8,13 +8,13 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("org.eclipse.jgit:org.eclipse.jgit:6.0.0.202111291000-r")
+        classpath("org.eclipse.jgit:org.eclipse.jgit:6.2.0.202206071550-r")
     }
 }
 
 plugins {
     id("com.github.triplet.play") version "3.7.0"
-    id("com.jaredsburrows.license") version "0.8.90"
+    id("com.jaredsburrows.license") version "0.9.0"
     id("com.android.application")
 }
 
@@ -40,13 +40,14 @@ fun isTagged(): Boolean {
 }
 
 android {
-    compileSdkVersion(31)
+    compileSdk = 32
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
-        minSdkVersion(14)
-        targetSdkVersion(31)
+        minSdk = 14
+        multiDexEnabled = true
+        targetSdk = 32
         versionCode = 44
-        versionName = "2.3.2"
+        versionName = "2.4.0-alpha"
         javaCompileOptions {
             annotationProcessorOptions {
                 argument("room.schemaLocation", "$projectDir/schemas")
@@ -81,9 +82,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    buildToolsVersion("31.0.0")
-    lintOptions {
-        isAbortOnError = false
+    buildToolsVersion = "31.0.0"
+    lint {
+        abortOnError = false
     }
 }
 
@@ -132,25 +133,26 @@ play {
 }
 
 dependencies {
-    val room_version = "2.4.1"
+    val roomVersion = "2.4.2"
 
-    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation("androidx.appcompat:appcompat:1.4.2")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.preference:preference:1.1.1")
-    implementation("androidx.room:room-guava:$room_version")
-    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.multidex:multidex:2.0.1")
+    implementation("androidx.preference:preference:1.2.0")
+    implementation("androidx.room:room-guava:$roomVersion")
+    implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.security:security-crypto:1.1.0-alpha03")
     implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
     implementation("androidx.work:work-runtime:2.7.1")
-    implementation("com.google.android.material:material:1.5.0")
-    implementation("com.google.guava:listenablefuture:1.0")
-    implementation("org.altbeacon:android-beacon-library:2.19.3")
+    implementation("com.google.android.material:material:1.6.1")
+    implementation("com.google.guava:guava:31.1-android")
+    implementation("org.altbeacon:android-beacon-library:2.19.4")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.assertj:assertj-core:3.22.0")
-    testImplementation("org.mockito:mockito-inline:4.2.0")
+    testImplementation("org.assertj:assertj-core:3.23.1")
+    testImplementation("org.mockito:mockito-inline:4.6.1")
 
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
 }
 
 tasks.register("printVersion") {
