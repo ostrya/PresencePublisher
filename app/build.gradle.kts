@@ -46,7 +46,7 @@ android {
         minSdk = 14
         multiDexEnabled = true
         targetSdk = 32
-        versionCode = 46
+        versionCode = 47
         versionName = "2.4.1"
         javaCompileOptions {
             annotationProcessorOptions {

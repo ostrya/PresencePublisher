@@ -156,7 +156,7 @@ public class PresencePublisher extends MultiDexApplication {
         }
         editor.putStringSet(MESSAGE_LIST, messages)
                 .remove(PRESENCE_TOPIC)
-                .remove(PRESENCE_TOPIC)
+                .remove(BATTERY_TOPIC)
                 .remove(SEND_BATTERY_MESSAGE)
                 .apply();
     }
