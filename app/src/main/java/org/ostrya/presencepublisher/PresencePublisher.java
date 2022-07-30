@@ -15,6 +15,7 @@ import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
 import androidx.preference.PreferenceManager;
+import androidx.work.WorkManager;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconManager;
@@ -33,24 +34,40 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class PresencePublisher extends MultiDexApplication {
     private static final String TAG = "PresencePublisher";
-    public static final int NOTIFICATION_ID = 1;
+    public static final int STATUS_NOTIFICATION_ID = 1;
     public static final int NOTIFICATION_REQUEST_CODE = 2;
+    public static final int PROGRESS_NOTIFICATION_ID = 3;
+
+    public static final Object LOCK = new Object();
+
+    public static final String MQTT_CLIENT_ID = "mqttClientId";
 
     // old preferences to be migrated
     private static final String PRESENCE_TOPIC = "topic";
     private static final String SEND_BATTERY_MESSAGE = "sendbatteryMessage";
     private static final String BATTERY_TOPIC = "batteryTopic";
 
+    // old work IDs to be cancelled
+    private static final String ID = "PublisherWork";
+    private static final String ID2 = "PublisherWork2";
+    private static final String ID3 = "PublisherWork3";
+    private static final String CID = "ChargingPublisherWork";
+    private static final String CID2 = "ChargingPublisherWork2";
+    private static final String CID3 = "ChargingPublisherWork3";
+
     @Override
     public void onCreate() {
         super.onCreate();
         initLogger();
         initBeaconManager();
-        new NotificationFactory(this).createNotificationChannel();
+        new NotificationFactory(this).createNotificationChannels();
+        initClientId();
         migrateOldSettings();
+        cancelOldWork();
     }
 
     private void initLogger() {
@@ -94,6 +111,14 @@ public class PresencePublisher extends MultiDexApplication {
         }
     }
 
+    private void initClientId() {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!preference.contains(MQTT_CLIENT_ID)) {
+            DatabaseLogger.i(TAG, "Generating persistent client ID");
+            preference.edit().putString(MQTT_CLIENT_ID, UUID.randomUUID().toString()).apply();
+        }
+    }
+
     private void migrateOldSettings() {
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preference.edit();
@@ -131,9 +156,19 @@ public class PresencePublisher extends MultiDexApplication {
         }
         editor.putStringSet(MESSAGE_LIST, messages)
                 .remove(PRESENCE_TOPIC)
-                .remove(PRESENCE_TOPIC)
+                .remove(BATTERY_TOPIC)
                 .remove(SEND_BATTERY_MESSAGE)
                 .apply();
+    }
+
+    private void cancelOldWork() {
+        WorkManager workManager = WorkManager.getInstance(this);
+        workManager.cancelUniqueWork(ID);
+        workManager.cancelUniqueWork(ID2);
+        workManager.cancelUniqueWork(ID3);
+        workManager.cancelUniqueWork(CID);
+        workManager.cancelUniqueWork(CID2);
+        workManager.cancelUniqueWork(CID3);
     }
 
     public boolean supportsBeacons() {

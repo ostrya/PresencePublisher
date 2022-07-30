@@ -36,7 +36,7 @@ fun getBuildVersionName(): String {
 }
 
 fun isTagged(): Boolean {
-    return getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+"))
+    return getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+(?:-alpha[0-9]*|-beta[0-9]*)?"))
 }
 
 android {
@@ -46,8 +46,8 @@ android {
         minSdk = 14
         multiDexEnabled = true
         targetSdk = 32
-        versionCode = 44
-        versionName = "2.4.0-alpha"
+        versionCode = 47
+        versionName = "2.4.1"
         javaCompileOptions {
             annotationProcessorOptions {
                 argument("room.schemaLocation", "$projectDir/schemas")

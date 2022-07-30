@@ -4,12 +4,10 @@ import static org.ostrya.presencepublisher.message.MessageContext.UNKNOWN;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.BatteryManager;
 
-import androidx.annotation.Nullable;
-
 import org.ostrya.presencepublisher.log.DatabaseLogger;
+import org.ostrya.presencepublisher.util.BatteryIntentLoader;
 
 public class BatteryStatusProvider {
     private static final String TAG = "BatteryStatusProvider";
@@ -17,14 +15,14 @@ public class BatteryStatusProvider {
     private static final BatteryStatus UNKNOWN =
             new BatteryStatus(MessageContext.UNKNOWN, -1, MessageContext.UNKNOWN);
 
-    private final Context applicationContext;
+    private final BatteryIntentLoader batteryIntentLoader;
 
     public BatteryStatusProvider(Context applicationContext) {
-        this.applicationContext = applicationContext;
+        batteryIntentLoader = new BatteryIntentLoader(applicationContext);
     }
 
     public BatteryStatus getCurrentBatteryStatus() {
-        Intent batteryStatusIntent = getBatteryStatusIntent(applicationContext);
+        Intent batteryStatusIntent = batteryIntentLoader.getBatteryIntent();
         if (batteryStatusIntent == null) {
             DatabaseLogger.w(TAG, "No battery status received, returning fallback value");
             return UNKNOWN;
@@ -80,12 +78,5 @@ public class BatteryStatusProvider {
             }
             return new BatteryStatus(batteryStatus, batteryLevelPercentage, plugStatus);
         }
-    }
-
-    @Nullable
-    private static Intent getBatteryStatusIntent(Context context) {
-        DatabaseLogger.i(TAG, "Retrieving battery value");
-        IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        return context.registerReceiver(null, filter);
     }
 }

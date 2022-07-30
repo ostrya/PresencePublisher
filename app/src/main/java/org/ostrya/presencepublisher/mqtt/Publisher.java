@@ -67,13 +67,10 @@ public class Publisher {
                 mqttService.sendMessages(messages);
             } catch (Exception e) {
                 DatabaseLogger.w(TAG, "Error while sending messages", e);
-                notificationFactory.setNotification(lastSuccessTimestamp, estimatedNextTimestamp);
                 return false;
             }
             sharedPreferences.edit().putLong(LAST_SUCCESS, currentTimestamp).apply();
-            notificationFactory.setNotification(currentTimestamp, estimatedNextTimestamp);
-        } else {
-            notificationFactory.setNotification(lastSuccessTimestamp, estimatedNextTimestamp);
+            notificationFactory.updateStatusNotification(currentTimestamp, estimatedNextTimestamp);
         }
         return true;
     }

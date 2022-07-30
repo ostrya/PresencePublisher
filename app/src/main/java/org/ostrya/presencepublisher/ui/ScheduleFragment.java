@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.ui;
 
+import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
 import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
 
@@ -15,6 +16,7 @@ import org.ostrya.presencepublisher.ui.preference.schedule.ChargingMessageSchedu
 import org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePreference;
 import org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference;
+import org.ostrya.presencepublisher.ui.preference.schedule.RunNowPreferenceDummy;
 import org.ostrya.presencepublisher.ui.util.AbstractConfigurationFragment;
 
 public class ScheduleFragment extends AbstractConfigurationFragment {
@@ -35,13 +37,18 @@ public class ScheduleFragment extends AbstractConfigurationFragment {
         lastSuccess = new LastSuccessTimestampPreference(context);
         nextSchedule = new NextScheduleTimestampPreference(context);
 
+        Preference runNowDummy = new RunNowPreferenceDummy(context, this);
+
         screen.addPreference(messageSchedule);
         screen.addPreference(chargingMessageSchedule);
         screen.addPreference(autostart);
         screen.addPreference(lastSuccess);
         screen.addPreference(nextSchedule);
+        screen.addPreference(runNowDummy);
 
         setPreferenceScreen(screen);
+        SharedPreferences preference = getPreferenceManager().getSharedPreferences();
+        screen.setEnabled(preference.getBoolean(LOCATION_CONSENT, false));
     }
 
     @Override
@@ -49,6 +56,8 @@ public class ScheduleFragment extends AbstractConfigurationFragment {
         super.onResume();
         lastSuccess.refresh();
         nextSchedule.refresh();
+        SharedPreferences preferences = getPreferenceManager().getSharedPreferences();
+        getPreferenceScreen().setEnabled(preferences.getBoolean(LOCATION_CONSENT, false));
     }
 
     @Override
@@ -59,6 +68,10 @@ public class ScheduleFragment extends AbstractConfigurationFragment {
                 break;
             case NEXT_SCHEDULE:
                 nextSchedule.refresh();
+                break;
+            case LOCATION_CONSENT:
+                getPreferenceScreen()
+                        .setEnabled(sharedPreferences.getBoolean(LOCATION_CONSENT, false));
                 break;
             default:
                 break;

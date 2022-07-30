@@ -39,7 +39,7 @@ public class ConditionContentProvider {
 
         // add beacons
         if (applicationContext.supportsBeacons()) {
-            DatabaseLogger.i(TAG, "Checking found beacons");
+            DatabaseLogger.d(TAG, "Checking found beacons");
             for (String beaconId :
                     sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet())) {
                 DatabaseLogger.i(TAG, "Adding content for beacon " + beaconId);
@@ -64,7 +64,7 @@ public class ConditionContentProvider {
 
         // add offline message
         if (contents.isEmpty() && sharedPreferences.getBoolean(SEND_OFFLINE_MESSAGE, false)) {
-            DatabaseLogger.i(TAG, "Scheduling offline message");
+            DatabaseLogger.i(TAG, "Triggering offline message");
             String offlineContent =
                     sharedPreferences.getString(
                             OfflineContentPreference.OFFLINE_CONTENT,
@@ -76,7 +76,7 @@ public class ConditionContentProvider {
     }
 
     private String getSsidIfMatching(String currentSsid) {
-        DatabaseLogger.i(TAG, "Checking SSID");
+        DatabaseLogger.d(TAG, "Checking SSID");
         if (currentSsid == null) {
             DatabaseLogger.i(TAG, "No SSID found");
             return null;

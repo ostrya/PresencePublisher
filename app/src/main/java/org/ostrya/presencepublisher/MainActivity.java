@@ -2,28 +2,7 @@ package org.ostrya.presencepublisher;
 
 import static org.ostrya.presencepublisher.ui.initialization.InitializationHandler.HANDLER_CHAIN;
 import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
-import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_CONTENT_PREFIX;
 import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
-import static org.ostrya.presencepublisher.ui.preference.condition.OfflineContentPreference.OFFLINE_CONTENT;
-import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
-import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
-import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.SSID_LIST;
-import static org.ostrya.presencepublisher.ui.preference.condition.WifiCategorySupport.WIFI_CONTENT_PREFIX;
-import static org.ostrya.presencepublisher.ui.preference.connection.ClientCertificatePreference.CLIENT_CERTIFICATE;
-import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
-import static org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference.PASSWORD;
-import static org.ostrya.presencepublisher.ui.preference.connection.PortPreference.PORT;
-import static org.ostrya.presencepublisher.ui.preference.connection.QoSPreference.QOS_VALUE;
-import static org.ostrya.presencepublisher.ui.preference.connection.RetainFlagPreference.RETAIN_FLAG;
-import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
-import static org.ostrya.presencepublisher.ui.preference.connection.UsernamePreference.USERNAME;
-import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
-import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_LIST;
-import static org.ostrya.presencepublisher.ui.preference.messages.MessageFormatPreference.MESSAGE_FORMAT_SETTING;
-import static org.ostrya.presencepublisher.ui.preference.schedule.AutostartPreference.AUTOSTART;
-import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
-import static org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePreference.MESSAGE_SCHEDULE;
-import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
 
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -101,46 +80,9 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
-        switch (key) {
-            case BEACON_LIST:
-            case CLIENT_CERTIFICATE:
-            case HOST:
-            case MESSAGE_SCHEDULE:
-            case MESSAGE_LIST:
-            case OFFLINE_CONTENT:
-            case PASSWORD:
-            case PORT:
-            case QOS_VALUE:
-            case RETAIN_FLAG:
-            case SEND_OFFLINE_MESSAGE:
-            case SEND_VIA_MOBILE_NETWORK:
-            case SSID_LIST:
-            case USERNAME:
-            case USE_TLS:
-            case MESSAGE_FORMAT_SETTING:
-                onChangedConnectionProperty(key);
-                break;
-            case AUTOSTART:
-            case LAST_SUCCESS:
-            case NEXT_SCHEDULE:
-                break;
-            case LOCATION_CONSENT:
-                handleConsentChange();
-                break;
-            default:
-                if (key.startsWith(WIFI_CONTENT_PREFIX)
-                        || key.startsWith(BEACON_CONTENT_PREFIX)
-                        || key.startsWith(MESSAGE_CONFIG_PREFIX)) {
-                    onChangedConnectionProperty(key);
-                } else {
-                    DatabaseLogger.d(TAG, "Ignoring unexpected value " + key);
-                }
+        if (LOCATION_CONSENT.equals(key)) {
+            handleConsentChange();
         }
-    }
-
-    private void onChangedConnectionProperty(String key) {
-        DatabaseLogger.i(TAG, "Changed parameter " + key);
-        new Scheduler(this).startSchedule();
     }
 
     private void handleConsentChange() {

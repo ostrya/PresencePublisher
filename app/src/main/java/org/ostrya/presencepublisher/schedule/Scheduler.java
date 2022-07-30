@@ -1,145 +1,137 @@
 package org.ostrya.presencepublisher.schedule;
 
-import static org.ostrya.presencepublisher.PresencePublisher.NOTIFICATION_ID;
+import static org.ostrya.presencepublisher.PresencePublisher.LOCK;
 import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.ui.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
 import static org.ostrya.presencepublisher.ui.preference.schedule.ChargingMessageSchedulePreference.CHARGING_MESSAGE_SCHEDULE;
+import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
 import static org.ostrya.presencepublisher.ui.preference.schedule.MessageSchedulePreference.MESSAGE_SCHEDULE;
+import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import org.ostrya.presencepublisher.log.DatabaseLogger;
+import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
+import org.ostrya.presencepublisher.util.BatteryIntentLoader;
 
+import java.text.DateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class Scheduler {
     private static final String TAG = "Scheduler";
 
-    private static final String ID = "PublisherWork";
-    private static final String ID2 = "PublisherWork2";
-    private static final String ID3 = "PublisherWork3";
-    private static final String CID = "ChargingPublisherWork";
-    private static final String CID2 = "ChargingPublisherWork2";
-    private static final String CID3 = "ChargingPublisherWork3";
-
     public static final long NOW_DELAY = 1_000L;
 
-    private final Context applicationContext;
+    public static final String USE_WORKER_1 = "useWorker1";
+    public static final String UNIQUE_WORKER_ID = "uniqueId";
+
+    private static final String WORKER_1 = "PublishingWorker1";
+    private static final String WORKER_2 = "PublishingWorker2";
+
     private final SharedPreferences sharedPreferences;
     private final WorkManager workManager;
+    private final BatteryIntentLoader batteryIntentLoader;
+    private final NotificationFactory notificationFactory;
 
     public Scheduler(Context context) {
-        applicationContext = context.getApplicationContext();
+        Context applicationContext = context.getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         workManager = WorkManager.getInstance(applicationContext);
+        batteryIntentLoader = new BatteryIntentLoader(applicationContext);
+        notificationFactory = new NotificationFactory(applicationContext);
     }
 
-    public void startSchedule() {
-        if (!sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
-            DatabaseLogger.w(TAG, "Location consent not given, will not schedule anything.");
-            return;
-        }
-        int messageScheduleInMinutes = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
-        boolean useMobile = useMobile();
-        scheduleWorker(messageScheduleInMinutes, useMobile, false);
-        int chargingScheduleInMinutes = sharedPreferences.getInt(CHARGING_MESSAGE_SCHEDULE, 0);
-        if (chargingScheduleInMinutes > 0) {
-            scheduleWorker(chargingScheduleInMinutes, useMobile, true);
+    public void ensureSchedule() {
+        long scheduled = sharedPreferences.getLong(NEXT_SCHEDULE, 0L);
+        long now = System.currentTimeMillis();
+        long delay = scheduled - now;
+        if (delay <= NOW_DELAY) {
+            DatabaseLogger.i(TAG, "Starting schedule now.");
+            scheduleWorker(NOW_DELAY);
         }
     }
 
-    private void scheduleWorker(int scheduleInMinutes, boolean useMobile, boolean chargingOnly) {
-        Constraints.Builder constraintsBuilder = new Constraints.Builder();
-        if (chargingOnly) {
-            constraintsBuilder.setRequiresCharging(true);
+    public void runNow() {
+        DatabaseLogger.i(TAG, "Running now.");
+        scheduleWorker(NOW_DELAY);
+    }
+
+    public void scheduleNext() {
+        // avoid race condition when scheduling next run
+        synchronized (LOCK) {
+            long scheduled = sharedPreferences.getLong(NEXT_SCHEDULE, 0L);
+            long now = System.currentTimeMillis();
+            long delay = scheduled - now;
+            if (delay <= NOW_DELAY) {
+                int minutes = 0;
+                if (batteryIntentLoader.isCharging()) {
+                    minutes = sharedPreferences.getInt(CHARGING_MESSAGE_SCHEDULE, 0);
+                }
+                if (minutes == 0) {
+                    minutes = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
+                }
+                delay = minutes * 60_000L;
+                long nextSchedule = now + delay;
+                sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
+                DatabaseLogger.i(
+                        TAG,
+                        "Scheduling next run at "
+                                + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
+                                        .format(new Date(nextSchedule)));
+                notificationFactory.updateStatusNotification(
+                        sharedPreferences.getLong(LAST_SUCCESS, 0L), nextSchedule);
+                scheduleWorker(delay);
+            }
         }
-        if (useMobile) {
-            constraintsBuilder.setRequiredNetworkType(NetworkType.CONNECTED);
-        } else {
-            constraintsBuilder.setRequiredNetworkType(NetworkType.UNMETERED);
+    }
+
+    private void scheduleWorker(long delay) {
+        // avoid race condition when selecting worker
+        synchronized (LOCK) {
+            if (!sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
+                DatabaseLogger.w(TAG, "Location consent not given, will not schedule anything.");
+                return;
+            }
+            Constraints.Builder constraintsBuilder = new Constraints.Builder();
+            if (useMobile()) {
+                constraintsBuilder.setRequiredNetworkType(NetworkType.CONNECTED);
+            } else {
+                constraintsBuilder.setRequiredNetworkType(NetworkType.UNMETERED);
+            }
+            Constraints constraints = constraintsBuilder.build();
+            boolean useWorker1 = sharedPreferences.getBoolean(USE_WORKER_1, false);
+            String uniqueWorkName = useWorker1 ? WORKER_1 : WORKER_2;
+            OneTimeWorkRequest workRequest =
+                    new OneTimeWorkRequest.Builder(PublishingWorker.class)
+                            .setConstraints(constraints)
+                            .keepResultsForAtLeast(1, TimeUnit.HOURS)
+                            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                            .setInputData(
+                                    new Data.Builder()
+                                            .putString(UNIQUE_WORKER_ID, uniqueWorkName)
+                                            .build())
+                            .build();
+            workManager.enqueueUniqueWork(uniqueWorkName, ExistingWorkPolicy.REPLACE, workRequest);
+            sharedPreferences.edit().putBoolean(USE_WORKER_1, !useWorker1).apply();
         }
-        Constraints constraints = constraintsBuilder.build();
-        if (scheduleInMinutes >= 15) {
-            workManager.enqueueUniquePeriodicWork(
-                    chargingOnly ? CID : ID,
-                    ExistingPeriodicWorkPolicy.REPLACE,
-                    new PeriodicWorkRequest.Builder(
-                                    PublishingWorker.class, scheduleInMinutes, TimeUnit.MINUTES)
-                            .setConstraints(constraints)
-                            .build());
-        } else if (scheduleInMinutes >= 8) {
-            workManager.enqueueUniquePeriodicWork(
-                    chargingOnly ? CID : ID,
-                    ExistingPeriodicWorkPolicy.REPLACE,
-                    new PeriodicWorkRequest.Builder(
-                                    PublishingWorker.class,
-                                    scheduleInMinutes * 2L,
-                                    TimeUnit.MINUTES)
-                            .setConstraints(constraints)
-                            .build());
-            workManager.enqueueUniquePeriodicWork(
-                    chargingOnly ? CID2 : ID2,
-                    ExistingPeriodicWorkPolicy.REPLACE,
-                    new PeriodicWorkRequest.Builder(
-                                    PublishingWorker.class,
-                                    scheduleInMinutes * 2L,
-                                    TimeUnit.MINUTES)
-                            .setInitialDelay(scheduleInMinutes, TimeUnit.MINUTES)
-                            .setConstraints(constraints)
-                            .build());
-        } else {
-            workManager.enqueueUniquePeriodicWork(
-                    chargingOnly ? CID : ID,
-                    ExistingPeriodicWorkPolicy.REPLACE,
-                    new PeriodicWorkRequest.Builder(
-                                    PublishingWorker.class,
-                                    scheduleInMinutes * 3L,
-                                    TimeUnit.MINUTES)
-                            .setConstraints(constraints)
-                            .build());
-            workManager.enqueueUniquePeriodicWork(
-                    chargingOnly ? CID2 : ID2,
-                    ExistingPeriodicWorkPolicy.REPLACE,
-                    new PeriodicWorkRequest.Builder(
-                                    PublishingWorker.class,
-                                    scheduleInMinutes * 3L,
-                                    TimeUnit.MINUTES)
-                            .setInitialDelay(scheduleInMinutes, TimeUnit.MINUTES)
-                            .setConstraints(constraints)
-                            .build());
-            workManager.enqueueUniquePeriodicWork(
-                    chargingOnly ? CID3 : ID3,
-                    ExistingPeriodicWorkPolicy.REPLACE,
-                    new PeriodicWorkRequest.Builder(
-                                    PublishingWorker.class,
-                                    scheduleInMinutes * 3L,
-                                    TimeUnit.MINUTES)
-                            .setInitialDelay(scheduleInMinutes * 2L, TimeUnit.MINUTES)
-                            .setConstraints(constraints)
-                            .build());
-        }
-        NotificationManagerCompat.from(applicationContext).cancel(NOTIFICATION_ID);
     }
 
     public void stopSchedule() {
-        workManager.cancelUniqueWork(ID);
-        workManager.cancelUniqueWork(ID2);
-        workManager.cancelUniqueWork(ID3);
-        workManager.cancelUniqueWork(CID);
-        workManager.cancelUniqueWork(CID2);
-        workManager.cancelUniqueWork(CID3);
+        workManager.cancelUniqueWork(WORKER_1);
+        workManager.cancelUniqueWork(WORKER_2);
     }
 
     private boolean useMobile() {

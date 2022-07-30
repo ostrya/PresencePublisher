@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.mqtt;
 
+import static org.ostrya.presencepublisher.PresencePublisher.MQTT_CLIENT_ID;
 import static org.ostrya.presencepublisher.ui.preference.connection.ClientCertificatePreference.CLIENT_CERTIFICATE;
 import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
 import static org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference.PASSWORD;
@@ -12,7 +13,6 @@ import static org.ostrya.presencepublisher.ui.preference.connection.UsernamePref
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.provider.Settings;
 
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
@@ -36,12 +36,16 @@ public class MqttService {
     private final AndroidSslSocketFactoryFactory factory;
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences securePreferences;
+    private final String clientId;
 
     public MqttService(Context context) {
         Context applicationContext = context.getApplicationContext();
         factory = new AndroidSslSocketFactoryFactory(applicationContext);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         securePreferences = SecurePreferencesHelper.getSecurePreferences(applicationContext);
+        clientId =
+                sharedPreferences.getString(
+                        MQTT_CLIENT_ID, "initialization error " + System.currentTimeMillis());
     }
 
     public void sendTestMessage() throws MqttException {
@@ -53,8 +57,7 @@ public class MqttService {
         String topic = "test";
 
         try (MqttClient mqttClient =
-                new MqttClient(
-                        getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence())) {
+                new MqttClient(getMqttUrl(tls), clientId, new MemoryPersistence())) {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setConnectionTimeout(5);
             if (!login.isEmpty() && !password.isEmpty()) {
@@ -81,8 +84,7 @@ public class MqttService {
         boolean retain = sharedPreferences.getBoolean(RETAIN_FLAG, false);
 
         try (MqttClient mqttClient =
-                new MqttClient(
-                        getMqttUrl(tls), Settings.Secure.ANDROID_ID, new MemoryPersistence())) {
+                new MqttClient(getMqttUrl(tls), clientId, new MemoryPersistence())) {
             MqttConnectOptions options = new MqttConnectOptions();
             options.setConnectionTimeout(5);
             if (!login.isEmpty() && !password.isEmpty()) {
