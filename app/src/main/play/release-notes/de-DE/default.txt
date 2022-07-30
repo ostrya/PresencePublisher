@@ -1,3 +1,6 @@
+v2.4.1
+• Entfernen von Rückständen vorheriger Zeitplanungslösung aus v2.4.0-alpha
+
 v2.4.0
 • Bugfix für die Eingabe von Nachrichtentopics
 • Verwendung von WorkManager statt Alarmen, um robuster Nachrichten versenden zu können

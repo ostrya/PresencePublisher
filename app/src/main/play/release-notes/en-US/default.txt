@@ -1,3 +1,6 @@
+v2.4.1
+• clean up left-overs from previous scheduling solution in v2.4.0-alpha
+
 v2.4.0
 • bugfix for entering message topics
 • using WorkManager instead of built-in alarms to send messages more robustly
