@@ -11,7 +11,6 @@ import android.content.Context;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.work.Data;
 import androidx.work.ForegroundInfo;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
@@ -33,8 +32,7 @@ public class PublishingWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Data inputData = getInputData();
-        String id = inputData.getString(UNIQUE_WORKER_ID);
+        String id = getInputData().getString(UNIQUE_WORKER_ID);
         DatabaseLogger.i(id, "Running publishing worker with attempt " + getRunAttemptCount());
         try {
             setForegroundAsync(getForegroundInfo()).get();
@@ -45,7 +43,7 @@ public class PublishingWorker extends Worker {
             DatabaseLogger.w(id, "Interrupted while putting worker to foreground");
         }
 
-        // make sure we do not run publishing twice
+        // make sure we do not run publishing in parallel
         synchronized (LOCK) {
             new Scheduler(getApplicationContext()).scheduleNext();
 

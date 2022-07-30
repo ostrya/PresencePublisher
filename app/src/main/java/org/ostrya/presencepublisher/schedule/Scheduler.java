@@ -70,28 +70,31 @@ public class Scheduler {
     }
 
     public void scheduleNext() {
-        long scheduled = sharedPreferences.getLong(NEXT_SCHEDULE, 0L);
-        long now = System.currentTimeMillis();
-        long delay = scheduled - now;
-        if (delay <= NOW_DELAY) {
-            int minutes = 0;
-            if (batteryIntentLoader.isCharging()) {
-                minutes = sharedPreferences.getInt(CHARGING_MESSAGE_SCHEDULE, 0);
+        // avoid race condition when scheduling next run
+        synchronized (LOCK) {
+            long scheduled = sharedPreferences.getLong(NEXT_SCHEDULE, 0L);
+            long now = System.currentTimeMillis();
+            long delay = scheduled - now;
+            if (delay <= NOW_DELAY) {
+                int minutes = 0;
+                if (batteryIntentLoader.isCharging()) {
+                    minutes = sharedPreferences.getInt(CHARGING_MESSAGE_SCHEDULE, 0);
+                }
+                if (minutes == 0) {
+                    minutes = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
+                }
+                delay = minutes * 60_000L;
+                long nextSchedule = now + delay;
+                sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
+                DatabaseLogger.i(
+                        TAG,
+                        "Scheduling next run at "
+                                + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
+                                        .format(new Date(nextSchedule)));
+                notificationFactory.updateStatusNotification(
+                        sharedPreferences.getLong(LAST_SUCCESS, 0L), nextSchedule);
+                scheduleWorker(delay);
             }
-            if (minutes == 0) {
-                minutes = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
-            }
-            delay = minutes * 60_000L;
-            long nextSchedule = now + delay;
-            sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
-            DatabaseLogger.i(
-                    TAG,
-                    "Scheduling next run at "
-                            + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
-                                    .format(new Date(nextSchedule)));
-            notificationFactory.updateStatusNotification(
-                    sharedPreferences.getLong(LAST_SUCCESS, 0L), nextSchedule);
-            scheduleWorker(delay);
         }
     }
 
