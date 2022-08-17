@@ -1,3 +1,6 @@
+v2.4.2
+• fix crash on Android 10
+
 v2.4.1
 • clean up left-overs from previous scheduling solution in v2.4.0-alpha
 

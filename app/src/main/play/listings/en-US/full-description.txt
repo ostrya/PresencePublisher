@@ -11,6 +11,9 @@ as well as client certificate authentication. For more details on how to
 configure certificate-based authentication, please have a look at
 <a href="https://github.com/ostrya/PresencePublisher/blob/main/README.md">https://github.com/ostrya/PresencePublisher/blob/main/README.md</a>.
 
+Note that the data you choose to publish is sent only to the server of your choice.
+The app does not send any data to me or any other third party.
+
 If you want to know more about how this app processes your location data,
 please have a look at the privacy policy at <a href="https://ostrya.github.io/PresencePublisher/en/PRIVACY_POLICY.html">https://ostrya.github.io/PresencePublisher/en/PRIVACY_POLICY.html</a>.
 

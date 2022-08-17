@@ -14,7 +14,10 @@ zertifikatsbasierter Authentifizierung findest du unter
 <a href="https://github.com/ostrya/PresencePublisher/blob/main/README.md">https://github.com/ostrya/PresencePublisher/blob/main/README.md</a>
 (auf Englisch).
 
-Mehr Informationen dazu, wie diese App deine Standortdaten verarbeitet, findest du in der
+Jegliche Daten, die du zum Versenden auswählst, werden ausschließlich auf den von
+dir vorgegebenen Server verschickt. Die App versendet keinerlei Daten an mich oder Dritte.
+
+Mehr Informationen dazu, wie diese App deine Daten verarbeitet, findest du in der
 Datenschutzerklärung unter <a href="https://ostrya.github.io/PresencePublisher/de/PRIVACY_POLICY.html">https://ostrya.github.io/PresencePublisher/de/PRIVACY_POLICY.html</a>
 
 <b>Berechtigungen</b>

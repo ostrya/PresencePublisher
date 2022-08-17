@@ -1,3 +1,6 @@
+v2.4.2
+• Bugfix für Absturz auf Android 10
+
 v2.4.1
 • Entfernen von Rückständen vorheriger Zeitplanungslösung aus v2.4.0-alpha
 

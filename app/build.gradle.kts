@@ -47,7 +47,7 @@ android {
         multiDexEnabled = true
         targetSdk = 32
         versionCode = 47
-        versionName = "2.4.1"
+        versionName = "2.4.2"
         javaCompileOptions {
             annotationProcessorOptions {
                 argument("room.schemaLocation", "$projectDir/schemas")
