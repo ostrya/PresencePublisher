@@ -58,8 +58,7 @@ public class NotificationFactory {
     public Notification getProgressNotification() {
         Notification notification;
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(
-                                applicationContext, applicationContext.getPackageName())
+                new NotificationCompat.Builder(applicationContext, PROGRESS_CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(applicationContext.getString(R.string.app_name))
                         .setContentText(
