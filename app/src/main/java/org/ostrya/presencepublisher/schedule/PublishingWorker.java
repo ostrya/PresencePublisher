@@ -59,7 +59,8 @@ public class PublishingWorker extends Worker {
     }
 
     @NonNull
-    private ForegroundInfo getForegroundInfo() {
+    @Override
+    public ForegroundInfo getForegroundInfo() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return new ForegroundInfo(
                     PROGRESS_NOTIFICATION_ID,

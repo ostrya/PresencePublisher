@@ -8,7 +8,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("org.eclipse.jgit:org.eclipse.jgit:6.2.0.202206071550-r")
+        classpath("org.eclipse.jgit:org.eclipse.jgit:6.4.0.202211300538-r")
     }
 }
 
@@ -134,24 +134,24 @@ play {
 }
 
 dependencies {
-    val roomVersion = "2.4.2"
+    val roomVersion = "2.5.0"
 
-    implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.preference:preference:1.2.0")
     implementation("androidx.room:room-guava:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.security:security-crypto:1.1.0-alpha03")
+    implementation("androidx.security:security-crypto:1.1.0-alpha05")
     implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
-    implementation("androidx.work:work-runtime:2.7.1")
-    implementation("com.google.android.material:material:1.6.1")
+    implementation("androidx.work:work-runtime:2.8.0")
+    implementation("com.google.android.material:material:1.8.0")
     implementation("com.google.guava:guava:31.1-android")
     implementation("org.altbeacon:android-beacon-library:2.19.4")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.assertj:assertj-core:3.23.1")
-    testImplementation("org.mockito:mockito-inline:4.6.1")
+    testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.mockito:mockito-inline:5.1.1")
 
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 }
