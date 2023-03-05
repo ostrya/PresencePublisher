@@ -28,7 +28,9 @@ Datenschutzerklärung unter <a href="https://ostrya.github.io/PresencePublisher/
 • ACCESS_WIFI_STATE: notwendig, um den Namen des verbundenen WLANs zu erfassen
 • BLUETOOTH: notwendig, um mit Bluetooth-Beacons zu kommunizieren
 • BLUETOOTH_ADMIN: notwendig, um unbekannte Bluetooth-Beacons zu finden
+• FOREGROUND_SERVICE: notwendig ab Android 9, damit die App zuverlässig laufen kann
 • INTERNET: nur notwendig, wenn dein MQTT-Broker nicht im lokalen Netzwerk läuft
+• POST_NOTIFICATIONS: notwendig ab Android 13, um Benachrichtigungen zu erzeugen
 • RECEIVE_BOOT_COMPLETED: notwendig, damit die App nach dem Neustart des Geräts automatisch starten kann
 • REQUEST_IGNORE_BATTERY_OPTIMIZATIONS: notwendig ab Android 6, um Batterieoptimierung zu deaktivieren
 • WRITE_EXTERNAL_STORAGE: nur in Android 4.0 - 4.3 notwendig, um nach Aufforderung Log-Dateien zu speichern

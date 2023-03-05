@@ -6,6 +6,7 @@ import static org.ostrya.presencepublisher.PresencePublisher.NOTIFICATION_REQUES
 import static org.ostrya.presencepublisher.PresencePublisher.STATUS_NOTIFICATION_ID;
 import static org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider.getFormattedTimestamp;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -14,8 +15,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
 
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
@@ -50,9 +55,32 @@ public class NotificationFactory {
         }
     }
 
+    public Runnable checkNotificationPermissionThenRunCallback(
+            Fragment fragment, ActivityResultCallback<Boolean> callback) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityResultLauncher<String> launcher =
+                    fragment.registerForActivityResult(
+                            new ActivityResultContracts.RequestPermission(), callback);
+            return () -> {
+                // looks like this method returns false only if the user never chose before, but
+                // returns true even if the user selected "don't allow", so we don't need to
+                // remember this ourselves
+                if (!notificationManager.areNotificationsEnabled()) {
+                    launcher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                } else {
+                    callback.onActivityResult(true);
+                }
+            };
+        } else {
+            return () -> callback.onActivityResult(true);
+        }
+    }
+
     public void updateStatusNotification(long lastSuccess, long nextSchedule) {
-        notificationManager.notify(
-                STATUS_NOTIFICATION_ID, getStatusNotification(lastSuccess, nextSchedule));
+        if (notificationManager.areNotificationsEnabled()) {
+            notificationManager.notify(
+                    STATUS_NOTIFICATION_ID, getStatusNotification(lastSuccess, nextSchedule));
+        }
     }
 
     public Notification getProgressNotification() {

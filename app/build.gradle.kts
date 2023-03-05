@@ -40,13 +40,13 @@ fun isTagged(): Boolean {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
         minSdk = 14
         multiDexEnabled = true
-        targetSdk = 32
-        versionCode = 47
+        targetSdk = 33
+        versionCode = 48
         versionName = "2.4.2"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -86,6 +86,7 @@ android {
     lint {
         abortOnError = false
     }
+    namespace = "org.ostrya.presencepublisher"
 }
 
 val checkParameters by tasks.registering {

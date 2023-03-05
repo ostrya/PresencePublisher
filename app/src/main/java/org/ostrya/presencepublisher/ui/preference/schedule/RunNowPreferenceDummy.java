@@ -7,9 +7,13 @@ import androidx.fragment.app.Fragment;
 
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.schedule.Scheduler;
+import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 import org.ostrya.presencepublisher.ui.preference.common.ClickDummy;
 
 public class RunNowPreferenceDummy extends ClickDummy {
+    private final NotificationFactory notificationFactory;
+    private final Runnable runnable;
+
     public RunNowPreferenceDummy(Context context, Fragment fragment) {
         super(
                 context,
@@ -17,10 +21,18 @@ public class RunNowPreferenceDummy extends ClickDummy {
                 R.string.run_now_title,
                 R.string.run_now_summary,
                 fragment);
+        this.notificationFactory = new NotificationFactory(context.getApplicationContext());
+        this.runnable =
+                notificationFactory.checkNotificationPermissionThenRunCallback(
+                        fragment, this::runNow);
     }
 
     @Override
     protected void onClick() {
+        runnable.run();
+    }
+
+    private void runNow(Boolean ignored) {
         Toast.makeText(getContext(), R.string.run_now_toast, Toast.LENGTH_SHORT).show();
         new Scheduler(getContext()).runNow();
     }
