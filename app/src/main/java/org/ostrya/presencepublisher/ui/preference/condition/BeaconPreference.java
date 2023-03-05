@@ -15,7 +15,7 @@ import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 import org.ostrya.presencepublisher.ui.preference.common.AbstractTextPreferenceEntry;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
-import org.ostrya.presencepublisher.ui.util.RegexValidator;
+import org.ostrya.presencepublisher.ui.util.NonEmptyStringValidator;
 
 public class BeaconPreference extends AbstractTextPreferenceEntry {
     public static final String DEFAULT_CONTENT_ONLINE = "online";
@@ -25,7 +25,7 @@ public class BeaconPreference extends AbstractTextPreferenceEntry {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public BeaconPreference(Context context, String key, String beaconId, Fragment fragment) {
-        super(context, key, new RegexValidator(".+"), beaconId);
+        super(context, key, new NonEmptyStringValidator(), beaconId);
         this.beaconId = beaconId;
         this.fragment = fragment;
         setDefaultValue(DEFAULT_CONTENT_ONLINE);

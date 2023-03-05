@@ -14,7 +14,7 @@ import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 import org.ostrya.presencepublisher.ui.preference.common.AbstractTextPreferenceEntry;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
-import org.ostrya.presencepublisher.ui.util.RegexValidator;
+import org.ostrya.presencepublisher.ui.util.NonEmptyStringValidator;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -32,7 +32,7 @@ public class WifiNetworkPreference extends AbstractTextPreferenceEntry {
             String ssid,
             SharedPreferences preference,
             Fragment fragment) {
-        super(context, key, new RegexValidator(".+"), ssid);
+        super(context, key, new NonEmptyStringValidator(), ssid);
         this.preference = preference;
         this.fragment = fragment;
         setDefaultValue(DEFAULT_CONTENT_ONLINE);

@@ -5,13 +5,13 @@ import android.content.Context;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.preference.common.TextPreferenceBase;
 import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
-import org.ostrya.presencepublisher.ui.util.RegexValidator;
+import org.ostrya.presencepublisher.ui.util.NonEmptyStringValidator;
 
 public class UsernamePreference extends TextPreferenceBase {
     public static final String USERNAME = "login";
 
     public UsernamePreference(Context context) {
-        super(context, USERNAME, new RegexValidator("[^ ]*"), R.string.username_title);
+        super(context, USERNAME, new NonEmptyStringValidator(), R.string.username_title);
     }
 
     @Override

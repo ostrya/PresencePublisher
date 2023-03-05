@@ -12,7 +12,7 @@ public class MessageConfigurationValidator implements Validator {
 
     @Override
     public boolean isValid(Context context, @Nullable String key, String value) {
-        if (key == null) {
+        if (key == null || key.trim().isEmpty()) {
             String text = context.getString(R.string.toast_empty_name);
             Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             return false;
@@ -23,7 +23,7 @@ public class MessageConfigurationValidator implements Validator {
             Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (messageConfiguration.getTopic().isEmpty()) {
+        if (messageConfiguration.getTopic().trim().isEmpty()) {
             String text = context.getString(R.string.toast_empty_topic);
             Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             return false;

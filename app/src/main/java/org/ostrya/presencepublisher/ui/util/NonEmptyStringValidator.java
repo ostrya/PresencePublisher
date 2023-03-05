@@ -7,18 +7,10 @@ import androidx.annotation.Nullable;
 
 import org.ostrya.presencepublisher.R;
 
-import java.util.regex.Pattern;
-
-public class RegexValidator implements Validator {
-    private final Pattern pattern;
-
-    public RegexValidator(final String pattern) {
-        this.pattern = Pattern.compile(pattern);
-    }
-
+public class NonEmptyStringValidator implements Validator {
     @Override
     public boolean isValid(Context context, @Nullable String key, String value) {
-        if (pattern.matcher(value).matches()) {
+        if (value != null && !value.trim().isEmpty()) {
             return true;
         } else {
             String text = context.getString(R.string.toast_invalid_input);

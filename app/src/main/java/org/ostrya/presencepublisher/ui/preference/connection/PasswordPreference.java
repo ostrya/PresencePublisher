@@ -9,13 +9,12 @@ import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.security.SecurePreferencesHelper;
 import org.ostrya.presencepublisher.ui.preference.common.TextPreferenceBase;
 import org.ostrya.presencepublisher.ui.util.PasswordSummaryProvider;
-import org.ostrya.presencepublisher.ui.util.RegexValidator;
 
 public class PasswordPreference extends TextPreferenceBase {
     public static final String PASSWORD = "password";
 
     public PasswordPreference(Context context) {
-        super(context, PASSWORD, new RegexValidator(".*"), R.string.password_title);
+        super(context, PASSWORD, (c, k, v) -> true, R.string.password_title);
         setOnBindEditTextListener(
                 editText -> {
                     editText.setInputType(

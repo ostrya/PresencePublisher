@@ -12,7 +12,7 @@ import androidx.preference.ListPreference;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.network.NetworkService;
 import org.ostrya.presencepublisher.ui.dialog.EditNetworkDialog;
-import org.ostrya.presencepublisher.ui.util.RegexValidator;
+import org.ostrya.presencepublisher.ui.util.NonEmptyStringValidator;
 import org.ostrya.presencepublisher.ui.util.Validator;
 
 import java.util.Collections;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 public class AddNetworkChoicePreferenceDummy extends ListPreference {
-    private final Validator validator = new RegexValidator(".+");
+    private final Validator validator = new NonEmptyStringValidator();
     private final String addNew;
     private final SharedPreferences sharedPreferences;
     private final NetworkService networkService;
@@ -65,7 +65,7 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
         if (!result) {
             String text = getContext().getString(R.string.toast_invalid_input);
             Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
-        } else if (!newValue.isEmpty()) {
+        } else {
             saveNewNetwork(newValue);
         }
     }
