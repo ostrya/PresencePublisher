@@ -67,7 +67,6 @@ public class PublisherTest {
         currentTimestamp = (long) (Math.random() * 100) + 1;
         nextTimestamp = currentTimestamp + 1;
         oldTimestamp = currentTimestamp - 1;
-        when(messageContext.getLastSuccessTimestamp()).thenReturn(oldTimestamp);
         when(messageContext.getCurrentTimestamp()).thenReturn(currentTimestamp);
         when(messageContext.getEstimatedNextTimestamp()).thenReturn(nextTimestamp);
         uut =

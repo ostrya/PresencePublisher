@@ -8,12 +8,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 import org.ostrya.presencepublisher.ui.preference.common.AbstractTextPreferenceEntry;
-import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
 import org.ostrya.presencepublisher.ui.util.NonEmptyStringValidator;
 
 import java.util.Collections;
@@ -26,15 +26,23 @@ public class WifiNetworkPreference extends AbstractTextPreferenceEntry {
     private final SharedPreferences preference;
     private final Fragment fragment;
 
+    private final WifiNetwork network;
+
     public WifiNetworkPreference(
             Context context,
             String key,
-            String ssid,
+            WifiNetwork network,
             SharedPreferences preference,
             Fragment fragment) {
-        super(context, key, new NonEmptyStringValidator(), ssid);
+        super(
+                context,
+                key,
+                new NonEmptyStringValidator(),
+                network.getName(),
+                R.string.content_summary);
         this.preference = preference;
         this.fragment = fragment;
+        this.network = network;
         setDefaultValue(DEFAULT_CONTENT_ONLINE);
     }
 
@@ -59,7 +67,11 @@ public class WifiNetworkPreference extends AbstractTextPreferenceEntry {
     }
 
     @Override
-    protected void configureSummary() {
-        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.content_summary));
+    protected String getValue(@NonNull String text) {
+        if (network.hasWildcard()) {
+            return text + "\n" + getContext().getString(R.string.use_wildcard);
+        } else {
+            return text;
+        }
     }
 }

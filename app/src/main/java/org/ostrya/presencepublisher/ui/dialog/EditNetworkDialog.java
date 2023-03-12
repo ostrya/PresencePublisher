@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 
@@ -45,13 +47,17 @@ public class EditNetworkDialog extends DialogFragment {
             editText.setSelection(0);
         }
 
+        SwitchMaterial useWildcards = view.findViewById(R.id.useWildcards);
+
         builder.setTitle(titleId)
                 .setView(view)
                 .setPositiveButton(
                         R.string.dialog_ok,
                         (dialog, id) -> {
                             if (editText != null) {
-                                callback.accept(editText.getText().toString());
+                                callback.accept(
+                                        editText.getText().toString(),
+                                        useWildcards != null && useWildcards.isChecked());
                             } else {
                                 DatabaseLogger.e(TAG, "Unable to find edit text field");
                             }
@@ -76,6 +82,6 @@ public class EditNetworkDialog extends DialogFragment {
     }
 
     public interface Callback {
-        void accept(String newValue);
+        void accept(String newValue, boolean useWildcards);
     }
 }

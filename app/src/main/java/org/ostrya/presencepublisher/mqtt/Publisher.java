@@ -56,7 +56,6 @@ public class Publisher {
 
     public boolean publish() {
         MessageContext messageContext = messageContextProvider.getContext();
-        long lastSuccessTimestamp = messageContext.getLastSuccessTimestamp();
         long currentTimestamp = messageContext.getCurrentTimestamp();
         long estimatedNextTimestamp = messageContext.getEstimatedNextTimestamp();
         sharedPreferences.edit().putLong(NEXT_SCHEDULE, estimatedNextTimestamp).apply();

@@ -16,6 +16,7 @@ import org.ostrya.presencepublisher.PresencePublisher;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.ui.preference.condition.BeaconPreference;
 import org.ostrya.presencepublisher.ui.preference.condition.OfflineContentPreference;
+import org.ostrya.presencepublisher.ui.preference.condition.WifiNetwork;
 import org.ostrya.presencepublisher.ui.preference.condition.WifiNetworkPreference;
 
 import java.util.ArrayList;
@@ -81,19 +82,24 @@ public class ConditionContentProvider {
             DatabaseLogger.i(TAG, "No SSID found");
             return null;
         }
-        Set<String> targetSsids = sharedPreferences.getStringSet(SSID_LIST, Collections.emptySet());
-        if (targetSsids.contains(currentSsid)) {
+        if (networkMatches(currentSsid)) {
             DatabaseLogger.d(TAG, "Correct network found");
             return currentSsid;
         } else {
             DatabaseLogger.i(
-                    TAG,
-                    "'"
-                            + currentSsid
-                            + "' does not match any desired network '"
-                            + targetSsids
-                            + "', skipping.");
+                    TAG, "'" + currentSsid + "' does not match any desired network, skipping.");
             return null;
         }
+    }
+
+    private boolean networkMatches(String currentSsid) {
+        Set<String> targetSsids = sharedPreferences.getStringSet(SSID_LIST, Collections.emptySet());
+        for (String target : targetSsids) {
+            WifiNetwork network = WifiNetwork.fromRawString(target);
+            if (network != null && network.matches(currentSsid)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

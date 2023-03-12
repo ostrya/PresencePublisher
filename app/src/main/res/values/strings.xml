@@ -96,7 +96,7 @@
     <string name="add_network_summary">Click here to add a new network</string>
     <string name="remove_network_title">Remove network</string>
     <string name="remove_network_warning_message">Do you really want to remove this network?</string>
-    <string name="enter_network">Enter other network …</string>
+    <string name="enter_network">Add network …</string>
     <string name="add_beacon_title">Add beacon</string>
     <string name="add_beacon_summary">Click here to add a beacon</string>
     <string name="remove_region_title">Remove region</string>
@@ -126,7 +126,8 @@
     <string name="add_message_summary">Click here to add a message</string>
     <string name="remove_message_title">Remove message</string>
     <string name="remove_message_warning_message">Do you really want to remove this message?</string>
-    <string name="message_summary" formatted="true">Current topic: %1$s%nCurrent content:%n%2$s</string>
+    <string name="message_summary" formatted="true">Current topic: %1$s</string>
+    <string name="message_content" formatted="true">Current content:%n%1$s</string>
     <string name="edit_message_title_1">Edit message (1)</string>
     <string name="edit_message_title_2">Edit message (2)</string>
     <string name="message_name_hint">Name</string>
@@ -144,4 +145,5 @@
     <string name="run_now_title">Run now</string>
     <string name="run_now_summary">Check conditions now and send configured messages.</string>
     <string name="run_now_toast">Running now …</string>
+    <string name="use_wildcard">Use * as wildcard</string>
 </resources>

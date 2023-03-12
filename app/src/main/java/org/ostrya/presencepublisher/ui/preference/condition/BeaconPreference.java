@@ -14,7 +14,6 @@ import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 import org.ostrya.presencepublisher.ui.preference.common.AbstractTextPreferenceEntry;
-import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
 import org.ostrya.presencepublisher.ui.util.NonEmptyStringValidator;
 
 public class BeaconPreference extends AbstractTextPreferenceEntry {
@@ -25,7 +24,7 @@ public class BeaconPreference extends AbstractTextPreferenceEntry {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public BeaconPreference(Context context, String key, String beaconId, Fragment fragment) {
-        super(context, key, new NonEmptyStringValidator(), beaconId);
+        super(context, key, new NonEmptyStringValidator(), beaconId, R.string.content_summary);
         this.beaconId = beaconId;
         this.fragment = fragment;
         setDefaultValue(DEFAULT_CONTENT_ONLINE);
@@ -48,10 +47,5 @@ public class BeaconPreference extends AbstractTextPreferenceEntry {
         if (ok) {
             PresenceBeaconManager.getInstance().removeBeacon(getContext(), beaconId);
         }
-    }
-
-    @Override
-    protected void configureSummary() {
-        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.content_summary));
     }
 }

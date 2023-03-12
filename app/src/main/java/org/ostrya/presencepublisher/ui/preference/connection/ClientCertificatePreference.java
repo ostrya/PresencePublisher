@@ -3,20 +3,22 @@ package org.ostrya.presencepublisher.ui.preference.connection;
 import android.content.Context;
 import android.security.KeyChain;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 
 import org.ostrya.presencepublisher.R;
-import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
 
-public class ClientCertificatePreference extends Preference {
+public class ClientCertificatePreference extends Preference
+        implements Preference.SummaryProvider<ClientCertificatePreference> {
     public static final String CLIENT_CERTIFICATE = "client_cert";
 
     public ClientCertificatePreference(Context context, Fragment fragment) {
         super(context);
         setKey(CLIENT_CERTIFICATE);
         setTitle(R.string.client_certificate_title);
-        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.client_certificate_summary));
+        setSummaryProvider(this);
         setIconSpaceReserved(false);
         setOnPreferenceClickListener(
                 prefs -> {
@@ -44,5 +46,18 @@ public class ClientCertificatePreference extends Preference {
         }
 
         notifyChanged();
+    }
+
+    @Nullable
+    @Override
+    public CharSequence provideSummary(@NonNull ClientCertificatePreference preference) {
+        return preference
+                .getContext()
+                .getString(R.string.client_certificate_summary, preference.getValue());
+    }
+
+    private String getValue() {
+        String undefined = getContext().getString(R.string.value_undefined);
+        return getPersistedString(undefined);
     }
 }

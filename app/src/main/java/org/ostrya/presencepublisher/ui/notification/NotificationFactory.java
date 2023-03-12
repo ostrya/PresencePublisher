@@ -4,7 +4,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 import static org.ostrya.presencepublisher.PresencePublisher.NOTIFICATION_REQUEST_CODE;
 import static org.ostrya.presencepublisher.PresencePublisher.STATUS_NOTIFICATION_ID;
-import static org.ostrya.presencepublisher.ui.util.TimestampSummaryProvider.getFormattedTimestamp;
+import static org.ostrya.presencepublisher.ui.util.TimestampFormatter.format;
 
 import android.Manifest;
 import android.app.Notification;
@@ -144,12 +144,11 @@ public class NotificationFactory {
     }
 
     private static String getLastSuccess(Context context, long lastSuccess) {
-        return context.getString(
-                R.string.notification_last_success, getFormattedTimestamp(context, lastSuccess));
+        return context.getString(R.string.notification_last_success, format(context, lastSuccess));
     }
 
     private static String getNextSchedule(Context context, long nextSchedule) {
         return context.getString(
-                R.string.notification_next_schedule, getFormattedTimestamp(context, nextSchedule));
+                R.string.notification_next_schedule, format(context, nextSchedule));
     }
 }

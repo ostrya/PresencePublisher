@@ -9,19 +9,21 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceViewHolder;
 
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.message.MessageItem;
 import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 import org.ostrya.presencepublisher.ui.dialog.EditMessageDialog;
 import org.ostrya.presencepublisher.ui.preference.common.AbstractTextPreferenceEntry;
 import org.ostrya.presencepublisher.ui.util.MessageConfigurationValidator;
-import org.ostrya.presencepublisher.ui.util.MessageSummaryProvider;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class MessagePreference extends AbstractTextPreferenceEntry
@@ -35,7 +37,7 @@ public class MessagePreference extends AbstractTextPreferenceEntry
             String title,
             SharedPreferences preference,
             Fragment fragment) {
-        super(context, key, new MessageConfigurationValidator(), title);
+        super(context, key, new MessageConfigurationValidator(), title, R.string.message_summary);
         this.fragment = fragment;
         this.preference = preference;
     }
@@ -104,7 +106,27 @@ public class MessagePreference extends AbstractTextPreferenceEntry
     }
 
     @Override
-    protected void configureSummary() {
-        setSummaryProvider(new MessageSummaryProvider());
+    protected String getValue(@NonNull String text) {
+        MessageConfiguration messageConfiguration = MessageConfiguration.fromRawValue(text);
+        if (messageConfiguration != null) {
+            return messageConfiguration.getTopic()
+                    + "\n"
+                    + getContent(messageConfiguration.getItems());
+        } else {
+            return getContext().getString(R.string.value_undefined);
+        }
+    }
+
+    private String getContent(List<MessageItem> items) {
+        StringBuilder sb = new StringBuilder();
+        boolean needSeparator = false;
+        for (MessageItem item : items) {
+            if (needSeparator) {
+                sb.append(", ");
+            }
+            sb.append(item.getName());
+            needSeparator = true;
+        }
+        return getContext().getString(R.string.message_content, sb.toString());
     }
 }

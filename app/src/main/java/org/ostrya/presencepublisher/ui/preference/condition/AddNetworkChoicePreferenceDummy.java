@@ -60,13 +60,13 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
         return super.getEntries();
     }
 
-    private void onEditText(String newValue) {
+    private void onEditText(String newValue, boolean useWildcards) {
         boolean result = this.validator.isValid(getContext(), null, newValue);
         if (!result) {
             String text = getContext().getString(R.string.toast_invalid_input);
             Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
         } else {
-            saveNewNetwork(newValue);
+            saveNewNetwork(WifiNetwork.toRawString(newValue, useWildcards));
         }
     }
 

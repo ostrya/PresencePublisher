@@ -4,7 +4,6 @@ import android.content.Context;
 
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.preference.common.TextPreferenceBase;
-import org.ostrya.presencepublisher.ui.util.ExplanationSummaryProvider;
 import org.ostrya.presencepublisher.ui.util.NonEmptyStringValidator;
 
 public class OfflineContentPreference extends TextPreferenceBase {
@@ -16,12 +15,8 @@ public class OfflineContentPreference extends TextPreferenceBase {
                 context,
                 OFFLINE_CONTENT,
                 new NonEmptyStringValidator(),
-                R.string.offline_content_title);
+                R.string.offline_content_title,
+                R.string.content_summary);
         setDefaultValue(DEFAULT_CONTENT_OFFLINE);
-    }
-
-    @Override
-    protected void configureSummary() {
-        setSummaryProvider(new ExplanationSummaryProvider<>(R.string.content_summary));
     }
 }

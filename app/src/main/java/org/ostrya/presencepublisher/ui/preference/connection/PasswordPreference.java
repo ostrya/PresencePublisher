@@ -5,16 +5,22 @@ import android.os.Build;
 import android.text.InputType;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.security.SecurePreferencesHelper;
 import org.ostrya.presencepublisher.ui.preference.common.TextPreferenceBase;
-import org.ostrya.presencepublisher.ui.util.PasswordSummaryProvider;
 
 public class PasswordPreference extends TextPreferenceBase {
     public static final String PASSWORD = "password";
 
     public PasswordPreference(Context context) {
-        super(context, PASSWORD, (c, k, v) -> true, R.string.password_title);
+        super(
+                context,
+                PASSWORD,
+                (c, k, v) -> true,
+                R.string.password_title,
+                R.string.password_summary);
         setOnBindEditTextListener(
                 editText -> {
                     editText.setInputType(
@@ -28,7 +34,7 @@ public class PasswordPreference extends TextPreferenceBase {
     }
 
     @Override
-    protected void configureSummary() {
-        setSummaryProvider(new PasswordSummaryProvider(R.string.password_summary));
+    protected String getValue(@NonNull String ignored) {
+        return getContext().getString(R.string.password_placeholder);
     }
 }

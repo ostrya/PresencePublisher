@@ -22,4 +22,10 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/useWildcards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/use_wildcard" />
+
 </LinearLayout>
