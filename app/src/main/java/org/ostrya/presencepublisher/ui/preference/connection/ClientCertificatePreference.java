@@ -1,10 +1,13 @@
 package org.ostrya.presencepublisher.ui.preference.connection;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.security.KeyChain;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.preference.Preference;
 
@@ -25,7 +28,8 @@ public class ClientCertificatePreference extends Preference
                     KeyChain.choosePrivateKeyAlias(
                             fragment.requireActivity(),
                             alias ->
-                                    fragment.requireActivity().runOnUiThread(() -> setValue(alias)),
+                                    fragment.requireActivity()
+                                            .runOnUiThread(() -> handleSelection(fragment, alias)),
                             null,
                             null,
                             null,
@@ -33,6 +37,25 @@ public class ClientCertificatePreference extends Preference
                             getPersistedString(null));
                     return true;
                 });
+    }
+
+    private void handleSelection(Fragment fragment, String alias) {
+        if (alias != null) {
+            setValue(alias);
+        } else {
+            new AlertDialog.Builder(fragment.requireContext())
+                    .setMessage(R.string.client_certificate_missing)
+                    .setNeutralButton(R.string.dialog_close, null)
+                    .setPositiveButton(
+                            R.string.dialog_show_readme,
+                            (dialog, which) ->
+                                    fragment.startActivity(
+                                            new Intent(
+                                                    Intent.ACTION_VIEW,
+                                                    Uri.parse(
+                                                            "https://github.com/ostrya/PresencePublisher/blob/main/README.md#client-certificates"))))
+                    .show();
+        }
     }
 
     private void setValue(String text) {

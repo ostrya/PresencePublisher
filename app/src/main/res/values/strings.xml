@@ -146,4 +146,6 @@
     <string name="run_now_summary">Check conditions now and send configured messages.</string>
     <string name="run_now_toast">Running now …</string>
     <string name="use_wildcard">Use * as wildcard</string>
+    <string name="client_certificate_missing">If you were not shown a selection dialog for a client certificate, make sure that you have installed your client certificate on your device as described in the Readme.</string>
+    <string name="dialog_show_readme">Show Readme</string>
 </resources>

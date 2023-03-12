@@ -29,14 +29,16 @@ For details on which data this app processes and how it does so, please have a l
 The app uses the default Android CA trust store for checking the server certificate validity. You can simply add your
 certificate via:
 
-* Android 4.0 - 7.1:
-  * `Settings` → `Security` → `Install from SD card`
-* Android 8.0 - 9.0:
-  * `Settings` → `Security & location` → `Encryption & credentials` → `Install from SD card`
+* Android 4 - 7:
+  * `Security` → `Install from SD card`
+* Android 8 - 9:
+  * `Security & location` → `Encryption & credentials` → `Install from SD card`
 * Android 10:
   * `Security` → `Encryption & credentials` → `Install from SD card`
-* Android 11+:
+* Android 11 - 12:
   * `Security` → `Encryption & credentials` → `Install a certificate` → `CA Certificate`
+* Android 13+:
+  * `Security & privacy` → `More security settings` → `Encryption and credentials` → `Install a certificate` → `CA certificate`
 
 Please note you need to have your certificate in DER format to be able to import it correctly. You can
 check this using:
@@ -84,14 +86,16 @@ Make sure your PKCS#12 keystore file has the `.pfx` extension, otherwise Android
 To be able to select this client certificate in Presence Publisher, you first need to add it to
 the Android Keystore. This works similar to the process for the server certificate:
 
-* Android 4.0 - 7.1:
-  * `Settings` → `Security` → `Install from SD card`
-* Android 8.0 - 9.0:
-  * `Settings` → `Security & location` → `Encryption & credentials` → `Install from SD card`
+* Android 4 - 7:
+  * `Security` → `Install from SD card`
+* Android 8 - 9:
+  * `Security & location` → `Encryption & credentials` → `Install from SD card`
 * Android 10:
   * `Security` → `Encryption & credentials` → `Install from SD card`
-* Android 11+:
+* Android 11 - 12:
   * `Security` → `Encryption & credentials` → `Install a certificate` → `VPN & app user certificate`
+* Android 13+:
+  * `Security & privacy` → `More security settings` → `Encryption and credentials` → `Install a certificate` → `VPN and app user certificate`
 
 After you have imported your client certificate, you will be able to choose it from the app.
 

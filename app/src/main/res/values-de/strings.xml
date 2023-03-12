@@ -143,4 +143,6 @@
     <string name="run_now_summary">Prüfe jetzt alle Bedingungen und versende konfigurierte Nachrichten.</string>
     <string name="run_now_toast">Gestartet …</string>
     <string name="use_wildcard">Nutze * als Platzhalter</string>
+    <string name="client_certificate_missing">Falls kein Dialog zur Auswahl eines Client-Zertifikats erschienen ist, stelle sicher dass du das Client-Zertifikat wie in der Readme (leider nur auf Englisch) auf deinem Gerät installiert hast.</string>
+    <string name="dialog_show_readme">Readme öffnen</string>
 </resources>
