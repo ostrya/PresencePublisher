@@ -11,15 +11,18 @@ Presence Publisher is a simple app that regularly publishes to a configurable MQ
 given Wi-Fi network or in proximity to a Bluetooth beacon. This can be used to integrate the presence of your phone
 in home automation.
 
-Several networks and beacons can be configured at once, and the message to be sent can be configured for each of them.
+Several networks and beacons can be configured at once, and the message to be sent can be configured
+for each of them.
 
 If your MQTT server is available on the internet, you can also choose to send an 'offline' message
-whenever you are not connected to any of the configured Wi-Fi networks and not in range of any configured beacon.
+whenever you are not connected to any of the configured Wi-Fi networks and not in range of any
+configured beacon.
 
-As an additional feature, you can send the battery level of your device whenever a condition is met, so that you can
-recharge it before it turns off.
+As an additional feature, you can send the battery level of your device whenever a condition is met,
+so that you can recharge it before it turns off.
 
-The app uses the built-in Android alarm manager, so notifications are sent even if the phone is in stand-by.
+The app uses Android's Work Manager library, so notifications are sent even if the phone is in
+stand-by.
 
 For details on which data this app processes and how it does so, please have a look at the
 [privacy policy](https://ostrya.github.io/PresencePublisher/en/PRIVACY_POLICY.html).

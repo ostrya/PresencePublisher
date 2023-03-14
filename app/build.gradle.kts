@@ -43,10 +43,10 @@ android {
     compileSdk = 33
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
-        minSdk = 14
+        minSdk = 19
         multiDexEnabled = true
         targetSdk = 33
-        versionCode = 48
+        versionCode = 49
         versionName = "2.5.0"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -79,6 +79,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -154,6 +155,8 @@ dependencies {
     testImplementation("org.mockito:mockito-inline:5.1.1")
 
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.2")
 }
 
 tasks.register("printVersion") {

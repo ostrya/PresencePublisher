@@ -8,11 +8,9 @@ import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategor
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.os.Build;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import org.ostrya.presencepublisher.R;
@@ -40,7 +38,6 @@ public class AddBeaconChoicePreferenceDummy extends ClickDummy {
         this.intentLauncher = intentLauncher;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onClick() {
         BluetoothManager bluetoothManager =
@@ -62,7 +59,6 @@ public class AddBeaconChoicePreferenceDummy extends ClickDummy {
         instance.show(getParentFragmentManager(), null);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void onScanResult(@Nullable PresenceBeacon beacon) {
         if (beacon == null) {
             return;

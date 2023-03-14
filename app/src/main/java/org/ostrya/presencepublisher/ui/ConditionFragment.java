@@ -5,7 +5,6 @@ import static org.ostrya.presencepublisher.ui.preference.condition.SendOfflineMe
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -42,7 +41,7 @@ public class ConditionFragment extends AbstractConfigurationFragment {
         WifiCategorySupport wifiSupport = new WifiCategorySupport(this);
         ActivityResultLauncher<String> intentLauncher;
         // to make linter happy
-        if (beaconsSupported && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        if (beaconsSupported) {
             intentLauncher =
                     registerForActivityResult(new IntentActionContract(), this::onActivityResult);
         } else {

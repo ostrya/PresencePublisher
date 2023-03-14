@@ -26,7 +26,7 @@ public class EnsureLocationServiceEnabled extends AbstractChainedHandler<String,
     protected void doInitialize() {
         LocationManager locationManager =
                 (LocationManager) activity.getSystemService(LOCATION_SERVICE);
-        if (activity.isLocationServiceNeeded()
+        if (activity.isLocationPermissionNeeded()
                 && (locationManager == null
                         || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                                 || locationManager.isProviderEnabled(

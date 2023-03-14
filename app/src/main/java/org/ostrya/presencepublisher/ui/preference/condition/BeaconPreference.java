@@ -4,10 +4,8 @@ import static org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment.
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.view.View;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import org.ostrya.presencepublisher.R;
@@ -22,7 +20,6 @@ public class BeaconPreference extends AbstractTextPreferenceEntry {
     private final Fragment fragment;
     private final String beaconId;
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public BeaconPreference(Context context, String key, String beaconId, Fragment fragment) {
         super(context, key, new NonEmptyStringValidator(), beaconId, R.string.content_summary);
         this.beaconId = beaconId;
@@ -31,7 +28,6 @@ public class BeaconPreference extends AbstractTextPreferenceEntry {
     }
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public boolean onLongClick(View v) {
         ConfirmationDialogFragment instance =
                 getInstance(
@@ -42,7 +38,6 @@ public class BeaconPreference extends AbstractTextPreferenceEntry {
         return true;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void deleteOnContinue(Activity unused, boolean ok) {
         if (ok) {
             PresenceBeaconManager.getInstance().removeBeacon(getContext(), beaconId);

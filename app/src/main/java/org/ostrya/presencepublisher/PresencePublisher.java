@@ -10,7 +10,6 @@ import static java.util.Collections.singletonList;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
@@ -172,7 +171,6 @@ public class PresencePublisher extends MultiDexApplication {
     }
 
     public boolean supportsBeacons() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
-                && getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
+        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
     }
 }

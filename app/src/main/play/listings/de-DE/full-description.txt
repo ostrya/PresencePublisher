@@ -33,4 +33,3 @@ Datenschutzerklärung unter <a href="https://ostrya.github.io/PresencePublisher/
 • POST_NOTIFICATIONS: notwendig ab Android 13, um Benachrichtigungen zu erzeugen
 • RECEIVE_BOOT_COMPLETED: notwendig, damit die App nach dem Neustart des Geräts automatisch starten kann
 • REQUEST_IGNORE_BATTERY_OPTIMIZATIONS: notwendig ab Android 6, um Batterieoptimierung zu deaktivieren
-• WRITE_EXTERNAL_STORAGE: nur in Android 4.0 - 4.3 notwendig, um nach Aufforderung Log-Dateien zu speichern

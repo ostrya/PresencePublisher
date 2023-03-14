@@ -2,7 +2,6 @@ package org.ostrya.presencepublisher.ui.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +26,6 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 import java.util.Collection;
 import java.util.Set;
 
-@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class BeaconScanDialogFragment extends DialogFragment {
     private static final String TAG = "BeaconScanDialogFragment";
     private static final String REGION_ID = "scan_region_id";

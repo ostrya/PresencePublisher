@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.os.Build;
 
 import androidx.fragment.app.FragmentManager;
 
@@ -26,10 +25,7 @@ public class EnsureBluetoothServiceEnabled extends AbstractChainedHandler<String
 
     @Override
     protected void doInitialize() {
-        if (activity.isLocationServiceNeeded()
-                // make linter happy
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
-                && activity.isBluetoothBeaconConfigured()) {
+        if (activity.isLocationPermissionNeeded() && activity.isBluetoothBeaconConfigured()) {
             BluetoothManager bluetoothManager =
                     (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
             if (bluetoothManager == null) {

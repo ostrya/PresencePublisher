@@ -3,11 +3,14 @@ package org.ostrya.presencepublisher.ui.initialization;
 import static android.content.Context.POWER_SERVICE;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
+import android.content.SharedPreferences;
 import android.os.PowerManager;
 
 import org.junit.Rule;
@@ -18,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.test.LogDisablerRule;
+import org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +34,8 @@ public class InitializationHandlerTest {
     @Mock private MainActivity context;
 
     @Mock private PowerManager powerManager;
+
+    @Mock private SharedPreferences sharedPreferences;
 
     private final LinkedList<AbstractChainedHandler<?, ?>> handlerSpies = new LinkedList<>();
 
@@ -58,8 +64,11 @@ public class InitializationHandlerTest {
                         .map(this::wrapAsSpy)
                         .collect(Collectors.toList());
 
-        doReturn(false).when(context).isLocationServiceNeeded();
-        doReturn(powerManager).when(context).getSystemService(POWER_SERVICE);
+        when(context.isLocationPermissionNeeded()).thenReturn(false);
+        when(context.getSystemService(POWER_SERVICE)).thenReturn(powerManager);
+        when(context.getSharedPreferences(any(), anyInt())).thenReturn(sharedPreferences);
+        when(sharedPreferences.getBoolean(LocationConsentPreference.LOCATION_CONSENT, false))
+                .thenReturn(true);
 
         InitializationHandler handler = InitializationHandler.getHandler(context, handlerChain);
         // scheduler needs too many android classes to mock properly for now

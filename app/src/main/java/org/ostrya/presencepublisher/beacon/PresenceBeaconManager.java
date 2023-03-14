@@ -5,11 +5,9 @@ import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategor
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.preference.PreferenceManager;
 
 import org.altbeacon.beacon.BeaconManager;
@@ -22,7 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
 public final class PresenceBeaconManager {
     private static final String TAG = "PresenceBeaconManager";
     private static final PresenceBeaconManager INSTANCE = new PresenceBeaconManager();

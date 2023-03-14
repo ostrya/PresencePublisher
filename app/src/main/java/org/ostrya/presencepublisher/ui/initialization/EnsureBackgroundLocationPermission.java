@@ -28,7 +28,7 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
 
     @Override
     protected void doInitialize() {
-        if (activity.isLocationServiceNeeded()
+        if (activity.isLocationPermissionNeeded()
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
                 && ContextCompat.checkSelfPermission(
                                 activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)

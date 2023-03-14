@@ -28,7 +28,7 @@ public class MainActivity extends FragmentActivity {
     private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceListener =
             this::onSharedPreferenceChanged;
     private InitializationHandler handler;
-    private boolean locationServiceNeeded;
+    private boolean locationPermissionNeeded;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -43,7 +43,7 @@ public class MainActivity extends FragmentActivity {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, viewPager, mainPagerAdapter).attach();
 
-        locationServiceNeeded =
+        locationPermissionNeeded =
                 ((PresencePublisher) getApplication()).supportsBeacons()
                         // for Wi-Fi name resolution
                         || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P;
@@ -71,8 +71,8 @@ public class MainActivity extends FragmentActivity {
         handler = null;
     }
 
-    public boolean isLocationServiceNeeded() {
-        return locationServiceNeeded;
+    public boolean isLocationPermissionNeeded() {
+        return locationPermissionNeeded;
     }
 
     public boolean isBluetoothBeaconConfigured() {

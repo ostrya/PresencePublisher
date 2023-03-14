@@ -40,16 +40,25 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String[], M
 
     @Override
     protected void doInitialize() {
-        if (activity.isLocationServiceNeeded()
-                && (ContextCompat.checkSelfPermission(
+        if ((activity.isLocationPermissionNeeded()
+                        && ContextCompat.checkSelfPermission(
                                         activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                                != PackageManager.PERMISSION_GRANTED
-                        // for migration of pre-2.2.2 app versions, the consent needs to be
-                        // confirmed once
-                        || !PreferenceManager.getDefaultSharedPreferences(activity)
-                                .getBoolean(LOCATION_CONSENT, false))) {
+                                != PackageManager.PERMISSION_GRANTED)
+                // even if we don't need the permission, we effectively access location data, so we
+                // must ask
+                || !PreferenceManager.getDefaultSharedPreferences(activity)
+                        .getBoolean(LOCATION_CONSENT, false)) {
             DatabaseLogger.i(TAG, "Location permission / consent not yet granted, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
+
+            String allowPermissions;
+            if (ContextCompat.checkSelfPermission(
+                            activity, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                allowPermissions = activity.getString(R.string.location_permission_dialog_message);
+            } else {
+                allowPermissions = "";
+            }
 
             ConfirmationDialogFragment fragment =
                     ConfirmationDialogFragment.getInstance(
@@ -60,8 +69,7 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String[], M
                                     activity.getString(R.string.tab_about_title),
                                     activity.getString(R.string.privacy_title),
                                     activity.getString(R.string.location_consent_title),
-                                    activity.getString(
-                                            R.string.location_permission_dialog_message)));
+                                    allowPermissions));
             fragment.show(fm, null);
         } else {
             finishInitialization();

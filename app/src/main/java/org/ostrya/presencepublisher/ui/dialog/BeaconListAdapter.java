@@ -1,13 +1,11 @@
 package org.ostrya.presencepublisher.ui.dialog;
 
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 import androidx.recyclerview.widget.SortedListAdapterCallback;
@@ -17,7 +15,6 @@ import org.ostrya.presencepublisher.beacon.PresenceBeacon;
 
 import java.util.Set;
 
-@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.BeaconHolder> {
     private final SortedList.Callback<PresenceBeacon> beaconBatchedCallback =
             new ListCallback(this);
