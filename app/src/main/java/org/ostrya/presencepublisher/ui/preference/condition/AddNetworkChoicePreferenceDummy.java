@@ -35,7 +35,7 @@ public class AddNetworkChoicePreferenceDummy extends ListPreference {
         setTitle(R.string.add_network_title);
         setDialogTitle(R.string.add_network_title);
         setSummary(R.string.add_network_summary);
-        setIcon(android.R.drawable.ic_menu_add);
+        setIcon(R.drawable.baseline_playlist_add_24);
         setOnPreferenceChangeListener(
                 (prefs, newValue) -> {
                     if (addNew.equals(newValue)) {

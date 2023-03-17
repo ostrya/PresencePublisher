@@ -13,7 +13,7 @@ public class PrivacyPreferenceDummy extends ClickDummy {
     public PrivacyPreferenceDummy(Context context, Fragment fragment) {
         super(
                 context,
-                android.R.drawable.ic_menu_more,
+                R.drawable.baseline_read_more_24,
                 R.string.privacy_title,
                 R.string.privacy_summary,
                 fragment);

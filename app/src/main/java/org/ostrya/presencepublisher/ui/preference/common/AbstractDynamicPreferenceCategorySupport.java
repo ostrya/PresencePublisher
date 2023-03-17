@@ -8,6 +8,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceManager;
 
+import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.ui.util.AbstractConfigurationFragment;
 
 import java.util.Collections;
@@ -63,7 +64,7 @@ public abstract class AbstractDynamicPreferenceCategorySupport {
             category.addPreference(entry);
         }
         Preference adderEntry = adderFactory.create(context, preferences, fragment);
-        adderEntry.setIcon(android.R.drawable.ic_menu_add);
+        adderEntry.setIcon(R.drawable.baseline_playlist_add_24);
         adderEntry.setPersistent(false);
         adderEntry.setKey(adderEntry.getClass().getCanonicalName());
         // show last

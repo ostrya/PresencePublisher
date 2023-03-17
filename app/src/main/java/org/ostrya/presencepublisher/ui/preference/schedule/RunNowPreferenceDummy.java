@@ -17,7 +17,7 @@ public class RunNowPreferenceDummy extends ClickDummy {
     public RunNowPreferenceDummy(Context context, Fragment fragment) {
         super(
                 context,
-                android.R.drawable.ic_media_play,
+                R.drawable.baseline_send_24,
                 R.string.run_now_title,
                 R.string.run_now_summary,
                 fragment);

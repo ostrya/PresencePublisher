@@ -14,7 +14,7 @@ public class SourceRepositoryPreferenceDummy extends ClickDummy {
     public SourceRepositoryPreferenceDummy(Context context, Fragment fragment) {
         super(
                 context,
-                android.R.drawable.ic_menu_view,
+                R.drawable.baseline_open_in_browser_24,
                 R.string.source_repo_title,
                 R.string.source_repo_summary,
                 fragment);

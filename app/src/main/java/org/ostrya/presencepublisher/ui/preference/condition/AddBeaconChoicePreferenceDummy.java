@@ -31,7 +31,7 @@ public class AddBeaconChoicePreferenceDummy extends ClickDummy {
             Context context, Fragment fragment, ActivityResultLauncher<String> intentLauncher) {
         super(
                 context,
-                android.R.drawable.ic_menu_add,
+                R.drawable.baseline_playlist_add_24,
                 R.string.add_beacon_title,
                 R.string.add_beacon_summary,
                 fragment);

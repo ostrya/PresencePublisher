@@ -26,7 +26,7 @@ public class AddMessageChoicePreferenceDummy extends ClickDummy {
             Context context, SharedPreferences preference, Fragment fragment) {
         super(
                 context,
-                android.R.drawable.ic_menu_add,
+                R.drawable.baseline_playlist_add_24,
                 R.string.add_message_title,
                 R.string.add_message_summary,
                 fragment);

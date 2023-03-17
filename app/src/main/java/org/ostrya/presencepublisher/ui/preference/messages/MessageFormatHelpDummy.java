@@ -24,7 +24,7 @@ public class MessageFormatHelpDummy extends ClickDummy {
     public MessageFormatHelpDummy(Context context, Fragment fragment) {
         super(
                 context,
-                android.R.drawable.ic_menu_help,
+                R.drawable.baseline_help_24,
                 R.string.message_format_help_title,
                 R.string.message_format_help_summary,
                 fragment);

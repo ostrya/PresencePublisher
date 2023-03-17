@@ -12,7 +12,7 @@ public class BundledLicensesPreferenceDummy extends ClickDummy {
     public BundledLicensesPreferenceDummy(Context context, Fragment fragment) {
         super(
                 context,
-                android.R.drawable.ic_menu_info_details,
+                R.drawable.baseline_text_snippet_24,
                 R.string.bundled_licenses_title,
                 R.string.bundled_licenses_summary,
                 fragment);
