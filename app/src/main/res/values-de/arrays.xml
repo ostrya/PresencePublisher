@@ -27,4 +27,9 @@
         <item>Erkannte Bedingungen</item>
         <item>Entwicklerlog</item>
     </string-array>
+    <string-array name="night_mode_descriptions">
+        <item>System folgen</item>
+        <item>Tag</item>
+        <item>Nacht</item>
+    </string-array>
 </resources>

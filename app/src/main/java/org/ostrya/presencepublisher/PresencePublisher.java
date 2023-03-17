@@ -16,6 +16,8 @@ import androidx.multidex.MultiDexApplication;
 import androidx.preference.PreferenceManager;
 import androidx.work.WorkManager;
 
+import com.google.android.material.color.DynamicColors;
+
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
@@ -27,6 +29,7 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
 import org.ostrya.presencepublisher.message.MessageItem;
 import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
+import org.ostrya.presencepublisher.ui.preference.about.NightModePreference;
 import org.ostrya.presencepublisher.ui.preference.messages.MessageConfiguration;
 
 import java.util.Collections;
@@ -65,6 +68,8 @@ public class PresencePublisher extends MultiDexApplication {
         initBeaconManager();
         new NotificationFactory(this).createNotificationChannels();
         initClientId();
+        NightModePreference.updateCurrentNightMode(this);
+        DynamicColors.applyToActivitiesIfAvailable(this);
         migrateOldSettings();
         cancelOldWork();
     }

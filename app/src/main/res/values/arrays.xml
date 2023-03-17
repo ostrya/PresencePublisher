@@ -32,4 +32,14 @@
         <item>Detected conditions</item>
         <item>Developer log</item>
     </string-array>
+    <string-array name="night_mode_descriptions">
+        <item>Follow system</item>
+        <item>Day</item>
+        <item>Night</item>
+    </string-array>
+    <string-array name="night_mode_values">
+        <item>-1</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

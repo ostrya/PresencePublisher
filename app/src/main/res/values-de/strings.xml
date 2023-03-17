@@ -113,6 +113,7 @@
     <string name="version_title">Version</string>
     <string name="category_build">Build-Information</string>
     <string name="category_legal">Rechtliches</string>
+    <string name="category_ui">UI</string>
     <string name="dialog_close">Schließen</string>
     <string name="source_repo_summary">Tippe hier, um den Quellcode in einem Browser zu öffnen.</string>
     <string name="privacy_url">https://ostrya.github.io/PresencePublisher/de/PRIVACY_POLICY.html</string>
@@ -145,4 +146,5 @@
     <string name="use_wildcard">Nutze * als Platzhalter</string>
     <string name="client_certificate_missing">Falls kein Dialog zur Auswahl eines Client-Zertifikats erschienen ist, stelle sicher dass du das Client-Zertifikat wie in der Readme (leider nur auf Englisch) auf deinem Gerät installiert hast.</string>
     <string name="dialog_show_readme">Readme öffnen</string>
+    <string name="night_mode_title">Nachtmodus</string>
 </resources>

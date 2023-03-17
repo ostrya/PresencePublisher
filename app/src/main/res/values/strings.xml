@@ -115,6 +115,7 @@
     <string name="version_title">Version</string>
     <string name="category_build">Build information</string>
     <string name="category_legal">Legal</string>
+    <string name="category_ui">UI</string>
     <string name="dialog_close">Close</string>
     <string name="privacy_url">https://ostrya.github.io/PresencePublisher/en/PRIVACY_POLICY.html</string>
     <string name="source_repo_url" translatable="false">https://github.com/ostrya/PresencePublisher/</string>
@@ -148,4 +149,5 @@
     <string name="use_wildcard">Use * as wildcard</string>
     <string name="client_certificate_missing">If you were not shown a selection dialog for a client certificate, make sure that you have installed your client certificate on your device as described in the Readme.</string>
     <string name="dialog_show_readme">Show Readme</string>
+    <string name="night_mode_title">Night mode</string>
 </resources>

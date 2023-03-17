@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -22,7 +22,7 @@ import org.ostrya.presencepublisher.ui.initialization.InitializationHandler;
 
 import java.util.Collections;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceListener =
