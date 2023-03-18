@@ -11,7 +11,6 @@ import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 import org.ostrya.presencepublisher.ui.preference.common.ClickDummy;
 
 public class RunNowPreferenceDummy extends ClickDummy {
-    private final NotificationFactory notificationFactory;
     private final Runnable runnable;
 
     public RunNowPreferenceDummy(Context context, Fragment fragment) {
@@ -21,7 +20,8 @@ public class RunNowPreferenceDummy extends ClickDummy {
                 R.string.run_now_title,
                 R.string.run_now_summary,
                 fragment);
-        this.notificationFactory = new NotificationFactory(context.getApplicationContext());
+        NotificationFactory notificationFactory =
+                new NotificationFactory(context.getApplicationContext());
         this.runnable =
                 notificationFactory.checkNotificationPermissionThenRunCallback(
                         fragment, this::runNow);

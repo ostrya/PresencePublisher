@@ -80,7 +80,7 @@ public class MessagePreference extends AbstractTextPreferenceEntry
     }
 
     @Override
-    public void onBindViewHolder(PreferenceViewHolder holder) {
+    public void onBindViewHolder(@NonNull PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
         holder.itemView.setOnLongClickListener(this);
     }

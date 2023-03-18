@@ -2,8 +2,6 @@ package org.ostrya.presencepublisher.message;
 
 import androidx.annotation.NonNull;
 
-import org.ostrya.presencepublisher.util.ObjectUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,9 +39,10 @@ public class Message {
 
     @Override
     public int hashCode() {
-        return ObjectUtil.hash(topic, content);
+        return Objects.hash(topic, content);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Message{" + "topic='" + topic + '\'' + ", content='" + content + '\'' + '}';

@@ -3,6 +3,7 @@ package org.ostrya.presencepublisher.ui.preference.common;
 import android.content.Context;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceViewHolder;
 
 import org.ostrya.presencepublisher.ui.util.Validator;
@@ -15,7 +16,7 @@ public abstract class AbstractTextPreferenceEntry extends TextPreferenceBase
     }
 
     @Override
-    public void onBindViewHolder(PreferenceViewHolder holder) {
+    public void onBindViewHolder(@NonNull PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
         holder.itemView.setOnLongClickListener(this);
     }

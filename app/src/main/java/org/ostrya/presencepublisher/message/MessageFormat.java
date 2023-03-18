@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.message;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.ostrya.presencepublisher.R;
@@ -8,6 +9,7 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public enum MessageFormat {
     PLAINTEXT {
@@ -195,11 +197,11 @@ public enum MessageFormat {
         return R.array.message_format_descriptions;
     }
 
-    @Nullable
+    @NonNull
     public static MessageFormat fromStringOrDefault(
-            @Nullable String rawValue, @Nullable MessageFormat defaultValue) {
+            @Nullable String rawValue, @NonNull MessageFormat defaultValue) {
         if (rawValue == null) {
-            return defaultValue;
+            return Objects.requireNonNull(defaultValue);
         }
         try {
             return MessageFormat.valueOf(rawValue);
