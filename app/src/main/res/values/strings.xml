@@ -7,8 +7,6 @@
     <string name="password_title">MQTT Password</string>
     <string name="password_summary" formatted="true">User Password%nCurrent value: %1$s</string>
     <string name="password_placeholder" translatable="false">••••••••</string>
-    <string name="default_presence_message_name">Presence message</string>
-    <string name="default_battery_message_name">Battery message</string>
     <string name="message_schedule_title">Publish period</string>
     <string name="message_schedule_summary">The time between messages in minutes</string>
     <string name="message_schedule_dialog_text">Setting the interval lower than 15 minutes will increase your battery usage. Do you want to continue?</string>

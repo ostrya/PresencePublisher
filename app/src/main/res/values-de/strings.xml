@@ -2,8 +2,6 @@
 <resources>
     <string name="host_title">MQTT Host</string>
     <string name="host_summary" formatted="true">IP-Adresse oder Hostname%nAktueller Wert: %1$s</string>
-    <string name="default_presence_message_name">Anwesenheitsnachricht</string>
-    <string name="default_battery_message_name">Batterie-Nachricht</string>
     <string name="message_schedule_title">Sendeperiode</string>
     <string name="message_schedule_summary">Zeit zwischen Nachrichten in Minuten</string>
     <string name="message_schedule_dialog_text">Die Periode auf unter 15 Minuten zu setzen wird den Batterieverbrauch erhöhen. Fortfahren?</string>
