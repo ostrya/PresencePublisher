@@ -3,7 +3,6 @@ package org.ostrya.presencepublisher.mqtt;
 import static org.ostrya.presencepublisher.PresencePublisher.MQTT_CLIENT_ID;
 import static org.ostrya.presencepublisher.ui.preference.connection.ClientCertificatePreference.CLIENT_CERTIFICATE;
 import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
-import static org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference.PASSWORD;
 import static org.ostrya.presencepublisher.ui.preference.connection.PortPreference.PORT;
 import static org.ostrya.presencepublisher.ui.preference.connection.QoSPreference.DEFAULT_VALUE;
 import static org.ostrya.presencepublisher.ui.preference.connection.QoSPreference.QOS_VALUE;
@@ -15,6 +14,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
+import androidx.core.util.Supplier;
 import androidx.preference.PreferenceManager;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -23,7 +23,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.message.Message;
-import org.ostrya.presencepublisher.security.SecurePreferencesHelper;
+import org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -35,14 +35,14 @@ public class MqttService {
 
     private final AndroidSslSocketFactoryFactory factory;
     private final SharedPreferences sharedPreferences;
-    private final SharedPreferences securePreferences;
+    private final Supplier<String> passwordProvider;
     private final String clientId;
 
     public MqttService(Context context) {
         Context applicationContext = context.getApplicationContext();
         factory = new AndroidSslSocketFactoryFactory(applicationContext);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-        securePreferences = SecurePreferencesHelper.getSecurePreferences(applicationContext);
+        passwordProvider = PasswordPreference.getPasswordProvider(applicationContext);
         clientId =
                 sharedPreferences.getString(
                         MQTT_CLIENT_ID, "initialization error " + System.currentTimeMillis());
@@ -53,7 +53,7 @@ public class MqttService {
         boolean tls = sharedPreferences.getBoolean(USE_TLS, false);
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERTIFICATE, null);
         String login = sharedPreferences.getString(USERNAME, "");
-        String password = securePreferences.getString(PASSWORD, "");
+        String password = passwordProvider.get();
         String topic = "test";
 
         try (MqttClient mqttClient =
@@ -79,7 +79,7 @@ public class MqttService {
         boolean tls = sharedPreferences.getBoolean(USE_TLS, false);
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERTIFICATE, null);
         String login = sharedPreferences.getString(USERNAME, "");
-        String password = securePreferences.getString(PASSWORD, "");
+        String password = passwordProvider.get();
         int qos = getQosFromString(sharedPreferences.getString(QOS_VALUE, null));
         boolean retain = sharedPreferences.getBoolean(RETAIN_FLAG, false);
 
