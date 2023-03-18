@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.ui.initialization;
+package org.ostrya.presencepublisher.initialization;
 
 import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 

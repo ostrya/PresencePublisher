@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.ui.contract;
+package org.ostrya.presencepublisher.initialization;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;

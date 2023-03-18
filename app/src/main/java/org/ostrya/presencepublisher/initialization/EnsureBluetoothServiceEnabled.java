@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.ui.initialization;
+package org.ostrya.presencepublisher.initialization;
 
 import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
 

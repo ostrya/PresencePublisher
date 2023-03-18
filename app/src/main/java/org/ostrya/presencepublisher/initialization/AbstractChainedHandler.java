@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.ui.initialization;
+package org.ostrya.presencepublisher.initialization;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
@@ -6,7 +6,6 @@ import androidx.annotation.Nullable;
 
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
-import org.ostrya.presencepublisher.ui.contract.DummyActivityResultLauncher;
 
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;

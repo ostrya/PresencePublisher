@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.ui.initialization;
+package org.ostrya.presencepublisher.initialization;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;

@@ -1,6 +1,6 @@
 package org.ostrya.presencepublisher;
 
-import static org.ostrya.presencepublisher.ui.initialization.InitializationHandler.HANDLER_CHAIN;
+import static org.ostrya.presencepublisher.initialization.InitializationHandler.HANDLER_CHAIN;
 import static org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
 
@@ -15,10 +15,10 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import org.ostrya.presencepublisher.initialization.InitializationHandler;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.schedule.Scheduler;
 import org.ostrya.presencepublisher.ui.MainPagerAdapter;
-import org.ostrya.presencepublisher.ui.initialization.InitializationHandler;
 
 import java.util.Collections;
 
