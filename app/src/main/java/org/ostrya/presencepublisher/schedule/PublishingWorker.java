@@ -17,7 +17,7 @@ import androidx.work.WorkerParameters;
 
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.mqtt.Publisher;
-import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
+import org.ostrya.presencepublisher.notification.NotificationFactory;
 
 import java.util.concurrent.ExecutionException;
 

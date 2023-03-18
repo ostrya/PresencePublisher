@@ -19,7 +19,7 @@ import org.ostrya.presencepublisher.message.MessageContext;
 import org.ostrya.presencepublisher.message.MessageContextProvider;
 import org.ostrya.presencepublisher.message.MessageFormat;
 import org.ostrya.presencepublisher.message.MessageItem;
-import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
+import org.ostrya.presencepublisher.notification.NotificationFactory;
 import org.ostrya.presencepublisher.ui.preference.messages.MessageConfiguration;
 
 import java.util.ArrayList;

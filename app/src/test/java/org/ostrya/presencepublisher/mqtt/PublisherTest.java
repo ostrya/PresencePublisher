@@ -29,8 +29,8 @@ import org.ostrya.presencepublisher.message.MessageContext;
 import org.ostrya.presencepublisher.message.MessageContextProvider;
 import org.ostrya.presencepublisher.message.MessageFormat;
 import org.ostrya.presencepublisher.message.MessageItem;
+import org.ostrya.presencepublisher.notification.NotificationFactory;
 import org.ostrya.presencepublisher.test.LogDisablerRule;
-import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 import org.ostrya.presencepublisher.ui.preference.messages.MessageConfiguration;
 
 import java.util.Arrays;
@@ -54,7 +54,6 @@ public class PublisherTest {
 
     private Publisher uut;
 
-    private long oldTimestamp;
     private long currentTimestamp;
     private long nextTimestamp;
 
@@ -66,7 +65,6 @@ public class PublisherTest {
         when(editor.putLong(anyString(), anyLong())).thenReturn(editor);
         currentTimestamp = (long) (Math.random() * 100) + 1;
         nextTimestamp = currentTimestamp + 1;
-        oldTimestamp = currentTimestamp - 1;
         when(messageContext.getCurrentTimestamp()).thenReturn(currentTimestamp);
         when(messageContext.getEstimatedNextTimestamp()).thenReturn(nextTimestamp);
         uut =

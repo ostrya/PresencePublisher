@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.ui.log;
+package org.ostrya.presencepublisher.log.ui;
 
 import android.view.LayoutInflater;
 import android.view.View;

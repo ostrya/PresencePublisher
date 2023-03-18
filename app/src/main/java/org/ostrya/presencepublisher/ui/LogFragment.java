@@ -21,9 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
-import org.ostrya.presencepublisher.ui.log.LogRecyclerViewAdapter;
-import org.ostrya.presencepublisher.ui.log.LogType;
-import org.ostrya.presencepublisher.ui.log.LogViewModel;
+import org.ostrya.presencepublisher.log.ui.LogRecyclerViewAdapter;
+import org.ostrya.presencepublisher.log.ui.LogType;
+import org.ostrya.presencepublisher.log.ui.LogViewModel;
 
 import java.io.File;
 import java.util.concurrent.ExecutionException;

@@ -6,8 +6,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.notification.NotificationFactory;
 import org.ostrya.presencepublisher.schedule.Scheduler;
-import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
 import org.ostrya.presencepublisher.ui.preference.common.ClickDummy;
 
 public class RunNowPreferenceDummy extends ClickDummy {

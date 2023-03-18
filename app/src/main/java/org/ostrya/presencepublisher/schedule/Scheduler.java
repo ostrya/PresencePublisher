@@ -22,7 +22,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import org.ostrya.presencepublisher.log.DatabaseLogger;
-import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
+import org.ostrya.presencepublisher.notification.NotificationFactory;
 import org.ostrya.presencepublisher.util.BatteryIntentLoader;
 
 import java.text.DateFormat;

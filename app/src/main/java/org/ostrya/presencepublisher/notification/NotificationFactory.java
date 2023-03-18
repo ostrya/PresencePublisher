@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.ui.notification;
+package org.ostrya.presencepublisher.notification;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 

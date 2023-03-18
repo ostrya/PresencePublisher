@@ -20,7 +20,7 @@ import org.ostrya.presencepublisher.beacon.LoggerAdapter;
 import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
-import org.ostrya.presencepublisher.ui.notification.NotificationFactory;
+import org.ostrya.presencepublisher.notification.NotificationFactory;
 import org.ostrya.presencepublisher.ui.preference.about.NightModePreference;
 
 import java.util.Collections;
