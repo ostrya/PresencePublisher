@@ -7,7 +7,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import org.ostrya.presencepublisher.log.db.DbLog;
-import org.ostrya.presencepublisher.log.db.DbLogDao;
+import org.ostrya.presencepublisher.log.db.LogDao;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class CleanupWorker extends Worker {
         return Result.success();
     }
 
-    private <T extends DbLog> int cleanLogs(long threshold, DbLogDao<T> logDao) {
+    private <T extends DbLog> int cleanLogs(long threshold, LogDao<T> logDao) {
         List<T> oldEntries = logDao.getEntriesOlderThan(threshold);
         return logDao.delete(oldEntries);
     }

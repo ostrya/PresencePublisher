@@ -8,12 +8,14 @@ import androidx.room.Query;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import org.ostrya.presencepublisher.log.LogItem;
+
 import java.util.List;
 
 @Dao
-public interface DeveloperLogDao extends DbLogDao<DeveloperLog> {
-    @Query("SELECT * FROM developerlog")
-    LiveData<List<DeveloperLog>> getAllContinuously();
+public interface DeveloperLogDao extends LogDao<DeveloperLog> {
+    @Query("SELECT id, line FROM developerlog")
+    LiveData<List<LogItem>> getAllContinuously();
 
     @Query("SELECT * FROM developerlog")
     ListenableFuture<List<DeveloperLog>> getAll();

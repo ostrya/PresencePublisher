@@ -5,12 +5,14 @@ import androidx.lifecycle.LiveData;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import org.ostrya.presencepublisher.log.LogItem;
+
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
-public interface DbLogDao<T extends DbLog> {
-    LiveData<List<T>> getAllContinuously();
+public interface LogDao<T extends DbLog> {
+    LiveData<List<LogItem>> getAllContinuously();
 
     ListenableFuture<List<T>> getAll();
 

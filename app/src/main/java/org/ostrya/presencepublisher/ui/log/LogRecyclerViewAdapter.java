@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.log.LogItem;
 
 public class LogRecyclerViewAdapter
         extends ListAdapter<LogItem, LogRecyclerViewAdapter.ViewHolder> {

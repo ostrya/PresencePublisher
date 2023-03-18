@@ -21,13 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
-import org.ostrya.presencepublisher.ui.log.LogItem;
 import org.ostrya.presencepublisher.ui.log.LogRecyclerViewAdapter;
 import org.ostrya.presencepublisher.ui.log.LogType;
 import org.ostrya.presencepublisher.ui.log.LogViewModel;
 
 import java.io.File;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,11 +36,7 @@ public class LogFragment extends Fragment {
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     private void updateLogView(LogRecyclerViewAdapter adapter, LogViewModel viewModel) {
-        viewModel
-                .getLogItems()
-                .observe(
-                        getViewLifecycleOwner(),
-                        logItems -> adapter.submitList((List<LogItem>) logItems));
+        viewModel.getLogItems().observe(getViewLifecycleOwner(), adapter::submitList);
     }
 
     private void exportLogs(View view, LogViewModel viewModel) {

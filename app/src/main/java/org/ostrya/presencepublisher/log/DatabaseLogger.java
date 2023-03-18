@@ -13,11 +13,11 @@ import androidx.work.WorkManager;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.ostrya.presencepublisher.log.db.DbLog;
-import org.ostrya.presencepublisher.log.db.DbLogDao;
 import org.ostrya.presencepublisher.log.db.DetectionLog;
 import org.ostrya.presencepublisher.log.db.DetectionLogDao;
 import org.ostrya.presencepublisher.log.db.DeveloperLog;
 import org.ostrya.presencepublisher.log.db.DeveloperLogDao;
+import org.ostrya.presencepublisher.log.db.LogDao;
 import org.ostrya.presencepublisher.log.db.LogDatabase;
 import org.ostrya.presencepublisher.log.db.MessagesLog;
 import org.ostrya.presencepublisher.log.db.MessagesLogDao;
@@ -143,7 +143,7 @@ public class DatabaseLogger {
     }
 
     private static <T extends DbLog> void addLogEntry(
-            DbLogDao<T> dao, EntityFactory<T> factory, String message, Executor executor) {
+            LogDao<T> dao, EntityFactory<T> factory, String message, Executor executor) {
         Date now = new Date();
         T entity = factory.create(0, now.getTime(), getFormattedLog(message, now));
         ListenableFuture<Long> result = dao.insert(entity);

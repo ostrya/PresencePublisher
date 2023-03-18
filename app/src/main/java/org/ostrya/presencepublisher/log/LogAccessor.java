@@ -1,12 +1,11 @@
-package org.ostrya.presencepublisher.ui.log;
+package org.ostrya.presencepublisher.log;
 
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
-import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.log.db.DbLog;
-import org.ostrya.presencepublisher.log.db.DbLogDao;
+import org.ostrya.presencepublisher.log.db.LogDao;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,22 +19,20 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class DbLogAccessor<T extends DbLog> implements LogAccessor<T> {
+public class LogAccessor<T extends DbLog> {
     private static final String TAG = "DbLogAccessor";
     private final ExecutorService workingExecutor = Executors.newCachedThreadPool();
     private final Executor listeningExecutor = Executors.newCachedThreadPool();
-    private final DbLogDao<T> dao;
+    private final LogDao<T> dao;
 
-    public DbLogAccessor(DbLogDao<T> dao) {
+    public LogAccessor(LogDao<T> dao) {
         this.dao = dao;
     }
 
-    @Override
-    public LiveData<List<T>> getLogs() {
+    public LiveData<List<LogItem>> getLogs() {
         return dao.getAllContinuously();
     }
 
-    @Override
     public Future<File> exportLogs(Context context) {
         return workingExecutor.submit(
                 () -> {
@@ -71,7 +68,6 @@ public class DbLogAccessor<T extends DbLog> implements LogAccessor<T> {
         return result;
     }
 
-    @Override
     public void clear() {
         Future<Integer> future = dao.deleteAll(workingExecutor);
         listeningExecutor.execute(
