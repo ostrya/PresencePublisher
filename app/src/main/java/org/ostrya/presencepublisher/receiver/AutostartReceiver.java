@@ -1,6 +1,6 @@
 package org.ostrya.presencepublisher.receiver;
 
-import static org.ostrya.presencepublisher.ui.preference.schedule.AutostartPreference.AUTOSTART;
+import static org.ostrya.presencepublisher.preference.schedule.AutostartPreference.AUTOSTART;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

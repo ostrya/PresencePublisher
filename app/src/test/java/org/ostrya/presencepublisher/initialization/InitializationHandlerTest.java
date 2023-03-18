@@ -20,8 +20,8 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.ostrya.presencepublisher.MainActivity;
+import org.ostrya.presencepublisher.preference.about.LocationConsentPreference;
 import org.ostrya.presencepublisher.test.LogDisablerRule;
-import org.ostrya.presencepublisher.ui.preference.about.LocationConsentPreference;
 
 import java.util.LinkedList;
 import java.util.List;

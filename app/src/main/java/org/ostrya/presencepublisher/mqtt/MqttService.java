@@ -1,14 +1,14 @@
 package org.ostrya.presencepublisher.mqtt;
 
 import static org.ostrya.presencepublisher.PresencePublisher.MQTT_CLIENT_ID;
-import static org.ostrya.presencepublisher.ui.preference.connection.ClientCertificatePreference.CLIENT_CERTIFICATE;
-import static org.ostrya.presencepublisher.ui.preference.connection.HostPreference.HOST;
-import static org.ostrya.presencepublisher.ui.preference.connection.PortPreference.PORT;
-import static org.ostrya.presencepublisher.ui.preference.connection.QoSPreference.DEFAULT_VALUE;
-import static org.ostrya.presencepublisher.ui.preference.connection.QoSPreference.QOS_VALUE;
-import static org.ostrya.presencepublisher.ui.preference.connection.RetainFlagPreference.RETAIN_FLAG;
-import static org.ostrya.presencepublisher.ui.preference.connection.UseTlsPreference.USE_TLS;
-import static org.ostrya.presencepublisher.ui.preference.connection.UsernamePreference.USERNAME;
+import static org.ostrya.presencepublisher.preference.connection.ClientCertificatePreference.CLIENT_CERTIFICATE;
+import static org.ostrya.presencepublisher.preference.connection.HostPreference.HOST;
+import static org.ostrya.presencepublisher.preference.connection.PortPreference.PORT;
+import static org.ostrya.presencepublisher.preference.connection.QoSPreference.DEFAULT_VALUE;
+import static org.ostrya.presencepublisher.preference.connection.QoSPreference.QOS_VALUE;
+import static org.ostrya.presencepublisher.preference.connection.RetainFlagPreference.RETAIN_FLAG;
+import static org.ostrya.presencepublisher.preference.connection.UseTlsPreference.USE_TLS;
+import static org.ostrya.presencepublisher.preference.connection.UsernamePreference.USERNAME;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -22,8 +22,8 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
-import org.ostrya.presencepublisher.message.Message;
-import org.ostrya.presencepublisher.ui.preference.connection.PasswordPreference;
+import org.ostrya.presencepublisher.mqtt.message.Message;
+import org.ostrya.presencepublisher.preference.connection.PasswordPreference;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;

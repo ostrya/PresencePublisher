@@ -4,7 +4,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 import static org.ostrya.presencepublisher.PresencePublisher.NOTIFICATION_REQUEST_CODE;
 import static org.ostrya.presencepublisher.PresencePublisher.STATUS_NOTIFICATION_ID;
-import static org.ostrya.presencepublisher.ui.util.TimestampFormatter.format;
+import static org.ostrya.presencepublisher.schedule.TimestampFormatter.format;
 
 import android.Manifest;
 import android.app.Notification;

@@ -21,7 +21,7 @@ import org.ostrya.presencepublisher.log.db.LogDao;
 import org.ostrya.presencepublisher.log.db.LogDatabase;
 import org.ostrya.presencepublisher.log.db.MessagesLog;
 import org.ostrya.presencepublisher.log.db.MessagesLogDao;
-import org.ostrya.presencepublisher.message.Message;
+import org.ostrya.presencepublisher.mqtt.message.Message;
 
 import java.util.Date;
 import java.util.Locale;

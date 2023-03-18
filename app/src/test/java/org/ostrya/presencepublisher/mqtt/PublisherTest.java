@@ -7,10 +7,10 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
-import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_LIST;
-import static org.ostrya.presencepublisher.ui.preference.messages.MessageFormatPreference.MESSAGE_FORMAT_SETTING;
-import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
+import static org.ostrya.presencepublisher.preference.message.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
+import static org.ostrya.presencepublisher.preference.message.MessageCategorySupport.MESSAGE_LIST;
+import static org.ostrya.presencepublisher.preference.message.MessageFormatPreference.MESSAGE_FORMAT_SETTING;
+import static org.ostrya.presencepublisher.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
 
 import android.content.SharedPreferences;
 
@@ -23,15 +23,15 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.ostrya.presencepublisher.message.BatteryStatus;
-import org.ostrya.presencepublisher.message.Message;
-import org.ostrya.presencepublisher.message.MessageContext;
-import org.ostrya.presencepublisher.message.MessageContextProvider;
-import org.ostrya.presencepublisher.message.MessageFormat;
-import org.ostrya.presencepublisher.message.MessageItem;
+import org.ostrya.presencepublisher.mqtt.context.MessageContext;
+import org.ostrya.presencepublisher.mqtt.context.MessageContextProvider;
+import org.ostrya.presencepublisher.mqtt.context.battery.BatteryStatus;
+import org.ostrya.presencepublisher.mqtt.message.Message;
+import org.ostrya.presencepublisher.mqtt.message.MessageFormat;
+import org.ostrya.presencepublisher.mqtt.message.MessageItem;
 import org.ostrya.presencepublisher.notification.NotificationFactory;
+import org.ostrya.presencepublisher.preference.message.MessageConfiguration;
 import org.ostrya.presencepublisher.test.LogDisablerRule;
-import org.ostrya.presencepublisher.ui.preference.messages.MessageConfiguration;
 
 import java.util.Arrays;
 import java.util.Collections;

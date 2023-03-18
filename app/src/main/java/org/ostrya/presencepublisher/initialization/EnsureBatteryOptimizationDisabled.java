@@ -12,11 +12,11 @@ import android.os.PowerManager;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentManager;
 
+import org.ostrya.presencepublisher.IntentActionContract;
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.dialog.ConfirmationDialogFragment;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
-import org.ostrya.presencepublisher.ui.contract.IntentActionContract;
-import org.ostrya.presencepublisher.ui.dialog.ConfirmationDialogFragment;
 
 import java.util.Queue;
 

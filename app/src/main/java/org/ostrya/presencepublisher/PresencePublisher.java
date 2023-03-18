@@ -1,6 +1,6 @@
 package org.ostrya.presencepublisher;
 
-import static org.ostrya.presencepublisher.ui.preference.condition.BeaconCategorySupport.BEACON_LIST;
+import static org.ostrya.presencepublisher.preference.condition.BeaconCategorySupport.BEACON_LIST;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,12 +16,12 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.distance.ModelSpecificDistanceCalculator;
 import org.altbeacon.beacon.logging.LogManager;
-import org.ostrya.presencepublisher.beacon.LoggerAdapter;
-import org.ostrya.presencepublisher.beacon.PresenceBeaconManager;
+import org.ostrya.presencepublisher.log.BeaconLoggerAdapter;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
+import org.ostrya.presencepublisher.mqtt.context.condition.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.notification.NotificationFactory;
-import org.ostrya.presencepublisher.ui.preference.about.NightModePreference;
+import org.ostrya.presencepublisher.preference.about.NightModePreference;
 
 import java.util.Collections;
 import java.util.List;
@@ -61,7 +61,7 @@ public class PresencePublisher extends MultiDexApplication {
 
     private void initBeaconManager() {
         if (supportsBeacons()) {
-            LogManager.setLogger(new LoggerAdapter());
+            LogManager.setLogger(new BeaconLoggerAdapter());
             LogManager.setVerboseLoggingEnabled(BuildConfig.DEBUG);
             Beacon.setHardwareEqualityEnforced(true);
             Beacon.setDistanceCalculator(

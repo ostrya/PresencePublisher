@@ -1,11 +1,11 @@
 package org.ostrya.presencepublisher.mqtt;
 
-import static org.ostrya.presencepublisher.message.Message.messagesForTopic;
-import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
-import static org.ostrya.presencepublisher.ui.preference.messages.MessageCategorySupport.MESSAGE_LIST;
-import static org.ostrya.presencepublisher.ui.preference.messages.MessageFormatPreference.MESSAGE_FORMAT_SETTING;
-import static org.ostrya.presencepublisher.ui.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
-import static org.ostrya.presencepublisher.ui.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
+import static org.ostrya.presencepublisher.mqtt.message.Message.messagesForTopic;
+import static org.ostrya.presencepublisher.preference.message.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
+import static org.ostrya.presencepublisher.preference.message.MessageCategorySupport.MESSAGE_LIST;
+import static org.ostrya.presencepublisher.preference.message.MessageFormatPreference.MESSAGE_FORMAT_SETTING;
+import static org.ostrya.presencepublisher.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
+import static org.ostrya.presencepublisher.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,13 +14,13 @@ import androidx.annotation.VisibleForTesting;
 import androidx.preference.PreferenceManager;
 
 import org.ostrya.presencepublisher.log.DatabaseLogger;
-import org.ostrya.presencepublisher.message.Message;
-import org.ostrya.presencepublisher.message.MessageContext;
-import org.ostrya.presencepublisher.message.MessageContextProvider;
-import org.ostrya.presencepublisher.message.MessageFormat;
-import org.ostrya.presencepublisher.message.MessageItem;
+import org.ostrya.presencepublisher.mqtt.context.MessageContext;
+import org.ostrya.presencepublisher.mqtt.context.MessageContextProvider;
+import org.ostrya.presencepublisher.mqtt.message.Message;
+import org.ostrya.presencepublisher.mqtt.message.MessageFormat;
+import org.ostrya.presencepublisher.mqtt.message.MessageItem;
 import org.ostrya.presencepublisher.notification.NotificationFactory;
-import org.ostrya.presencepublisher.ui.preference.messages.MessageConfiguration;
+import org.ostrya.presencepublisher.preference.message.MessageConfiguration;
 
 import java.util.ArrayList;
 import java.util.Collections;
