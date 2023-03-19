@@ -106,8 +106,8 @@ public class MessagePreference extends AbstractTextPreferenceEntry
     }
 
     @Override
-    protected String getValue(@NonNull String text) {
-        MessageConfiguration messageConfiguration = MessageConfiguration.fromRawValue(text);
+    protected String getContentValue() {
+        MessageConfiguration messageConfiguration = MessageConfiguration.fromRawValue(getText());
         if (messageConfiguration != null) {
             return messageConfiguration.getTopic()
                     + "\n"

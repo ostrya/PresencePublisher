@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import org.ostrya.presencepublisher.R;
@@ -68,11 +67,11 @@ public class WifiNetworkPreference extends AbstractTextPreferenceEntry {
     }
 
     @Override
-    protected String getValue(@NonNull String text) {
+    protected String getContentValue() {
         if (network.hasWildcard()) {
-            return text + "\n" + getContext().getString(R.string.use_wildcard);
+            return network.getName() + "\n" + getContext().getString(R.string.use_wildcard);
         } else {
-            return text;
+            return network.getName();
         }
     }
 }

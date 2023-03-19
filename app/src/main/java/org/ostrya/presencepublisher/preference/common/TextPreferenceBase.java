@@ -51,16 +51,16 @@ public abstract class TextPreferenceBase extends EditTextPreference
     @Nullable
     @Override
     public CharSequence provideSummary(@NonNull TextPreferenceBase preference) {
-        String text = preference.getText();
+        String contentValue = preference.getContentValue();
         Context context = preference.getContext();
-        if (TextUtils.isEmpty(text)) {
+        if (TextUtils.isEmpty(contentValue)) {
             return context.getString(summaryId, context.getString(R.string.value_undefined));
         } else {
-            return context.getString(summaryId, preference.getValue(text));
+            return context.getString(summaryId, contentValue);
         }
     }
 
-    protected String getValue(@NonNull String text) {
-        return text;
+    protected String getContentValue() {
+        return getText();
     }
 }

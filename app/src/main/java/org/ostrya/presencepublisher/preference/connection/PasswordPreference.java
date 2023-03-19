@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -40,7 +41,10 @@ public class PasswordPreference extends TextPreferenceBase {
     }
 
     @Override
-    protected String getValue(@NonNull String ignored) {
+    protected String getContentValue() {
+        if (TextUtils.isEmpty(getText())) {
+            return null;
+        }
         return getContext().getString(R.string.password_placeholder);
     }
 
