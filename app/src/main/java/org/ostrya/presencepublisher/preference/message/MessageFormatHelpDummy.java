@@ -1,10 +1,8 @@
 package org.ostrya.presencepublisher.preference.message;
 
 import android.content.Context;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
-import android.text.Html;
 
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 
 import org.ostrya.presencepublisher.R;
@@ -37,12 +35,7 @@ public class MessageFormatHelpDummy extends ClickDummy {
             sb.append(messagePerFormat(format));
         }
         String content = sb.toString().replace("\n", "<br/>").replace(' ', ' ');
-        CharSequence message;
-        if (VERSION.SDK_INT >= VERSION_CODES.N) {
-            message = Html.fromHtml(content, Html.FROM_HTML_MODE_LEGACY);
-        } else {
-            message = Html.fromHtml(content);
-        }
+        CharSequence message = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY);
         ScrollableMessageFragment fragment = ScrollableMessageFragment.getInstance(message);
 
         fragment.show(getParentFragmentManager(), null);

@@ -1,11 +1,10 @@
 package org.ostrya.presencepublisher.preference.about;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.os.Build;
+
+import androidx.core.content.pm.PackageInfoCompat;
 
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
@@ -15,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.List;
 
 public class SignaturePreferenceDummy extends StringDummy {
     private static final String TAG = "SignaturePreferenceDummy";
@@ -25,24 +25,10 @@ public class SignaturePreferenceDummy extends StringDummy {
 
     private static String getSignatures(Context context) {
         try {
-            Signature[] signatures;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                PackageInfo info =
-                        context.getPackageManager()
-                                .getPackageInfo(
-                                        context.getPackageName(),
-                                        PackageManager.GET_SIGNING_CERTIFICATES);
-                if (info.signingInfo == null) {
-                    signatures = null;
-                } else if (info.signingInfo.hasMultipleSigners()) {
-                    signatures = info.signingInfo.getApkContentsSigners();
-                } else {
-                    signatures = info.signingInfo.getSigningCertificateHistory();
-                }
-            } else {
-                signatures = getLegacySignatures(context);
-            }
-            if (signatures == null) {
+            List<Signature> signatures =
+                    PackageInfoCompat.getSignatures(
+                            context.getPackageManager(), context.getPackageName());
+            if (signatures.isEmpty()) {
                 DatabaseLogger.i(TAG, "No signing info found");
                 return context.getString(R.string.value_undefined);
             }
@@ -61,16 +47,6 @@ public class SignaturePreferenceDummy extends StringDummy {
             DatabaseLogger.w(TAG, "Unable to find this package", e);
             return context.getString(R.string.value_undefined);
         }
-    }
-
-    @SuppressWarnings("deprecation")
-    @SuppressLint("PackageManagerGetSignatures")
-    private static Signature[] getLegacySignatures(Context context)
-            throws PackageManager.NameNotFoundException {
-        PackageInfo info =
-                context.getPackageManager()
-                        .getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
-        return info.signatures;
     }
 
     private static String signatureToString(Signature signature, String defaultValue) {
