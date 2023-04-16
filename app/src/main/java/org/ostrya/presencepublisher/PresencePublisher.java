@@ -16,9 +16,11 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.distance.ModelSpecificDistanceCalculator;
 import org.altbeacon.beacon.logging.LogManager;
+import org.eclipse.paho.client.mqttv3.logging.LoggerFactory;
 import org.ostrya.presencepublisher.log.BeaconLoggerAdapter;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
+import org.ostrya.presencepublisher.log.PahoNoopLogger;
 import org.ostrya.presencepublisher.mqtt.context.condition.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.notification.NotificationFactory;
 import org.ostrya.presencepublisher.preference.about.NightModePreference;
@@ -57,6 +59,7 @@ public class PresencePublisher extends MultiDexApplication {
         }
         Thread.setDefaultUncaughtExceptionHandler(
                 new LogUncaughtExceptionHandler(this, Thread.getDefaultUncaughtExceptionHandler()));
+        LoggerFactory.setLogger(PahoNoopLogger.class.getName());
     }
 
     private void initBeaconManager() {
