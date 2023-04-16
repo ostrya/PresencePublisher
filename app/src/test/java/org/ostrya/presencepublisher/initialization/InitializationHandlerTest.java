@@ -48,13 +48,14 @@ public class InitializationHandlerTest {
 
         InitializationHandler.getHandler(context, handlerChain);
 
-        assertThat(handlerSpies).hasSize(6);
+        assertThat(handlerSpies).hasSize(7);
         assertThat(handlerSpies.get(0)).isInstanceOf(EnsureLocationPermission.class);
         assertThat(handlerSpies.get(1)).isInstanceOf(EnsureBackgroundLocationPermission.class);
         assertThat(handlerSpies.get(2)).isInstanceOf(EnsureLocationServiceEnabled.class);
-        assertThat(handlerSpies.get(3)).isInstanceOf(EnsureBluetoothServiceEnabled.class);
-        assertThat(handlerSpies.get(4)).isInstanceOf(EnsureBatteryOptimizationDisabled.class);
-        assertThat(handlerSpies.get(5)).isInstanceOf(CreateSchedule.class);
+        assertThat(handlerSpies.get(3)).isInstanceOf(EnsureBluetoothPermission.class);
+        assertThat(handlerSpies.get(4)).isInstanceOf(EnsureBluetoothServiceEnabled.class);
+        assertThat(handlerSpies.get(5)).isInstanceOf(EnsureBatteryOptimizationDisabled.class);
+        assertThat(handlerSpies.get(6)).isInstanceOf(CreateSchedule.class);
     }
 
     @Test
@@ -72,7 +73,7 @@ public class InitializationHandlerTest {
 
         InitializationHandler handler = InitializationHandler.getHandler(context, handlerChain);
         // scheduler needs too many android classes to mock properly for now
-        doNothing().when(handlerSpies.get(5)).initialize();
+        doNothing().when(handlerSpies.get(6)).initialize();
 
         handler.initialize();
 

@@ -15,6 +15,7 @@ public interface InitializationHandler {
                             EnsureLocationPermission::new,
                             EnsureBackgroundLocationPermission::new,
                             EnsureLocationServiceEnabled::new,
+                            EnsureBluetoothPermission::new,
                             EnsureBluetoothServiceEnabled::new,
                             EnsureBatteryOptimizationDisabled::new,
                             CreateSchedule::new));

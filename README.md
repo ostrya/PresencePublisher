@@ -108,8 +108,9 @@ After you have imported your client certificate, you will be able to choose it f
 * ACCESS_FINE_LOCATION: necessary to discover beacons; on Android 9+, necessary to retrieve SSID of connected Wi-Fi
 * ACCESS_NETWORK_STATE: necessary to register network change listener
 * ACCESS_WIFI_STATE: necessary to retrieve SSID of connected Wi-Fi
-* BLUETOOTH: necessary to communicate with beacons
-* BLUETOOTH_ADMIN: necessary to discover beacons
+* BLUETOOTH: necessary up to Android 11 to communicate with beacons
+* BLUETOOTH_ADMIN: necessary up to Android 11 to discover beacons
+* BLUETOOTH_SCAN: on Android 12+, necessary to discover beacons
 * INTERNET: only necessary if your MQTT server is not running locally
 * RECEIVE_BOOT_COMPLETED: necessary to start service on start-up
 * REQUEST_IGNORE_BATTERY_OPTIMIZATIONS: on Android 6+, necessary to request disabling battery optimization

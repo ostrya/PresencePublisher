@@ -17,26 +17,28 @@ public class BeaconCategorySupport extends AbstractDynamicPreferenceCategorySupp
     public static final String BEACON_LIST = "beacons";
     public static final String BEACON_CONTENT_PREFIX = "beacon.";
 
-    private static final String TAG = "BeaconCategorySupport";
-
     public BeaconCategorySupport(
             AbstractConfigurationFragment fragment,
-            @Nullable ActivityResultLauncher<String> intentLauncher) {
+            @Nullable ActivityResultLauncher<String> serviceStartLauncher,
+            @Nullable ActivityResultLauncher<String> permissionRequestLauncher) {
         super(
                 fragment,
                 R.string.category_beacon_regions,
                 BEACON_LIST,
                 BEACON_CONTENT_PREFIX,
-                (c, p, f) -> createAdderEntry(c, f, intentLauncher),
+                (c, p, f) ->
+                        createAdderEntry(c, f, serviceStartLauncher, permissionRequestLauncher),
                 BeaconCategorySupport::createEntry);
     }
 
     private static Preference createAdderEntry(
             Context context,
             Fragment fragment,
-            @Nullable ActivityResultLauncher<String> intentLauncher) {
-        if (intentLauncher != null) {
-            return new AddBeaconChoicePreferenceDummy(context, fragment, intentLauncher);
+            @Nullable ActivityResultLauncher<String> serviceStartLauncher,
+            @Nullable ActivityResultLauncher<String> permissionRequestLauncher) {
+        if (serviceStartLauncher != null && permissionRequestLauncher != null) {
+            return new AddBeaconChoicePreferenceDummy(
+                    context, fragment, serviceStartLauncher, permissionRequestLauncher);
         } else {
             return new StringDummy(context, R.string.no_bluetooth_explanation);
         }
@@ -53,11 +55,11 @@ public class BeaconCategorySupport extends AbstractDynamicPreferenceCategorySupp
 
     public void clickAdd() {
         @Nullable
-        Preference adderPreference =
+        AddBeaconChoicePreferenceDummy adderPreference =
                 getPreferenceManager()
                         .findPreference(AddBeaconChoicePreferenceDummy.class.getCanonicalName());
         if (adderPreference != null) {
-            adderPreference.getOnPreferenceClickListener().onPreferenceClick(adderPreference);
+            adderPreference.onClick();
         }
     }
 }

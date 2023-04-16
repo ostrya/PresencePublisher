@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceScreen;
@@ -39,15 +40,22 @@ public class ConditionFragment extends AbstractConfigurationFragment {
         SharedPreferences preference = getPreferenceManager().getSharedPreferences();
 
         WifiCategorySupport wifiSupport = new WifiCategorySupport(this);
-        ActivityResultLauncher<String> intentLauncher;
+        ActivityResultLauncher<String> serviceStartLauncher;
+        ActivityResultLauncher<String> permissionRequestLauncher;
         // to make linter happy
         if (beaconsSupported) {
-            intentLauncher =
+            serviceStartLauncher =
                     registerForActivityResult(new IntentActionContract(), this::onActivityResult);
+            permissionRequestLauncher =
+                    registerForActivityResult(
+                            new ActivityResultContracts.RequestPermission(),
+                            this::onActivityResult);
         } else {
-            intentLauncher = null;
+            serviceStartLauncher = null;
+            permissionRequestLauncher = null;
         }
-        beaconSupport = new BeaconCategorySupport(this, intentLauncher);
+        beaconSupport =
+                new BeaconCategorySupport(this, serviceStartLauncher, permissionRequestLauncher);
 
         PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(context);
 

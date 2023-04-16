@@ -28,6 +28,8 @@
         %4$s
     </string>
     <string name="location_consent_summary">Allow this app to access and process your location information.</string>
+    <string name="bluetooth_permission_dialog_title">Bluetooth permission</string>
+    <string name="bluetooth_permission_dialog_message">Please allow scanning for bluetooth devices so this app can react to your beacons\' presence.</string>
     <string name="bluetooth_dialog_title">Bluetooth</string>
     <string name="bluetooth_dialog_message">Please enable Bluetooth so that this app can scan for beacons. Otherwise,
         no beacons will be found.

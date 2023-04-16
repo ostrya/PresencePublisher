@@ -26,5 +26,7 @@
 -keep public class org.eclipse.paho.client.mqttv3.internal.SSLNetworkModuleFactory
 -keep public class org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketNetworkModuleFactory
 -keep public class org.eclipse.paho.client.mqttv3.internal.websocket.WebSocketSecureNetworkModuleFactory
+# needed for distance calculation
+-keep public class org.altbeacon.beacon.service.RunningAverageRssiFilter
 # needed to avoid "no logger found" exceptions
 -keep public class org.ostrya.presencepublisher.log.PahoNoopLogger

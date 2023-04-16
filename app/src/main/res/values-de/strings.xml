@@ -21,6 +21,8 @@
         %4$s
     </string>
     <string name="location_consent_summary">Erlaube dieser App, deine Standortdaten zu erfassen und zu verarbeiten.</string>
+    <string name="bluetooth_permission_dialog_title">Bluetooth-Berechtigung</string>
+    <string name="bluetooth_permission_dialog_message">Bitte erlaube das Suchen nach Bluetooth-Geräten, damit diese App auf deine Beacons reagieren kann.</string>
     <string name="bluetooth_dialog_title">Bluetooth</string>
     <string name="bluetooth_dialog_message">Bitte schalte Bluetooth an, damit diese App nach Beacons suchen kann. Andernfalls
         wird die App keine Beacons finden.

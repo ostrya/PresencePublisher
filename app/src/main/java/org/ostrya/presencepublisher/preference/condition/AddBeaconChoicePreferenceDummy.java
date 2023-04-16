@@ -4,12 +4,16 @@ import static android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE;
 
 import static org.ostrya.presencepublisher.dialog.BeaconScanDialogFragment.getInstance;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import org.ostrya.presencepublisher.R;
@@ -24,21 +28,33 @@ import java.util.Collections;
 public class AddBeaconChoicePreferenceDummy extends ClickDummy {
     private static final String TAG = "AddBeaconChoicePreferenceDummy";
 
-    private final ActivityResultLauncher<String> intentLauncher;
+    private final ActivityResultLauncher<String> serviceStartLauncher;
+    private final ActivityResultLauncher<String> permissionRequestLauncher;
 
     public AddBeaconChoicePreferenceDummy(
-            Context context, Fragment fragment, ActivityResultLauncher<String> intentLauncher) {
+            Context context,
+            Fragment fragment,
+            ActivityResultLauncher<String> serviceStartLauncher,
+            ActivityResultLauncher<String> permissionRequestLauncher) {
         super(
                 context,
                 R.drawable.baseline_playlist_add_24,
                 R.string.add_beacon_title,
                 R.string.add_beacon_summary,
                 fragment);
-        this.intentLauncher = intentLauncher;
+        this.serviceStartLauncher = serviceStartLauncher;
+        this.permissionRequestLauncher = permissionRequestLauncher;
     }
 
     @Override
     protected void onClick() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                && ContextCompat.checkSelfPermission(
+                                getContext(), Manifest.permission.BLUETOOTH_SCAN)
+                        != PackageManager.PERMISSION_GRANTED) {
+            permissionRequestLauncher.launch(Manifest.permission.BLUETOOTH_SCAN);
+            return;
+        }
         BluetoothManager bluetoothManager =
                 (BluetoothManager) getContext().getSystemService(Context.BLUETOOTH_SERVICE);
         if (bluetoothManager == null) {
@@ -46,7 +62,7 @@ public class AddBeaconChoicePreferenceDummy extends ClickDummy {
         } else {
             BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
             if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
-                intentLauncher.launch(ACTION_REQUEST_ENABLE);
+                serviceStartLauncher.launch(ACTION_REQUEST_ENABLE);
                 return;
             }
         }
