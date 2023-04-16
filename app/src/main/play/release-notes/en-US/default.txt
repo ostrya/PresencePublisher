@@ -1,3 +1,7 @@
+v2.5.1
+• bright and dark mode
+• new permissions for bluetooth detection on Android 12+
+
 v2.5.0
 • support for wildcards when selecting WiFi networks
 • improved validation of input values

@@ -48,7 +48,7 @@ android {
         targetSdk = 33
         vectorDrawables.useSupportLibrary = true
         versionCode = 49
-        versionName = "2.5.0"
+        versionName = "2.5.1"
         javaCompileOptions {
             annotationProcessorOptions {
                 argument("room.schemaLocation", "$projectDir/schemas")

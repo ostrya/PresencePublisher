@@ -1,3 +1,7 @@
+v2.5.1
+• Hell- und Dunkelmodus
+• neue Berechtigungen für Bluetooth-Erkennung mit Android 12+
+
 v2.5.0
 • Unterstützung von Platzhaltern bei Auswahl von WLANs
 • Verbesserungen bei der Validierung von Eingabewerten
