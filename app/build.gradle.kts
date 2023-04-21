@@ -47,8 +47,8 @@ android {
         multiDexEnabled = true
         targetSdk = 33
         vectorDrawables.useSupportLibrary = true
-        versionCode = 49
-        versionName = "2.5.1"
+        versionCode = 50
+        versionName = "2.5.2"
         javaCompileOptions {
             annotationProcessorOptions {
                 argument("room.schemaLocation", "$projectDir/schemas")

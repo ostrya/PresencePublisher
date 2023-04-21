@@ -110,6 +110,7 @@ After you have imported your client certificate, you will be able to choose it f
 * ACCESS_WIFI_STATE: necessary to retrieve SSID of connected Wi-Fi
 * BLUETOOTH: necessary up to Android 11 to communicate with beacons
 * BLUETOOTH_ADMIN: necessary up to Android 11 to discover beacons
+* BLUETOOTH_CONNECT: on Android 12+, necessary to read beacon names
 * BLUETOOTH_SCAN: on Android 12+, necessary to discover beacons
 * INTERNET: only necessary if your MQTT server is not running locally
 * RECEIVE_BOOT_COMPLETED: necessary to start service on start-up

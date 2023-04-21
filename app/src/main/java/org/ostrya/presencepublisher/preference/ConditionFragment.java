@@ -26,6 +26,8 @@ import org.ostrya.presencepublisher.preference.condition.SendOfflineMessagePrefe
 import org.ostrya.presencepublisher.preference.condition.SendViaMobileNetworkPreference;
 import org.ostrya.presencepublisher.preference.condition.WifiCategorySupport;
 
+import java.util.Map;
+
 public class ConditionFragment extends AbstractConfigurationFragment {
     private static final String TAG = "ConditionFragment";
 
@@ -41,15 +43,15 @@ public class ConditionFragment extends AbstractConfigurationFragment {
 
         WifiCategorySupport wifiSupport = new WifiCategorySupport(this);
         ActivityResultLauncher<String> serviceStartLauncher;
-        ActivityResultLauncher<String> permissionRequestLauncher;
+        ActivityResultLauncher<String[]> permissionRequestLauncher;
         // to make linter happy
         if (beaconsSupported) {
             serviceStartLauncher =
-                    registerForActivityResult(new IntentActionContract(), this::onActivityResult);
+                    registerForActivityResult(new IntentActionContract(), this::onServiceStart);
             permissionRequestLauncher =
                     registerForActivityResult(
-                            new ActivityResultContracts.RequestPermission(),
-                            this::onActivityResult);
+                            new ActivityResultContracts.RequestMultiplePermissions(),
+                            this::onPermissionsGranted);
         } else {
             serviceStartLauncher = null;
             permissionRequestLauncher = null;
@@ -98,9 +100,17 @@ public class ConditionFragment extends AbstractConfigurationFragment {
         }
     }
 
-    private void onActivityResult(boolean result) {
+    private void onServiceStart(boolean result) {
         DatabaseLogger.d(TAG, "Received result " + result);
         if (result && beaconSupport != null) {
+            DatabaseLogger.i(TAG, "Start scanning after enabling bluetooth");
+            beaconSupport.clickAdd();
+        }
+    }
+
+    private void onPermissionsGranted(Map<String, Boolean> result) {
+        DatabaseLogger.d(TAG, "Received result " + result);
+        if (result.values().stream().allMatch(b -> b) && beaconSupport != null) {
             DatabaseLogger.i(TAG, "Start scanning after enabling bluetooth");
             beaconSupport.clickAdd();
         }

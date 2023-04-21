@@ -29,13 +29,13 @@ public class AddBeaconChoicePreferenceDummy extends ClickDummy {
     private static final String TAG = "AddBeaconChoicePreferenceDummy";
 
     private final ActivityResultLauncher<String> serviceStartLauncher;
-    private final ActivityResultLauncher<String> permissionRequestLauncher;
+    private final ActivityResultLauncher<String[]> permissionRequestLauncher;
 
     public AddBeaconChoicePreferenceDummy(
             Context context,
             Fragment fragment,
             ActivityResultLauncher<String> serviceStartLauncher,
-            ActivityResultLauncher<String> permissionRequestLauncher) {
+            ActivityResultLauncher<String[]> permissionRequestLauncher) {
         super(
                 context,
                 R.drawable.baseline_playlist_add_24,
@@ -49,10 +49,16 @@ public class AddBeaconChoicePreferenceDummy extends ClickDummy {
     @Override
     protected void onClick() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                && ContextCompat.checkSelfPermission(
-                                getContext(), Manifest.permission.BLUETOOTH_SCAN)
-                        != PackageManager.PERMISSION_GRANTED) {
-            permissionRequestLauncher.launch(Manifest.permission.BLUETOOTH_SCAN);
+                && (ContextCompat.checkSelfPermission(
+                                        getContext(), Manifest.permission.BLUETOOTH_SCAN)
+                                != PackageManager.PERMISSION_GRANTED
+                        || ContextCompat.checkSelfPermission(
+                                        getContext(), Manifest.permission.BLUETOOTH_CONNECT)
+                                != PackageManager.PERMISSION_GRANTED)) {
+            permissionRequestLauncher.launch(
+                    new String[] {
+                        Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT
+                    });
             return;
         }
         BluetoothManager bluetoothManager =

@@ -20,7 +20,7 @@ public class BeaconCategorySupport extends AbstractDynamicPreferenceCategorySupp
     public BeaconCategorySupport(
             AbstractConfigurationFragment fragment,
             @Nullable ActivityResultLauncher<String> serviceStartLauncher,
-            @Nullable ActivityResultLauncher<String> permissionRequestLauncher) {
+            @Nullable ActivityResultLauncher<String[]> permissionRequestLauncher) {
         super(
                 fragment,
                 R.string.category_beacon_regions,
@@ -35,7 +35,7 @@ public class BeaconCategorySupport extends AbstractDynamicPreferenceCategorySupp
             Context context,
             Fragment fragment,
             @Nullable ActivityResultLauncher<String> serviceStartLauncher,
-            @Nullable ActivityResultLauncher<String> permissionRequestLauncher) {
+            @Nullable ActivityResultLauncher<String[]> permissionRequestLauncher) {
         if (serviceStartLauncher != null && permissionRequestLauncher != null) {
             return new AddBeaconChoicePreferenceDummy(
                     context, fragment, serviceStartLauncher, permissionRequestLauncher);

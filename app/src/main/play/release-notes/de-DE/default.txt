@@ -1,3 +1,6 @@
+v2.5.2
+• weitere fehlende Bluetooth-Berechtigung hinzugefügt
+
 v2.5.1
 • Hell- und Dunkelmodus
 • neue Berechtigungen für Bluetooth-Erkennung mit Android 12+

@@ -28,6 +28,7 @@ Datenschutzerklärung unter <a href="https://ostrya.github.io/PresencePublisher/
 • ACCESS_WIFI_STATE: notwendig, um den Namen des verbundenen WLANs zu erfassen
 • BLUETOOTH: notwendig bis Android 11, um mit Bluetooth-Beacons zu kommunizieren
 • BLUETOOTH_ADMIN: notwendig bis Android 11, um unbekannte Bluetooth-Beacons zu finden
+• BLUETOOTH_CONNECT: notwendig ab Android 12, um Namen von unbekannten Bluetooth-Beacons zu lesen
 • BLUETOOTH_SCAN: notwendig ab Android 12, um unbekannte Bluetooth-Beacons zu finden
 • FOREGROUND_SERVICE: notwendig ab Android 9, damit die App zuverlässig laufen kann
 • INTERNET: nur notwendig, wenn dein MQTT-Broker nicht im lokalen Netzwerk läuft
