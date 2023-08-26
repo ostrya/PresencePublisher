@@ -19,8 +19,8 @@ please have a look at the privacy policy at <a href="https://ostrya.github.io/Pr
 
 <b>Permissions</b>
 
-• ACCESS_BACKGROUND_LOCATION: on Android 10+, necessary to retrieve SSID of connected Wi-Fi while running in background
-• ACCESS_FINE_LOCATION: necessary to discover beacons; on Android 9+, necessary to retrieve SSID of connected Wi-Fi
+• ACCESS_BACKGROUND_LOCATION: on Android 10+, necessary to retrieve name of connected Wi-Fi while running in background
+• ACCESS_FINE_LOCATION: necessary to discover beacons; on Android 9+, necessary to retrieve name of connected Wi-Fi
 • ACCESS_NETWORK_STATE: necessary to register network change listener
 • ACCESS_WIFI_STATE: necessary to retrieve SSID of connected Wi-Fi
 • BLUETOOTH: necessary up to Android 11 to communicate with beacons
@@ -28,6 +28,8 @@ please have a look at the privacy policy at <a href="https://ostrya.github.io/Pr
 • BLUETOOTH_CONNECT: on Android 12+, necessary to read beacon names
 • BLUETOOTH_SCAN: on Android 12+, necessary to discover beacons
 • FOREGROUND_SERVICE: necessary on Android 9+ to run the app reliably
+• FOREGROUND_SERVICE_DATA_SYNC: on Android 14+, necessary to send MQTT messages
+• FOREGROUND_SERVICE_LOCATION: on Android 14+, necessary to retrieve Wi-Fi name
 • INTERNET: only necessary if your MQTT server is not running locally
 • POST_NOTIFICATIONS: necessary in Android 13+ to create notifications
 • RECEIVE_BOOT_COMPLETED: necessary to start service on start-up

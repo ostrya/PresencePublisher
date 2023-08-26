@@ -8,13 +8,13 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r")
+        classpath("org.eclipse.jgit:org.eclipse.jgit:6.6.0.202305301015-r")
     }
 }
 
 plugins {
-    id("com.github.triplet.play") version "3.8.1"
-    id("com.jaredsburrows.license") version "0.9.2"
+    id("com.github.triplet.play") version "3.8.4"
+    id("com.jaredsburrows.license") version "0.9.3"
     id("com.android.application")
 }
 
@@ -40,14 +40,14 @@ fun isTagged(): Boolean {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
         minSdk = 19
         multiDexEnabled = true
-        targetSdk = 33
+        targetSdk = 34
         vectorDrawables.useSupportLibrary = true
-        versionCode = 50
+        versionCode = 51
         versionName = "2.5.2"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -84,7 +84,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    buildToolsVersion = "31.0.0"
     lint {
         abortOnError = false
     }
@@ -136,20 +135,20 @@ play {
 }
 
 dependencies {
-    val roomVersion = "2.5.1"
+    val roomVersion = "2.6.0-beta01"
 
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat:1.7.0-alpha03")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.preference:preference:1.2.0")
+    implementation("androidx.preference:preference:1.2.1")
     implementation("androidx.room:room-guava:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.security:security-crypto:1.1.0-alpha05")
-    implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("androidx.viewpager2:viewpager2:1.1.0-beta02")
     implementation("androidx.work:work-runtime:2.8.1")
-    implementation("com.google.android.material:material:1.8.0")
-    implementation("com.google.guava:guava:31.1-android")
-    implementation("org.altbeacon:android-beacon-library:2.19.5")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.guava:guava:32.1.2-android")
+    implementation("org.altbeacon:android-beacon-library:2.19.6")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.assertj:assertj-core:3.24.2")

@@ -104,15 +104,18 @@ After you have imported your client certificate, you will be able to choose it f
 
 ## Permissions
 
-* ACCESS_BACKGROUND_LOCATION: on Android 10+, necessary to retrieve SSID of connected Wi-Fi while running in background
-* ACCESS_FINE_LOCATION: necessary to discover beacons; on Android 9+, necessary to retrieve SSID of connected Wi-Fi
+* ACCESS_BACKGROUND_LOCATION: on Android 10+, necessary to retrieve name of connected Wi-Fi while running in background
+* ACCESS_FINE_LOCATION: necessary to discover beacons; on Android 9+, necessary to retrieve name of connected Wi-Fi
 * ACCESS_NETWORK_STATE: necessary to register network change listener
 * ACCESS_WIFI_STATE: necessary to retrieve SSID of connected Wi-Fi
 * BLUETOOTH: necessary up to Android 11 to communicate with beacons
 * BLUETOOTH_ADMIN: necessary up to Android 11 to discover beacons
 * BLUETOOTH_CONNECT: on Android 12+, necessary to read beacon names
 * BLUETOOTH_SCAN: on Android 12+, necessary to discover beacons
+* FOREGROUND_SERVICE: necessary on Android 9+ to run the app reliably
+* FOREGROUND_SERVICE_DATA_SYNC: on Android 14+, necessary to send MQTT messages
+* FOREGROUND_SERVICE_LOCATION: on Android 14+, necessary to retrieve Wi-Fi name
 * INTERNET: only necessary if your MQTT server is not running locally
+* POST_NOTIFICATIONS: necessary in Android 13+ to create notifications
 * RECEIVE_BOOT_COMPLETED: necessary to start service on start-up
 * REQUEST_IGNORE_BATTERY_OPTIMIZATIONS: on Android 6+, necessary to request disabling battery optimization
-* WRITE_EXTERNAL_STORAGE: only necessary if you want to export log files in Android 4.0 - 4.3

@@ -31,6 +31,8 @@ Datenschutzerklärung unter <a href="https://ostrya.github.io/PresencePublisher/
 • BLUETOOTH_CONNECT: notwendig ab Android 12, um Namen von unbekannten Bluetooth-Beacons zu lesen
 • BLUETOOTH_SCAN: notwendig ab Android 12, um unbekannte Bluetooth-Beacons zu finden
 • FOREGROUND_SERVICE: notwendig ab Android 9, damit die App zuverlässig laufen kann
+• FOREGROUND_SERVICE_DATA_SYNC: notwendig ab Android 14, um MQTT-Nachrichten zu senden
+• FOREGROUND_SERVICE_LOCATION: notwendig ab Android 14, um den WLAN-Namen zu erfassen
 • INTERNET: nur notwendig, wenn dein MQTT-Broker nicht im lokalen Netzwerk läuft
 • POST_NOTIFICATIONS: notwendig ab Android 13, um Benachrichtigungen zu erzeugen
 • RECEIVE_BOOT_COMPLETED: notwendig, damit die App nach dem Neustart des Geräts automatisch starten kann
