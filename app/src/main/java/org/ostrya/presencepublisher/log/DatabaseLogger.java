@@ -84,6 +84,11 @@ public class DatabaseLogger {
                 instance.executor);
     }
 
+    public static void logMessageError(String error) {
+        DatabaseLogger instance = getInstance();
+        addLogEntry(instance.messagesLogDao, MessagesLog::new, error, instance.executor);
+    }
+
     public static void v(String tag, String message) {
         log(Log.VERBOSE, tag, message, null);
     }
@@ -129,7 +134,12 @@ public class DatabaseLogger {
         if (level >= instance.logLevel) {
             String line;
             if (throwable != null) {
-                line = message + '\n' + Log.getStackTraceString(throwable);
+                line =
+                        message
+                                + ": "
+                                + throwable.getMessage()
+                                + '\n'
+                                + Log.getStackTraceString(throwable);
             } else {
                 line = message;
             }

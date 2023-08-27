@@ -65,7 +65,8 @@ public class Publisher {
             try {
                 mqttService.sendMessages(messages);
             } catch (Exception e) {
-                DatabaseLogger.w(TAG, "Error while sending messages", e);
+                DatabaseLogger.w(TAG, "Error while sending messages: " + messages, e);
+                DatabaseLogger.logMessageError("Failed to send messages: " + e.getMessage());
                 return false;
             }
             sharedPreferences.edit().putLong(LAST_SUCCESS, currentTimestamp).apply();
