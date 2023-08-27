@@ -26,6 +26,8 @@ public class CheckConnectionDialogFragment extends DialogFragment {
     private Context context;
     private MqttService mqttService;
 
+    private Future<?> connectionTestFuture = null;
+
     public static CheckConnectionDialogFragment getInstance(final Context context) {
         CheckConnectionDialogFragment fragment = new CheckConnectionDialogFragment();
         fragment.setContext(context);
@@ -42,9 +44,17 @@ public class CheckConnectionDialogFragment extends DialogFragment {
                 .setNeutralButton(R.string.dialog_cancel, null);
 
         AlertDialog alertDialog = builder.create();
-        Future<?> future = executorService.submit(new ConnectionTestWorker(alertDialog));
-        alertDialog.setOnDismissListener(dialog -> future.cancel(true));
+        connectionTestFuture = executorService.submit(new ConnectionTestWorker(alertDialog));
         return alertDialog;
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (connectionTestFuture != null) {
+            connectionTestFuture.cancel(true);
+            connectionTestFuture = null;
+        }
     }
 
     private void setMqttService(MqttService mqttService) {

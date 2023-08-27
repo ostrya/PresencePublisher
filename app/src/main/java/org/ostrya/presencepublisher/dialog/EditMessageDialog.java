@@ -59,7 +59,7 @@ public class EditMessageDialog extends DialogFragment {
         Context context = requireContext();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = getLayoutInflater();
         ViewGroup root = requireActivity().findViewById(android.R.id.content);
         View view = inflater.inflate(R.layout.dialog_edit_message, root, false);
 

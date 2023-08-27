@@ -37,7 +37,7 @@ public class EditNetworkDialog extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
 
-        LayoutInflater inflater = LayoutInflater.from(getContext());
+        LayoutInflater inflater = getLayoutInflater();
         ViewGroup root = requireActivity().findViewById(android.R.id.content);
         View view = inflater.inflate(R.layout.dialog_edit_network, root, false);
 

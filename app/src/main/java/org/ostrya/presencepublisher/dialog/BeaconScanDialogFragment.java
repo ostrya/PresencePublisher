@@ -52,7 +52,7 @@ public class BeaconScanDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        LayoutInflater inflater = getLayoutInflater();
         ViewGroup root = requireActivity().findViewById(android.R.id.content);
         View view = inflater.inflate(R.layout.dialog_beacon_scan, root, false);
 
