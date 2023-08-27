@@ -1,3 +1,6 @@
+v2.5.3
+• added support for Android 14
+
 v2.5.2
 • added another missing bluetooth permission
 
