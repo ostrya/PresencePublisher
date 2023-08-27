@@ -86,11 +86,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleConsentChange() {
+        PresencePublisher application = (PresencePublisher) getApplication();
         if (sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
             DatabaseLogger.i(TAG, "User consented to location access, initializing.");
+            application.setUpConditionCallbacks(sharedPreferences);
             handler.initialize();
         } else {
             DatabaseLogger.i(TAG, "User revoked location access consent, stopping schedule.");
+            application.removeConditionCallbacks();
             new Scheduler(this).stopSchedule();
         }
     }

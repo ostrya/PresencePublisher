@@ -25,7 +25,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <!-- Request specific foreground permissions on Android 14+ -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -60,9 +59,18 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receiver.NetworkReceiver" android:exported="true">
+            <intent-filter>
+                <!-- only works until API level 23, see https://developer.android.com/topic/performance/background-optimization -->
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                    tools:ignore="BatteryLife" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
-            android:foregroundServiceType="dataSync|location"
+            android:foregroundServiceType="dataSync"
             tools:node="merge" />
     </application>
 

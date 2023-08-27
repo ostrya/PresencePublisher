@@ -52,7 +52,7 @@ public final class PresenceBeaconManager {
         List<Region> scanRegions = new ArrayList<>(beaconList.size());
         for (String beaconId : beaconList) {
             String address = PresenceBeacon.beaconIdToAddress(beaconId);
-            DatabaseLogger.d(TAG, "Registering scan region for beacon " + beaconId);
+            DatabaseLogger.i(TAG, "Registering scan region for beacon " + beaconId);
             scanRegions.add(new Region(beaconId, address));
         }
         return scanRegions;
@@ -65,18 +65,16 @@ public final class PresenceBeaconManager {
         Set<String> storedBeacons =
                 new HashSet<>(sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet()));
         String beaconId = beacon.toBeaconId();
-        storedBeacons.add(beaconId);
-        sharedPreferences.edit().putStringSet(BEACON_LIST, storedBeacons).apply();
+        if (storedBeacons.add(beaconId)) {
+            if (beaconManager == null) {
+                initialize(context);
+            }
+            sharedPreferences.edit().putStringSet(BEACON_LIST, storedBeacons).apply();
 
-        DatabaseLogger.d(TAG, "Add scanning for beacon " + beaconId);
-        Region region = new Region(beaconId, beacon.getAddress());
-        if (beaconManager == null) {
-            DatabaseLogger.d(TAG, "Start scanning for beacons");
-            beaconManager = BeaconManager.getInstanceForApplication(applicationContext);
-            RegionMonitorNotifier monitorNotifier = new RegionMonitorNotifier(sharedPreferences);
-            beaconManager.addMonitorNotifier(monitorNotifier);
+            DatabaseLogger.d(TAG, "Add scanning for beacon " + beaconId);
+            Region region = new Region(beaconId, beacon.getAddress());
+            beaconManager.startMonitoring(region);
         }
-        beaconManager.startMonitoring(region);
     }
 
     public synchronized void removeBeacon(Context context, String beaconId) {
@@ -102,11 +100,17 @@ public final class PresenceBeaconManager {
         if (beaconManager != null) {
             beaconManager.stopMonitoring(region);
             if (storedBeacons.isEmpty()) {
-                DatabaseLogger.i(TAG, "Disable scanning for beacons");
-                beaconManager.removeAllMonitorNotifiers();
-                beaconManager.shutdownIfIdle();
-                beaconManager = null;
+                disableScanning();
             }
+        }
+    }
+
+    public synchronized void disableScanning() {
+        if (beaconManager != null) {
+            DatabaseLogger.i(TAG, "Disable scanning for beacons");
+            beaconManager.removeAllMonitorNotifiers();
+            beaconManager.shutdownIfIdle();
+            beaconManager = null;
         }
     }
 }

@@ -1,9 +1,13 @@
 package org.ostrya.presencepublisher;
 
+import static org.ostrya.presencepublisher.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.preference.condition.BeaconCategorySupport.BEACON_LIST;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkRequest;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
@@ -22,6 +26,7 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
 import org.ostrya.presencepublisher.log.PahoNoopLogger;
 import org.ostrya.presencepublisher.mqtt.context.condition.beacon.PresenceBeaconManager;
+import org.ostrya.presencepublisher.mqtt.context.condition.network.NetworkService;
 import org.ostrya.presencepublisher.notification.NotificationFactory;
 import org.ostrya.presencepublisher.preference.about.NightModePreference;
 
@@ -29,6 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PresencePublisher extends MultiDexApplication {
     private static final String TAG = "PresencePublisher";
@@ -40,16 +46,28 @@ public class PresencePublisher extends MultiDexApplication {
 
     private static final String USE_WORKER_1 = "useWorker1";
 
+    private final AtomicReference<ConnectivityManager.NetworkCallback> currentCallback =
+            new AtomicReference<>();
+
     @Override
     public void onCreate() {
         super.onCreate();
         initLogger();
         initBeaconManager();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getBoolean(LOCATION_CONSENT, false)) {
+            setUpConditionCallbacks(preferences);
+        }
         new NotificationFactory(this).createNotificationChannels();
-        initClientId();
+        initClientId(preferences);
         NightModePreference.updateCurrentNightMode(this);
         DynamicColors.applyToActivitiesIfAvailable(this);
-        removeOldValues();
+        removeOldValues(preferences);
+    }
+
+    public void setUpConditionCallbacks(SharedPreferences preferences) {
+        initNetworkCallback();
+        initBeaconCallback(preferences);
     }
 
     private void initLogger() {
@@ -79,13 +97,33 @@ public class PresencePublisher extends MultiDexApplication {
             beaconParsers.add(
                     new BeaconParser("Eddystone UID")
                             .setBeaconLayout(BeaconParser.EDDYSTONE_UID_LAYOUT));
+        }
+    }
 
-            SharedPreferences sharedPreferences =
-                    PreferenceManager.getDefaultSharedPreferences(this);
-            Set<String> beacons =
-                    sharedPreferences.getStringSet(BEACON_LIST, Collections.emptySet());
+    private void initNetworkCallback() {
+        // for older versions, we are good with the broadcast receiver configured in the manifest
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ConnectivityManager connectivityManager =
+                    (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            if (connectivityManager == null) {
+                DatabaseLogger.e(
+                        TAG, "Unable to get system services, cannot register network callback");
+            } else {
+                ConnectivityManager.NetworkCallback wifiCallback =
+                        NetworkService.getWifiCallback(this);
+                if (currentCallback.compareAndSet(null, wifiCallback)) {
+                    DatabaseLogger.i(TAG, "Registering callback to await Wi-Fi connection");
+                    NetworkRequest request = new NetworkRequest.Builder().build();
+                    connectivityManager.registerNetworkCallback(request, wifiCallback);
+                }
+            }
+        }
+    }
+
+    private void initBeaconCallback(SharedPreferences preferences) {
+        if (supportsBeacons()) {
+            Set<String> beacons = preferences.getStringSet(BEACON_LIST, Collections.emptySet());
             if (!beacons.isEmpty()) {
-                DatabaseLogger.i(TAG, "Enabling beacon scanning for " + beacons);
                 PresenceBeaconManager.getInstance().initialize(this);
             } else {
                 DatabaseLogger.i(
@@ -94,11 +132,29 @@ public class PresencePublisher extends MultiDexApplication {
         }
     }
 
-    private void initClientId() {
-        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!preference.contains(MQTT_CLIENT_ID)) {
+    private void initClientId(SharedPreferences preferences) {
+        if (!preferences.contains(MQTT_CLIENT_ID)) {
             DatabaseLogger.i(TAG, "Generating persistent client ID");
-            preference.edit().putString(MQTT_CLIENT_ID, UUID.randomUUID().toString()).apply();
+            preferences.edit().putString(MQTT_CLIENT_ID, UUID.randomUUID().toString()).apply();
+        }
+    }
+
+    public void removeConditionCallbacks() {
+        removeNetworkCallback();
+        PresenceBeaconManager.getInstance().disableScanning();
+    }
+
+    private void removeNetworkCallback() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ConnectivityManager connectivityManager =
+                    (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            if (connectivityManager != null) {
+                DatabaseLogger.i(TAG, "Removing callback to await Wi-Fi connection");
+                ConnectivityManager.NetworkCallback oldCallback = currentCallback.getAndSet(null);
+                if (oldCallback != null) {
+                    connectivityManager.unregisterNetworkCallback(oldCallback);
+                }
+            }
         }
     }
 
@@ -106,8 +162,7 @@ public class PresencePublisher extends MultiDexApplication {
         return getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
     }
 
-    private void removeOldValues() {
-        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
-        preference.edit().remove(USE_WORKER_1).apply();
+    private void removeOldValues(SharedPreferences preferences) {
+        preferences.edit().remove(USE_WORKER_1).apply();
     }
 }

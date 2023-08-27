@@ -1,7 +1,6 @@
 package org.ostrya.presencepublisher.schedule;
 
 import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC;
-import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION;
 
 import static org.ostrya.presencepublisher.PresencePublisher.PROGRESS_NOTIFICATION_ID;
 import static org.ostrya.presencepublisher.schedule.Scheduler.UNIQUE_WORKER_ID;
@@ -65,7 +64,7 @@ public class PublishingWorker extends Worker {
             return new ForegroundInfo(
                     PROGRESS_NOTIFICATION_ID,
                     notificationFactory.getProgressNotification(),
-                    FOREGROUND_SERVICE_TYPE_DATA_SYNC | FOREGROUND_SERVICE_TYPE_LOCATION);
+                    FOREGROUND_SERVICE_TYPE_DATA_SYNC);
         } else {
             return new ForegroundInfo(
                     PROGRESS_NOTIFICATION_ID, notificationFactory.getProgressNotification());

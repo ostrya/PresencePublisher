@@ -112,10 +112,9 @@ After you have imported your client certificate, you will be able to choose it f
 * BLUETOOTH_ADMIN: necessary up to Android 11 to discover beacons
 * BLUETOOTH_CONNECT: on Android 12+, necessary to read beacon names
 * BLUETOOTH_SCAN: on Android 12+, necessary to discover beacons
-* FOREGROUND_SERVICE: necessary on Android 9+ to run the app reliably
+* FOREGROUND_SERVICE: on Android 9+, necessary to run the app reliably
 * FOREGROUND_SERVICE_DATA_SYNC: on Android 14+, necessary to send MQTT messages
-* FOREGROUND_SERVICE_LOCATION: on Android 14+, necessary to retrieve Wi-Fi name
 * INTERNET: only necessary if your MQTT server is not running locally
-* POST_NOTIFICATIONS: necessary in Android 13+ to create notifications
+* POST_NOTIFICATIONS: on Android 13+, necessary to create notifications
 * RECEIVE_BOOT_COMPLETED: necessary to start service on start-up
 * REQUEST_IGNORE_BATTERY_OPTIMIZATIONS: on Android 6+, necessary to request disabling battery optimization
