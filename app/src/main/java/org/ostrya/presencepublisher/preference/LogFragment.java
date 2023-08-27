@@ -35,8 +35,10 @@ public class LogFragment extends Fragment {
     private static final String TAG = "LogFragment";
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
-    private void updateLogView(LogRecyclerViewAdapter adapter, LogViewModel viewModel) {
-        viewModel.getLogItems().observe(getViewLifecycleOwner(), adapter::submitList);
+    private void updateLogView(RecyclerView recyclerView, LogViewModel viewModel) {
+        LogRecyclerViewAdapter logAdapter = new LogRecyclerViewAdapter();
+        recyclerView.setAdapter(logAdapter);
+        viewModel.getLogItems().observe(getViewLifecycleOwner(), logAdapter::submitList);
     }
 
     private void exportLogs(View view, LogViewModel viewModel) {
@@ -77,9 +79,7 @@ public class LogFragment extends Fragment {
             LinearLayoutManager layout = new LinearLayoutManager(context);
             layout.setStackFromEnd(true);
             recyclerView.setLayoutManager(layout);
-            LogRecyclerViewAdapter logAdapter = new LogRecyclerViewAdapter();
-            recyclerView.setAdapter(logAdapter);
-            updateLogView(logAdapter, viewModel);
+            updateLogView(recyclerView, viewModel);
             if (clearButton != null) {
                 clearButton.setOnClickListener(v -> viewModel.clearLogs());
             }
@@ -97,7 +97,7 @@ public class LogFragment extends Fragment {
                             public void onItemSelected(
                                     AdapterView<?> parent, View view, int position, long id) {
                                 viewModel.setLogType(LogType.settingValues()[position]);
-                                updateLogView(logAdapter, viewModel);
+                                updateLogView(recyclerView, viewModel);
                             }
 
                             @Override
