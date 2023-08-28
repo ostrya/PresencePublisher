@@ -1,6 +1,5 @@
 package org.ostrya.presencepublisher.schedule;
 
-import static org.ostrya.presencepublisher.PresencePublisher.LOCK;
 import static org.ostrya.presencepublisher.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.preference.condition.BeaconCategorySupport.BEACON_LIST;
 import static org.ostrya.presencepublisher.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
@@ -13,6 +12,8 @@ import static org.ostrya.presencepublisher.preference.schedule.NextScheduleTimes
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.GuardedBy;
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import androidx.work.Constraints;
 import androidx.work.Data;
@@ -21,6 +22,9 @@ import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.MoreExecutors;
+
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.mqtt.context.battery.BatteryIntentLoader;
 import org.ostrya.presencepublisher.notification.NotificationFactory;
@@ -28,14 +32,18 @@ import org.ostrya.presencepublisher.notification.NotificationFactory;
 import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class Scheduler {
     private static final String TAG = "Scheduler";
 
-    public static final long NOW_DELAY = 1_000L;
+    static final Object LOCK = new Object();
 
-    public static final String USE_WORKER_1 = "useWorker1";
+    private static final long NOW_DELAY = 1L;
+
+    private static final String NEXT_WORKER_ID = "nextWorkerId";
     public static final String UNIQUE_WORKER_ID = "uniqueId";
 
     private static final String WORKER_1 = "PublishingWorker1";
@@ -55,27 +63,28 @@ public class Scheduler {
     }
 
     public void ensureSchedule() {
-        long scheduled = sharedPreferences.getLong(NEXT_SCHEDULE, 0L);
-        long now = System.currentTimeMillis();
-        long delay = scheduled - now;
-        if (delay <= NOW_DELAY) {
-            DatabaseLogger.i(TAG, "Starting schedule now.");
-            scheduleWorker(NOW_DELAY);
+        synchronized (LOCK) {
+            String nextWorker = getNextWorker();
+            if (mustBeRescheduled(nextWorker)) {
+                DatabaseLogger.i(TAG, "Starting schedule now.");
+                scheduleWorker(NOW_DELAY, nextWorker);
+            }
         }
     }
 
     public void runNow() {
-        DatabaseLogger.i(TAG, "Running now.");
-        scheduleWorker(NOW_DELAY);
+        synchronized (LOCK) {
+            DatabaseLogger.i(TAG, "Running now.");
+            scheduleWorker(NOW_DELAY, getNextWorker());
+        }
     }
 
-    public void scheduleNext() {
-        // avoid race condition when scheduling next run
+    public void scheduleNext(String currentWorker) {
         synchronized (LOCK) {
-            long scheduled = sharedPreferences.getLong(NEXT_SCHEDULE, 0L);
-            long now = System.currentTimeMillis();
-            long delay = scheduled - now;
-            if (delay <= NOW_DELAY) {
+            // we only switch workers when triggered from within a worker
+            String nextWorker = WORKER_1.equals(currentWorker) ? WORKER_2 : WORKER_1;
+            sharedPreferences.edit().putString(NEXT_WORKER_ID, nextWorker).apply();
+            if (mustBeRescheduled(nextWorker)) {
                 int minutes = 0;
                 if (batteryIntentLoader.isCharging()) {
                     minutes = sharedPreferences.getInt(CHARGING_MESSAGE_SCHEDULE, 0);
@@ -83,8 +92,8 @@ public class Scheduler {
                 if (minutes == 0) {
                     minutes = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
                 }
-                delay = minutes * 60_000L;
-                long nextSchedule = now + delay;
+                long delay = minutes * 60L;
+                long nextSchedule = System.currentTimeMillis() + delay * 1_000L;
                 sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
                 DatabaseLogger.i(
                         TAG,
@@ -93,45 +102,63 @@ public class Scheduler {
                                         .format(new Date(nextSchedule)));
                 notificationFactory.updateStatusNotification(
                         sharedPreferences.getLong(LAST_SUCCESS, 0L), nextSchedule);
-                scheduleWorker(delay);
+                scheduleWorker(delay, nextWorker);
             }
-        }
-    }
-
-    private void scheduleWorker(long delay) {
-        // avoid race condition when selecting worker
-        synchronized (LOCK) {
-            if (!sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
-                DatabaseLogger.w(TAG, "Location consent not given, will not schedule anything.");
-                return;
-            }
-            Constraints.Builder constraintsBuilder = new Constraints.Builder();
-            if (useMobile()) {
-                constraintsBuilder.setRequiredNetworkType(NetworkType.CONNECTED);
-            } else {
-                constraintsBuilder.setRequiredNetworkType(NetworkType.UNMETERED);
-            }
-            Constraints constraints = constraintsBuilder.build();
-            boolean useWorker1 = sharedPreferences.getBoolean(USE_WORKER_1, false);
-            String uniqueWorkName = useWorker1 ? WORKER_1 : WORKER_2;
-            OneTimeWorkRequest workRequest =
-                    new OneTimeWorkRequest.Builder(PublishingWorker.class)
-                            .setConstraints(constraints)
-                            .keepResultsForAtLeast(1, TimeUnit.HOURS)
-                            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-                            .setInputData(
-                                    new Data.Builder()
-                                            .putString(UNIQUE_WORKER_ID, uniqueWorkName)
-                                            .build())
-                            .build();
-            workManager.enqueueUniqueWork(uniqueWorkName, ExistingWorkPolicy.REPLACE, workRequest);
-            sharedPreferences.edit().putBoolean(USE_WORKER_1, !useWorker1).apply();
         }
     }
 
     public void stopSchedule() {
-        workManager.cancelUniqueWork(WORKER_1);
-        workManager.cancelUniqueWork(WORKER_2);
+        synchronized (LOCK) {
+            workManager.cancelUniqueWork(WORKER_1);
+            workManager.cancelUniqueWork(WORKER_2);
+        }
+    }
+
+    @GuardedBy("LOCK")
+    @NonNull
+    private String getNextWorker() {
+        return sharedPreferences.getString(NEXT_WORKER_ID, WORKER_1);
+    }
+
+    @GuardedBy("LOCK")
+    private boolean mustBeRescheduled(String nextWorker) {
+        try {
+            return Futures.transform(
+                            workManager.getWorkInfosForUniqueWork(nextWorker),
+                            w -> w.isEmpty() || w.get(0).getState().isFinished(),
+                            MoreExecutors.directExecutor())
+                    .get(1, TimeUnit.SECONDS);
+        } catch (ExecutionException | TimeoutException e) {
+            DatabaseLogger.w(TAG, "Unable to get worker state for " + nextWorker, e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        return true;
+    }
+
+    @GuardedBy("LOCK")
+    private void scheduleWorker(long delay, String workerId) {
+        if (!sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
+            DatabaseLogger.w(TAG, "Location consent not given, will not schedule anything.");
+            return;
+        }
+        Constraints.Builder constraintsBuilder = new Constraints.Builder();
+        if (useMobile()) {
+            constraintsBuilder.setRequiredNetworkType(NetworkType.CONNECTED);
+        } else {
+            constraintsBuilder.setRequiredNetworkType(NetworkType.UNMETERED);
+        }
+        Constraints constraints = constraintsBuilder.build();
+        OneTimeWorkRequest workRequest =
+                new OneTimeWorkRequest.Builder(PublishingWorker.class)
+                        .setConstraints(constraints)
+                        .keepResultsForAtLeast(1, TimeUnit.HOURS)
+                        .setInitialDelay(delay, TimeUnit.SECONDS)
+                        .setInputData(
+                                new Data.Builder().putString(UNIQUE_WORKER_ID, workerId).build())
+                        .build();
+        DatabaseLogger.d(TAG, "Scheduling " + workerId + " in " + delay + " s");
+        workManager.enqueueUniqueWork(workerId, ExistingWorkPolicy.REPLACE, workRequest);
     }
 
     private boolean useMobile() {

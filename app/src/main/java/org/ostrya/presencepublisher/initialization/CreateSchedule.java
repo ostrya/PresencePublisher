@@ -14,7 +14,7 @@ public class CreateSchedule extends AbstractChainedHandler<Void, Void> {
     @Override
     protected void doInitialize() {
         DatabaseLogger.i(TAG, "Ensure schedule is active");
-        new Scheduler(activity).ensureSchedule();
+        new Thread(() -> new Scheduler(activity).ensureSchedule()).start();
         finishInitialization();
     }
 

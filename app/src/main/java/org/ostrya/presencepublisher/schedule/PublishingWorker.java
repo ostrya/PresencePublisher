@@ -3,7 +3,6 @@ package org.ostrya.presencepublisher.schedule;
 import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC;
 import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION;
 
-import static org.ostrya.presencepublisher.PresencePublisher.LOCK;
 import static org.ostrya.presencepublisher.PresencePublisher.PROGRESS_NOTIFICATION_ID;
 import static org.ostrya.presencepublisher.schedule.Scheduler.UNIQUE_WORKER_ID;
 
@@ -35,6 +34,8 @@ public class PublishingWorker extends Worker {
         String id = getInputData().getString(UNIQUE_WORKER_ID);
         DatabaseLogger.i(id, "Running publishing worker with attempt " + getRunAttemptCount());
         try {
+            // requesting foreground before the lock to improve chances this thread is not killed
+            // while waiting for the lock
             setForegroundAsync(getForegroundInfo()).get();
         } catch (ExecutionException e) {
             DatabaseLogger.w(id, "Error while putting worker to foreground", e);
@@ -43,10 +44,8 @@ public class PublishingWorker extends Worker {
             DatabaseLogger.w(id, "Interrupted while putting worker to foreground");
         }
 
-        // make sure we do not run publishing in parallel
-        synchronized (LOCK) {
-            new Scheduler(getApplicationContext()).scheduleNext();
-
+        // make sure we do not run publishing / scheduling in parallel
+        synchronized (Scheduler.LOCK) {
             try (NetworkBinder ignored = NetworkBinder.bindToNetwork(this)) {
                 if (new Publisher(getApplicationContext()).publish()) {
                     DatabaseLogger.i(id, "Successfully published.");
@@ -54,6 +53,7 @@ public class PublishingWorker extends Worker {
             } catch (RuntimeException e) {
                 DatabaseLogger.w(id, "Error while trying to publish", e);
             }
+            new Scheduler(getApplicationContext()).scheduleNext(id);
             return Result.success();
         }
     }

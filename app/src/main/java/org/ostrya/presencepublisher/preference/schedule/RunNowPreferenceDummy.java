@@ -34,6 +34,6 @@ public class RunNowPreferenceDummy extends ClickDummy {
 
     private void runNow(Boolean ignored) {
         Toast.makeText(getContext(), R.string.run_now_toast, Toast.LENGTH_SHORT).show();
-        new Scheduler(getContext()).runNow();
+        new Thread(() -> new Scheduler(getContext()).runNow());
     }
 }

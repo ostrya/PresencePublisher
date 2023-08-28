@@ -36,9 +36,9 @@ public class PresencePublisher extends MultiDexApplication {
     public static final int NOTIFICATION_REQUEST_CODE = 2;
     public static final int PROGRESS_NOTIFICATION_ID = 3;
 
-    public static final Object LOCK = new Object();
-
     public static final String MQTT_CLIENT_ID = "mqttClientId";
+
+    private static final String USE_WORKER_1 = "useWorker1";
 
     @Override
     public void onCreate() {
@@ -49,6 +49,7 @@ public class PresencePublisher extends MultiDexApplication {
         initClientId();
         NightModePreference.updateCurrentNightMode(this);
         DynamicColors.applyToActivitiesIfAvailable(this);
+        removeOldValues();
     }
 
     private void initLogger() {
@@ -103,5 +104,10 @@ public class PresencePublisher extends MultiDexApplication {
 
     public boolean supportsBeacons() {
         return getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
+    }
+
+    private void removeOldValues() {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
+        preference.edit().remove(USE_WORKER_1).apply();
     }
 }
