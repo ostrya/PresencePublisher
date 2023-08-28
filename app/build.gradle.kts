@@ -47,7 +47,7 @@ android {
         multiDexEnabled = true
         targetSdk = 34
         vectorDrawables.useSupportLibrary = true
-        versionCode = 51
+        versionCode = 52
         versionName = "2.5.3"
         javaCompileOptions {
             annotationProcessorOptions {
