@@ -2,7 +2,7 @@ package org.ostrya.presencepublisher.mqtt.context;
 
 import androidx.annotation.Nullable;
 
-import org.ostrya.presencepublisher.mqtt.context.battery.BatteryStatus;
+import org.ostrya.presencepublisher.mqtt.context.device.BatteryStatus;
 
 import java.util.List;
 

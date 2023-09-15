@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.ostrya.presencepublisher.mqtt.context.MessageContext;
 import org.ostrya.presencepublisher.mqtt.context.MessageContextProvider;
-import org.ostrya.presencepublisher.mqtt.context.battery.BatteryStatus;
+import org.ostrya.presencepublisher.mqtt.context.device.BatteryStatus;
 import org.ostrya.presencepublisher.mqtt.message.Message;
 import org.ostrya.presencepublisher.mqtt.message.MessageFormat;
 import org.ostrya.presencepublisher.mqtt.message.MessageItem;

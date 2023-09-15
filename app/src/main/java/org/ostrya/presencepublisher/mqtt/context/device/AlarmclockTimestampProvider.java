@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.mqtt.context.alarm;
+package org.ostrya.presencepublisher.mqtt.context.device;
 
 import android.app.AlarmManager;
 import android.content.Context;

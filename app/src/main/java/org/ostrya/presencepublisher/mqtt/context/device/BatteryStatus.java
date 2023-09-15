@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.mqtt.context.battery;
+package org.ostrya.presencepublisher.mqtt.context.device;
 
 import org.ostrya.presencepublisher.mqtt.context.MessageContext;
 

@@ -26,7 +26,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
 
 import org.ostrya.presencepublisher.log.DatabaseLogger;
-import org.ostrya.presencepublisher.mqtt.context.battery.BatteryIntentLoader;
+import org.ostrya.presencepublisher.mqtt.context.device.BatteryIntentLoader;
 import org.ostrya.presencepublisher.notification.NotificationFactory;
 
 import java.text.DateFormat;

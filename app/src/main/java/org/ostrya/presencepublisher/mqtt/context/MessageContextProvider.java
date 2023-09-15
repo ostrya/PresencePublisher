@@ -8,11 +8,11 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
-import org.ostrya.presencepublisher.mqtt.context.alarm.AlarmclockTimestampProvider;
-import org.ostrya.presencepublisher.mqtt.context.battery.BatteryStatusProvider;
 import org.ostrya.presencepublisher.mqtt.context.condition.ConditionContentProvider;
 import org.ostrya.presencepublisher.mqtt.context.condition.network.NetworkService;
-import org.ostrya.presencepublisher.mqtt.context.location.LocationProvider;
+import org.ostrya.presencepublisher.mqtt.context.device.AlarmclockTimestampProvider;
+import org.ostrya.presencepublisher.mqtt.context.device.BatteryStatusProvider;
+import org.ostrya.presencepublisher.mqtt.context.device.LocationProvider;
 
 public class MessageContextProvider {
     private final AlarmclockTimestampProvider alarmclockTimestampProvider;

@@ -1,4 +1,4 @@
-package org.ostrya.presencepublisher.mqtt.context.location;
+package org.ostrya.presencepublisher.mqtt.context.device;
 
 import android.content.Context;
 import android.location.Criteria;
