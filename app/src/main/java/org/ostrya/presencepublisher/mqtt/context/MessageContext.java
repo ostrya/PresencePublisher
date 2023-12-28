@@ -13,7 +13,6 @@ public class MessageContext {
     private final BatteryStatus batteryStatus;
     private final List<String> conditionContents;
     private final String lastKnownLocation;
-    private final long lastSuccessTimestamp;
     private final long currentTimestamp;
     private final long estimatedNextTimestamp;
     private final String deviceName;
@@ -24,7 +23,6 @@ public class MessageContext {
             BatteryStatus batteryStatus,
             List<String> conditionContents,
             String lastKnownLocation,
-            long lastSuccessTimestamp,
             long currentTimestamp,
             long estimatedNextTimestamp,
             String deviceName,
@@ -33,7 +31,6 @@ public class MessageContext {
         this.batteryStatus = batteryStatus;
         this.conditionContents = conditionContents;
         this.lastKnownLocation = lastKnownLocation;
-        this.lastSuccessTimestamp = lastSuccessTimestamp;
         this.currentTimestamp = currentTimestamp;
         this.estimatedNextTimestamp = estimatedNextTimestamp;
         this.deviceName = deviceName;
@@ -54,10 +51,6 @@ public class MessageContext {
 
     public String getLastKnownLocation() {
         return lastKnownLocation;
-    }
-
-    public long getLastSuccessTimestamp() {
-        return lastSuccessTimestamp;
     }
 
     public long getCurrentTimestamp() {

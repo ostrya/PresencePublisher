@@ -1,6 +1,5 @@
 package org.ostrya.presencepublisher.mqtt.context;
 
-import static org.ostrya.presencepublisher.preference.schedule.LastSuccessTimestampPreference.LAST_SUCCESS;
 import static org.ostrya.presencepublisher.preference.schedule.NextScheduleTimestampPreference.NEXT_SCHEDULE;
 
 import android.content.Context;
@@ -42,7 +41,6 @@ public class MessageContextProvider {
                 batteryStatusProvider.getCurrentBatteryStatus(),
                 conditionContentProvider.getConditionContents(currentSsid),
                 locationProvider.getLastKnownLocation(),
-                preferences.getLong(LAST_SUCCESS, 0L),
                 currentTimestamp,
                 preferences.getLong(NEXT_SCHEDULE, 0L),
                 deviceNameProvider.getDeviceName(),
