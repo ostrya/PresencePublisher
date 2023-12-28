@@ -8,12 +8,12 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("org.eclipse.jgit:org.eclipse.jgit:6.6.0.202305301015-r")
+        classpath("org.eclipse.jgit:org.eclipse.jgit:6.8.0.202311291450-r")
     }
 }
 
 plugins {
-    id("com.github.triplet.play") version "3.8.4"
+    id("com.github.triplet.play") version "3.8.6"
     id("com.jaredsburrows.license") version "0.9.3"
     id("com.android.application")
 }
@@ -135,7 +135,7 @@ play {
 }
 
 dependencies {
-    val roomVersion = "2.6.0-beta01"
+    val roomVersion = "2.6.1"
 
     implementation("androidx.appcompat:appcompat:1.7.0-alpha03")
     implementation("androidx.cardview:cardview:1.0.0")
@@ -145,10 +145,10 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("androidx.viewpager2:viewpager2:1.1.0-beta02")
-    implementation("androidx.work:work-runtime:2.8.1")
-    implementation("com.google.android.material:material:1.9.0")
-    implementation("com.google.guava:guava:32.1.2-android")
-    implementation("org.altbeacon:android-beacon-library:2.19.6")
+    implementation("androidx.work:work-runtime:2.9.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.guava:guava:33.0.0-android")
+    implementation("org.altbeacon:android-beacon-library:2.20.3")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.assertj:assertj-core:3.24.2")
@@ -156,7 +156,7 @@ dependencies {
 
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
 }
 
 tasks.register("printVersion") {
