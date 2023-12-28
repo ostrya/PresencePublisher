@@ -74,6 +74,12 @@ public enum MessageItem {
                             ? nextAlarmclockTimestamp / 1000
                             : nextAlarmclockTimestamp);
         }
+    },
+    DEVICE_NAME {
+        @Override
+        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+            builder.withEntry(this, messageContext.getDeviceName());
+        }
     };
 
     private static final String TAG = "MessageItem";
@@ -117,7 +123,8 @@ public enum MessageItem {
             GEO_LOCATION,
             CURRENT_TIMESTAMP,
             NEXT_SCHEDULED_TIMESTAMP,
-            NEXT_ALARMCLOCK_TIMESTAMP
+            NEXT_ALARMCLOCK_TIMESTAMP,
+            DEVICE_NAME
         };
     }
 

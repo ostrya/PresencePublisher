@@ -21,6 +21,7 @@
         <item><b>currentTimestamp</b>: Der Zeitstempel in Sekunden seit dem 1. 1. 1970, zu dem diese Nachricht generiert worden ist.</item>
         <item><b>nextScheduledTimestamp</b>: Der Zeitstempel in Sekunden seit dem 1. 1. 1970, für den die nächste Nachricht geplant ist. Oder 0, wenn nicht geplant (z.B. wenn keine Bedingung erfüllt ist)</item>
         <item><b>nextAlarmclockTimestamp</b>: Der Zeitstempel in Sekunden seit dem 1. 1. 1970, auf den der nächste Wecker eingestellt ist. Oder 0, wenn kein Wecker gestellt ist.</item>
+        <item><b>deviceName</b>: Der Gerätename, entweder aus \"Über das Telefon - Gerätename\" (Android 7.1+) oder aus \"Verbundene Geräte - Verbindungseinstellungen - Bluetooth - Gerätename\".</item>
     </string-array>
     <string-array name="log_type_descriptions">
         <item>Gesendete Nachrichten</item>
