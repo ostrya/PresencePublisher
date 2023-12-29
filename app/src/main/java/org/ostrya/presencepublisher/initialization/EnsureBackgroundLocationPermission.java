@@ -28,6 +28,13 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
 
     @Override
     protected void doInitialize() {
+        // when we reach this point, the user has already successfully passed the
+        // EnsureLocationPermission step, so we know we have consent
+        DatabaseLogger.i(getName(), "User gave consent to access location data.");
+        PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext())
+                .edit()
+                .putBoolean(LOCATION_CONSENT, true)
+                .apply();
         if (activity.isLocationPermissionNeeded()
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
                 && ContextCompat.checkSelfPermission(
@@ -66,10 +73,6 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void onResult(Activity parent, boolean ok) {
         if (ok) {
-            PreferenceManager.getDefaultSharedPreferences(parent)
-                    .edit()
-                    .putBoolean(LOCATION_CONSENT, true)
-                    .apply();
             getLauncher().launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
         } else {
             DatabaseLogger.i(getName(), "User did not give consent. Stopping any further actions.");
@@ -88,6 +91,10 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
             finishInitialization();
         } else {
             DatabaseLogger.w(TAG, "Background location not granted, stopping initialization");
+            PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext())
+                    .edit()
+                    .putBoolean(LOCATION_CONSENT, false)
+                    .apply();
         }
     }
 

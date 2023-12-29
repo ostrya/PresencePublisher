@@ -4,7 +4,9 @@ import static android.content.Context.POWER_SERVICE;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.spy;
@@ -37,6 +39,8 @@ public class InitializationHandlerTest {
 
     @Mock private SharedPreferences sharedPreferences;
 
+    @Mock private SharedPreferences.Editor editor;
+
     private final LinkedList<AbstractChainedHandler<?, ?>> handlerSpies = new LinkedList<>();
 
     @Test
@@ -65,11 +69,14 @@ public class InitializationHandlerTest {
                         .map(this::wrapAsSpy)
                         .collect(Collectors.toList());
 
+        when(context.getApplicationContext()).thenReturn(context);
         when(context.isLocationPermissionNeeded()).thenReturn(false);
         when(context.getSystemService(POWER_SERVICE)).thenReturn(powerManager);
         when(context.getSharedPreferences(any(), anyInt())).thenReturn(sharedPreferences);
         when(sharedPreferences.getBoolean(LocationConsentPreference.LOCATION_CONSENT, false))
                 .thenReturn(true);
+        when(sharedPreferences.edit()).thenReturn(editor);
+        when(editor.putBoolean(anyString(), anyBoolean())).thenReturn(editor);
 
         InitializationHandler handler = InitializationHandler.getHandler(context, handlerChain);
         // scheduler needs too many android classes to mock properly for now

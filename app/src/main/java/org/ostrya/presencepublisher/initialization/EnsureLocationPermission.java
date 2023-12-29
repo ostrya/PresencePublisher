@@ -78,10 +78,6 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String[], M
 
     private void onResult(Activity parent, boolean ok) {
         if (ok) {
-            PreferenceManager.getDefaultSharedPreferences(parent)
-                    .edit()
-                    .putBoolean(LOCATION_CONSENT, true)
-                    .apply();
             if (ContextCompat.checkSelfPermission(
                             activity, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -91,6 +87,11 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String[], M
                                     Manifest.permission.ACCESS_FINE_LOCATION,
                                     Manifest.permission.ACCESS_COARSE_LOCATION
                                 });
+            } else {
+                // can happen if the permission is already given but the consent was disabled before
+                // in this case, we continue with initialization, and the next step will enable the
+                // consent flag
+                finishInitialization();
             }
         } else {
             DatabaseLogger.i(getName(), "User did not give consent. Stopping any further actions.");
@@ -134,6 +135,10 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String[], M
     private void onRetrySetFineLocationResult(Activity parent, boolean ok) {
         if (!ok) {
             DatabaseLogger.w(TAG, "Location not granted, stopping initialization");
+            PreferenceManager.getDefaultSharedPreferences(parent)
+                    .edit()
+                    .putBoolean(LOCATION_CONSENT, false)
+                    .apply();
         } else {
             Intent intent =
                     new Intent(
