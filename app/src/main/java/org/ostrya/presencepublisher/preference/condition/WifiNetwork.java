@@ -46,6 +46,10 @@ public class WifiNetwork {
         return name;
     }
 
+    public String getRawString() {
+        return toRawString(name, hasWildcard());
+    }
+
     public boolean hasWildcard() {
         return wildcardMatcher != null;
     }

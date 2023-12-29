@@ -61,7 +61,7 @@ public class WifiNetworkPreference extends AbstractTextPreferenceEntry {
                     new HashSet<>(
                             preference.getStringSet(
                                     WifiCategorySupport.SSID_LIST, Collections.emptySet()));
-            storedSsids.remove(getTitle().toString());
+            storedSsids.remove(network.getRawString());
             preference.edit().putStringSet(WifiCategorySupport.SSID_LIST, storedSsids).apply();
         }
     }
