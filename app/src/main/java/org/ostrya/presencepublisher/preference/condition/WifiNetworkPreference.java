@@ -37,7 +37,9 @@ public class WifiNetworkPreference extends AbstractTextPreferenceEntry {
                 key,
                 new NonEmptyStringValidator(),
                 network.getName(),
-                R.string.content_summary);
+                network.hasWildcard()
+                        ? R.string.wifi_summary_with_wildcard
+                        : R.string.content_summary);
         this.preference = preference;
         this.fragment = fragment;
         this.network = network;
@@ -63,15 +65,6 @@ public class WifiNetworkPreference extends AbstractTextPreferenceEntry {
                                     WifiCategorySupport.SSID_LIST, Collections.emptySet()));
             storedSsids.remove(network.getRawString());
             preference.edit().putStringSet(WifiCategorySupport.SSID_LIST, storedSsids).apply();
-        }
-    }
-
-    @Override
-    protected String getContentValue() {
-        if (network.hasWildcard()) {
-            return network.getName() + "\n" + getContext().getString(R.string.use_wildcard);
-        } else {
-            return network.getName();
         }
     }
 }
