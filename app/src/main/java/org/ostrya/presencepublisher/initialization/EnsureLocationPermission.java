@@ -4,15 +4,8 @@ import static org.ostrya.presencepublisher.preference.about.LocationConsentPrefe
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -26,16 +19,11 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 import java.util.Map;
 import java.util.Queue;
 
-public class EnsureLocationPermission extends AbstractChainedHandler<String[], Map<String, Boolean>>
-        implements ActivityResultCallback<ActivityResult> {
-
-    private final ActivityResultLauncher<Intent> appPermissionLauncher;
+public class EnsureLocationPermission
+        extends AbstractChainedHandler<String[], Map<String, Boolean>> {
 
     protected EnsureLocationPermission(MainActivity activity, Queue<HandlerFactory> handlerChain) {
         super(activity, new ActivityResultContracts.RequestMultiplePermissions(), handlerChain);
-        ActivityResultContracts.StartActivityForResult intentLauncherContract =
-                new ActivityResultContracts.StartActivityForResult();
-        appPermissionLauncher = activity.registerForActivityResult(intentLauncherContract, this);
     }
 
     @Override
@@ -111,21 +99,12 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String[], M
             finishInitialization();
         } else {
             FragmentManager fm = activity.getSupportFragmentManager();
-            CharSequence optionName;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                PackageManager pm = activity.getPackageManager();
-                optionName = pm.getBackgroundPermissionOptionLabel();
-            } else {
-                optionName =
-                        activity.getString(R.string.background_location_permission_option_name);
-            }
             ConfirmationDialogFragment fragment =
                     ConfirmationDialogFragment.getInstance(
                             this::onRetrySetFineLocationResult,
                             R.string.location_permission_dialog_title,
                             activity.getString(
-                                    R.string.location_permission_dialog_confirm_no_fine_location,
-                                    optionName));
+                                    R.string.location_permission_dialog_confirm_no_fine_location));
             fragment.setConfirmId(R.string.dialog_yes);
             fragment.setCancelId(R.string.dialog_no);
             fragment.show(fm, null);
@@ -140,32 +119,17 @@ public class EnsureLocationPermission extends AbstractChainedHandler<String[], M
                     .putBoolean(LOCATION_CONSENT, false)
                     .apply();
         } else {
-            Intent intent =
-                    new Intent(
-                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                            Uri.fromParts("package", parent.getPackageName(), null));
-            if (intent.resolveActivity(parent.getPackageManager()) != null) {
-                appPermissionLauncher.launch(intent);
-            } else {
-                DatabaseLogger.w(TAG, "Unable to open app settings!");
-                DatabaseLogger.w(TAG, "Location not granted, stopping initialization");
-            }
+            getLauncher()
+                    .launch(
+                            new String[] {
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            });
         }
     }
 
     @Override
     protected String getName() {
         return "EnsureLocationPermission";
-    }
-
-    @Override
-    public void onActivityResult(ActivityResult result) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            DatabaseLogger.i(TAG, "Successfully granted location permission");
-            finishInitialization();
-        } else {
-            DatabaseLogger.w(TAG, "Location not granted, stopping initialization");
-        }
     }
 }
