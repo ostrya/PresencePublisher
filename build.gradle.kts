@@ -22,7 +22,3 @@ allprojects {
         options.isDeprecation = true
     }
 }
-
-tasks.register<Delete>("clean") {
-    delete(rootProject.buildDir)
-}
