@@ -88,6 +88,9 @@ android {
         abortOnError = false
     }
     namespace = "org.ostrya.presencepublisher"
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 val checkParameters by tasks.registering {
