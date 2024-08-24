@@ -40,12 +40,12 @@ fun isTagged(): Boolean {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
         minSdk = 21
         multiDexEnabled = true
-        targetSdk = 34
+        targetSdk = 35
         vectorDrawables.useSupportLibrary = true
         versionCode = 52
         versionName = "2.5.3"
