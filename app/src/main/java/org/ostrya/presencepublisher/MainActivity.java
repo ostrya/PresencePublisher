@@ -55,18 +55,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceListener);
         handler.initialize();
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(sharedPreferenceListener);
-    }
-
-    @Override
     protected void onDestroy() {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(sharedPreferenceListener);
         super.onDestroy();
         handler = null;
     }
