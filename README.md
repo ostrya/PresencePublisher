@@ -32,7 +32,7 @@ For details on which data this app processes and how it does so, please have a l
 The app uses the default Android CA trust store for checking the server certificate validity. You can simply add your
 certificate via:
 
-* Android 4 - 7:
+* Android 5 - 7:
   * `Security` → `Install from SD card`
 * Android 8 - 9:
   * `Security & location` → `Encryption & credentials` → `Install from SD card`
@@ -89,7 +89,7 @@ Make sure your PKCS#12 keystore file has the `.pfx` extension, otherwise Android
 To be able to select this client certificate in Presence Publisher, you first need to add it to
 the Android Keystore. This works similar to the process for the server certificate:
 
-* Android 4 - 7:
+* Android 5 - 7:
   * `Security` → `Install from SD card`
 * Android 8 - 9:
   * `Security & location` → `Encryption & credentials` → `Install from SD card`

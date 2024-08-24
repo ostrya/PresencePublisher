@@ -92,10 +92,8 @@ public class NotificationFactory {
                         .setContentText(
                                 applicationContext.getString(R.string.progress_notification))
                         .setSilent(true)
-                        .setOnlyAlertOnce(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setCategory(Notification.CATEGORY_PROGRESS);
-        }
+                        .setOnlyAlertOnce(true)
+                        .setCategory(Notification.CATEGORY_PROGRESS);
         notification = builder.build();
 
         return notification;
@@ -134,10 +132,8 @@ public class NotificationFactory {
                                 new NotificationCompat.InboxStyle()
                                         .addLine(getLastSuccess(applicationContext, lastSuccess))
                                         .addLine(getNextSchedule(applicationContext, nextSchedule)))
-                        .setOnlyAlertOnce(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setCategory(Notification.CATEGORY_STATUS);
-        }
+                        .setOnlyAlertOnce(true)
+                        .setCategory(Notification.CATEGORY_STATUS);
 
         notification = builder.build();
         return notification;

@@ -8,13 +8,13 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("org.eclipse.jgit:org.eclipse.jgit:6.8.0.202311291450-r")
+        classpath("org.eclipse.jgit:org.eclipse.jgit:6.10.0.202406032230-r")
     }
 }
 
 plugins {
-    id("com.github.triplet.play") version "3.8.6"
-    id("com.jaredsburrows.license") version "0.9.3"
+    id("com.github.triplet.play") version "3.10.1"
+    id("com.jaredsburrows.license") version "0.9.8"
     id("com.android.application")
 }
 
@@ -43,7 +43,7 @@ android {
     compileSdk = 34
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
-        minSdk = 19
+        minSdk = 21
         multiDexEnabled = true
         targetSdk = 34
         vectorDrawables.useSupportLibrary = true
@@ -140,21 +140,21 @@ play {
 dependencies {
     val roomVersion = "2.6.1"
 
-    implementation("androidx.appcompat:appcompat:1.7.0-alpha03")
+    implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.preference:preference:1.2.1")
     implementation("androidx.room:room-guava:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
-    implementation("androidx.viewpager2:viewpager2:1.1.0-beta02")
-    implementation("androidx.work:work-runtime:2.9.0")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("com.google.guava:guava:33.0.0-android")
-    implementation("org.altbeacon:android-beacon-library:2.20.3")
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("androidx.work:work-runtime:2.9.1")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("com.google.guava:guava:33.3.0-android")
+    implementation("org.altbeacon:android-beacon-library:2.20.6")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.assertj:assertj-core:3.26.3")
     testImplementation("org.mockito:mockito-inline:5.2.0")
 
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
