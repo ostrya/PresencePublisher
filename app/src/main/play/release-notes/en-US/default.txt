@@ -1,13 +1,4 @@
-v2.5.3
-• added support for Android 14
-
-v2.5.2
-• added another missing bluetooth permission
-
-v2.5.1
-• bright and dark mode
-• new permissions for bluetooth detection on Android 12+
-
-v2.5.0
-• support for wildcards when selecting WiFi networks
-• improved validation of input values
+v2.6.0
+• messages are now immediately sent when connecting to or disconnecting from a WiFi network
+• device name can now be sent as message content
+• fixed bug where wifi conditions with wildcards could not be deleted

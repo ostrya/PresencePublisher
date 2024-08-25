@@ -1,13 +1,4 @@
-v2.5.3
-• Unterstützung für Android 14 hinzugefügt
-
-v2.5.2
-• weitere fehlende Bluetooth-Berechtigung hinzugefügt
-
-v2.5.1
-• Hell- und Dunkelmodus
-• neue Berechtigungen für Bluetooth-Erkennung mit Android 12+
-
-v2.5.0
-• Unterstützung von Platzhaltern bei Auswahl von WLANs
-• Verbesserungen bei der Validierung von Eingabewerten
+v2.6.0
+• Nachrichten werden nun sofort nach Verbinden mit oder Trennen von WLAN gesendet
+• Gerätename kann nun als Nachrichteninhalt versendet werden
+• Fehler beim Löschen von WLAN-Bedingungen mit Platzhalter behoben
