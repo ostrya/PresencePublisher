@@ -1,6 +1,6 @@
 # Datenschutzerklärung
 
-*Inkrafttreten: 03. Januar 2022*
+*Inkrafttreten: 28. August 2024*
 
 Das folgende Dokument beschreibt, wie Presence Publisher deine persönlichen Daten erhebt
 und verarbeitet.
@@ -14,8 +14,8 @@ selbst wenn es nicht ausgeführt wird. Folgende Informationen werden erhoben:
   konfigurierten Netzwerknamen vorkommt.
 * Ob eines der Bluetooth-Beacons, die du konfiguriert hast, sich in der Reichweite
   deines Android-Gerätes befindet.
-* Nur falls du dies explizit konfigurierst: der zuletzt bekannte Standort deines Gerätes sowie
-  der aktuell verbundene WLAN-Name.
+* Nur falls du dies explizit konfigurierst: der zuletzt bekannte Standort deines Gerätes,
+  der aktuell verbundene WLAN-Name und der von dir gewählte Name deines Gerätes.
 
 Presence Publisher speichert niemals deinen GPS-Standort. Auch speichert es
 keine Information über WLAN-Netzwerke und Bluetooth-Beacons die nicht vorher von dir

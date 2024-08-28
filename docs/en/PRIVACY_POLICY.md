@@ -14,8 +14,8 @@ even if it is not running. The following information is collected:
   names that you have configured.
 * Whether any Bluetooth beacon that you have configured is in range of your
   Android device.
-* If you explicitly choose to send this information, your last known location
-  and currently connected Wi-Fi network name is collected.
+* If you explicitly choose to send this information, your last known location, currently
+  connected Wi-Fi network name and the name of your device is collected.
 
 Presence Publisher does not store your GPS location. It also does not store
 any information about Wi-Fi networks and Bluetooth beacons which are not explicitly
