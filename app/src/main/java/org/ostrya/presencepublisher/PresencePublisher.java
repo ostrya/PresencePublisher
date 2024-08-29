@@ -60,7 +60,7 @@ public class PresencePublisher extends MultiDexApplication {
         }
         new NotificationFactory(this).createNotificationChannels();
         initClientId(preferences);
-        NightModePreference.updateCurrentNightMode(this);
+        NightModePreference.updateCurrentNightMode(preferences);
         DynamicColors.applyToActivitiesIfAvailable(this);
         removeOldValues(preferences);
     }

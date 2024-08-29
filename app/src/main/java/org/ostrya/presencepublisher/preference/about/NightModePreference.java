@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.preference.PreferenceManager;
 
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.preference.common.ListPreferenceBase;
@@ -24,9 +23,7 @@ public class NightModePreference extends ListPreferenceBase {
         setEntryValues(R.array.night_mode_values);
     }
 
-    public static void updateCurrentNightMode(Context context) {
-        SharedPreferences preferences =
-                PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+    public static void updateCurrentNightMode(SharedPreferences preferences) {
         String nightModeValue = preferences.getString(NightModePreference.NIGHT_MODE, null);
         int nightMode;
         try {

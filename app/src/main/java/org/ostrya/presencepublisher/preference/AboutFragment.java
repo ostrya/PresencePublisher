@@ -51,7 +51,7 @@ public class AboutFragment extends AbstractConfigurationFragment {
     @Override
     protected void onPreferencesChanged(SharedPreferences preferences, String name) {
         if (NightModePreference.NIGHT_MODE.equals(name)) {
-            NightModePreference.updateCurrentNightMode(requireContext());
+            NightModePreference.updateCurrentNightMode(preferences);
         }
     }
 }
