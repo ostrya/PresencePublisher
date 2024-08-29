@@ -1,3 +1,6 @@
+v2.6.1
+• fixed bug where changing to night mode sometimes crashed the app
+
 v2.6.0
 • messages are now immediately sent when connecting to or disconnecting from a WiFi network
 • device name can now be sent as message content

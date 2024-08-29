@@ -1,3 +1,6 @@
+v2.6.1
+• Fehler behoben, bei dem die App manchmal beim Wechseln in den Nachtmodus gecrasht ist
+
 v2.6.0
 • Nachrichten werden nun sofort nach Verbinden mit oder Trennen von WLAN gesendet
 • Gerätename kann nun als Nachrichteninhalt versendet werden
