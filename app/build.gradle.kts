@@ -47,7 +47,7 @@ android {
         multiDexEnabled = true
         targetSdk = 35
         vectorDrawables.useSupportLibrary = true
-        versionCode = 53
+        versionCode = 54
         versionName = "2.6.1"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -159,7 +159,7 @@ dependencies {
 
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.1")
 }
 
 tasks.register("printVersion") {
