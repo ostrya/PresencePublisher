@@ -1,3 +1,6 @@
+v2.6.2
+• Probleme bei WLAN-Erkennung für Android 10 und 11 behoben
+
 v2.6.1
 • Fehler behoben, bei dem die App manchmal beim Wechseln in den Nachtmodus gecrasht ist
 
