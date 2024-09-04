@@ -41,8 +41,6 @@ public class NetworkService {
         WifiEventConsumer consumer = new WifiEventConsumer(applicationContext);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             return new WifiCallback(consumer);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return new WifiCallbackApi29(consumer);
         } else {
             WifiManager wifiManager =
                     (WifiManager) applicationContext.getSystemService(WIFI_SERVICE);

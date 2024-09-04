@@ -9,12 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.util.Function;
 
+import org.ostrya.presencepublisher.log.DatabaseLogger;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class WifiNetworkHelper {
+    private final String TAG = "WifiNetworkHelper";
     private final Map<Long, Optional<String>> ssidByNetworkHandle = new ConcurrentHashMap<>();
     private final WifiEventConsumer consumer;
     private final Function<NetworkCapabilities, Optional<WifiInfo>> wifiResolver;
@@ -28,20 +31,31 @@ public class WifiNetworkHelper {
 
     public void handleAvailableNetwork(
             @NonNull Network network, @NonNull NetworkCapabilities networkCapabilities) {
+        long networkHandle = network.getNetworkHandle();
         Optional<String> current = NetworkService.getSsid(wifiResolver.apply(networkCapabilities));
-        Optional<String> previous =
-                ssidByNetworkHandle.putIfAbsent(network.getNetworkHandle(), current);
+        Optional<String> previous = ssidByNetworkHandle.putIfAbsent(networkHandle, current);
         // absent means not a Wi-Fi network, null means (previously) unknown
         //noinspection OptionalAssignedToNull
-        if (previous == null && current.isPresent()) {
-            consumer.wifiConnected(current.get());
+        if (previous == null) {
+            if (current.isPresent()) {
+                DatabaseLogger.d(TAG, "Connected to Wifi network " + networkHandle);
+                consumer.wifiConnected(current.get());
+            } else {
+                DatabaseLogger.d(TAG, "Connected to non-Wifi network " + networkHandle);
+            }
         }
     }
 
     public void handleLostNetwork(@NonNull Network network) {
-        Optional<String> removed = ssidByNetworkHandle.remove(network.getNetworkHandle());
-        if (removed != null && removed.isPresent()) {
-            consumer.wifiDisconnected(removed.get());
+        long networkHandle = network.getNetworkHandle();
+        Optional<String> removed = ssidByNetworkHandle.remove(networkHandle);
+        if (removed != null) {
+            if (removed.isPresent()) {
+                DatabaseLogger.d(TAG, "Lost Wifi network " + networkHandle);
+                consumer.wifiDisconnected(removed.get());
+            } else {
+                DatabaseLogger.d(TAG, "Lost non-Wifi network " + networkHandle);
+            }
         }
     }
 }
