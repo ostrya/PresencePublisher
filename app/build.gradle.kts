@@ -13,7 +13,7 @@ buildscript {
 }
 
 plugins {
-    id("com.github.triplet.play") version "3.10.1"
+    id("com.github.triplet.play") version "3.11.0"
     id("com.jaredsburrows.license") version "0.9.8"
     id("com.android.application")
 }
@@ -47,7 +47,7 @@ android {
         multiDexEnabled = true
         targetSdk = 35
         vectorDrawables.useSupportLibrary = true
-        versionCode = 54
+        versionCode = 55
         versionName = "2.6.2"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -159,7 +159,7 @@ dependencies {
 
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.1")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
 }
 
 tasks.register("printVersion") {
