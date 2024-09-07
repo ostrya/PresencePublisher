@@ -1,3 +1,6 @@
+v2.6.3
+• weitere Probleme bei WLAN-Erkennung für Android 10 und 11 behoben
+
 v2.6.2
 • Probleme bei WLAN-Erkennung für Android 10 und 11 behoben
 
