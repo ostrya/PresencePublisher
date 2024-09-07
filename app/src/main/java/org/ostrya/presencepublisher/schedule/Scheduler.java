@@ -41,8 +41,6 @@ public class Scheduler {
 
     static final Object LOCK = new Object();
 
-    private static final long NOW_DELAY = 1L;
-
     private static final String NEXT_WORKER_ID = "nextWorkerId";
     public static final String UNIQUE_WORKER_ID = "uniqueId";
 
@@ -67,7 +65,8 @@ public class Scheduler {
             String nextWorker = getNextWorker();
             if (mustBeRescheduled(nextWorker)) {
                 DatabaseLogger.i(TAG, "Starting schedule now.");
-                scheduleWorker(NOW_DELAY, nextWorker);
+                // we use a delay to ensure we have enough time between scheduling and running
+                scheduleWorker(1, TimeUnit.SECONDS, nextWorker);
             }
         }
     }
@@ -75,7 +74,15 @@ public class Scheduler {
     public void runNow() {
         synchronized (LOCK) {
             DatabaseLogger.i(TAG, "Running now.");
-            scheduleWorker(NOW_DELAY, getNextWorker());
+            // we use a delay to ensure we have enough time between scheduling and running
+            scheduleWorker(1, TimeUnit.SECONDS, getNextWorker());
+        }
+    }
+
+    public void runIn(long delay, TimeUnit timeUnit) {
+        synchronized (LOCK) {
+            DatabaseLogger.i(TAG, "Running in " + delay + " " + timeUnit + ".");
+            scheduleWorker(delay, timeUnit, getNextWorker());
         }
     }
 
@@ -92,8 +99,7 @@ public class Scheduler {
                 if (minutes == 0) {
                     minutes = sharedPreferences.getInt(MESSAGE_SCHEDULE, 15);
                 }
-                long delay = minutes * 60L;
-                long nextSchedule = System.currentTimeMillis() + delay * 1_000L;
+                long nextSchedule = System.currentTimeMillis() + minutes * 60_000L;
                 sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
                 DatabaseLogger.i(
                         TAG,
@@ -102,7 +108,7 @@ public class Scheduler {
                                         .format(new Date(nextSchedule)));
                 notificationFactory.updateStatusNotification(
                         sharedPreferences.getLong(LAST_SUCCESS, 0L), nextSchedule);
-                scheduleWorker(delay, nextWorker);
+                scheduleWorker(minutes, TimeUnit.MINUTES, nextWorker);
             }
         }
     }
@@ -137,7 +143,7 @@ public class Scheduler {
     }
 
     @GuardedBy("LOCK")
-    private void scheduleWorker(long delay, String workerId) {
+    private void scheduleWorker(long delay, TimeUnit timeUnit, String workerId) {
         if (!sharedPreferences.getBoolean(LOCATION_CONSENT, false)) {
             DatabaseLogger.w(TAG, "Location consent not given, will not schedule anything.");
             return;
@@ -153,11 +159,11 @@ public class Scheduler {
                 new OneTimeWorkRequest.Builder(PublishingWorker.class)
                         .setConstraints(constraints)
                         .keepResultsForAtLeast(1, TimeUnit.HOURS)
-                        .setInitialDelay(delay, TimeUnit.SECONDS)
+                        .setInitialDelay(delay, timeUnit)
                         .setInputData(
                                 new Data.Builder().putString(UNIQUE_WORKER_ID, workerId).build())
                         .build();
-        DatabaseLogger.d(TAG, "Scheduling " + workerId + " in " + delay + " s");
+        DatabaseLogger.d(TAG, "Scheduling " + workerId + " in " + delay + " " + timeUnit);
         workManager.enqueueUniqueWork(workerId, ExistingWorkPolicy.REPLACE, workRequest);
     }
 

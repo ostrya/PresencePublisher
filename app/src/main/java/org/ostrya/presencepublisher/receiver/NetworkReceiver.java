@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiManager;
 
 import androidx.preference.PreferenceManager;
@@ -33,7 +34,11 @@ public class NetworkReceiver extends BroadcastReceiver {
                 } else {
                     Optional<String> ssid =
                             NetworkService.getSsid(
-                                    Optional.ofNullable(wifiManager.getConnectionInfo()));
+                                    Optional.ofNullable(wifiManager.getConnectionInfo())
+                                            .filter(
+                                                    w ->
+                                                            w.getSupplicantState()
+                                                                    == SupplicantState.COMPLETED));
                     WifiEventConsumer consumer = new WifiEventConsumer(applicationContext);
                     if (ssid.isPresent()) {
                         consumer.wifiConnected(ssid.get());
