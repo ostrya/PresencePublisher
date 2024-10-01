@@ -93,10 +93,13 @@ public class Publisher {
                         "No valid message configuration for config '" + messageConfigName + "'");
             } else {
                 Message.MessageBuilder builder = messagesForTopic(messageConfiguration.getTopic());
+                boolean valid = true;
                 for (MessageItem item : messageConfiguration.getItems()) {
-                    item.apply(messageContext, builder);
+                    valid = valid && item.apply(messageContext, builder);
                 }
-                messages.addAll(builder.build(messageFormat));
+                if (valid) {
+                    messages.addAll(builder.build(messageFormat));
+                }
             }
         }
         return Collections.unmodifiableList(messages);

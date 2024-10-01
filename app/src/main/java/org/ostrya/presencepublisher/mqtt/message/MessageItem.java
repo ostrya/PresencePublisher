@@ -13,72 +13,85 @@ import org.ostrya.presencepublisher.mqtt.context.MessageContext;
 public enum MessageItem {
     CONDITION_CONTENT {
         @Override
-        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+        public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
+            if (messageContext.getConditionContents().isEmpty()) {
+                return false;
+            }
             builder.withEntry(this, messageContext.getConditionContents());
+            return true;
         }
     },
     BATTERY_LEVEL {
         @Override
-        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+        public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
             builder.withEntry(this, messageContext.getBatteryStatus().getBatteryLevelPercentage());
+            return true;
         }
     },
     CHARGING_STATE {
         @Override
-        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+        public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
             builder.withEntry(this, messageContext.getBatteryStatus().getBatteryStatus());
+            return true;
         }
     },
     PLUG_STATE {
         @Override
-        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+        public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
             builder.withEntry(this, messageContext.getBatteryStatus().getPlugStatus());
+            return true;
         }
     },
     CONNECTED_WIFI {
         @Override
-        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+        public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
             builder.withEntry(
                     this,
                     messageContext.getCurrentSsid() == null
                             ? UNKNOWN
                             : messageContext.getCurrentSsid());
+            return true;
         }
     },
     GEO_LOCATION {
         @Override
-        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+        public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
             builder.withEntry(this, messageContext.getLastKnownLocation());
+            return true;
         }
     },
     CURRENT_TIMESTAMP {
         @Override
-        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+        public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
             builder.withEntry(this, messageContext.getCurrentTimestamp() / 1000);
+            return true;
         }
     },
     NEXT_SCHEDULED_TIMESTAMP {
         @Override
-        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+        public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
             long nextTimestamp = messageContext.getEstimatedNextTimestamp();
             builder.withEntry(this, nextTimestamp > 0L ? nextTimestamp / 1000 : nextTimestamp);
+            return true;
         }
     },
     NEXT_ALARMCLOCK_TIMESTAMP {
         @Override
-        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+        public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
             long nextAlarmclockTimestamp = messageContext.getNextAlarmclockTimestamp();
             builder.withEntry(
                     this,
                     nextAlarmclockTimestamp > 0L
                             ? nextAlarmclockTimestamp / 1000
                             : nextAlarmclockTimestamp);
+            return true;
         }
     },
     DEVICE_NAME {
         @Override
-        public void apply(MessageContext messageContext, Message.MessageBuilder builder) {
+        public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
             builder.withEntry(this, messageContext.getDeviceName());
+            return true;
         }
     };
 
@@ -128,7 +141,7 @@ public enum MessageItem {
         };
     }
 
-    public abstract void apply(MessageContext messageContext, Message.MessageBuilder builder);
+    public abstract boolean apply(MessageContext messageContext, Message.MessageBuilder builder);
 
     public String getName() {
         return name;

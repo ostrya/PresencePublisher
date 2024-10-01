@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.mqtt.message;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +79,15 @@ public class Message {
                             Objects.requireNonNull(item).getName(),
                             Objects.requireNonNull(values)));
             return this;
+        }
+
+        @VisibleForTesting
+        public List<Message> buildForTesting(@NonNull List<String> contents) {
+            List<Message> messages = new ArrayList<>();
+            for (String content : contents) {
+                messages.add(new Message(topic, content));
+            }
+            return messages;
         }
 
         public List<Message> build(@NonNull MessageFormat format) {
