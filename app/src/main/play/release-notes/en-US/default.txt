@@ -1,13 +1,9 @@
+v2.6.4
+• fixed even more issues with wifi detection in Android 10 and 11
+• fixed wrongly sending messages if no condition matches
+
 v2.6.3
 • fixed further issues with wifi detection in Android 10 and 11
 
 v2.6.2
 • fixed issues with wifi detection in Android 10 and 11
-
-v2.6.1
-• fixed bug where changing to night mode sometimes crashed the app
-
-v2.6.0
-• messages are now immediately sent when connecting to or disconnecting from a WiFi network
-• device name can now be sent as message content
-• fixed bug where wifi conditions with wildcards could not be deleted

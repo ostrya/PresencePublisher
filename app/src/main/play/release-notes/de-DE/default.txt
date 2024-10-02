@@ -1,13 +1,9 @@
+v2.6.4
+• noch mehr Probleme bei WLAN-Erkennung für Android 10 und 11 behoben
+• falsches Versenden von Nachrichten ohne passende Bedingung behoben
+
 v2.6.3
 • weitere Probleme bei WLAN-Erkennung für Android 10 und 11 behoben
 
 v2.6.2
 • Probleme bei WLAN-Erkennung für Android 10 und 11 behoben
-
-v2.6.1
-• Fehler behoben, bei dem die App manchmal beim Wechseln in den Nachtmodus gecrasht ist
-
-v2.6.0
-• Nachrichten werden nun sofort nach Verbinden mit oder Trennen von WLAN gesendet
-• Gerätename kann nun als Nachrichteninhalt versendet werden
-• Fehler beim Löschen von WLAN-Bedingungen mit Platzhalter behoben
