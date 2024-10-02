@@ -33,12 +33,12 @@ public class WifiCallbackApi23 extends ConnectivityManager.NetworkCallback {
         checkWifiConnection();
     }
 
-    // trouble is that we have no guarantee that what the WifiManager returns is in sync with the
-    // event (changed / lost) we just received, so let's be on the safe side and only look at what
-    // the wifi manager gives us, even if it gives us a wifi network in a 'lost' event
-    // this *should* work most of the time, but obviously if the last onCapabilitiesChanged event
-    // comes too early, we may end up thinking we're offline when we're actually online ...
-    private void checkWifiConnection() {
+    // We have no guarantee that what the WifiManager returns is in sync with the/ event (changed /
+    // lost) we just received, so let's be on the safe side and only look at what the wifi manager
+    // gives us, even if it gives us a wifi network in a 'lost' event.
+    // This *should* work most of the time, but to "fix" any race conditions, we also do this check
+    // on every publishing schedule
+    void checkWifiConnection() {
         Optional<String> ssid = getConnectedSsid();
         if (ssid.isPresent()) {
             consumer.wifiConnected(ssid.get());

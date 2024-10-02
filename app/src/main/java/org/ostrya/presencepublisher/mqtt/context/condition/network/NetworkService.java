@@ -3,7 +3,6 @@ package org.ostrya.presencepublisher.mqtt.context.condition.network;
 import static android.content.Context.WIFI_SERVICE;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -12,7 +11,6 @@ import android.os.Build;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.preference.PreferenceManager;
 
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 
@@ -24,15 +22,19 @@ import java.util.Optional;
 public class NetworkService {
     private static final String TAG = "NetworkService";
 
-    static final String CURRENT_WIFI_SSID = "currentWifiSsid";
-
     private final WifiManager wifiManager;
-    private final SharedPreferences preference;
+    private final WifiEventConsumer wifiEventConsumer;
+    @Nullable private final WifiCallbackApi23 wifiCallbackApi23;
 
     public NetworkService(Context context) {
         Context applicationContext = context.getApplicationContext();
         this.wifiManager = (WifiManager) applicationContext.getSystemService(WIFI_SERVICE);
-        this.preference = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        this.wifiEventConsumer = new WifiEventConsumer(applicationContext);
+        this.wifiCallbackApi23 =
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                                && Build.VERSION.SDK_INT < Build.VERSION_CODES.S
+                        ? new WifiCallbackApi23(wifiEventConsumer, wifiManager)
+                        : null;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -50,7 +52,13 @@ public class NetworkService {
 
     @Nullable
     public String getCurrentSsid() {
-        return preference.getString(CURRENT_WIFI_SSID, null);
+        // since the detection of wifi networks in Android < 12 with a network callback is flaky
+        // due to the SSID not being present in the event data, we re-check the current wifi
+        // whenever we need it
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && wifiCallbackApi23 != null) {
+            wifiCallbackApi23.checkWifiConnection();
+        }
+        return wifiEventConsumer.getCurrentSsid();
     }
 
     public static Optional<String> getSsid(Optional<WifiInfo> wifiInfo) {

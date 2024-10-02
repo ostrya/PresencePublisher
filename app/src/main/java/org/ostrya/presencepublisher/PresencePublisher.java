@@ -45,6 +45,7 @@ public class PresencePublisher extends MultiDexApplication {
     public static final String MQTT_CLIENT_ID = "mqttClientId";
 
     private static final String USE_WORKER_1 = "useWorker1";
+    private static final String CURRENT_WIFI_SSID = "currentWifiSsid";
 
     private final AtomicReference<ConnectivityManager.NetworkCallback> currentCallback =
             new AtomicReference<>();
@@ -163,6 +164,6 @@ public class PresencePublisher extends MultiDexApplication {
     }
 
     private void removeOldValues(SharedPreferences preferences) {
-        preferences.edit().remove(USE_WORKER_1).apply();
+        preferences.edit().remove(USE_WORKER_1).remove(CURRENT_WIFI_SSID).apply();
     }
 }
