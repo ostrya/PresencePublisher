@@ -40,15 +40,22 @@ public class WifiCallbackApi23 extends ConnectivityManager.NetworkCallback {
     // on every publishing schedule
     void checkWifiConnection() {
         Optional<String> ssid = getConnectedSsid();
-        if (ssid.isPresent()) {
-            consumer.wifiConnected(ssid.get());
+        Optional<String> bssid = getConnectedBssid();
+        if (ssid.isPresent() && bssid.isPresent()) {
+            consumer.wifiConnected(ssid.get(), bssid.get());
         } else {
-            consumer.wifiDisconnected(null);
+            consumer.wifiDisconnected(null, null);
         }
     }
 
     private Optional<String> getConnectedSsid() {
         return NetworkService.getSsid(
+                Optional.ofNullable(wifiManager.getConnectionInfo())
+                        .filter(w -> w.getSupplicantState() == SupplicantState.COMPLETED));
+    }
+
+    private Optional<String> getConnectedBssid() {
+        return NetworkService.getBssid(
                 Optional.ofNullable(wifiManager.getConnectionInfo())
                         .filter(w -> w.getSupplicantState() == SupplicantState.COMPLETED));
     }

@@ -53,6 +53,17 @@ public enum MessageItem {
             return true;
         }
     },
+    CONNECTED_WIFI_BSSID {
+        @Override
+        public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
+            builder.withEntry(
+                    this,
+                    messageContext.getCurrentBssid() == null
+                            ? UNKNOWN
+                            : messageContext.getCurrentBssid());
+            return true;
+        }
+    },
     GEO_LOCATION {
         @Override
         public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
@@ -133,6 +144,7 @@ public enum MessageItem {
             CHARGING_STATE,
             PLUG_STATE,
             CONNECTED_WIFI,
+            CONNECTED_WIFI_BSSID,
             GEO_LOCATION,
             CURRENT_TIMESTAMP,
             NEXT_SCHEDULED_TIMESTAMP,
