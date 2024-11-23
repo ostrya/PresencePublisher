@@ -39,11 +39,18 @@ public class NetworkReceiver extends BroadcastReceiver {
                                                     w ->
                                                             w.getSupplicantState()
                                                                     == SupplicantState.COMPLETED));
+                    Optional<String> bssid =
+                            NetworkService.getBssid(
+                                    Optional.ofNullable(wifiManager.getConnectionInfo())
+                                            .filter(
+                                                    w ->
+                                                            w.getSupplicantState()
+                                                                    == SupplicantState.COMPLETED));
                     WifiEventConsumer consumer = new WifiEventConsumer(applicationContext);
                     if (ssid.isPresent()) {
-                        consumer.wifiConnected(ssid.get());
+                        consumer.wifiConnected(ssid.get(), bssid.get());
                     } else {
-                        consumer.wifiDisconnected(null);
+                        consumer.wifiDisconnected(null,null);
                     }
                 }
             }

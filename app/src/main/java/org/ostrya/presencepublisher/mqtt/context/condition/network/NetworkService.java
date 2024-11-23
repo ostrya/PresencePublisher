@@ -61,8 +61,23 @@ public class NetworkService {
         return wifiEventConsumer.getCurrentSsid();
     }
 
+    @Nullable
+    public String getCurrentBssid() {
+        // since the detection of wifi networks in Android < 12 with a network callback is flaky
+        // due to the SSID not being present in the event data, we re-check the current wifi
+        // whenever we need it
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && wifiCallbackApi23 != null) {
+            wifiCallbackApi23.checkWifiConnection();
+        }
+        return wifiEventConsumer.getCurrentBssid();
+    }
+
     public static Optional<String> getSsid(Optional<WifiInfo> wifiInfo) {
         return wifiInfo.map(WifiInfo::getSSID).map(NetworkService::normalizeSsid);
+    }
+
+    public static Optional<String> getBssid(Optional<WifiInfo> wifiInfo) {
+        return wifiInfo.map(WifiInfo::getBSSID);
     }
 
     private static String normalizeSsid(String ssid) {

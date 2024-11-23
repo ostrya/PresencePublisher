@@ -23,6 +23,7 @@ public class WifiEventConsumer {
     // will be reset so that we do trigger an event after restart even if the current network is the
     // same as before the app restart
     private static final AtomicReference<String> CURRENT_SSID = new AtomicReference<>();
+    private static final AtomicReference<String> CURRENT_BSSID = new AtomicReference<>();
     private final SharedPreferences preference;
     private final Scheduler scheduler;
 
@@ -31,14 +32,14 @@ public class WifiEventConsumer {
         scheduler = new Scheduler(applicationContext);
     }
 
-    public void wifiDisconnected(@Nullable String ssid) {
-        if (CURRENT_SSID.getAndSet(null) != null) {
+    public void wifiDisconnected(@Nullable String ssid, @Nullable String bssid) {
+        if (CURRENT_SSID.getAndSet(null) != null || CURRENT_BSSID.getAndSet(null) != null) {
             if (ssid != null) {
-                DatabaseLogger.logDetection("Wi-Fi disconnected: " + ssid);
+                DatabaseLogger.logDetection("Wi-Fi disconnected: " + ssid + " " + bssid);
             } else {
                 DatabaseLogger.logDetection("Wi-Fi disconnected");
             }
-            DatabaseLogger.i(TAG, "Wi-Fi disconnected: " + ssid);
+            DatabaseLogger.i(TAG, "Wi-Fi disconnected: " + ssid + " " + bssid);
             if (preference.getBoolean(SEND_VIA_MOBILE_NETWORK, false)) {
                 DatabaseLogger.i(TAG, "Triggering scheduler after disconnect");
                 // since we don't want to continuously send "offline" / "online" ping-pong, let's
@@ -48,22 +49,27 @@ public class WifiEventConsumer {
                 scheduler.runIn(15, TimeUnit.SECONDS);
             }
         } else {
-            DatabaseLogger.d(TAG, "Ignoring disconnect for already disconnected network " + ssid);
+            DatabaseLogger.d(TAG, "Ignoring disconnect for already disconnected network " + ssid + " " + bssid);
         }
     }
 
-    public void wifiConnected(@NonNull String ssid) {
-        if (!ssid.equals(CURRENT_SSID.getAndSet(ssid))) {
-            DatabaseLogger.logDetection("Wi-Fi connected: " + ssid);
-            DatabaseLogger.i(TAG, "Triggering scheduler after connecting to Wi-Fi " + ssid);
+    public void wifiConnected(@NonNull String ssid, @NonNull String bssid) {
+        if (!ssid.equals(CURRENT_SSID.getAndSet(ssid)) && !bssid.equals(CURRENT_BSSID.getAndSet(bssid))) {
+            DatabaseLogger.logDetection("Wi-Fi connected/changed: " + ssid + " " + bssid);
+            DatabaseLogger.i(TAG, "Triggering scheduler after connecting to Wi-Fi " + ssid + " " + bssid);
             scheduler.runNow();
         } else {
-            DatabaseLogger.d(TAG, "Ignoring connect for already connected network " + ssid);
+            DatabaseLogger.d(TAG, "Ignoring connect for already connected network " + ssid + " " + bssid);
         }
     }
 
     @Nullable
     public String getCurrentSsid() {
         return CURRENT_SSID.get();
+    }
+
+    @Nullable
+    public String getCurrentBssid() {
+        return CURRENT_BSSID.get();
     }
 }
