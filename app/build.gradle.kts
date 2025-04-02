@@ -8,12 +8,12 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("org.eclipse.jgit:org.eclipse.jgit:6.10.0.202406032230-r")
+        classpath("org.eclipse.jgit:org.eclipse.jgit:7.2.0.202503040940-r")
     }
 }
 
 plugins {
-    id("com.github.triplet.play") version "3.11.0"
+    id("com.github.triplet.play") version "3.12.1"
     id("com.jaredsburrows.license") version "0.9.8"
     id("com.android.application")
 }
@@ -148,18 +148,18 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
-    implementation("androidx.work:work-runtime:2.9.1")
+    implementation("androidx.work:work-runtime:2.10.0")
     implementation("com.google.android.material:material:1.12.0")
-    implementation("com.google.guava:guava:33.3.0-android")
-    implementation("org.altbeacon:android-beacon-library:2.20.6")
+    implementation("com.google.guava:guava:33.4.6-android")
+    implementation("org.altbeacon:android-beacon-library:2.21.1")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.assertj:assertj-core:3.26.3")
+    testImplementation("org.assertj:assertj-core:3.27.3")
     testImplementation("org.mockito:mockito-inline:5.2.0")
 
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
 
 tasks.register("printVersion") {

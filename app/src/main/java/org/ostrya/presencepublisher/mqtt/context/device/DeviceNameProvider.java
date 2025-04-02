@@ -5,9 +5,9 @@ import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 
-import org.ostrya.presencepublisher.mqtt.context.MessageContext;
+import androidx.annotation.Nullable;
 
-import javax.annotation.Nullable;
+import org.ostrya.presencepublisher.mqtt.context.MessageContext;
 
 public class DeviceNameProvider {
     private final Context applicationContext;

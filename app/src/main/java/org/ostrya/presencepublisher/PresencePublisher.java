@@ -15,10 +15,9 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.color.DynamicColors;
 
-import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.distance.ModelSpecificDistanceCalculator;
+import org.altbeacon.beacon.Settings;
 import org.altbeacon.beacon.logging.LogManager;
 import org.eclipse.paho.client.mqttv3.logging.LoggerFactory;
 import org.ostrya.presencepublisher.log.BeaconLoggerAdapter;
@@ -86,11 +85,23 @@ public class PresencePublisher extends MultiDexApplication {
         if (supportsBeacons()) {
             LogManager.setLogger(new BeaconLoggerAdapter());
             LogManager.setVerboseLoggingEnabled(BuildConfig.DEBUG);
-            Beacon.setHardwareEqualityEnforced(true);
-            Beacon.setDistanceCalculator(
-                    new ModelSpecificDistanceCalculator(
-                            this, BeaconManager.getDistanceModelUpdateUrl()));
             BeaconManager beaconManager = BeaconManager.getInstanceForApplication(this);
+            beaconManager.adjustSettings(
+                    new Settings(
+                            BuildConfig.DEBUG,
+                            null,
+                            true,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null));
             List<BeaconParser> beaconParsers = beaconManager.getBeaconParsers();
             beaconParsers.add(
                     new BeaconParser("iBeacon")
