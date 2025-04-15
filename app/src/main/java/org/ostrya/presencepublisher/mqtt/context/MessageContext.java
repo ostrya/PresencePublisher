@@ -17,6 +17,7 @@ public class MessageContext {
     private final long estimatedNextTimestamp;
     private final String deviceName;
     @Nullable private final String currentSsid;
+    @Nullable private final String currentBssid;
 
     MessageContext(
             long nextAlarmclockTimestamp,
@@ -26,7 +27,8 @@ public class MessageContext {
             long currentTimestamp,
             long estimatedNextTimestamp,
             String deviceName,
-            @Nullable String currentSsid) {
+            @Nullable String currentSsid,
+            @Nullable String currentBssid) {
         this.nextAlarmclockTimestamp = nextAlarmclockTimestamp;
         this.batteryStatus = batteryStatus;
         this.conditionContents = conditionContents;
@@ -35,6 +37,7 @@ public class MessageContext {
         this.estimatedNextTimestamp = estimatedNextTimestamp;
         this.deviceName = deviceName;
         this.currentSsid = currentSsid;
+        this.currentBssid = currentBssid;
     }
 
     public long getNextAlarmclockTimestamp() {
@@ -68,5 +71,10 @@ public class MessageContext {
     @Nullable
     public String getCurrentSsid() {
         return currentSsid;
+    }
+
+    @Nullable
+    public String getCurrentBssid() {
+        return currentBssid;
     }
 }
