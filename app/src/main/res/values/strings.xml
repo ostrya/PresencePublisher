@@ -133,7 +133,7 @@
     <string name="edit_message_title_2">Edit message (2)</string>
     <string name="message_name_hint">Name</string>
     <string name="message_topic_hint">Topic</string>
-    <string name="message_help_summary">This list of messages will be sent at the defined schedule.\n\nClick to edit a message. Long-click to delete an entry.</string>
+    <string name="message_help_summary">This list of messages will be sent at the defined schedule.\n\nClick to edit a message. Long-click to delete an entry.\n\n⚠️ If you add the \"conditionContent\" entry to a message, it will only be sent if at least one condition is fulfilled. If the entry is not added, the message will be sent every time.</string>
     <string name="message_format_setting_title">Message format</string>
     <string name="message_format_setting_summary" formatted="true">The format to send MQTT messages in.%nCurrent value: %1$s</string>
     <string name="message_format_help_summary">For more details concerning the different message formats, click here.</string>
