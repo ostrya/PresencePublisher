@@ -30,3 +30,6 @@
 -keep public class org.altbeacon.beacon.service.RunningAverageRssiFilter
 # needed to avoid "no logger found" exceptions
 -keep public class org.ostrya.presencepublisher.log.PahoNoopLogger
+# for some reason R8 complains about missing classes even though they are part of the android SDK
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.concurrent.GuardedBy

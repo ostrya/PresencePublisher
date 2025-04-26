@@ -138,7 +138,7 @@ play {
 }
 
 dependencies {
-    val roomVersion = "2.6.1"
+    val roomVersion = "2.7.1"
 
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.cardview:cardview:1.0.0")
@@ -146,9 +146,9 @@ dependencies {
     implementation("androidx.preference:preference:1.2.1")
     implementation("androidx.room:room-guava:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("androidx.security:security-crypto:1.1.0-alpha07")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
-    implementation("androidx.work:work-runtime:2.10.0")
+    implementation("androidx.work:work-runtime:2.10.1")
     implementation("com.google.android.material:material:1.12.0")
     implementation("com.google.guava:guava:33.4.6-android")
     implementation("org.altbeacon:android-beacon-library:2.21.1")
