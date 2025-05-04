@@ -2,6 +2,7 @@ package org.ostrya.presencepublisher;
 
 import static org.ostrya.presencepublisher.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.preference.condition.BeaconCategorySupport.BEACON_LIST;
+import static org.ostrya.presencepublisher.preference.connection.PasswordPreference.PASSWORD;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,6 +21,7 @@ import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Settings;
 import org.altbeacon.beacon.logging.LogManager;
 import org.eclipse.paho.client.mqttv3.logging.LoggerFactory;
+import org.ostrya.presencepublisher.device.DevicePreferences;
 import org.ostrya.presencepublisher.log.BeaconLoggerAdapter;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
@@ -28,6 +30,7 @@ import org.ostrya.presencepublisher.mqtt.context.condition.beacon.PresenceBeacon
 import org.ostrya.presencepublisher.mqtt.context.condition.network.NetworkService;
 import org.ostrya.presencepublisher.notification.NotificationFactory;
 import org.ostrya.presencepublisher.preference.about.NightModePreference;
+import org.ostrya.presencepublisher.preference.connection.PasswordPreference;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,9 +46,6 @@ public class PresencePublisher extends MultiDexApplication {
 
     public static final String MQTT_CLIENT_ID = "mqttClientId";
 
-    private static final String USE_WORKER_1 = "useWorker1";
-    private static final String CURRENT_WIFI_SSID = "currentWifiSsid";
-
     private final AtomicReference<ConnectivityManager.NetworkCallback> currentCallback =
             new AtomicReference<>();
 
@@ -59,10 +59,10 @@ public class PresencePublisher extends MultiDexApplication {
             setUpConditionCallbacks(preferences);
         }
         new NotificationFactory(this).createNotificationChannels();
-        initClientId(preferences);
+        migratePreferences(preferences);
+        initClientId();
         NightModePreference.updateCurrentNightMode(preferences);
         DynamicColors.applyToActivitiesIfAvailable(this);
-        removeOldValues(preferences);
     }
 
     public void setUpConditionCallbacks(SharedPreferences preferences) {
@@ -144,10 +144,11 @@ public class PresencePublisher extends MultiDexApplication {
         }
     }
 
-    private void initClientId(SharedPreferences preferences) {
-        if (!preferences.contains(MQTT_CLIENT_ID)) {
+    private void initClientId() {
+        DevicePreferences devicePreferences = new DevicePreferences(this);
+        if (!devicePreferences.contains(MQTT_CLIENT_ID)) {
             DatabaseLogger.i(TAG, "Generating persistent client ID");
-            preferences.edit().putString(MQTT_CLIENT_ID, UUID.randomUUID().toString()).apply();
+            devicePreferences.putString(MQTT_CLIENT_ID, UUID.randomUUID().toString());
         }
     }
 
@@ -174,7 +175,16 @@ public class PresencePublisher extends MultiDexApplication {
         return getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
     }
 
-    private void removeOldValues(SharedPreferences preferences) {
-        preferences.edit().remove(USE_WORKER_1).remove(CURRENT_WIFI_SSID).apply();
+    private void migratePreferences(SharedPreferences preferences) {
+        DevicePreferences devicePreferences = new DevicePreferences(this);
+        String value = PasswordPreference.getOldPasswordProvider(this).get();
+        if (!devicePreferences.contains(PASSWORD) && value != null) {
+            devicePreferences.putString(PASSWORD, value);
+        }
+        value = preferences.getString(MQTT_CLIENT_ID, null);
+        if (!devicePreferences.contains(MQTT_CLIENT_ID) && value != null) {
+            devicePreferences.putString(MQTT_CLIENT_ID, value);
+        }
+        preferences.edit().remove(PASSWORD).remove(MQTT_CLIENT_ID).apply();
     }
 }

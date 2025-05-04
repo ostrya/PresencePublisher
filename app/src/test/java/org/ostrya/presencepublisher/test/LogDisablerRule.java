@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.test;
 
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.withSettings;
 
 import org.junit.rules.ExternalResource;
 import org.mockito.MockedStatic;
@@ -11,7 +12,7 @@ public class LogDisablerRule extends ExternalResource {
 
     @Override
     protected void before() {
-        staticLogMock = mockStatic(DatabaseLogger.class);
+        staticLogMock = mockStatic(DatabaseLogger.class, withSettings().verboseLogging());
     }
 
     @Override

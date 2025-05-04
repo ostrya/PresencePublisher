@@ -19,7 +19,7 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.preference.common.TextPreferenceBase;
 
 public class PasswordPreference extends TextPreferenceBase {
-    private static final String PASSWORD = "password";
+    public static final String PASSWORD = "password";
 
     public PasswordPreference(Context context) {
         super(
@@ -48,11 +48,13 @@ public class PasswordPreference extends TextPreferenceBase {
         return getContext().getString(R.string.password_placeholder);
     }
 
-    public static Supplier<String> getPasswordProvider(@NonNull Context context) {
+    @Deprecated
+    public static Supplier<String> getOldPasswordProvider(@NonNull Context context) {
         SecureDataStore dataStore = new SecureDataStore(context);
         return () -> dataStore.getString(PASSWORD, "");
     }
 
+    @Deprecated
     private static class SecureDataStore extends PreferenceDataStore {
         private static final String TAG = "SecureDataStore";
 

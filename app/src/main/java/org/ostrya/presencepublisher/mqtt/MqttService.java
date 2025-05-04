@@ -14,13 +14,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
-import androidx.core.util.Supplier;
 import androidx.preference.PreferenceManager;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.ostrya.presencepublisher.device.DevicePreferences;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.mqtt.message.Message;
 import org.ostrya.presencepublisher.preference.connection.PasswordPreference;
@@ -35,16 +35,16 @@ public class MqttService {
 
     private final AndroidSslSocketFactoryFactory factory;
     private final SharedPreferences sharedPreferences;
-    private final Supplier<String> passwordProvider;
+    private final DevicePreferences devicePreferences;
     private final String clientId;
 
     public MqttService(Context context) {
         Context applicationContext = context.getApplicationContext();
         factory = new AndroidSslSocketFactoryFactory(applicationContext);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-        passwordProvider = PasswordPreference.getPasswordProvider(applicationContext);
+        devicePreferences = new DevicePreferences(applicationContext);
         clientId =
-                sharedPreferences.getString(
+                devicePreferences.getString(
                         MQTT_CLIENT_ID, "initialization error " + System.currentTimeMillis());
     }
 
@@ -53,7 +53,7 @@ public class MqttService {
         boolean tls = sharedPreferences.getBoolean(USE_TLS, false);
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERTIFICATE, null);
         String login = sharedPreferences.getString(USERNAME, "");
-        String password = passwordProvider.get();
+        String password = devicePreferences.getString(PasswordPreference.PASSWORD, "");
         String topic = "test";
 
         try (MqttClient mqttClient =
@@ -79,7 +79,7 @@ public class MqttService {
         boolean tls = sharedPreferences.getBoolean(USE_TLS, false);
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERTIFICATE, null);
         String login = sharedPreferences.getString(USERNAME, "");
-        String password = passwordProvider.get();
+        String password = devicePreferences.getString(PasswordPreference.PASSWORD, "");
         int qos = getQosFromString(sharedPreferences.getString(QOS_VALUE, null));
         boolean retain = sharedPreferences.getBoolean(RETAIN_FLAG, false);
 

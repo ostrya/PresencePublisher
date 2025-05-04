@@ -54,6 +54,7 @@ android {
                 argument("room.schemaLocation", "$projectDir/schemas")
             }
         }
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
         register("release") {
@@ -138,6 +139,7 @@ play {
 }
 
 dependencies {
+    val assertJVersion = "3.27.3"
     val roomVersion = "2.7.1"
 
     implementation("androidx.appcompat:appcompat:1.7.0")
@@ -146,6 +148,7 @@ dependencies {
     implementation("androidx.preference:preference:1.2.1")
     implementation("androidx.room:room-guava:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
+    // deprecated, but we need to keep it another version for migration
     implementation("androidx.security:security-crypto:1.1.0-alpha07")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation("androidx.work:work-runtime:2.10.1")
@@ -154,8 +157,10 @@ dependencies {
     implementation("org.altbeacon:android-beacon-library:2.21.1")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.assertj:assertj-core:3.27.3")
+    testImplementation("org.assertj:assertj-core:$assertJVersion")
     testImplementation("org.mockito:mockito-inline:5.2.0")
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("org.assertj:assertj-core:$assertJVersion")
 
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
