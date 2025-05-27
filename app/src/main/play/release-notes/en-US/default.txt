@@ -1,6 +1,5 @@
+v2.6.6
+• fixed issue when storing MQTT password
+
 v2.6.5
 • new warning about always sending messages without 'conditionContent'
-
-v2.6.4
-• fixed even more issues with wifi detection in Android 10 and 11
-• fixed wrongly sending messages if no condition matches

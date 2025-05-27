@@ -1,6 +1,5 @@
+v2.6.6
+• Fehler beim Speichern des MQTT-Passworts behoben
+
 v2.6.5
 • neue Warnung, dass Nachrichten ohne 'conditionContent' immer versendet werden
-
-v2.6.4
-• noch mehr Probleme bei WLAN-Erkennung für Android 10 und 11 behoben
-• falsches Versenden von Nachrichten ohne passende Bedingung behoben

@@ -85,7 +85,7 @@ public class DevicePreferences extends PreferenceDataStore {
 
     @Override
     public void putString(String key, @Nullable String value) {
-        if (value != null) {
+        if (value != null && !value.isEmpty()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 try {
                     SecretKey secretKey = getOrInitKey();

@@ -181,6 +181,13 @@ public class PresencePublisher extends MultiDexApplication {
         if (!devicePreferences.contains(PASSWORD) && value != null) {
             devicePreferences.putString(PASSWORD, value);
         }
+        // fix migration from 2.6.5: since the old storage returned "" if no data was stored,
+        // we did store "" into the new storage even though that's pointless
+        value = devicePreferences.getString(PASSWORD, null);
+        // so just remove it again in this case
+        if ("".equals(value)) {
+            devicePreferences.putString(PASSWORD, null);
+        }
         value = preferences.getString(MQTT_CLIENT_ID, null);
         if (!devicePreferences.contains(MQTT_CLIENT_ID) && value != null) {
             devicePreferences.putString(MQTT_CLIENT_ID, value);

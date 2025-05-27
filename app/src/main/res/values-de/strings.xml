@@ -130,7 +130,7 @@
     <string name="edit_message_title_2">Nachricht bearbeiten (2)</string>
     <string name="message_name_hint">Name</string>
     <string name="message_topic_hint">Topic</string>
-    <string name="message_help_summary">Diese Liste von Nachrichten wird zum gegebenen Zeitplan versendet.\n\nTippe, um die Nachricht zu bearbeiten. Berühre länger, um einen Eintrag zu löschen.⚠️ Wenn der \"conditionContent\" Eintrag zu einer Nachricht hinzugefügt wird, so wird diese Nachricht nur versendet, wenn mindestens eine Bedingung erfüllt ist. Wenn der Eintrag nicht hinzugefügt wird, so wird die Nachricht immer versendet.</string>
+    <string name="message_help_summary">Diese Liste von Nachrichten wird zum gegebenen Zeitplan versendet.\n\nTippe, um die Nachricht zu bearbeiten. Berühre länger, um einen Eintrag zu löschen.\n\n⚠️ Wenn der \"conditionContent\" Eintrag zu einer Nachricht hinzugefügt wird, so wird diese Nachricht nur versendet, wenn mindestens eine Bedingung erfüllt ist. Wenn der Eintrag nicht hinzugefügt wird, so wird die Nachricht immer versendet.</string>
     <string name="message_format_setting_title">Nachrichtenformat</string>
     <string name="message_format_setting_summary" formatted="true">Das Format, in dem MQTT-Nachrichten versendet werden.%nAktueller Wert: %1$s</string>
     <string name="message_format_help_summary">Für weitere Details über die verschiedenen Nachrichtenformate bitte hier klicken.</string>

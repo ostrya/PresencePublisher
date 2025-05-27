@@ -15,6 +15,7 @@ import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
 
 import org.ostrya.presencepublisher.R;
+import org.ostrya.presencepublisher.device.DevicePreferences;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.preference.common.TextPreferenceBase;
 
@@ -37,7 +38,7 @@ public class PasswordPreference extends TextPreferenceBase {
                         editText.setAutofillHints(View.AUTOFILL_HINT_PASSWORD);
                     }
                 });
-        setPreferenceDataStore(new SecureDataStore(context));
+        setPreferenceDataStore(new DevicePreferences(context));
     }
 
     @Override
