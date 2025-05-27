@@ -148,8 +148,6 @@ dependencies {
     implementation("androidx.preference:preference:1.2.1")
     implementation("androidx.room:room-guava:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
-    // deprecated, but we need to keep it another version for migration
-    implementation("androidx.security:security-crypto:1.1.0-alpha07")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation("androidx.work:work-runtime:2.10.1")
     implementation("com.google.android.material:material:1.12.0")

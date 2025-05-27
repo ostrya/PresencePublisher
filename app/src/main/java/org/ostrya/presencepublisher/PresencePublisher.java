@@ -2,7 +2,6 @@ package org.ostrya.presencepublisher;
 
 import static org.ostrya.presencepublisher.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.preference.condition.BeaconCategorySupport.BEACON_LIST;
-import static org.ostrya.presencepublisher.preference.connection.PasswordPreference.PASSWORD;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -30,7 +29,6 @@ import org.ostrya.presencepublisher.mqtt.context.condition.beacon.PresenceBeacon
 import org.ostrya.presencepublisher.mqtt.context.condition.network.NetworkService;
 import org.ostrya.presencepublisher.notification.NotificationFactory;
 import org.ostrya.presencepublisher.preference.about.NightModePreference;
-import org.ostrya.presencepublisher.preference.connection.PasswordPreference;
 
 import java.util.Collections;
 import java.util.List;
@@ -175,23 +173,5 @@ public class PresencePublisher extends MultiDexApplication {
         return getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
     }
 
-    private void migratePreferences(SharedPreferences preferences) {
-        DevicePreferences devicePreferences = new DevicePreferences(this);
-        String value = PasswordPreference.getOldPasswordProvider(this).get();
-        if (!devicePreferences.contains(PASSWORD) && value != null) {
-            devicePreferences.putString(PASSWORD, value);
-        }
-        // fix migration from 2.6.5: since the old storage returned "" if no data was stored,
-        // we did store "" into the new storage even though that's pointless
-        value = devicePreferences.getString(PASSWORD, null);
-        // so just remove it again in this case
-        if ("".equals(value)) {
-            devicePreferences.putString(PASSWORD, null);
-        }
-        value = preferences.getString(MQTT_CLIENT_ID, null);
-        if (!devicePreferences.contains(MQTT_CLIENT_ID) && value != null) {
-            devicePreferences.putString(MQTT_CLIENT_ID, value);
-        }
-        preferences.edit().remove(PASSWORD).remove(MQTT_CLIENT_ID).apply();
-    }
+    private void migratePreferences(SharedPreferences preferences) {}
 }
