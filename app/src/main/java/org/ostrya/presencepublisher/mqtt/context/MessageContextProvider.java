@@ -36,6 +36,7 @@ public class MessageContextProvider {
     public MessageContext getContext() {
         long currentTimestamp = System.currentTimeMillis();
         String currentSsid = networkService.getCurrentSsid();
+        String currentBssid = networkService.getCurrentBssid();
         return new MessageContext(
                 alarmclockTimestampProvider.getNextAlarmclockTimestamp(),
                 batteryStatusProvider.getCurrentBatteryStatus(),
@@ -44,6 +45,7 @@ public class MessageContextProvider {
                 currentTimestamp,
                 preferences.getLong(NEXT_SCHEDULE, 0L),
                 deviceNameProvider.getDeviceName(),
-                currentSsid);
+                currentSsid,
+                currentBssid);
     }
 }

@@ -22,6 +22,7 @@
         <item><b>chargingState</b>: Possible values: CHARGING, DISCHARGING, FULL, NOT_CHARGING, N/A</item>
         <item><b>plugState</b>: Possible values: AC, USB, WIRELESS, N/A</item>
         <item><b>connectedWifi</b>: The SSID of the network you are currently connected to. May be \"N/A\" if your device is not connected or the app is unable to determine the SSID.</item>
+        <item><b>connectedWifiBssid</b>: The BSSID of the network you are currently connected to. May be \"N/A\" if your device is not connected or the app is unable to determine the BSSID.</item>
         <item><b>geoLocation</b>: The last known geo location of your device. It is encoded according to RFC 5870 with custom parameter \"timestamp\" which contains the age of the location in seconds since 1970–01–01.</item>
         <item><b>currentTimestamp</b>: The timestamp when this message was generated in seconds since 1970–01–01.</item>
         <item><b>nextScheduledTimestamp</b>: The timestamp when the next message is scheduled in seconds since 1970–01–01, or 0 if not scheduled (e.g. if currently no condition matches).</item>
