@@ -7,8 +7,12 @@ import static org.ostrya.presencepublisher.preference.condition.BeaconCategorySu
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -36,6 +40,18 @@ public class MainActivity extends AppCompatActivity {
         DatabaseLogger.d(TAG, "Creating activity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        View parent = findViewById(R.id.parent);
+        ViewCompat.setOnApplyWindowInsetsListener(
+                parent,
+                (v, insets) -> {
+                    Insets bars =
+                            insets.getInsets(
+                                    WindowInsetsCompat.Type.systemBars()
+                                            | WindowInsetsCompat.Type.displayCutout());
+                    v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+                    return WindowInsetsCompat.CONSUMED;
+                });
 
         MainPagerAdapter mainPagerAdapter = new MainPagerAdapter(this);
         ViewPager2 viewPager = findViewById(R.id.pager);
