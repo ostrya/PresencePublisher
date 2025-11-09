@@ -13,7 +13,7 @@ buildscript {
 }
 
 plugins {
-    id("com.github.triplet.play") version "3.12.1"
+    id("com.github.triplet.play") version "3.12.2"
     id("com.jaredsburrows.license") version "0.9.8"
     id("com.android.application")
 }
@@ -40,12 +40,12 @@ fun isTagged(): Boolean {
 }
 
 android {
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
         minSdk = 21
         multiDexEnabled = true
-        targetSdk = 35
+        targetSdk = 36
         vectorDrawables.useSupportLibrary = true
         versionCode = 59
         versionName = "2.6.6"
@@ -76,7 +76,7 @@ android {
         }
         named("release") {
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.findByName("release")?.takeIf { it.isSigningReady }
         }
     }
@@ -139,25 +139,27 @@ play {
 }
 
 dependencies {
-    val assertJVersion = "3.27.3"
-    val roomVersion = "2.7.1"
+    val assertJVersion = "3.27.6"
+    // room 2.8+ only works with SDK23+
+    val roomVersion = "2.7.2"
 
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.preference:preference:1.2.1")
     implementation("androidx.room:room-guava:$roomVersion")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
-    implementation("androidx.work:work-runtime:2.10.1")
-    implementation("com.google.android.material:material:1.12.0")
-    implementation("com.google.guava:guava:33.4.8-android")
+    // work 2.11+ only works with SDK23+
+    implementation("androidx.work:work-runtime:2.10.5")
+    implementation("com.google.android.material:material:1.13.0")
+    implementation("com.google.guava:guava:33.5.0-android")
     implementation("org.altbeacon:android-beacon-library:2.21.1")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.assertj:assertj-core:$assertJVersion")
     testImplementation("org.mockito:mockito-inline:5.2.0")
-    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test:runner:1.7.0")
     androidTestImplementation("org.assertj:assertj-core:$assertJVersion")
 
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
