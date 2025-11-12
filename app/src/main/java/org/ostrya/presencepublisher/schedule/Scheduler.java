@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.schedule;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
 import static org.ostrya.presencepublisher.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.preference.condition.BeaconCategorySupport.BEACON_LIST;
 import static org.ostrya.presencepublisher.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
@@ -29,7 +30,6 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.mqtt.context.device.BatteryIntentLoader;
 import org.ostrya.presencepublisher.notification.NotificationFactory;
 
-import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
@@ -81,7 +81,7 @@ public class Scheduler {
 
     public void runIn(long delay, TimeUnit timeUnit) {
         synchronized (LOCK) {
-            DatabaseLogger.i(TAG, "Running in " + delay + " " + timeUnit + ".");
+            DatabaseLogger.i(TAG, "Running in %d %s.", args(delay, timeUnit));
             scheduleWorker(delay, timeUnit, getNextWorker());
         }
     }
@@ -102,10 +102,7 @@ public class Scheduler {
                 long nextSchedule = System.currentTimeMillis() + minutes * 60_000L;
                 sharedPreferences.edit().putLong(NEXT_SCHEDULE, nextSchedule).apply();
                 DatabaseLogger.i(
-                        TAG,
-                        "Scheduling next run at "
-                                + DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
-                                        .format(new Date(nextSchedule)));
+                        TAG, "Scheduling next run at %tF %<tT", args(new Date(nextSchedule)));
                 notificationFactory.updateStatusNotification(
                         sharedPreferences.getLong(LAST_SUCCESS, 0L), nextSchedule);
                 scheduleWorker(minutes, TimeUnit.MINUTES, nextWorker);
@@ -135,7 +132,7 @@ public class Scheduler {
                             MoreExecutors.directExecutor())
                     .get(1, TimeUnit.SECONDS);
         } catch (ExecutionException | TimeoutException e) {
-            DatabaseLogger.w(TAG, "Unable to get worker state for " + nextWorker, e);
+            DatabaseLogger.w(TAG, "Unable to get worker state for %s", args(nextWorker), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -163,7 +160,7 @@ public class Scheduler {
                         .setInputData(
                                 new Data.Builder().putString(UNIQUE_WORKER_ID, workerId).build())
                         .build();
-        DatabaseLogger.d(TAG, "Scheduling " + workerId + " in " + delay + " " + timeUnit);
+        DatabaseLogger.d(TAG, "Scheduling %s in %d %s", args(workerId, delay, timeUnit));
         workManager.enqueueUniqueWork(workerId, ExistingWorkPolicy.REPLACE, workRequest);
     }
 

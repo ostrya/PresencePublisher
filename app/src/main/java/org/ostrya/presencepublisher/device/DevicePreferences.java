@@ -6,6 +6,8 @@ import static android.security.keystore.KeyProperties.KEY_ALGORITHM_AES;
 import static android.security.keystore.KeyProperties.PURPOSE_DECRYPT;
 import static android.security.keystore.KeyProperties.PURPOSE_ENCRYPT;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -111,7 +113,7 @@ public class DevicePreferences extends PreferenceDataStore {
                                     + Base64.getEncoder().encodeToString(cipherText);
                     devicePreferences.edit().putString(key, encrypted).apply();
                 } catch (Exception e) {
-                    DatabaseLogger.e(TAG, "Unable to encrypt value for '" + key + "'", e);
+                    DatabaseLogger.e(TAG, "Unable to encrypt value for '%s'", args(key), e);
                 }
             } else {
                 devicePreferences.edit().putString(key, value).apply();
@@ -132,7 +134,7 @@ public class DevicePreferences extends PreferenceDataStore {
                 }
                 String[] split = value.split("!", 3);
                 if (split.length != 3) {
-                    DatabaseLogger.w(TAG, "Ignoring malformed value for key " + key);
+                    DatabaseLogger.w(TAG, "Ignoring malformed value for key %s", args(key));
                     return defValue;
                 }
                 byte[] iv = Base64.getDecoder().decode(split[0]);
@@ -149,7 +151,7 @@ public class DevicePreferences extends PreferenceDataStore {
                 cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(tagLength, iv));
                 return new String(cipher.doFinal(encrypted), StandardCharsets.UTF_8);
             } catch (Exception e) {
-                DatabaseLogger.w(TAG, "Unable to decrypt value for key " + key, e);
+                DatabaseLogger.w(TAG, "Unable to decrypt value for key %s", args(key), e);
                 return defValue;
             }
         } else {

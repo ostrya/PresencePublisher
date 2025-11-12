@@ -1,5 +1,7 @@
 package org.ostrya.presencepublisher.dialog;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -127,15 +129,15 @@ public class BeaconScanDialogFragment extends DialogFragment {
     private class ScanCallback implements RangeNotifier {
         @Override
         public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-            DatabaseLogger.v(TAG, "Got callback from beacon scan for region " + region);
+            DatabaseLogger.v(TAG, "Got callback from beacon scan for region %s", args(region));
             for (Beacon beacon : beacons) {
                 if (beacon != null
                         && beacon.getBluetoothAddress() != null
                         && beacon.getParserIdentifier() != null) {
-                    DatabaseLogger.d(TAG, "Found beacon " + beacon);
+                    DatabaseLogger.d(TAG, "Found beacon %s", args(beacon));
                     adapter.addBeacon(new PresenceBeacon(beacon));
                 } else {
-                    DatabaseLogger.w(TAG, "Beacon " + beacon + " is incomplete");
+                    DatabaseLogger.w(TAG, "Beacon %s is incomplete", args(beacon));
                 }
             }
         }

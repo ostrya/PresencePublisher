@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.preference;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
 import static org.ostrya.presencepublisher.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 
@@ -101,7 +102,7 @@ public class ConditionFragment extends AbstractConfigurationFragment {
     }
 
     private void onServiceStart(boolean result) {
-        DatabaseLogger.d(TAG, "Received result " + result);
+        DatabaseLogger.d(TAG, "Received result %s", args(result));
         if (result && beaconSupport != null) {
             DatabaseLogger.i(TAG, "Start scanning after enabling bluetooth");
             beaconSupport.clickAdd();
@@ -109,7 +110,7 @@ public class ConditionFragment extends AbstractConfigurationFragment {
     }
 
     private void onPermissionsGranted(Map<String, Boolean> result) {
-        DatabaseLogger.d(TAG, "Received result " + result);
+        DatabaseLogger.d(TAG, "Received result %s", args(result));
         if (result.values().stream().allMatch(b -> b) && beaconSupport != null) {
             DatabaseLogger.i(TAG, "Start scanning after enabling bluetooth");
             beaconSupport.clickAdd();

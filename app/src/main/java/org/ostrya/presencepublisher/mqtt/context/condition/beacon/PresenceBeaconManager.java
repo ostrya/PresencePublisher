@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.mqtt.context.condition.beacon;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
 import static org.ostrya.presencepublisher.preference.condition.BeaconCategorySupport.BEACON_LIST;
 
 import android.content.Context;
@@ -52,7 +53,7 @@ public final class PresenceBeaconManager {
         List<Region> scanRegions = new ArrayList<>(beaconList.size());
         for (String beaconId : beaconList) {
             String address = PresenceBeacon.beaconIdToAddress(beaconId);
-            DatabaseLogger.i(TAG, "Registering scan region for beacon " + beaconId);
+            DatabaseLogger.i(TAG, "Registering scan region for beacon %s", args(beaconId));
             scanRegions.add(new Region(beaconId, address));
         }
         return scanRegions;
@@ -71,7 +72,7 @@ public final class PresenceBeaconManager {
             }
             sharedPreferences.edit().putStringSet(BEACON_LIST, storedBeacons).apply();
 
-            DatabaseLogger.d(TAG, "Add scanning for beacon " + beaconId);
+            DatabaseLogger.d(TAG, "Add scanning for beacon %s", args(beaconId));
             Region region = new Region(beaconId, beacon.getAddress());
             beaconManager.startMonitoring(region);
         }
@@ -95,7 +96,7 @@ public final class PresenceBeaconManager {
                 .putStringSet(RegionMonitorNotifier.FOUND_BEACON_LIST, foundBeacons)
                 .apply();
 
-        DatabaseLogger.d(TAG, "Remove scanning for beacon " + beaconId);
+        DatabaseLogger.d(TAG, "Remove scanning for beacon %s", args(beaconId));
         Region region = new Region(beaconId, PresenceBeacon.beaconIdToAddress(beaconId));
         if (beaconManager != null) {
             beaconManager.stopMonitoring(region);

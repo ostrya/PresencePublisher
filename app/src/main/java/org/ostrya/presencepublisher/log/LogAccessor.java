@@ -11,7 +11,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -57,9 +56,7 @@ public class LogAccessor<T extends DbLog> {
         File result = new File(parentDir, System.currentTimeMillis() + ".log");
         try (BufferedWriter out = new BufferedWriter(new FileWriter(result, false))) {
             for (T line : lines) {
-                out.append(
-                        DatabaseLogger.getFormattedLog(
-                                line.getLine(), new Date(line.getTimestamp())));
+                out.append(line.getLine());
                 out.newLine();
             }
         } catch (IOException e) {

@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.mqtt;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
 import static org.ostrya.presencepublisher.mqtt.message.Message.messagesForTopic;
 import static org.ostrya.presencepublisher.preference.message.MessageCategorySupport.MESSAGE_CONFIG_PREFIX;
 import static org.ostrya.presencepublisher.preference.message.MessageCategorySupport.MESSAGE_LIST;
@@ -65,7 +66,7 @@ public class Publisher {
             try {
                 mqttService.sendMessages(messages);
             } catch (Exception e) {
-                DatabaseLogger.w(TAG, "Error while sending messages: " + messages, e);
+                DatabaseLogger.w(TAG, "Error while sending messages: %s", args(messages), e);
                 DatabaseLogger.logMessageError("Failed to send messages: " + e.getMessage());
                 return false;
             }
@@ -90,7 +91,8 @@ public class Publisher {
             if (messageConfiguration == null) {
                 DatabaseLogger.w(
                         TAG,
-                        "No valid message configuration for config '" + messageConfigName + "'");
+                        "No valid message configuration for config '%s'",
+                        args(messageConfigName));
             } else {
                 Message.MessageBuilder builder = messagesForTopic(messageConfiguration.getTopic());
                 boolean valid = true;

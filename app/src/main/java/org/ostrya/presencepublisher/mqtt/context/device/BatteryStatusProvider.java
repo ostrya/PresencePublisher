@@ -1,5 +1,7 @@
 package org.ostrya.presencepublisher.mqtt.context.device;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.BatteryManager;
@@ -30,7 +32,7 @@ public class BatteryStatusProvider {
             int batteryLevelPercentage;
 
             if (level == -1 || scale == -1) {
-                DatabaseLogger.w(TAG, "Invalid level " + level + " or scale " + scale);
+                DatabaseLogger.w(TAG, "Invalid level %d or scale %d", args(level, scale));
                 batteryLevelPercentage = -1;
             } else {
                 batteryLevelPercentage = (int) (level / (0.01f * scale));

@@ -3,6 +3,7 @@ package org.ostrya.presencepublisher.schedule;
 import static android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC;
 
 import static org.ostrya.presencepublisher.PresencePublisher.PROGRESS_NOTIFICATION_ID;
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
 import static org.ostrya.presencepublisher.schedule.Scheduler.UNIQUE_WORKER_ID;
 
 import android.content.Context;
@@ -31,12 +32,18 @@ public class PublishingWorker extends Worker {
     @Override
     public Result doWork() {
         String id = getInputData().getString(UNIQUE_WORKER_ID);
-        DatabaseLogger.i(id, "Running publishing worker with attempt " + getRunAttemptCount());
+        DatabaseLogger.i(
+                id, "Running publishing worker with attempt %d", args(getRunAttemptCount()));
         try {
             // requesting foreground before the lock to improve chances this thread is not killed
             // while waiting for the lock
             setForegroundAsync(getForegroundInfo()).get();
         } catch (ExecutionException e) {
+            // funnily enough, if the two workers end up running in parallel, we may get an
+            // IllegalStateException in the later worker if the earlier worker returns at the same
+            // time
+            // but it looks like we're still benefitting from the other worker having been in the
+            // foreground, as the worker still finishes successfully
             DatabaseLogger.w(id, "Error while putting worker to foreground", e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -47,7 +54,7 @@ public class PublishingWorker extends Worker {
         synchronized (Scheduler.LOCK) {
             try (NetworkBinder ignored = NetworkBinder.bindToNetwork(this)) {
                 if (new Publisher(getApplicationContext()).publish()) {
-                    DatabaseLogger.i(id, "Successfully published.");
+                    DatabaseLogger.i(id, "Successfully published");
                 }
             } catch (RuntimeException e) {
                 DatabaseLogger.w(id, "Error while trying to publish", e);

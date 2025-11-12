@@ -1,5 +1,7 @@
 package org.ostrya.presencepublisher.log;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
+
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -27,7 +29,7 @@ public class CleanupWorker extends Worker {
         count += cleanLogs(threshold, DatabaseLogger.getInstance().getDetectionLogDao());
         count += cleanLogs(threshold, DatabaseLogger.getInstance().getMessagesLogDao());
         count += cleanLogs(threshold, DatabaseLogger.getInstance().getDeveloperLogDao());
-        DatabaseLogger.i(TAG, "Successfully cleaned " + count + " log entries.");
+        DatabaseLogger.i(TAG, "Successfully cleaned %d log entries.", args(count));
         return Result.success();
     }
 

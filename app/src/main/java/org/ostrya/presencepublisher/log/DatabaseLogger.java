@@ -1,9 +1,10 @@
 package org.ostrya.presencepublisher.log;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
+
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Room;
 import androidx.work.ExistingPeriodicWorkPolicy;
@@ -32,9 +33,10 @@ import java.util.concurrent.TimeUnit;
 
 public class DatabaseLogger {
     private static final String TAG = "DatabaseLogger";
-    private static final String MESSAGE_FORMAT = "%tF %<tT: %s";
+    private static final String DEVELOPER_MESSAGE_FORMAT = "%tF %<tT.%<tL (%d:%s) [%s/%s]: %s";
+    private static final String MESSAGE_FORMAT = "%tF %<tT.%<tL: %s";
     private static final String MESSAGE_LOG_FORMAT = "Sent to topic '%s':%n%s";
-    private static final String DEVELOPER_LOG_FORMAT = "[%s/%s] %s";
+    private static final FormatArgs EMPTY = args();
     private static DatabaseLogger instance = null;
 
     private final int logLevel;
@@ -72,7 +74,12 @@ public class DatabaseLogger {
 
     public static void logDetection(String message) {
         DatabaseLogger instance = getInstance();
-        addLogEntry(instance.detectionLogDao, DetectionLog::new, message, instance.executor);
+        addLogEntry(
+                instance.detectionLogDao,
+                DetectionLog::new,
+                DatabaseLogger::messageWithTimestamp,
+                message,
+                instance.executor);
     }
 
     public static void logMessage(Message message) {
@@ -80,82 +87,134 @@ public class DatabaseLogger {
         addLogEntry(
                 instance.messagesLogDao,
                 MessagesLog::new,
+                DatabaseLogger::messageWithTimestamp,
                 String.format(MESSAGE_LOG_FORMAT, message.getTopic(), message.getContent()),
                 instance.executor);
     }
 
     public static void logMessageError(String error) {
         DatabaseLogger instance = getInstance();
-        addLogEntry(instance.messagesLogDao, MessagesLog::new, error, instance.executor);
+        addLogEntry(
+                instance.messagesLogDao,
+                MessagesLog::new,
+                DatabaseLogger::messageWithTimestamp,
+                error,
+                instance.executor);
     }
 
     public static void v(String tag, String message) {
-        log(Log.VERBOSE, tag, message, null);
+        log(Log.VERBOSE, tag, message, EMPTY, null);
     }
 
     public static void v(String tag, String message, Throwable throwable) {
-        log(Log.VERBOSE, tag, message, throwable);
+        log(Log.VERBOSE, tag, message, EMPTY, throwable);
+    }
+
+    public static void v(String tag, String message, FormatArgs args) {
+        log(Log.VERBOSE, tag, message, args, null);
+    }
+
+    public static void v(String tag, String message, FormatArgs args, Throwable throwable) {
+        log(Log.VERBOSE, tag, message, args, throwable);
     }
 
     public static void d(String tag, String message) {
-        log(Log.DEBUG, tag, message, null);
+        log(Log.DEBUG, tag, message, EMPTY, null);
     }
 
     public static void d(String tag, String message, Throwable throwable) {
-        log(Log.DEBUG, tag, message, throwable);
+        log(Log.DEBUG, tag, message, EMPTY, throwable);
+    }
+
+    public static void d(String tag, String message, FormatArgs args) {
+        log(Log.DEBUG, tag, message, args, null);
+    }
+
+    public static void d(String tag, String message, FormatArgs args, Throwable throwable) {
+        log(Log.DEBUG, tag, message, args, throwable);
     }
 
     public static void i(String tag, String message) {
-        log(Log.INFO, tag, message, null);
+        log(Log.INFO, tag, message, EMPTY, null);
     }
 
     public static void i(String tag, String message, Throwable throwable) {
-        log(Log.INFO, tag, message, throwable);
+        log(Log.INFO, tag, message, EMPTY, throwable);
+    }
+
+    public static void i(String tag, String message, FormatArgs args) {
+        log(Log.INFO, tag, message, args, null);
+    }
+
+    public static void i(String tag, String message, FormatArgs args, Throwable throwable) {
+        log(Log.INFO, tag, message, args, throwable);
     }
 
     public static void w(String tag, String message) {
-        log(Log.WARN, tag, message, null);
+        log(Log.WARN, tag, message, EMPTY, null);
     }
 
     public static void w(String tag, String message, Throwable throwable) {
-        log(Log.WARN, tag, message, throwable);
+        log(Log.WARN, tag, message, EMPTY, throwable);
+    }
+
+    public static void w(String tag, String message, FormatArgs args) {
+        log(Log.WARN, tag, message, args, null);
+    }
+
+    public static void w(String tag, String message, FormatArgs args, Throwable throwable) {
+        log(Log.WARN, tag, message, args, throwable);
     }
 
     public static void e(String tag, String message) {
-        log(Log.ERROR, tag, message, null);
+        log(Log.ERROR, tag, message, EMPTY, null);
     }
 
     public static void e(String tag, String message, Throwable throwable) {
-        log(Log.ERROR, tag, message, throwable);
+        log(Log.ERROR, tag, message, EMPTY, throwable);
     }
 
-    private static void log(int level, String tag, String message, @Nullable Throwable throwable) {
+    public static void e(String tag, String message, FormatArgs args) {
+        log(Log.ERROR, tag, message, args, null);
+    }
+
+    public static void e(String tag, String message, FormatArgs args, Throwable throwable) {
+        log(Log.ERROR, tag, message, args, throwable);
+    }
+
+    private static void log(
+            int level, String tag, String message, FormatArgs args, @Nullable Throwable throwable) {
         DatabaseLogger instance = getInstance();
         if (level >= instance.logLevel) {
             String line;
             if (throwable != null) {
                 line =
-                        message
+                        args.applyTo(message)
                                 + ": "
                                 + throwable.getMessage()
                                 + '\n'
                                 + Log.getStackTraceString(throwable);
             } else {
-                line = message;
+                line = args.applyTo(message);
             }
             Log.println(level, tag, line);
             addLogEntry(
                     instance.developerLogDao,
                     DeveloperLog::new,
-                    String.format(DEVELOPER_LOG_FORMAT, getLogLevelName(level), tag, line),
+                    new DeveloperLogMessageFactory(level, tag),
+                    line,
                     instance.executor);
         }
     }
 
     private static <T extends DbLog> void addLogEntry(
-            LogDao<T> dao, EntityFactory<T> factory, String message, Executor executor) {
+            LogDao<T> dao,
+            EntityFactory<T> entityFactory,
+            MessageFactory messageFactory,
+            String message,
+            Executor executor) {
         Date now = new Date();
-        T entity = factory.create(0, now.getTime(), getFormattedLog(message, now));
+        T entity = entityFactory.create(0, now.getTime(), messageFactory.format(message, now));
         ListenableFuture<Long> result = dao.insert(entity);
         result.addListener(
                 () -> {
@@ -170,9 +229,52 @@ public class DatabaseLogger {
                 executor);
     }
 
-    @NonNull
-    public static String getFormattedLog(String message, Date now) {
+    public DetectionLogDao getDetectionLogDao() {
+        return detectionLogDao;
+    }
+
+    public MessagesLogDao getMessagesLogDao() {
+        return messagesLogDao;
+    }
+
+    public DeveloperLogDao getDeveloperLogDao() {
+        return developerLogDao;
+    }
+
+    private interface EntityFactory<T> {
+        T create(long id, long timestamp, String message);
+    }
+
+    private interface MessageFactory {
+        String format(String message, Date now);
+    }
+
+    private static String messageWithTimestamp(String message, Date now) {
         return String.format(Locale.ROOT, MESSAGE_FORMAT, now, message);
+    }
+
+    private static class DeveloperLogMessageFactory implements MessageFactory {
+        private final int level;
+        private final String tag;
+
+        private DeveloperLogMessageFactory(int level, String tag) {
+            this.level = level;
+            this.tag = tag;
+        }
+
+        @Override
+        public String format(String message, Date now) {
+            Thread currentThread = Thread.currentThread();
+            return String.format(
+                    Locale.ROOT,
+                    DEVELOPER_MESSAGE_FORMAT,
+                    now,
+                    currentThread.getId(),
+                    currentThread.getName(),
+                    getLogLevelName(level),
+                    tag,
+                    message);
+        }
     }
 
     private static String getLogLevelName(int logLevel) {
@@ -192,21 +294,5 @@ public class DatabaseLogger {
             default:
                 return "NONE";
         }
-    }
-
-    public DetectionLogDao getDetectionLogDao() {
-        return detectionLogDao;
-    }
-
-    public MessagesLogDao getMessagesLogDao() {
-        return messagesLogDao;
-    }
-
-    public DeveloperLogDao getDeveloperLogDao() {
-        return developerLogDao;
-    }
-
-    private interface EntityFactory<T> {
-        T create(long id, long timestamp, String message);
     }
 }

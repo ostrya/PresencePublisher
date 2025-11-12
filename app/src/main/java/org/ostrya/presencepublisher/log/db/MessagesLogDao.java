@@ -14,13 +14,13 @@ import java.util.List;
 
 @Dao
 public interface MessagesLogDao extends LogDao<MessagesLog> {
-    @Query("SELECT id, line FROM messageslog")
+    @Query("SELECT id, line FROM messageslog ORDER BY timestamp, id")
     LiveData<List<LogItem>> getAllContinuously();
 
-    @Query("SELECT * FROM messageslog")
+    @Query("SELECT * FROM messageslog ORDER BY timestamp, id")
     ListenableFuture<List<MessagesLog>> getAll();
 
-    @Query("SELECT * FROM messageslog WHERE timestamp < :threshold")
+    @Query("SELECT * FROM messageslog WHERE timestamp < :threshold ORDER BY timestamp, id")
     List<MessagesLog> getEntriesOlderThan(long threshold);
 
     @Insert

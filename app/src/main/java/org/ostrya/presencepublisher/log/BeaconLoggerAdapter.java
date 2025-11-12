@@ -6,46 +6,42 @@ public class BeaconLoggerAdapter implements Logger {
     private static final String BEACON_TAG_PREFIX = "altbeacon/";
 
     public void v(String tag, String message, Object... args) {
-        DatabaseLogger.v(BEACON_TAG_PREFIX + tag, formatString(message, args));
+        DatabaseLogger.v(BEACON_TAG_PREFIX + tag, message, new FormatArgs(args));
     }
 
     public void v(Throwable t, String tag, String message, Object... args) {
-        DatabaseLogger.v(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
+        DatabaseLogger.v(BEACON_TAG_PREFIX + tag, message, new FormatArgs(args), t);
     }
 
     public void d(String tag, String message, Object... args) {
-        DatabaseLogger.d(BEACON_TAG_PREFIX + tag, formatString(message, args));
+        DatabaseLogger.d(BEACON_TAG_PREFIX + tag, message, new FormatArgs(args));
     }
 
     public void d(Throwable t, String tag, String message, Object... args) {
-        DatabaseLogger.d(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
+        DatabaseLogger.d(BEACON_TAG_PREFIX + tag, message, new FormatArgs(args), t);
     }
 
     public void i(String tag, String message, Object... args) {
-        DatabaseLogger.i(BEACON_TAG_PREFIX + tag, formatString(message, args));
+        DatabaseLogger.i(BEACON_TAG_PREFIX + tag, message, new FormatArgs(args));
     }
 
     public void i(Throwable t, String tag, String message, Object... args) {
-        DatabaseLogger.i(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
+        DatabaseLogger.i(BEACON_TAG_PREFIX + tag, message, new FormatArgs(args), t);
     }
 
     public void w(String tag, String message, Object... args) {
-        DatabaseLogger.w(BEACON_TAG_PREFIX + tag, formatString(message, args));
+        DatabaseLogger.w(BEACON_TAG_PREFIX + tag, message, new FormatArgs(args));
     }
 
     public void w(Throwable t, String tag, String message, Object... args) {
-        DatabaseLogger.w(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
+        DatabaseLogger.w(BEACON_TAG_PREFIX + tag, message, new FormatArgs(args), t);
     }
 
     public void e(String tag, String message, Object... args) {
-        DatabaseLogger.e(BEACON_TAG_PREFIX + tag, formatString(message, args));
+        DatabaseLogger.e(BEACON_TAG_PREFIX + tag, message, new FormatArgs(args));
     }
 
     public void e(Throwable t, String tag, String message, Object... args) {
-        DatabaseLogger.e(BEACON_TAG_PREFIX + tag, formatString(message, args), t);
-    }
-
-    private String formatString(String message, Object... args) {
-        return args.length == 0 ? message : String.format(message, args);
+        DatabaseLogger.e(BEACON_TAG_PREFIX + tag, message, new FormatArgs(args), t);
     }
 }

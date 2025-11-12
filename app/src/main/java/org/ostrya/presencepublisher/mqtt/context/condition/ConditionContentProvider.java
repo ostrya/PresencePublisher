@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.mqtt.context.condition;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
 import static org.ostrya.presencepublisher.preference.condition.BeaconCategorySupport.BEACON_CONTENT_PREFIX;
 import static org.ostrya.presencepublisher.preference.condition.SendOfflineMessagePreference.SEND_OFFLINE_MESSAGE;
 import static org.ostrya.presencepublisher.preference.condition.WifiCategorySupport.SSID_LIST;
@@ -44,7 +45,7 @@ public class ConditionContentProvider {
             for (String beaconId :
                     sharedPreferences.getStringSet(
                             RegionMonitorNotifier.FOUND_BEACON_LIST, Collections.emptySet())) {
-                DatabaseLogger.i(TAG, "Adding content for beacon " + beaconId);
+                DatabaseLogger.i(TAG, "Adding content for beacon %s", args(beaconId));
                 String content =
                         sharedPreferences.getString(
                                 BEACON_CONTENT_PREFIX + beaconId,
@@ -56,7 +57,7 @@ public class ConditionContentProvider {
         // add SSID
         String ssid = getSsidIfMatching(currentSsid);
         if (ssid != null) {
-            DatabaseLogger.i(TAG, "Adding content for SSID " + ssid);
+            DatabaseLogger.i(TAG, "Adding content for SSID %s", args(ssid));
             String onlineContent =
                     sharedPreferences.getString(
                             WIFI_CONTENT_PREFIX + ssid,
@@ -88,7 +89,7 @@ public class ConditionContentProvider {
             return currentSsid;
         } else {
             DatabaseLogger.i(
-                    TAG, "'" + currentSsid + "' does not match any desired network, skipping.");
+                    TAG, "'%s' does not match any desired network, skipping.", args(currentSsid));
             return null;
         }
     }

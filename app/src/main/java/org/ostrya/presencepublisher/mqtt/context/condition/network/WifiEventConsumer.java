@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.mqtt.context.condition.network;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
 import static org.ostrya.presencepublisher.preference.condition.SendViaMobileNetworkPreference.SEND_VIA_MOBILE_NETWORK;
 
 import android.content.Context;
@@ -38,7 +39,7 @@ public class WifiEventConsumer {
             } else {
                 DatabaseLogger.logDetection("Wi-Fi disconnected");
             }
-            DatabaseLogger.i(TAG, "Wi-Fi disconnected: " + ssid);
+            DatabaseLogger.i(TAG, "Wi-Fi disconnected: %s", args(ssid));
             if (preference.getBoolean(SEND_VIA_MOBILE_NETWORK, false)) {
                 DatabaseLogger.i(TAG, "Triggering scheduler after disconnect");
                 // since we don't want to continuously send "offline" / "online" ping-pong, let's
@@ -48,17 +49,18 @@ public class WifiEventConsumer {
                 scheduler.runIn(15, TimeUnit.SECONDS);
             }
         } else {
-            DatabaseLogger.d(TAG, "Ignoring disconnect for already disconnected network " + ssid);
+            DatabaseLogger.d(
+                    TAG, "Ignoring disconnect for already disconnected network %s", args(ssid));
         }
     }
 
     public void wifiConnected(@NonNull String ssid) {
         if (!ssid.equals(CURRENT_SSID.getAndSet(ssid))) {
             DatabaseLogger.logDetection("Wi-Fi connected: " + ssid);
-            DatabaseLogger.i(TAG, "Triggering scheduler after connecting to Wi-Fi " + ssid);
+            DatabaseLogger.i(TAG, "Triggering scheduler after connecting to Wi-Fi %s", args(ssid));
             scheduler.runNow();
         } else {
-            DatabaseLogger.d(TAG, "Ignoring connect for already connected network " + ssid);
+            DatabaseLogger.d(TAG, "Ignoring connect for already connected network %s", args(ssid));
         }
     }
 

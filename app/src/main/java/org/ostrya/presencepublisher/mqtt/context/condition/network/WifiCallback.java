@@ -1,5 +1,7 @@
 package org.ostrya.presencepublisher.mqtt.context.condition.network;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
+
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -34,13 +36,12 @@ public class WifiCallback extends ConnectivityManager.NetworkCallback {
         Optional<String> current = NetworkService.getSsid(getWifiInfo(networkCapabilities));
         Optional<String> previous = ssidByNetworkHandle.putIfAbsent(networkHandle, current);
         // absent means not a Wi-Fi network, null means (previously) unknown
-        //noinspection OptionalAssignedToNull
         if (previous == null) {
             if (current.isPresent()) {
-                DatabaseLogger.d(TAG, "Connected to Wifi network " + networkHandle);
+                DatabaseLogger.d(TAG, "Connected to Wifi network %s", args(networkHandle));
                 consumer.wifiConnected(current.get());
             } else {
-                DatabaseLogger.d(TAG, "Connected to non-Wifi network " + networkHandle);
+                DatabaseLogger.d(TAG, "Connected to non-Wifi network %s", args(networkHandle));
             }
         }
     }
@@ -51,10 +52,10 @@ public class WifiCallback extends ConnectivityManager.NetworkCallback {
         Optional<String> removed = ssidByNetworkHandle.remove(networkHandle);
         if (removed != null) {
             if (removed.isPresent()) {
-                DatabaseLogger.d(TAG, "Lost Wifi network " + networkHandle);
+                DatabaseLogger.d(TAG, "Lost Wifi network %s", args(networkHandle));
                 consumer.wifiDisconnected(removed.get());
             } else {
-                DatabaseLogger.d(TAG, "Lost non-Wifi network " + networkHandle);
+                DatabaseLogger.d(TAG, "Lost non-Wifi network %s", args(networkHandle));
             }
         }
     }

@@ -1,5 +1,7 @@
 package org.ostrya.presencepublisher;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +35,7 @@ public class IntentActionContract extends ActivityResultContract<String, Boolean
 
     @Override
     public Boolean parseResult(int resultCode, @Nullable Intent intent) {
-        DatabaseLogger.d(TAG, "Received result code " + resultCode + " for action " + action);
+        DatabaseLogger.d(TAG, "Received result code %d for action %s", args(resultCode, action));
         return resultCode == Activity.RESULT_OK;
     }
 

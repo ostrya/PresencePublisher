@@ -1,5 +1,7 @@
 package org.ostrya.presencepublisher.mqtt.context.condition.beacon;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
+
 import android.content.SharedPreferences;
 
 import org.altbeacon.beacon.MonitorNotifier;
@@ -26,7 +28,7 @@ public class RegionMonitorNotifier implements MonitorNotifier {
                 new HashSet<>(
                         sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet()));
         if (!foundRegions.contains(regionId)) {
-            DatabaseLogger.i(TAG, "Found " + regionId);
+            DatabaseLogger.i(TAG, "Found %s", args(regionId));
             DatabaseLogger.logDetection("Found beacon: " + regionId);
             foundRegions.add(regionId);
             sharedPreferences.edit().putStringSet(FOUND_BEACON_LIST, foundRegions).apply();
@@ -41,7 +43,7 @@ public class RegionMonitorNotifier implements MonitorNotifier {
                         sharedPreferences.getStringSet(FOUND_BEACON_LIST, Collections.emptySet()));
         if (foundRegions.contains(regionId)) {
             foundRegions.remove(regionId);
-            DatabaseLogger.i(TAG, "Lost " + regionId);
+            DatabaseLogger.i(TAG, "Lost %s", args(regionId));
             DatabaseLogger.logDetection("Lost beacon: " + regionId);
             sharedPreferences.edit().putStringSet(FOUND_BEACON_LIST, foundRegions).apply();
         }

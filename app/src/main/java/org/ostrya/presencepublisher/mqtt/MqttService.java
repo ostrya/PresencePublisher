@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.mqtt;
 
 import static org.ostrya.presencepublisher.PresencePublisher.MQTT_CLIENT_ID;
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
 import static org.ostrya.presencepublisher.preference.connection.ClientCertificatePreference.CLIENT_CERTIFICATE;
 import static org.ostrya.presencepublisher.preference.connection.HostPreference.HOST;
 import static org.ostrya.presencepublisher.preference.connection.PortPreference.PORT;
@@ -75,7 +76,7 @@ public class MqttService {
     }
 
     public void sendMessages(List<Message> messages) throws MqttException {
-        DatabaseLogger.i(TAG, "Sending " + messages.size() + " messages to server");
+        DatabaseLogger.i(TAG, "Sending %d messages to server", args(messages.size()));
         boolean tls = sharedPreferences.getBoolean(USE_TLS, false);
         String clientCertAlias = sharedPreferences.getString(CLIENT_CERTIFICATE, null);
         String login = sharedPreferences.getString(USERNAME, "");
@@ -120,7 +121,7 @@ public class MqttService {
             try {
                 return Integer.parseInt(stringValue);
             } catch (NumberFormatException e) {
-                DatabaseLogger.w(TAG, "Unable to parse QoS value " + stringValue);
+                DatabaseLogger.w(TAG, "Unable to parse QoS value %s", args(stringValue));
             }
         }
         return DEFAULT_VALUE;

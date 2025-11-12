@@ -1,5 +1,6 @@
 package org.ostrya.presencepublisher.mqtt.message;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
 import static org.ostrya.presencepublisher.mqtt.context.MessageContext.UNKNOWN;
 
 import androidx.annotation.NonNull;
@@ -158,11 +159,8 @@ public enum MessageItem {
         } catch (IllegalArgumentException e) {
             DatabaseLogger.w(
                     TAG,
-                    "Invalid setting '"
-                            + rawValue
-                            + "'. Used default value '"
-                            + defaultValue
-                            + "'.");
+                    "Invalid setting '%s'. Used default value '%s'.",
+                    args(rawValue, defaultValue));
             return defaultValue;
         }
     }

@@ -1,5 +1,7 @@
 package org.ostrya.presencepublisher.initialization;
 
+import static org.ostrya.presencepublisher.log.FormatArgs.args;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
@@ -68,10 +70,8 @@ public class EnsureBluetoothPermission
                 (permission, enabled) ->
                         DatabaseLogger.d(
                                 getName(),
-                                "Result for "
-                                        + permission
-                                        + ": "
-                                        + (enabled ? "granted" : "not granted")));
+                                "Result for %s: %s",
+                                args(permission, (enabled ? "granted" : "not granted"))));
         DatabaseLogger.d(getName(), "Continuing initialization");
         finishInitialization();
     }
