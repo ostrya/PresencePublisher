@@ -36,7 +36,8 @@ public class EnsureLocationPermission
                 // must ask
                 || !PreferenceManager.getDefaultSharedPreferences(activity)
                         .getBoolean(LOCATION_CONSENT, false)) {
-            DatabaseLogger.i(TAG, "Location permission / consent not yet granted, asking user ...");
+            DatabaseLogger.d(
+                    getName(), "Location permission / consent not yet granted, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 
             String allowPermissions;
@@ -95,7 +96,7 @@ public class EnsureLocationPermission
     protected void doHandleResult(Map<String, Boolean> result) {
         if (result != null
                 && Boolean.TRUE.equals(result.get(Manifest.permission.ACCESS_FINE_LOCATION))) {
-            DatabaseLogger.i(TAG, "Successfully granted location permission");
+            DatabaseLogger.i(getName(), "Successfully granted location permission");
             finishInitialization();
         } else {
             FragmentManager fm = activity.getSupportFragmentManager();
@@ -113,7 +114,7 @@ public class EnsureLocationPermission
 
     private void onRetrySetFineLocationResult(Activity parent, boolean ok) {
         if (!ok) {
-            DatabaseLogger.w(TAG, "Location not granted, stopping initialization");
+            DatabaseLogger.w(getName(), "Location not granted, stopping initialization");
             PreferenceManager.getDefaultSharedPreferences(parent)
                     .edit()
                     .putBoolean(LOCATION_CONSENT, false)

@@ -38,10 +38,10 @@ abstract class AbstractChainedHandler<I, O> implements InitializationHandler {
     @Override
     public void initialize() {
         if (inProgress.compareAndSet(false, true)) {
-            DatabaseLogger.i(TAG, "Running initialization for " + getName());
+            DatabaseLogger.d(getName(), "Running initialization");
             doInitialize();
         } else {
-            DatabaseLogger.d(TAG, "Skipping initialization, already in progress for " + getName());
+            DatabaseLogger.d(getName(), "Skipping initialization, already in progress");
         }
     }
 
@@ -51,8 +51,7 @@ abstract class AbstractChainedHandler<I, O> implements InitializationHandler {
         if (inProgress.get()) {
             doHandleResult(result);
         } else {
-            DatabaseLogger.w(
-                    TAG, "Skipping result because initialization not in progress for " + getName());
+            DatabaseLogger.w(getName(), "Skipping result because initialization not in progress");
         }
     }
 

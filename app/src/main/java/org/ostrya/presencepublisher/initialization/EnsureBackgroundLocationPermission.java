@@ -30,7 +30,7 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
     protected void doInitialize() {
         // when we reach this point, the user has already successfully passed the
         // EnsureLocationPermission step, so we know we have consent
-        DatabaseLogger.i(getName(), "User gave consent to access location data.");
+        DatabaseLogger.d(getName(), "User gave consent to access location data.");
         PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext())
                 .edit()
                 .putBoolean(LOCATION_CONSENT, true)
@@ -40,8 +40,8 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
                 && ContextCompat.checkSelfPermission(
                                 activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
-            DatabaseLogger.i(
-                    TAG, "Background location permission not yet granted, asking user ...");
+            DatabaseLogger.d(
+                    getName(), "Background location permission not yet granted, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 
             CharSequence optionName;
@@ -75,7 +75,7 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
         if (ok) {
             getLauncher().launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
         } else {
-            DatabaseLogger.i(getName(), "User did not give consent. Stopping any further actions.");
+            DatabaseLogger.d(getName(), "User did not give consent. Stopping any further actions.");
             PreferenceManager.getDefaultSharedPreferences(parent)
                     .edit()
                     .putBoolean(LOCATION_CONSENT, false)
@@ -87,10 +87,10 @@ public class EnsureBackgroundLocationPermission extends AbstractChainedHandler<S
     @Override
     protected void doHandleResult(Boolean result) {
         if (result) {
-            DatabaseLogger.i(TAG, "Successfully granted background location permission");
+            DatabaseLogger.d(getName(), "Successfully granted background location permission");
             finishInitialization();
         } else {
-            DatabaseLogger.w(TAG, "Background location not granted, stopping initialization");
+            DatabaseLogger.w(getName(), "Background location not granted, stopping initialization");
             PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext())
                     .edit()
                     .putBoolean(LOCATION_CONSENT, false)

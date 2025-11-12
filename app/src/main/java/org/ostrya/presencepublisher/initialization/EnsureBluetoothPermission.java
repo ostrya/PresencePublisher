@@ -34,7 +34,8 @@ public class EnsureBluetoothPermission
                         || ContextCompat.checkSelfPermission(
                                         activity, Manifest.permission.BLUETOOTH_CONNECT)
                                 != PackageManager.PERMISSION_GRANTED)) {
-            DatabaseLogger.i(TAG, "Bluetooth scan permission not yet granted, asking user ...");
+            DatabaseLogger.d(
+                    getName(), "Bluetooth scan permission not yet granted, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
             ConfirmationDialogFragment fragment =
                     ConfirmationDialogFragment.getInstance(
@@ -65,13 +66,13 @@ public class EnsureBluetoothPermission
     protected void doHandleResult(Map<String, Boolean> result) {
         result.forEach(
                 (permission, enabled) ->
-                        DatabaseLogger.i(
-                                TAG,
+                        DatabaseLogger.d(
+                                getName(),
                                 "Result for "
                                         + permission
                                         + ": "
                                         + (enabled ? "granted" : "not granted")));
-        DatabaseLogger.i(TAG, "Continuing initialization");
+        DatabaseLogger.d(getName(), "Continuing initialization");
         finishInitialization();
     }
 

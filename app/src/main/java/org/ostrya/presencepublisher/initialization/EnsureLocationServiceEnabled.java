@@ -31,7 +31,7 @@ public class EnsureLocationServiceEnabled extends AbstractChainedHandler<String,
                         || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                                 || locationManager.isProviderEnabled(
                                         LocationManager.NETWORK_PROVIDER)))) {
-            DatabaseLogger.i(TAG, "Location service not yet enabled, asking user ...");
+            DatabaseLogger.d(getName(), "Location service not yet enabled, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
 
             ConfirmationDialogFragment fragment =
@@ -54,10 +54,10 @@ public class EnsureLocationServiceEnabled extends AbstractChainedHandler<String,
     @Override
     protected void doHandleResult(Boolean result) {
         if (result) {
-            DatabaseLogger.i(TAG, "Location service has successfully been started");
+            DatabaseLogger.d(getName(), "Location service has successfully been started");
             finishInitialization();
         } else {
-            DatabaseLogger.w(TAG, "User has cancelled starting location service");
+            DatabaseLogger.w(getName(), "User has cancelled starting location service");
         }
     }
 

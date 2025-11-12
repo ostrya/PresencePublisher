@@ -30,11 +30,13 @@ public class EnsureBluetoothServiceEnabled extends AbstractChainedHandler<String
                     (BluetoothManager) activity.getSystemService(Context.BLUETOOTH_SERVICE);
             if (bluetoothManager == null) {
                 DatabaseLogger.w(
-                        TAG, "Unable to get bluetooth manager, continuing initialization anyway");
+                        getName(),
+                        "Unable to get bluetooth manager, continuing initialization anyway");
             } else {
                 BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
                 if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
-                    DatabaseLogger.d(TAG, "Bluetooth service not yet enabled, asking user ...");
+                    DatabaseLogger.d(
+                            getName(), "Bluetooth service not yet enabled, asking user ...");
                     FragmentManager fm = activity.getSupportFragmentManager();
 
                     ConfirmationDialogFragment fragment =
@@ -59,10 +61,10 @@ public class EnsureBluetoothServiceEnabled extends AbstractChainedHandler<String
     @Override
     protected void doHandleResult(Boolean result) {
         if (result) {
-            DatabaseLogger.i(TAG, "Bluetooth service has successfully been started");
+            DatabaseLogger.d(getName(), "Bluetooth service has successfully been started");
             finishInitialization();
         } else {
-            DatabaseLogger.w(TAG, "User has cancelled starting bluetooth service");
+            DatabaseLogger.w(getName(), "User has cancelled starting bluetooth service");
         }
     }
 

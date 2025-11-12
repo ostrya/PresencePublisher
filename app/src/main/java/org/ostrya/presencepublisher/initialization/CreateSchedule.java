@@ -13,14 +13,14 @@ public class CreateSchedule extends AbstractChainedHandler<Void, Void> {
 
     @Override
     protected void doInitialize() {
-        DatabaseLogger.i(TAG, "Ensure schedule is active");
+        DatabaseLogger.d(getName(), "Ensure schedule is active");
         new Thread(() -> new Scheduler(activity).ensureSchedule()).start();
         finishInitialization();
     }
 
     @Override
     protected void doHandleResult(Void result) {
-        DatabaseLogger.w(TAG, "Skipping unexpected result");
+        DatabaseLogger.w(getName(), "Skipping unexpected result");
     }
 
     @Override
