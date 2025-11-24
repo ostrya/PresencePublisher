@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class NetworkService {
     private static final String TAG = "NetworkService";
@@ -50,15 +51,14 @@ public class NetworkService {
         }
     }
 
-    @Nullable
-    public String getCurrentSsid() {
+    public Set<String> getCurrentSsids() {
         // since the detection of wifi networks in Android < 12 with a network callback is flaky
         // due to the SSID not being present in the event data, we re-check the current wifi
         // whenever we need it
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && wifiCallbackApi23 != null) {
             wifiCallbackApi23.checkWifiConnection();
         }
-        return wifiEventConsumer.getCurrentSsid();
+        return wifiEventConsumer.getCurrentSsids();
     }
 
     public static Optional<String> getSsid(Optional<WifiInfo> wifiInfo) {
@@ -89,10 +89,7 @@ public class NetworkService {
         }
         if (ssids.isEmpty()) {
             DatabaseLogger.w(TAG, "No known networks found");
-            String currentSsid = getCurrentSsid();
-            if (currentSsid != null) {
-                ssids.add(currentSsid);
-            }
+            ssids.addAll(getCurrentSsids());
         }
         return ssids;
     }

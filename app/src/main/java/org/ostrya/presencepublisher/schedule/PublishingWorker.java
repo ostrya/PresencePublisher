@@ -34,24 +34,20 @@ public class PublishingWorker extends Worker {
         String id = getInputData().getString(UNIQUE_WORKER_ID);
         DatabaseLogger.i(
                 id, "Running publishing worker with attempt %d", args(getRunAttemptCount()));
-        try {
-            // requesting foreground before the lock to improve chances this thread is not killed
-            // while waiting for the lock
-            setForegroundAsync(getForegroundInfo()).get();
-        } catch (ExecutionException e) {
-            // funnily enough, if the two workers end up running in parallel, we may get an
-            // IllegalStateException in the later worker if the earlier worker returns at the same
-            // time
-            // but it looks like we're still benefitting from the other worker having been in the
-            // foreground, as the worker still finishes successfully
-            DatabaseLogger.w(id, "Error while putting worker to foreground", e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            DatabaseLogger.w(id, "Interrupted while putting worker to foreground");
-        }
-
-        // make sure we do not run publishing / scheduling in parallel
+        // ensure we do not run publishing / scheduling in parallel
         synchronized (Scheduler.LOCK) {
+            // we schedule the next runner first, in case acquiring foreground state fails and this
+            // worker is terminated prematurely
+            new Scheduler(getApplicationContext()).scheduleNext(id);
+            try {
+                setForegroundAsync(getForegroundInfo()).get();
+            } catch (ExecutionException e) {
+                DatabaseLogger.w(id, "Error while putting worker to foreground", e);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                DatabaseLogger.w(id, "Interrupted while putting worker to foreground");
+            }
+
             try (NetworkBinder ignored = NetworkBinder.bindToNetwork(this)) {
                 if (new Publisher(getApplicationContext()).publish()) {
                     DatabaseLogger.i(id, "Successfully published");
@@ -59,7 +55,6 @@ public class PublishingWorker extends Worker {
             } catch (RuntimeException e) {
                 DatabaseLogger.w(id, "Error while trying to publish", e);
             }
-            new Scheduler(getApplicationContext()).scheduleNext(id);
             return Result.success();
         }
     }

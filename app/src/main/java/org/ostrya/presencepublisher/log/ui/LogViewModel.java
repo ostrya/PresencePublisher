@@ -24,6 +24,7 @@ public class LogViewModel extends ViewModel {
         accessorMap.put(LogType.DEVELOPER, new LogAccessor<>(dbLogger.getDeveloperLogDao()));
         accessorMap.put(LogType.MESSAGES, new LogAccessor<>(dbLogger.getMessagesLogDao()));
         accessorMap.put(LogType.DETECTION, new LogAccessor<>(dbLogger.getDetectionLogDao()));
+        accessorMap.values().forEach(this::addCloseable);
         logAccessor = accessorMap.get(LogType.MESSAGES);
     }
 

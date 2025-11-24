@@ -1,5 +1,7 @@
 package org.ostrya.presencepublisher;
 
+import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
+
 import static org.ostrya.presencepublisher.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.preference.condition.BeaconCategorySupport.BEACON_LIST;
 
@@ -27,6 +29,7 @@ import org.ostrya.presencepublisher.log.LogUncaughtExceptionHandler;
 import org.ostrya.presencepublisher.log.PahoNoopLogger;
 import org.ostrya.presencepublisher.mqtt.context.condition.beacon.PresenceBeaconManager;
 import org.ostrya.presencepublisher.mqtt.context.condition.network.NetworkService;
+import org.ostrya.presencepublisher.mqtt.context.condition.network.WifiCallback;
 import org.ostrya.presencepublisher.notification.NotificationFactory;
 import org.ostrya.presencepublisher.preference.about.NightModePreference;
 
@@ -77,6 +80,7 @@ public class PresencePublisher extends MultiDexApplication {
         Thread.setDefaultUncaughtExceptionHandler(
                 new LogUncaughtExceptionHandler(this, Thread.getDefaultUncaughtExceptionHandler()));
         LoggerFactory.setLogger(PahoNoopLogger.class.getName());
+        DatabaseLogger.logDetection("Wi-Fi information reset due to app restart");
     }
 
     private void initBeaconManager() {
@@ -123,8 +127,12 @@ public class PresencePublisher extends MultiDexApplication {
                         NetworkService.getWifiCallback(this);
                 if (currentCallback.compareAndSet(null, wifiCallback)) {
                     DatabaseLogger.i(TAG, "Registering callback to await Wi-Fi connection");
-                    NetworkRequest request = new NetworkRequest.Builder().build();
+                    NetworkRequest request =
+                            new NetworkRequest.Builder().addTransportType(TRANSPORT_WIFI).build();
                     connectivityManager.registerNetworkCallback(request, wifiCallback);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                        && wifiCallback instanceof WifiCallback) {
+                    ((WifiCallback) wifiCallback).close();
                 }
             }
         }
@@ -157,14 +165,18 @@ public class PresencePublisher extends MultiDexApplication {
 
     private void removeNetworkCallback() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ConnectivityManager.NetworkCallback oldCallback = currentCallback.getAndSet(null);
             ConnectivityManager connectivityManager =
                     (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
             if (connectivityManager != null) {
                 DatabaseLogger.i(TAG, "Removing callback to await Wi-Fi connection");
-                ConnectivityManager.NetworkCallback oldCallback = currentCallback.getAndSet(null);
                 if (oldCallback != null) {
                     connectivityManager.unregisterNetworkCallback(oldCallback);
                 }
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                    && oldCallback instanceof WifiCallback) {
+                ((WifiCallback) oldCallback).close();
             }
         }
     }
@@ -174,4 +186,11 @@ public class PresencePublisher extends MultiDexApplication {
     }
 
     private void migratePreferences(SharedPreferences preferences) {}
+
+    @Override
+    public void onTerminate() {
+        removeConditionCallbacks();
+        DatabaseLogger.getInstance().close();
+        super.onTerminate();
+    }
 }

@@ -1,10 +1,9 @@
 package org.ostrya.presencepublisher.mqtt.context;
 
-import androidx.annotation.Nullable;
-
 import org.ostrya.presencepublisher.mqtt.context.device.BatteryStatus;
 
 import java.util.List;
+import java.util.Set;
 
 public class MessageContext {
     public static final String UNKNOWN = "N/A";
@@ -16,7 +15,7 @@ public class MessageContext {
     private final long currentTimestamp;
     private final long estimatedNextTimestamp;
     private final String deviceName;
-    @Nullable private final String currentSsid;
+    private final Set<String> currentSsids;
 
     MessageContext(
             long nextAlarmclockTimestamp,
@@ -26,7 +25,7 @@ public class MessageContext {
             long currentTimestamp,
             long estimatedNextTimestamp,
             String deviceName,
-            @Nullable String currentSsid) {
+            Set<String> currentSsids) {
         this.nextAlarmclockTimestamp = nextAlarmclockTimestamp;
         this.batteryStatus = batteryStatus;
         this.conditionContents = conditionContents;
@@ -34,7 +33,7 @@ public class MessageContext {
         this.currentTimestamp = currentTimestamp;
         this.estimatedNextTimestamp = estimatedNextTimestamp;
         this.deviceName = deviceName;
-        this.currentSsid = currentSsid;
+        this.currentSsids = currentSsids;
     }
 
     public long getNextAlarmclockTimestamp() {
@@ -65,8 +64,7 @@ public class MessageContext {
         return deviceName;
     }
 
-    @Nullable
-    public String getCurrentSsid() {
-        return currentSsid;
+    public Set<String> getCurrentSsids() {
+        return currentSsids;
     }
 }

@@ -28,10 +28,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class DatabaseLogger {
+public class DatabaseLogger implements AutoCloseable {
     private static final String TAG = "DatabaseLogger";
     private static final String DEVELOPER_MESSAGE_FORMAT = "%tF %<tT.%<tL (%d:%s) [%s/%s]: %s";
     private static final String MESSAGE_FORMAT = "%tF %<tT.%<tL: %s";
@@ -40,7 +41,7 @@ public class DatabaseLogger {
     private static DatabaseLogger instance = null;
 
     private final int logLevel;
-    private final Executor executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
     private final DetectionLogDao detectionLogDao;
     private final MessagesLogDao messagesLogDao;
     private final DeveloperLogDao developerLogDao;
@@ -239,6 +240,11 @@ public class DatabaseLogger {
 
     public DeveloperLogDao getDeveloperLogDao() {
         return developerLogDao;
+    }
+
+    @Override
+    public void close() {
+        executor.shutdown();
     }
 
     private interface EntityFactory<T> {

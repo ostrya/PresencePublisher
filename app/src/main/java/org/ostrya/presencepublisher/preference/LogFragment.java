@@ -115,4 +115,10 @@ public class LogFragment extends Fragment {
         }
         return view;
     }
+
+    @Override
+    public void onDestroyView() {
+        executorService.shutdown();
+        super.onDestroyView();
+    }
 }

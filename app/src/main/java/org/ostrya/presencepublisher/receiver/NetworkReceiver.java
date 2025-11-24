@@ -41,9 +41,9 @@ public class NetworkReceiver extends BroadcastReceiver {
                                                                     == SupplicantState.COMPLETED));
                     WifiEventConsumer consumer = new WifiEventConsumer(applicationContext);
                     if (ssid.isPresent()) {
-                        consumer.wifiConnected(ssid.get());
+                        consumer.wifiConnectedLegacy(ssid.get());
                     } else {
-                        consumer.wifiDisconnected(null);
+                        consumer.wifiDisconnectedLegacy();
                     }
                 }
             }

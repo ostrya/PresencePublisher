@@ -8,20 +8,20 @@ import org.ostrya.presencepublisher.log.db.DbLog;
 import org.ostrya.presencepublisher.log.db.LogDao;
 
 import java.io.BufferedWriter;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class LogAccessor<T extends DbLog> {
+public class LogAccessor<T extends DbLog> implements Closeable {
     private static final String TAG = "DbLogAccessor";
     private final ExecutorService workingExecutor = Executors.newCachedThreadPool();
-    private final Executor listeningExecutor = Executors.newCachedThreadPool();
+    private final ExecutorService listeningExecutor = Executors.newCachedThreadPool();
     private final LogDao<T> dao;
 
     public LogAccessor(LogDao<T> dao) {
@@ -77,5 +77,11 @@ public class LogAccessor<T extends DbLog> {
                         DatabaseLogger.w(TAG, "Unable to clear log", e);
                     }
                 });
+    }
+
+    @Override
+    public void close() {
+        listeningExecutor.shutdown();
+        workingExecutor.shutdown();
     }
 }

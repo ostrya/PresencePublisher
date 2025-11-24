@@ -41,9 +41,9 @@ public class WifiCallbackApi23 extends ConnectivityManager.NetworkCallback {
     void checkWifiConnection() {
         Optional<String> ssid = getConnectedSsid();
         if (ssid.isPresent()) {
-            consumer.wifiConnected(ssid.get());
+            consumer.wifiConnectedLegacy(ssid.get());
         } else {
-            consumer.wifiDisconnected(null);
+            consumer.wifiDisconnectedLegacy();
         }
     }
 

@@ -1,7 +1,6 @@
 package org.ostrya.presencepublisher.mqtt.message;
 
 import static org.ostrya.presencepublisher.log.FormatArgs.args;
-import static org.ostrya.presencepublisher.mqtt.context.MessageContext.UNKNOWN;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,6 +9,8 @@ import androidx.annotation.VisibleForTesting;
 import org.ostrya.presencepublisher.R;
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.mqtt.context.MessageContext;
+
+import java.util.stream.Collectors;
 
 public enum MessageItem {
     CONDITION_CONTENT {
@@ -48,9 +49,9 @@ public enum MessageItem {
         public boolean apply(MessageContext messageContext, Message.MessageBuilder builder) {
             builder.withEntry(
                     this,
-                    messageContext.getCurrentSsid() == null
-                            ? UNKNOWN
-                            : messageContext.getCurrentSsid());
+                    messageContext.getCurrentSsids().stream()
+                            .sorted()
+                            .collect(Collectors.toList()));
             return true;
         }
     },

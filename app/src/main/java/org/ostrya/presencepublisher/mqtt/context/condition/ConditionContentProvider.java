@@ -9,7 +9,6 @@ import static org.ostrya.presencepublisher.preference.condition.WifiCategorySupp
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.annotation.Nullable;
 import androidx.preference.PreferenceManager;
 
 import org.ostrya.presencepublisher.PresencePublisher;
@@ -22,6 +21,7 @@ import org.ostrya.presencepublisher.preference.condition.WifiNetworkPreference;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,7 +36,7 @@ public class ConditionContentProvider {
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
     }
 
-    public List<String> getConditionContents(@Nullable String currentSsid) {
+    public List<String> getConditionContents(Set<String> currentSsids) {
         List<String> contents = new ArrayList<>();
 
         // add beacons
@@ -55,14 +55,17 @@ public class ConditionContentProvider {
         }
 
         // add SSID
-        String ssid = getSsidIfMatching(currentSsid);
-        if (ssid != null) {
-            DatabaseLogger.i(TAG, "Adding content for SSID %s", args(ssid));
-            String onlineContent =
-                    sharedPreferences.getString(
-                            WIFI_CONTENT_PREFIX + ssid,
-                            WifiNetworkPreference.DEFAULT_CONTENT_ONLINE);
-            contents.add(onlineContent);
+        Set<String> ssids = getSsidsWhereMatching(currentSsids);
+        if (!ssids.isEmpty()) {
+            DatabaseLogger.i(TAG, "Adding content for SSIDs %s", args(ssids));
+            ssids.forEach(
+                    ssid -> {
+                        String onlineContent =
+                                sharedPreferences.getString(
+                                        WIFI_CONTENT_PREFIX + ssid,
+                                        WifiNetworkPreference.DEFAULT_CONTENT_ONLINE);
+                        contents.add(onlineContent);
+                    });
         }
 
         // add offline message
@@ -78,30 +81,38 @@ public class ConditionContentProvider {
         return contents;
     }
 
-    private String getSsidIfMatching(String currentSsid) {
-        DatabaseLogger.d(TAG, "Checking SSID");
-        if (currentSsid == null) {
+    private Set<String> getSsidsWhereMatching(Set<String> currentSsids) {
+        DatabaseLogger.d(TAG, "Checking SSIDs");
+        if (currentSsids.isEmpty()) {
             DatabaseLogger.i(TAG, "No SSID found");
-            return null;
+            return Collections.emptySet();
         }
-        if (networkMatches(currentSsid)) {
-            DatabaseLogger.d(TAG, "Correct network found");
-            return currentSsid;
+        Set<String> matching = findMatchingNetworks(currentSsids);
+        if (!matching.isEmpty()) {
+            DatabaseLogger.d(TAG, "Matching networks found");
         } else {
             DatabaseLogger.i(
-                    TAG, "'%s' does not match any desired network, skipping.", args(currentSsid));
-            return null;
+                    TAG,
+                    "No SSID in '%s' matches any desired network, skipping.",
+                    args(currentSsids));
         }
+        return matching;
     }
 
-    private boolean networkMatches(String currentSsid) {
+    private Set<String> findMatchingNetworks(Set<String> currentSsids) {
         Set<String> targetSsids = sharedPreferences.getStringSet(SSID_LIST, Collections.emptySet());
+        Set<String> matching = new HashSet<>();
         for (String target : targetSsids) {
             WifiNetwork network = WifiNetwork.fromRawString(target);
-            if (network != null && network.matches(currentSsid)) {
-                return true;
+            if (network != null) {
+                currentSsids.forEach(
+                        ssid -> {
+                            if (network.matches(ssid)) {
+                                matching.add(ssid);
+                            }
+                        });
             }
         }
-        return false;
+        return matching;
     }
 }

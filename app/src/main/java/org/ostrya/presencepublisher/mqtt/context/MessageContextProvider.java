@@ -14,6 +14,8 @@ import org.ostrya.presencepublisher.mqtt.context.device.BatteryStatusProvider;
 import org.ostrya.presencepublisher.mqtt.context.device.DeviceNameProvider;
 import org.ostrya.presencepublisher.mqtt.context.device.LocationProvider;
 
+import java.util.Set;
+
 public class MessageContextProvider {
     private final AlarmclockTimestampProvider alarmclockTimestampProvider;
     private final BatteryStatusProvider batteryStatusProvider;
@@ -35,15 +37,15 @@ public class MessageContextProvider {
 
     public MessageContext getContext() {
         long currentTimestamp = System.currentTimeMillis();
-        String currentSsid = networkService.getCurrentSsid();
+        Set<String> currentSsids = networkService.getCurrentSsids();
         return new MessageContext(
                 alarmclockTimestampProvider.getNextAlarmclockTimestamp(),
                 batteryStatusProvider.getCurrentBatteryStatus(),
-                conditionContentProvider.getConditionContents(currentSsid),
+                conditionContentProvider.getConditionContents(currentSsids),
                 locationProvider.getLastKnownLocation(),
                 currentTimestamp,
                 preferences.getLong(NEXT_SCHEDULE, 0L),
                 deviceNameProvider.getDeviceName(),
-                currentSsid);
+                currentSsids);
     }
 }

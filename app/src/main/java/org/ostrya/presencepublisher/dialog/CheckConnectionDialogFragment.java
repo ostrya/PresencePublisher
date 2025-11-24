@@ -55,6 +55,7 @@ public class CheckConnectionDialogFragment extends DialogFragment {
             connectionTestFuture.cancel(true);
             connectionTestFuture = null;
         }
+        executorService.shutdown();
     }
 
     private void setMqttService(MqttService mqttService) {
