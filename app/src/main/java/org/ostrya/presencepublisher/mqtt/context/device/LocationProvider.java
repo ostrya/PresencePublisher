@@ -27,7 +27,13 @@ public class LocationProvider {
             DatabaseLogger.w(TAG, "No location manager available, unable to get location");
             return MessageContext.UNKNOWN;
         }
-        Location location = locationManager.getLastKnownLocation(PASSIVE_PROVIDER);
+        Location location;
+        try {
+            location = locationManager.getLastKnownLocation(PASSIVE_PROVIDER);
+        } catch (SecurityException e) {
+            DatabaseLogger.w(TAG, "Access to location denied", e);
+            location = null;
+        }
         if (location == null) {
             DatabaseLogger.w(TAG, "No last known location found");
             return MessageContext.UNKNOWN;

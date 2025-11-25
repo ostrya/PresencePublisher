@@ -28,17 +28,15 @@ public class DeviceNameProvider {
     @Nullable
     private String getDeviceNameOrNull() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            String deviceName =
-                    Settings.Global.getString(
-                            applicationContext.getContentResolver(), Settings.Global.DEVICE_NAME);
-            if (deviceName != null) {
-                return deviceName;
+            return Settings.Global.getString(
+                    applicationContext.getContentResolver(), Settings.Global.DEVICE_NAME);
+        } else {
+            BluetoothManager bluetoothManager =
+                    (BluetoothManager)
+                            applicationContext.getSystemService(Context.BLUETOOTH_SERVICE);
+            if (bluetoothManager != null) {
+                return bluetoothManager.getAdapter().getName();
             }
-        }
-        BluetoothManager bluetoothManager =
-                (BluetoothManager) applicationContext.getSystemService(Context.BLUETOOTH_SERVICE);
-        if (bluetoothManager != null) {
-            return bluetoothManager.getAdapter().getName();
         }
         return null;
     }
