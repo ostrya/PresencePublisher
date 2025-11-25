@@ -1,5 +1,5 @@
-v2.6.6
-• fixed issue when storing MQTT password
+v2.7.0
+• solved issues when connecting to multiple Wi-Fis
+• UI supports insets for camera and navigation bar
 
-v2.6.5
-• new warning about always sending messages without 'conditionContent'
+Important: The content of message connectedWifi is now a list. Modern Android versions can be connected to multiple Wi-Fis at once.

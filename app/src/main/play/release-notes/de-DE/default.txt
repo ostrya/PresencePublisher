@@ -1,5 +1,5 @@
-v2.6.6
-• Fehler beim Speichern des MQTT-Passworts behoben
+v2.7.0
+• Problem bei Verbindung zu mehreren WLANs behoben
+• UI unterstützt nun Insets für Kamera und Navigationsleiste
 
-v2.6.5
-• neue Warnung, dass Nachrichten ohne 'conditionContent' immer versendet werden
+Achtung: Der Inhalt der Nachricht connectedWifi ist nun eine Liste, da in neueren Android-Versionen mehr als ein WLAN verbunden sein kann.
