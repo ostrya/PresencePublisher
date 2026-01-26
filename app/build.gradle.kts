@@ -139,7 +139,7 @@ play {
 }
 
 dependencies {
-    val assertJVersion = "3.27.6"
+    val assertJVersion = "3.27.7"
     // room 2.8+ only works with SDK23+
     val roomVersion = "2.7.2"
 
