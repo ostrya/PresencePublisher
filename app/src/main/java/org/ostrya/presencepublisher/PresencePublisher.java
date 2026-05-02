@@ -12,7 +12,6 @@ import android.net.NetworkRequest;
 import android.os.Build;
 import android.util.Log;
 
-import androidx.multidex.MultiDexApplication;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.color.DynamicColors;
@@ -39,7 +38,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class PresencePublisher extends MultiDexApplication {
+public class PresencePublisher extends android.app.Application {
     private static final String TAG = "PresencePublisher";
     public static final int STATUS_NOTIFICATION_ID = 1;
     public static final int NOTIFICATION_REQUEST_CODE = 2;
@@ -115,25 +114,21 @@ public class PresencePublisher extends MultiDexApplication {
     }
 
     private void initNetworkCallback() {
-        // for older versions, we are good with the broadcast receiver configured in the manifest
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ConnectivityManager connectivityManager =
-                    (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-            if (connectivityManager == null) {
-                DatabaseLogger.e(
-                        TAG, "Unable to get system services, cannot register network callback");
-            } else {
-                ConnectivityManager.NetworkCallback wifiCallback =
-                        NetworkService.getWifiCallback(this);
-                if (currentCallback.compareAndSet(null, wifiCallback)) {
-                    DatabaseLogger.i(TAG, "Registering callback to await Wi-Fi connection");
-                    NetworkRequest request =
-                            new NetworkRequest.Builder().addTransportType(TRANSPORT_WIFI).build();
-                    connectivityManager.registerNetworkCallback(request, wifiCallback);
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                        && wifiCallback instanceof WifiCallback) {
-                    ((WifiCallback) wifiCallback).close();
-                }
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        if (connectivityManager == null) {
+            DatabaseLogger.e(
+                    TAG, "Unable to get system services, cannot register network callback");
+        } else {
+            ConnectivityManager.NetworkCallback wifiCallback = NetworkService.getWifiCallback(this);
+            if (currentCallback.compareAndSet(null, wifiCallback)) {
+                DatabaseLogger.i(TAG, "Registering callback to await Wi-Fi connection");
+                NetworkRequest request =
+                        new NetworkRequest.Builder().addTransportType(TRANSPORT_WIFI).build();
+                connectivityManager.registerNetworkCallback(request, wifiCallback);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                    && wifiCallback instanceof WifiCallback) {
+                ((WifiCallback) wifiCallback).close();
             }
         }
     }
@@ -164,20 +159,17 @@ public class PresencePublisher extends MultiDexApplication {
     }
 
     private void removeNetworkCallback() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ConnectivityManager.NetworkCallback oldCallback = currentCallback.getAndSet(null);
-            ConnectivityManager connectivityManager =
-                    (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-            if (connectivityManager != null) {
-                DatabaseLogger.i(TAG, "Removing callback to await Wi-Fi connection");
-                if (oldCallback != null) {
-                    connectivityManager.unregisterNetworkCallback(oldCallback);
-                }
+        ConnectivityManager.NetworkCallback oldCallback = currentCallback.getAndSet(null);
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            DatabaseLogger.i(TAG, "Removing callback to await Wi-Fi connection");
+            if (oldCallback != null) {
+                connectivityManager.unregisterNetworkCallback(oldCallback);
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-                    && oldCallback instanceof WifiCallback) {
-                ((WifiCallback) oldCallback).close();
-            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && oldCallback instanceof WifiCallback) {
+            ((WifiCallback) oldCallback).close();
         }
     }
 

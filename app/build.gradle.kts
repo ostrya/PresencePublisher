@@ -1,21 +1,18 @@
+import com.android.build.api.dsl.ApplicationExtension
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.revwalk.RevWalk
-import org.eclipse.jgit.treewalk.filter.PathFilter
 
-// license plugin needs google repo, see https://github.com/jaredsburrows/gradle-license-plugin/issues/129
 buildscript {
-    repositories {
-        google()
-    }
     dependencies {
-        classpath("org.eclipse.jgit:org.eclipse.jgit:7.4.0.202509020913-r")
+        classpath(libs.jgit)
     }
 }
 
 plugins {
-    id("com.github.triplet.play") version "3.12.2"
-    id("com.jaredsburrows.license") version "0.9.8"
-    id("com.android.application")
+    alias(libs.plugins.aboutLibraries)
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.play)
 }
 
 val git: Git = Git.open(rootDir)
@@ -39,12 +36,11 @@ fun isTagged(): Boolean {
     return getBuildVersionName().matches(Regex("[0-9]+\\.[0-9]+\\.[0-9]+(?:-alpha[0-9]*|-beta[0-9]*)?"))
 }
 
-android {
+extensions.configure<ApplicationExtension> {
     compileSdk = 36
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
-        minSdk = 21
-        multiDexEnabled = true
+        minSdk = 23
         targetSdk = 36
         vectorDrawables.useSupportLibrary = true
         versionCode = 59
@@ -76,8 +72,9 @@ android {
         }
         named("release") {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.findByName("release")?.takeIf { it.isSigningReady }
+            signingConfig = signingConfigs.findByName("release")
         }
     }
     compileOptions {
@@ -91,6 +88,7 @@ android {
     namespace = "org.ostrya.presencepublisher"
     buildFeatures {
         buildConfig = true
+        compose = true
     }
 }
 
@@ -105,66 +103,36 @@ val checkParameters by tasks.registering {
     }
 }
 
-licenseReport {
-    generateCsvReport = false
-    generateHtmlReport = true
-    generateJsonReport = false
-    copyHtmlReportToAssets = true
-}
-
-afterEvaluate {
-    val licenseDebugReport by tasks.existing
-
-    tasks.preBuild {
-        dependsOn(checkParameters)
-    }
-    tasks.register("checkUpdatedLicenseFile") {
-        dependsOn(licenseDebugReport)
-        doLast {
-            if (git.status().addPath("app/src/main/assets/open_source_licenses.html").call().hasUncommittedChanges()) {
-                git.diff()
-                    .setPathFilter(PathFilter.create("app/src/main/assets/open_source_licenses.html"))
-                    .setOutputStream(System.out)
-                    .setShowNameAndStatusOnly(false)
-                    .call()
-                throw InvalidUserDataException("License file has changed, please commit new version first")
-            }
-        }
-    }
-}
-
 play {
     serviceAccountCredentials.set(file("../../google-key.json"))
     defaultToAppBundles.set(true)
 }
 
 dependencies {
-    val assertJVersion = "3.27.6"
-    // room 2.8+ only works with SDK23+
-    val roomVersion = "2.7.2"
+    implementation(libs.aboutlibraries.core)
+    implementation(libs.aboutlibraries.compose.m3)
+    implementation(libs.appcompat)
+    implementation(libs.beacon)
+    implementation(libs.cardview)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.material3)
+    implementation(libs.guava)
+    implementation(libs.material)
+    implementation(libs.mqtt)
+    implementation(libs.preference)
+    implementation(libs.room.guava)
+    implementation(libs.room.runtime)
+    implementation(libs.viewpager2)
+    implementation(libs.work.runtime)
+    testImplementation(libs.junit)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.mockito.inline)
+    androidTestImplementation(libs.runner)
+    androidTestImplementation(libs.assertj.core)
 
-    implementation("androidx.appcompat:appcompat:1.7.1")
-    implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.preference:preference:1.2.1")
-    implementation("androidx.room:room-guava:$roomVersion")
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.viewpager2:viewpager2:1.1.0")
-    // work 2.11+ only works with SDK23+
-    implementation("androidx.work:work-runtime:2.10.5")
-    implementation("com.google.android.material:material:1.13.0")
-    implementation("com.google.guava:guava:33.5.0-android")
-    implementation("org.altbeacon:android-beacon-library:2.21.1")
-    implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.assertj:assertj-core:$assertJVersion")
-    testImplementation("org.mockito:mockito-inline:5.2.0")
-    androidTestImplementation("androidx.test:runner:1.7.0")
-    androidTestImplementation("org.assertj:assertj-core:$assertJVersion")
+    annotationProcessor(libs.room.compiler)
 
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
-
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
 
 tasks.register("printVersion") {

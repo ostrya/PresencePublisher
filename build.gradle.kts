@@ -4,12 +4,14 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.13.1")
+        classpath(libs.gradle)
     }
 }
 
 plugins {
-    id("com.github.ben-manes.versions") version "0.53.0"
+    alias(libs.plugins.aboutLibraries) apply false
+    alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.versions)
 }
 
 allprojects {

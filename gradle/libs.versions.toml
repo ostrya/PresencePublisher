@@ -1,0 +1,55 @@
+[versions]
+aboutLibraries = "14.2.0"
+androidGradle = "9.2.1"
+appcompat = "1.7.1"
+assertJ = "3.27.7"
+beacon = "2.21.2"
+cardview = "1.0.0"
+compose_bom = "2026.05.00"
+desugar_jdk_libs = "2.1.5"
+guava = "33.6.0-android"
+jgit = "7.4.0.202509020913-r"
+junit = "4.13.2"
+kotlin = "2.3.21"
+material = "1.13.0"
+mockitoInline = "5.2.0"
+mqtt = "1.2.5"
+play = "4.0.0"
+preference = "1.2.1"
+room = "2.8.4"
+runner = "1.7.0"
+versions = "0.54.0"
+viewpager2 = "1.1.0"
+workRuntime = "2.11.2"
+
+[libraries]
+aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutLibraries" }
+aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertJ" }
+beacon = { module = "org.altbeacon:android-beacon-library", version.ref = "beacon" }
+cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose_bom" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
+gradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+jgit = { module = "org.eclipse.jgit:org.eclipse.jgit", version.ref = "jgit" }
+junit = { module = "junit:junit", version.ref = "junit" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
+mqtt = { module = "org.eclipse.paho:org.eclipse.paho.client.mqttv3", version.ref = "mqtt" }
+preference = { module = "androidx.preference:preference", version.ref = "preference" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room-guava = { module = "androidx.room:room-guava", version.ref = "room" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+runner = { module = "androidx.test:runner", version.ref = "runner" }
+viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
+work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
+
+[plugins]
+aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "aboutLibraries" }
+androidApplication = { id = "com.android.application" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+play = { id = "com.github.triplet.play", version.ref = "play" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
