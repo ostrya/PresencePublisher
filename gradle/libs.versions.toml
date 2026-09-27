@@ -1,6 +1,6 @@
 [versions]
 aboutLibraries = "14.2.0"
-androidGradle = "9.2.1"
+androidGradle = "9.4.1"
 appcompat = "1.7.1"
 assertJ = "3.27.7"
 beacon = "2.21.2"
