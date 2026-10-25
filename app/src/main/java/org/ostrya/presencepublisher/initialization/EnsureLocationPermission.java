@@ -19,8 +19,7 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 import java.util.Map;
 import java.util.Queue;
 
-public class EnsureLocationPermission
-        extends AbstractChainedHandler<String[], Map<String, Boolean>> {
+class EnsureLocationPermission extends AbstractChainedHandler<String[], Map<String, Boolean>> {
 
     protected EnsureLocationPermission(MainActivity activity, Queue<HandlerFactory> handlerChain) {
         super(activity, new ActivityResultContracts.RequestMultiplePermissions(), handlerChain);

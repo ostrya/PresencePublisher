@@ -15,7 +15,7 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 import java.util.Queue;
 
-public class EnsureLocationServiceEnabled extends AbstractChainedHandler<String, Boolean> {
+class EnsureLocationServiceEnabled extends AbstractChainedHandler<String, Boolean> {
     protected EnsureLocationServiceEnabled(
             MainActivity activity, Queue<HandlerFactory> handlerChain) {
         super(activity, new IntentActionContract(), handlerChain);
@@ -51,7 +51,7 @@ public class EnsureLocationServiceEnabled extends AbstractChainedHandler<String,
 
     @Override
     protected void doHandleResult(Boolean result) {
-        if (result) {
+        if (Boolean.TRUE.equals(result)) {
             DatabaseLogger.d(getName(), "Location service has successfully been started");
             finishInitialization();
         } else {

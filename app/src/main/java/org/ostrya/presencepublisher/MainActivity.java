@@ -3,6 +3,7 @@ package org.ostrya.presencepublisher;
 import static org.ostrya.presencepublisher.initialization.InitializationHandler.HANDLER_CHAIN;
 import static org.ostrya.presencepublisher.preference.about.LocationConsentPreference.LOCATION_CONSENT;
 import static org.ostrya.presencepublisher.preference.condition.BeaconCategorySupport.BEACON_LIST;
+import static org.ostrya.presencepublisher.preference.connection.HostPreference.HOST;
 
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -92,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
     private void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
         if (LOCATION_CONSENT.equals(key)) {
             handleConsentChange();
+        }
+        // if host key changes, let's check if we need the local network permission
+        if (HOST.equals(key)) {
+            handler.initialize();
         }
     }
 

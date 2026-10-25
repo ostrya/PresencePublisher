@@ -72,9 +72,7 @@ public class NetworkService {
     public List<String> getKnownSsids() {
         List<String> ssids = new ArrayList<>();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            //noinspection deprecation
             for (WifiConfiguration configuration : getConfiguredNetworks()) {
-                //noinspection deprecation
                 String ssid = normalizeSsid(configuration.SSID);
                 if (ssid != null) {
                     ssids.add(ssid);

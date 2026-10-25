@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
 
-public class DummyActivityResultLauncher<I> extends ActivityResultLauncher<I> {
+class DummyActivityResultLauncher<I> extends ActivityResultLauncher<I> {
     @Override
     public void launch(I input, @Nullable ActivityOptionsCompat activityOptionsCompat) {
         throw new UnsupportedOperationException();

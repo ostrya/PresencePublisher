@@ -28,6 +28,8 @@
         %4$s
     </string>
     <string name="location_consent_summary">Allow this app to access and process your location information.</string>
+    <string name="local_network_permission_dialog_title">Local Network permission</string>
+    <string name="local_network_permission_dialog_message">You seem to have configured a local MQTT address. Android 17+ requires an extra permission to access local network addresses. Please allow access to nearby devices so MQTT messages can be sent.</string>
     <string name="bluetooth_permission_dialog_title">Bluetooth permission</string>
     <string name="bluetooth_permission_dialog_message">Please allow scanning for and connecting to bluetooth devices so this app can react to your beacons\' presence.</string>
     <string name="bluetooth_dialog_title">Bluetooth</string>

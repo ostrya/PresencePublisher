@@ -37,11 +37,11 @@ fun isTagged(): Boolean {
 }
 
 extensions.configure<ApplicationExtension> {
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         applicationId = "org.ostrya.presencepublisher"
         minSdk = 23
-        targetSdk = 36
+        targetSdk = 37
         vectorDrawables.useSupportLibrary = true
         versionCode = 59
         versionName = "2.7.0"

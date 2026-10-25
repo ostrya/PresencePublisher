@@ -6,7 +6,7 @@ import org.ostrya.presencepublisher.schedule.Scheduler;
 
 import java.util.Queue;
 
-public class CreateSchedule extends AbstractChainedHandler<Void, Void> {
+class CreateSchedule extends AbstractChainedHandler<Void, Void> {
     protected CreateSchedule(MainActivity activity, Queue<HandlerFactory> handlerChain) {
         super(activity, null, handlerChain);
     }

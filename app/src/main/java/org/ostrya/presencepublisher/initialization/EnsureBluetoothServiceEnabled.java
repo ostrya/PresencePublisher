@@ -16,7 +16,7 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 import java.util.Queue;
 
-public class EnsureBluetoothServiceEnabled extends AbstractChainedHandler<String, Boolean> {
+class EnsureBluetoothServiceEnabled extends AbstractChainedHandler<String, Boolean> {
     protected EnsureBluetoothServiceEnabled(
             MainActivity activity, Queue<HandlerFactory> handlerChain) {
         super(activity, new IntentActionContract(), handlerChain);
@@ -58,7 +58,7 @@ public class EnsureBluetoothServiceEnabled extends AbstractChainedHandler<String
 
     @Override
     protected void doHandleResult(Boolean result) {
-        if (result) {
+        if (Boolean.TRUE.equals(result)) {
             DatabaseLogger.d(getName(), "Bluetooth service has successfully been started");
             finishInitialization();
         } else {

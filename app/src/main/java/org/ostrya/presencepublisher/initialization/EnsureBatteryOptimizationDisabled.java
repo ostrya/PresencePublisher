@@ -17,7 +17,7 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 
 import java.util.Queue;
 
-public class EnsureBatteryOptimizationDisabled extends AbstractChainedHandler<String, Boolean> {
+class EnsureBatteryOptimizationDisabled extends AbstractChainedHandler<String, Boolean> {
     protected EnsureBatteryOptimizationDisabled(
             MainActivity activity, Queue<HandlerFactory> handlerChain) {
         super(
@@ -58,7 +58,7 @@ public class EnsureBatteryOptimizationDisabled extends AbstractChainedHandler<St
 
     @Override
     protected void doHandleResult(Boolean result) {
-        if (result) {
+        if (Boolean.TRUE.equals(result)) {
             DatabaseLogger.d(getName(), "Battery optimization has successfully been disabled");
             finishInitialization();
         } else {

@@ -20,8 +20,7 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 import java.util.Map;
 import java.util.Queue;
 
-public class EnsureBluetoothPermission
-        extends AbstractChainedHandler<String[], Map<String, Boolean>> {
+class EnsureBluetoothPermission extends AbstractChainedHandler<String[], Map<String, Boolean>> {
     protected EnsureBluetoothPermission(MainActivity activity, Queue<HandlerFactory> handlerChain) {
         super(activity, new ActivityResultContracts.RequestMultiplePermissions(), handlerChain);
     }
@@ -71,7 +70,11 @@ public class EnsureBluetoothPermission
                         DatabaseLogger.d(
                                 getName(),
                                 "Result for %s: %s",
-                                args(permission, (enabled ? "granted" : "not granted"))));
+                                args(
+                                        permission,
+                                        (Boolean.TRUE.equals(enabled)
+                                                ? "granted"
+                                                : "not granted"))));
         DatabaseLogger.d(getName(), "Continuing initialization");
         finishInitialization();
     }
