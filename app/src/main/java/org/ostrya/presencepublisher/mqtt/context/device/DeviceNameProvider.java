@@ -32,8 +32,7 @@ public class DeviceNameProvider {
                     applicationContext.getContentResolver(), Settings.Global.DEVICE_NAME);
         } else {
             BluetoothManager bluetoothManager =
-                    (BluetoothManager)
-                            applicationContext.getSystemService(Context.BLUETOOTH_SERVICE);
+                    applicationContext.getSystemService(BluetoothManager.class);
             if (bluetoothManager != null) {
                 return bluetoothManager.getAdapter().getName();
             }

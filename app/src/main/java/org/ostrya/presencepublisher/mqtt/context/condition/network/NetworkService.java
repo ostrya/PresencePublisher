@@ -1,7 +1,5 @@
 package org.ostrya.presencepublisher.mqtt.context.condition.network;
 
-import static android.content.Context.WIFI_SERVICE;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiConfiguration;
@@ -10,7 +8,6 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import org.ostrya.presencepublisher.log.DatabaseLogger;
 
@@ -29,24 +26,21 @@ public class NetworkService {
 
     public NetworkService(Context context) {
         Context applicationContext = context.getApplicationContext();
-        this.wifiManager = (WifiManager) applicationContext.getSystemService(WIFI_SERVICE);
+        this.wifiManager = applicationContext.getSystemService(WifiManager.class);
         this.wifiEventConsumer = new WifiEventConsumer(applicationContext);
         this.wifiCallbackApi23 =
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                                && Build.VERSION.SDK_INT < Build.VERSION_CODES.S
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.S
                         ? new WifiCallbackApi23(wifiEventConsumer, wifiManager)
                         : null;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public static ConnectivityManager.NetworkCallback getWifiCallback(Context context) {
         Context applicationContext = context.getApplicationContext();
         WifiEventConsumer consumer = new WifiEventConsumer(applicationContext);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             return new WifiCallback(consumer);
         } else {
-            WifiManager wifiManager =
-                    (WifiManager) applicationContext.getSystemService(WIFI_SERVICE);
+            WifiManager wifiManager = applicationContext.getSystemService(WifiManager.class);
             return new WifiCallbackApi23(consumer, wifiManager);
         }
     }
@@ -55,7 +49,7 @@ public class NetworkService {
         // since the detection of wifi networks in Android < 12 with a network callback is flaky
         // due to the SSID not being present in the event data, we re-check the current wifi
         // whenever we need it
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && wifiCallbackApi23 != null) {
+        if (wifiCallbackApi23 != null) {
             wifiCallbackApi23.checkWifiConnection();
         }
         return wifiEventConsumer.getCurrentSsids();

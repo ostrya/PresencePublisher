@@ -18,8 +18,7 @@ public class LocationProvider {
     private final LocationManager locationManager;
 
     public LocationProvider(Context applicationContext) {
-        locationManager =
-                (LocationManager) applicationContext.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = applicationContext.getSystemService(LocationManager.class);
     }
 
     public String getLastKnownLocation() {

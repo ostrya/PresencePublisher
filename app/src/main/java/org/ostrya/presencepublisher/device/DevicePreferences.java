@@ -10,11 +10,9 @@ import static org.ostrya.presencepublisher.log.FormatArgs.args;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 import androidx.preference.PreferenceDataStore;
 
@@ -59,7 +57,6 @@ public class DevicePreferences extends PreferenceDataStore {
         this.devicePreferences = devicePreferences;
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private SecretKey getOrInitKey()
             throws KeyStoreException,
                     UnrecoverableKeyException,
@@ -88,35 +85,29 @@ public class DevicePreferences extends PreferenceDataStore {
     @Override
     public void putString(String key, @Nullable String value) {
         if (value != null && !value.isEmpty()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                try {
-                    SecretKey secretKey = getOrInitKey();
-                    Cipher cipher =
-                            Cipher.getInstance(
-                                    KEY_ALGORITHM_AES
-                                            + "/"
-                                            + BLOCK_MODE_GCM
-                                            + "/"
-                                            + ENCRYPTION_PADDING_NONE);
-                    cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-                    byte[] iv = cipher.getIV();
-                    int tagLength =
-                            cipher.getParameters()
-                                    .getParameterSpec(GCMParameterSpec.class)
-                                    .getTLen();
-                    byte[] cipherText = cipher.doFinal(value.getBytes(StandardCharsets.UTF_8));
-                    String encrypted =
-                            Base64.getEncoder().encodeToString(iv)
-                                    + "!"
-                                    + tagLength
-                                    + "!"
-                                    + Base64.getEncoder().encodeToString(cipherText);
-                    devicePreferences.edit().putString(key, encrypted).apply();
-                } catch (Exception e) {
-                    DatabaseLogger.e(TAG, "Unable to encrypt value for '%s'", args(key), e);
-                }
-            } else {
-                devicePreferences.edit().putString(key, value).apply();
+            try {
+                SecretKey secretKey = getOrInitKey();
+                Cipher cipher =
+                        Cipher.getInstance(
+                                KEY_ALGORITHM_AES
+                                        + "/"
+                                        + BLOCK_MODE_GCM
+                                        + "/"
+                                        + ENCRYPTION_PADDING_NONE);
+                cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+                byte[] iv = cipher.getIV();
+                int tagLength =
+                        cipher.getParameters().getParameterSpec(GCMParameterSpec.class).getTLen();
+                byte[] cipherText = cipher.doFinal(value.getBytes(StandardCharsets.UTF_8));
+                String encrypted =
+                        Base64.getEncoder().encodeToString(iv)
+                                + "!"
+                                + tagLength
+                                + "!"
+                                + Base64.getEncoder().encodeToString(cipherText);
+                devicePreferences.edit().putString(key, encrypted).apply();
+            } catch (Exception e) {
+                DatabaseLogger.e(TAG, "Unable to encrypt value for '%s'", args(key), e);
             }
         } else {
             devicePreferences.edit().remove(key).apply();
@@ -126,36 +117,32 @@ public class DevicePreferences extends PreferenceDataStore {
     @Nullable
     @Override
     public String getString(String key, @Nullable String defValue) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            try {
-                String value = devicePreferences.getString(key, null);
-                if (value == null) {
-                    return defValue;
-                }
-                String[] split = value.split("!", 3);
-                if (split.length != 3) {
-                    DatabaseLogger.w(TAG, "Ignoring malformed value for key %s", args(key));
-                    return defValue;
-                }
-                byte[] iv = Base64.getDecoder().decode(split[0]);
-                int tagLength = Integer.parseInt(split[1]);
-                byte[] encrypted = Base64.getDecoder().decode(split[2]);
-                SecretKey secretKey = getOrInitKey();
-                Cipher cipher =
-                        Cipher.getInstance(
-                                KEY_ALGORITHM_AES
-                                        + "/"
-                                        + BLOCK_MODE_GCM
-                                        + "/"
-                                        + ENCRYPTION_PADDING_NONE);
-                cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(tagLength, iv));
-                return new String(cipher.doFinal(encrypted), StandardCharsets.UTF_8);
-            } catch (Exception e) {
-                DatabaseLogger.w(TAG, "Unable to decrypt value for key %s", args(key), e);
+        try {
+            String value = devicePreferences.getString(key, null);
+            if (value == null) {
                 return defValue;
             }
-        } else {
-            return devicePreferences.getString(key, defValue);
+            String[] split = value.split("!", 3);
+            if (split.length != 3) {
+                DatabaseLogger.w(TAG, "Ignoring malformed value for key %s", args(key));
+                return defValue;
+            }
+            byte[] iv = Base64.getDecoder().decode(split[0]);
+            int tagLength = Integer.parseInt(split[1]);
+            byte[] encrypted = Base64.getDecoder().decode(split[2]);
+            SecretKey secretKey = getOrInitKey();
+            Cipher cipher =
+                    Cipher.getInstance(
+                            KEY_ALGORITHM_AES
+                                    + "/"
+                                    + BLOCK_MODE_GCM
+                                    + "/"
+                                    + ENCRYPTION_PADDING_NONE);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(tagLength, iv));
+            return new String(cipher.doFinal(encrypted), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            DatabaseLogger.w(TAG, "Unable to decrypt value for key %s", args(key), e);
+            return defValue;
         }
     }
 

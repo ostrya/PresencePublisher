@@ -114,8 +114,7 @@ public class PresencePublisher extends android.app.Application {
     }
 
     private void initNetworkCallback() {
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = getSystemService(ConnectivityManager.class);
         if (connectivityManager == null) {
             DatabaseLogger.e(
                     TAG, "Unable to get system services, cannot register network callback");
@@ -160,8 +159,7 @@ public class PresencePublisher extends android.app.Application {
 
     private void removeNetworkCallback() {
         ConnectivityManager.NetworkCallback oldCallback = currentCallback.getAndSet(null);
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = getSystemService(ConnectivityManager.class);
         if (connectivityManager != null) {
             DatabaseLogger.i(TAG, "Removing callback to await Wi-Fi connection");
             if (oldCallback != null) {

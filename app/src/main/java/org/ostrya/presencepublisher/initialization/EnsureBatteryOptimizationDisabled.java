@@ -1,15 +1,12 @@
 package org.ostrya.presencepublisher.initialization;
 
-import static android.content.Context.POWER_SERVICE;
 import static android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.Uri;
-import android.os.Build;
 import android.os.PowerManager;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentManager;
 
 import org.ostrya.presencepublisher.IntentActionContract;
@@ -32,9 +29,8 @@ public class EnsureBatteryOptimizationDisabled extends AbstractChainedHandler<St
 
     @Override
     protected void doInitialize() {
-        PowerManager powerManager = (PowerManager) activity.getSystemService(POWER_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && powerManager != null
+        PowerManager powerManager = activity.getSystemService(PowerManager.class);
+        if (powerManager != null
                 && !powerManager.isIgnoringBatteryOptimizations(activity.getPackageName())) {
             DatabaseLogger.d(getName(), "Battery optimization not yet disabled, asking user ...");
             FragmentManager fm = activity.getSupportFragmentManager();
@@ -54,7 +50,6 @@ public class EnsureBatteryOptimizationDisabled extends AbstractChainedHandler<St
     }
 
     @SuppressLint("BatteryLife")
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void onResult(Activity parent, boolean ok) {
         if (ok) {
             getLauncher().launch(ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);

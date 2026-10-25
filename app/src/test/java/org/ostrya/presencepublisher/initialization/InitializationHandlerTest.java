@@ -1,7 +1,5 @@
 package org.ostrya.presencepublisher.initialization;
 
-import static android.content.Context.POWER_SERVICE;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -34,8 +32,6 @@ public class InitializationHandlerTest {
     @Rule public final LogDisablerRule logDisablerRule = new LogDisablerRule();
 
     @Mock private MainActivity context;
-
-    @Mock private PowerManager powerManager;
 
     @Mock private SharedPreferences sharedPreferences;
 
@@ -71,7 +67,7 @@ public class InitializationHandlerTest {
 
         when(context.getApplicationContext()).thenReturn(context);
         when(context.isLocationPermissionNeeded()).thenReturn(false);
-        when(context.getSystemService(POWER_SERVICE)).thenReturn(powerManager);
+        when(context.getSystemService(PowerManager.class)).thenReturn(null);
         when(context.getSharedPreferences(any(), anyInt())).thenReturn(sharedPreferences);
         when(sharedPreferences.getBoolean(LocationConsentPreference.LOCATION_CONSENT, false))
                 .thenReturn(true);

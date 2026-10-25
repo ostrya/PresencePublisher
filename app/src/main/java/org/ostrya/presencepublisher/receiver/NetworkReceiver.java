@@ -27,8 +27,7 @@ public class NetworkReceiver extends BroadcastReceiver {
             Context applicationContext = context.getApplicationContext();
             if (PreferenceManager.getDefaultSharedPreferences(applicationContext)
                     .getBoolean(LOCATION_CONSENT, false)) {
-                WifiManager wifiManager =
-                        (WifiManager) applicationContext.getSystemService(Context.WIFI_SERVICE);
+                WifiManager wifiManager = applicationContext.getSystemService(WifiManager.class);
                 if (wifiManager == null) {
                     DatabaseLogger.e(TAG, "No wifi manager found, could not detect network");
                 } else {

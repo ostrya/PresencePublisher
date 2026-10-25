@@ -5,14 +5,11 @@ import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import java.util.Optional;
 
-@RequiresApi(api = Build.VERSION_CODES.M)
 public class WifiCallbackApi23 extends ConnectivityManager.NetworkCallback {
     private final WifiEventConsumer consumer;
     private final WifiManager wifiManager;

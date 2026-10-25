@@ -103,22 +103,12 @@ public class NotificationFactory {
         Intent intent = new Intent(applicationContext, MainActivity.class);
         intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pendingIntent =
-                    PendingIntent.getActivity(
-                            applicationContext,
-                            NOTIFICATION_REQUEST_CODE,
-                            intent,
-                            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        } else {
-            //noinspection UnspecifiedImmutableFlag
-            pendingIntent =
-                    PendingIntent.getActivity(
-                            applicationContext,
-                            NOTIFICATION_REQUEST_CODE,
-                            intent,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
-        }
+        pendingIntent =
+                PendingIntent.getActivity(
+                        applicationContext,
+                        NOTIFICATION_REQUEST_CODE,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification;
         NotificationCompat.Builder builder =

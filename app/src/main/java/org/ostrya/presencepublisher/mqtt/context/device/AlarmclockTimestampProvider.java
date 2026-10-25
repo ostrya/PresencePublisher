@@ -7,8 +7,7 @@ public class AlarmclockTimestampProvider {
     private final AlarmManager alarmManager;
 
     public AlarmclockTimestampProvider(Context applicationContext) {
-        this.alarmManager =
-                (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
+        this.alarmManager = applicationContext.getSystemService(AlarmManager.class);
     }
 
     public long getNextAlarmclockTimestamp() {

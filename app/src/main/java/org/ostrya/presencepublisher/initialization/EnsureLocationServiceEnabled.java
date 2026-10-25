@@ -1,6 +1,5 @@
 package org.ostrya.presencepublisher.initialization;
 
-import static android.content.Context.LOCATION_SERVICE;
 import static android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS;
 
 import android.app.Activity;
@@ -24,8 +23,7 @@ public class EnsureLocationServiceEnabled extends AbstractChainedHandler<String,
 
     @Override
     protected void doInitialize() {
-        LocationManager locationManager =
-                (LocationManager) activity.getSystemService(LOCATION_SERVICE);
+        LocationManager locationManager = activity.getSystemService(LocationManager.class);
         if (activity.isLocationPermissionNeeded()
                 && (locationManager == null
                         || !(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)

@@ -61,8 +61,7 @@ public class AddBeaconChoicePreferenceDummy extends ClickDummy {
                     });
             return;
         }
-        BluetoothManager bluetoothManager =
-                (BluetoothManager) getContext().getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothManager bluetoothManager = getContext().getSystemService(BluetoothManager.class);
         if (bluetoothManager == null) {
             DatabaseLogger.w(TAG, "Unable to get bluetooth manager");
         } else {
