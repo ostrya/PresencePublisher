@@ -2,6 +2,7 @@ package org.ostrya.presencepublisher.mqtt;
 
 import android.content.Context;
 import android.security.KeyChain;
+import android.util.Base64;
 
 import androidx.annotation.Nullable;
 
@@ -13,6 +14,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
@@ -66,7 +68,9 @@ class AndroidSslSocketFactoryFactory {
             X509Certificate[] certificateChain =
                     KeyChain.getCertificateChain(context, clientCertAlias);
             KeyStore customKeyStore = KeyStore.getInstance("PKCS12");
-            char[] pwdArray = Double.toString(Math.random()).toCharArray();
+            byte[] randomBytes = new byte[32];
+            new SecureRandom().nextBytes(randomBytes);
+            char[] pwdArray = Base64.encodeToString(randomBytes, Base64.NO_WRAP).toCharArray();
             customKeyStore.load(null, pwdArray);
             customKeyStore.setKeyEntry(clientCertAlias, privateKey, null, certificateChain);
             KeyManagerFactory keyManagerFactory =
