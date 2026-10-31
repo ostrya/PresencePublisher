@@ -35,7 +35,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
       - name: Build with Gradle
-        run: ./gradlew buildDebug
+        run: ./gradlew buildDebug check
       - name: Publish test report
         uses: mikepenz/action-junit-report@v6
         if: always()
