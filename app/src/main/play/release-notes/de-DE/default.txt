@@ -1,3 +1,6 @@
+v2.8.1
+• Fehler bei Adressprüfung korrigiert
+
 v2.8.0
 • Abhängigkeiten aktualisiert und für Android 17 angepasst
 
