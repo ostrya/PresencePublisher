@@ -24,6 +24,7 @@ Datenschutzerklärung unter <a href="https://ostrya.github.io/PresencePublisher/
 
 • ACCESS_BACKGROUND_LOCATION: notwendig ab Android 10, um den Namen des verbundenen WLANs im Hintergrund zu erfassen
 • ACCESS_FINE_LOCATION: notwendig für das Finden von Bluetooth-Beacons; notwendig ab Android 9, um den Namen des verbundenen WLANs zu erfassen
+* ACCESS_LOCAL_NETWORK: notwendig ab Android 17+, um MQTT-Nachrichten ins lokale Netzwerk zu senden
 • ACCESS_NETWORK_STATE: notwendig für das Reagieren auf Netzwerk-Änderungen
 • ACCESS_WIFI_STATE: notwendig, um den Namen des verbundenen WLANs zu erfassen
 • BLUETOOTH: notwendig bis Android 11, um mit Bluetooth-Beacons zu kommunizieren

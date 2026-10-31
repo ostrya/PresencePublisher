@@ -106,6 +106,7 @@ After you have imported your client certificate, you will be able to choose it f
 
 * ACCESS_BACKGROUND_LOCATION: on Android 10+, necessary to retrieve name of connected Wi-Fi while running in background
 * ACCESS_FINE_LOCATION: necessary to discover beacons; on Android 9+, necessary to retrieve name of connected Wi-Fi
+* ACCESS_LOCAL_NETWORK: on Android 17+, necessary to send MQTT messages to local network
 * ACCESS_NETWORK_STATE: necessary to register network change listener
 * ACCESS_WIFI_STATE: necessary to retrieve SSID of connected Wi-Fi
 * BLUETOOTH: necessary up to Android 11 to communicate with beacons

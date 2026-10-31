@@ -1,5 +1,5 @@
-v2.7.0
-• Problem bei Verbindung zu mehreren WLANs behoben
-• UI unterstützt nun Insets für Kamera und Navigationsleiste
+v2.8.0
+• Abhängigkeiten aktualisiert und für Android 17 angepasst
 
-Achtung: Der Inhalt der Nachricht connectedWifi ist nun eine Liste, da in neueren Android-Versionen mehr als ein WLAN verbunden sein kann.
+Achtung: Nach der Aktualisierung muss die App einmal geöffnet werden, um die neue Berechtigung zum
+den Zugriff auf das lokale Netzwerk für MQTT-Nachrichten zu erhalten.
