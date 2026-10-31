@@ -93,18 +93,6 @@ extensions.configure<ApplicationExtension> {
     }
 }
 
-tasks.register("checkParameters") {
-    description = "Verify build version against git tag"
-    doLast {
-        if (android.defaultConfig.versionCode != getBuildVersionCode()) {
-            throw InvalidUserDataException("Version code should be ${getBuildVersionCode()}")
-        }
-        if (isTagged() && android.defaultConfig.versionName != getBuildVersionName()) {
-            throw InvalidUserDataException("Version name should be ${getBuildVersionName()}")
-        }
-    }
-}
-
 play {
     serviceAccountCredentials.set(file("../../google-key.json"))
     defaultToAppBundles.set(true)
@@ -137,9 +125,26 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
 
-tasks.register("printVersion") {
+val checkParameters = tasks.register("checkParameters") {
+    description = "Verify build version against git tag"
+    doLast {
+        if (android.defaultConfig.versionCode != getBuildVersionCode()) {
+            throw InvalidUserDataException("Version code should be ${getBuildVersionCode()}")
+        }
+        if (isTagged() && android.defaultConfig.versionName != getBuildVersionName()) {
+            throw InvalidUserDataException("Version name should be ${getBuildVersionName()}")
+        }
+    }
+}
+
+val printVersion = tasks.register("printVersion") {
+    dependsOn(checkParameters)
     description = "Print actual version values"
     doLast {
         println("Version code: ${getBuildVersionCode()}, version name: ${getBuildVersionName()}")
     }
+}
+
+tasks.named("preBuild") {
+    dependsOn(printVersion)
 }
