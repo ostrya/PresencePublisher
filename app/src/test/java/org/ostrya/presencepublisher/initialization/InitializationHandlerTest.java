@@ -7,17 +7,22 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import android.content.SharedPreferences;
+import android.os.Looper;
 import android.os.PowerManager;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.ostrya.presencepublisher.MainActivity;
 import org.ostrya.presencepublisher.preference.about.LocationConsentPreference;
@@ -37,7 +42,19 @@ public class InitializationHandlerTest {
 
     @Mock private SharedPreferences.Editor editor;
 
+    private MockedStatic<Looper> looperMockedStatic;
+
     private final LinkedList<AbstractChainedHandler<?, ?>> handlerSpies = new LinkedList<>();
+
+    @Before
+    public void setup() {
+        looperMockedStatic = mockStatic(Looper.class);
+    }
+
+    @After
+    public void tearDown() {
+        looperMockedStatic.close();
+    }
 
     @Test
     public void chain_is_set_up_correctly() {

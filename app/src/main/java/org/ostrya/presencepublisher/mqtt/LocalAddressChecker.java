@@ -1,11 +1,18 @@
 package org.ostrya.presencepublisher.mqtt;
 
+import androidx.annotation.WorkerThread;
+
+import org.ostrya.presencepublisher.log.DatabaseLogger;
+
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class LocalAddressChecker {
+    private static final String TAG = "LocalAddressChecker";
+
+    @WorkerThread
     public static boolean isLocalAddress(String host) {
         if (host.endsWith(".local")) {
             return true;
@@ -31,7 +38,7 @@ public class LocalAddressChecker {
                         || (address6.getAddress()[0] & 0xFF) == 0xFD;
             }
         } catch (UnknownHostException e) {
-            // if resolution of the name does not work, it could be because it's a local address
+            DatabaseLogger.i(TAG, "Could not resolve address, assuming local", e);
             return true;
         }
         return false;

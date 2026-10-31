@@ -6,6 +6,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
@@ -20,8 +22,13 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.mqtt.LocalAddressChecker;
 
 import java.util.Queue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 class EnsureLocalNetworkPermission extends AbstractChainedHandler<String, Boolean> {
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
     protected EnsureLocalNetworkPermission(
             MainActivity activity, Queue<HandlerFactory> handlerChain) {
         super(activity, new ActivityResultContracts.RequestPermission(), handlerChain);
@@ -31,25 +38,46 @@ class EnsureLocalNetworkPermission extends AbstractChainedHandler<String, Boolea
     protected void doInitialize() {
         String host = PreferenceManager.getDefaultSharedPreferences(activity).getString(HOST, null);
         // skip permission check if no host is configured or not a local address or < SDK 37
-        if (host != null
-                && LocalAddressChecker.isLocalAddress(host)
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN
-                && ContextCompat.checkSelfPermission(
-                                activity, Manifest.permission.ACCESS_LOCAL_NETWORK)
-                        != PackageManager.PERMISSION_GRANTED) {
-            DatabaseLogger.d(
-                    getName(), "Local network permission not yet granted, asking user ...");
-            FragmentManager fm = activity.getSupportFragmentManager();
-
-            ConfirmationDialogFragment fragment =
-                    ConfirmationDialogFragment.getInstance(
-                            this::onResult,
-                            R.string.local_network_permission_dialog_title,
-                            R.string.local_network_permission_dialog_message);
-            fragment.show(fm, null);
+        if (host != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN) {
+            // as isLocalAddress is a network interaction, it must be done off the main thread
+            executor.execute(
+                    () -> {
+                        final boolean isLocal = LocalAddressChecker.isLocalAddress(host);
+                        // once we have the result, continue in main thread
+                        mainHandler.post(
+                                () -> {
+                                    if (activity.isFinishing() || activity.isDestroyed()) {
+                                        // cancel if activity is gone
+                                        return;
+                                    }
+                                    if (!isLocal
+                                            || ContextCompat.checkSelfPermission(
+                                                            activity,
+                                                            Manifest.permission
+                                                                    .ACCESS_LOCAL_NETWORK)
+                                                    == PackageManager.PERMISSION_GRANTED) {
+                                        finishInitialization();
+                                    } else {
+                                        onNeedsLocalAccessPermission();
+                                    }
+                                });
+                    });
         } else {
             finishInitialization();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.CINNAMON_BUN)
+    private void onNeedsLocalAccessPermission() {
+        DatabaseLogger.d(getName(), "Local network permission not yet granted, asking user ...");
+        FragmentManager fm = activity.getSupportFragmentManager();
+
+        ConfirmationDialogFragment fragment =
+                ConfirmationDialogFragment.getInstance(
+                        this::onResult,
+                        R.string.local_network_permission_dialog_title,
+                        R.string.local_network_permission_dialog_message);
+        fragment.show(fm, null);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.CINNAMON_BUN)
