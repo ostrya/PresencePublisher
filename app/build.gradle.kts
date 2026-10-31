@@ -1,5 +1,7 @@
 import com.android.build.api.dsl.ApplicationExtension
 import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.lib.Ref
+import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.revwalk.RevWalk
 
 buildscript {
@@ -18,9 +20,12 @@ plugins {
 val git: Git = Git.open(rootDir)
 
 fun getBuildVersionCode(): Int {
-    val headWalk: RevWalk = git.log().call() as RevWalk
-    val head = headWalk.next()
-    val tagList = git.tagList().call()
+    val headWalk = git.log().call() as RevWalk
+    val head: RevCommit? = headWalk.next()
+    val tagList = git.tagList().call() as List<Ref>
+    if (head == null || tagList.isEmpty()) {
+        return -1
+    }
     val tagCount = tagList.count {
         it.name.matches(Regex("refs/tags/v[1-9].*"))
                 && headWalk.isMergedInto(headWalk.parseCommit(it.objectId), head)
@@ -29,7 +34,7 @@ fun getBuildVersionCode(): Int {
 }
 
 fun getBuildVersionName(): String {
-    return git.describe().setTags(true).setMatch("v[1-9].*").call().substring(1)
+    return git.describe().setTags(true).setMatch("v[1-9].*").call()?.substring(1).orEmpty()
 }
 
 fun isTagged(): Boolean {
@@ -128,11 +133,15 @@ dependencies {
 val checkParameters = tasks.register("checkParameters") {
     description = "Verify build version against git tag"
     doLast {
-        if (android.defaultConfig.versionCode != getBuildVersionCode()) {
-            throw InvalidUserDataException("Version code should be ${getBuildVersionCode()}")
-        }
-        if (isTagged() && android.defaultConfig.versionName != getBuildVersionName()) {
-            throw InvalidUserDataException("Version name should be ${getBuildVersionName()}")
+        val buildVersionCode = getBuildVersionCode()
+        // skip check on shallow checkout or checkout without tags
+        if (buildVersionCode >= 0) {
+            if (android.defaultConfig.versionCode != getBuildVersionCode()) {
+                throw InvalidUserDataException("Version code should be ${getBuildVersionCode()}")
+            }
+            if (isTagged() && android.defaultConfig.versionName != getBuildVersionName()) {
+                throw InvalidUserDataException("Version name should be ${getBuildVersionName()}")
+            }
         }
     }
 }
