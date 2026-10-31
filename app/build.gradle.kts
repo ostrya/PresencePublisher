@@ -54,10 +54,10 @@ extensions.configure<ApplicationExtension> {
     }
     signingConfigs {
         register("release") {
-            val keystorePath: String? by project
-            val keystorePassword: String? by project
-            val signkeyAlias: String? by project
-            val signkeyPassword: String? by project
+            val keystorePath = project.findProperty("keystorePath") as String?
+            val keystorePassword = project.findProperty("keystorePassword") as String?
+            val signkeyAlias = project.findProperty("signkeyAlias") as String?
+            val signkeyPassword = project.findProperty("signkeyPassword") as String?
             storeFile = keystorePath?.let { file(it) }
             storePassword = keystorePassword
             keyAlias = signkeyAlias
@@ -92,7 +92,8 @@ extensions.configure<ApplicationExtension> {
     }
 }
 
-val checkParameters by tasks.registering {
+tasks.register("checkParameters") {
+    description = "Verify build version against git tag"
     doLast {
         if (android.defaultConfig.versionCode != getBuildVersionCode()) {
             throw InvalidUserDataException("Version code should be ${getBuildVersionCode()}")
@@ -136,6 +137,7 @@ dependencies {
 }
 
 tasks.register("printVersion") {
+    description = "Print actual version values"
     doLast {
         println("Version code: ${getBuildVersionCode()}, version name: ${getBuildVersionName()}")
     }
