@@ -1,25 +1,26 @@
 [versions]
-aboutLibraries = "14.2.0"
+aboutLibraries = "15.3.0"
 androidGradle = "9.5.0"
-appcompat = "1.7.1"
+appcompat = "1.8.0"
 assertJ = "3.27.7"
 beacon = "2.21.2"
 cardview = "1.0.0"
-compose_bom = "2026.05.00"
+compose_bom = "2026.09.00"
 desugar_jdk_libs = "2.1.5"
-guava = "33.6.0-android"
-jgit = "7.4.0.202509020913-r"
+guava = "33.7.2-android"
+jgit = "7.8.0.202609011348-r"
 junit = "4.13.2"
-kotlin = "2.3.21"
-material = "1.13.0"
+kotlin = "2.4.21"
+material = "1.14.0"
 mockitoInline = "5.2.0"
 mqtt = "1.2.5"
-play = "4.0.0"
+play = "4.1.1"
 preference = "1.2.1"
-room = "2.8.4"
+room = "2.8.5"
 runner = "1.7.0"
-versions = "0.54.0"
+versions = "0.66.0"
 viewpager2 = "1.1.0"
+# 2.12+ needs min-sdk 24
 workRuntime = "2.11.2"
 
 [libraries]
@@ -52,4 +53,4 @@ aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.re
 androidApplication = { id = "com.android.application" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 play = { id = "com.github.triplet.play", version.ref = "play" }
-versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
+versions = { id = "io.github.ben-manes.versions", version.ref = "versions" }

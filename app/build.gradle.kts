@@ -79,8 +79,9 @@ extensions.configure<ApplicationExtension> {
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        // below SDK 33, desugarizing will take care of compatibility to Java 7 / 8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     lint {
         abortOnError = false
