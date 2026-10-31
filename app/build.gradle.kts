@@ -148,3 +148,9 @@ val printVersion = tasks.register("printVersion") {
 tasks.named("preBuild") {
     dependsOn(printVersion)
 }
+
+tasks.register("testClasses") {
+    group = "verification"
+    description = "compile unit test classes for CodeQL analysis"
+    dependsOn(tasks.named("compileDebugUnitTestJavaWithJavac"))
+}
