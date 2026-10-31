@@ -25,6 +25,7 @@ jobs:
     permissions:
       security-events: write
       checks: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v7
         with:
@@ -43,7 +44,10 @@ jobs:
         if: always()
         with:
           report_paths: app/build/test-results/testDebugUnitTest/TEST-*.xml
-          check_name: JUnit Test Report
+          include_passed: true
+          require_passed_tests: true
+          check_annotations: true
+          comment: true
       - name: Archive debug apk
         uses: actions/upload-artifact@v7
         with:
