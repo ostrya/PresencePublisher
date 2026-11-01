@@ -18,7 +18,7 @@ play = "4.1.1"
 preference = "1.2.1"
 room = "2.8.5"
 runner = "1.7.0"
-versions = "0.66.0"
+versions = "0.67.0"
 viewpager2 = "1.1.0"
 # 2.12+ needs min-sdk 24
 workRuntime = "2.11.2"
