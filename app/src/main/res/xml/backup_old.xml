@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- only allow transferring the regular preferences (no MQTT client ID, no password) from device to device -->
+    <include domain="sharedpref" path="org.ostrya.presencepublisher_preferences.xml" requireFlags="deviceToDeviceTransfer" />
+</full-backup-content>

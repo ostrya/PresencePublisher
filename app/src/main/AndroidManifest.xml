@@ -36,7 +36,9 @@
 
     <!-- just to be on the safe side, rtl support is not enabled (mainly because I didn't check what would be necessary) -->
     <application
-        android:allowBackup="false"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/backup_new"
+        android:fullBackupContent="@xml/backup_old"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:name=".PresencePublisher"
