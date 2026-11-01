@@ -41,7 +41,7 @@ public class Scheduler {
 
     static final Object LOCK = new Object();
 
-    private static final String NEXT_WORKER_ID = "nextWorkerId";
+    public static final String NEXT_WORKER_ID = "nextWorkerId";
     public static final String UNIQUE_WORKER_ID = "uniqueId";
 
     private static final String WORKER_1 = "PublishingWorker1";

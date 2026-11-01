@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.log.ui;
 
 import android.content.Context;
+import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
@@ -9,7 +10,6 @@ import org.ostrya.presencepublisher.log.DatabaseLogger;
 import org.ostrya.presencepublisher.log.LogAccessor;
 import org.ostrya.presencepublisher.log.LogItem;
 
-import java.io.File;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +40,7 @@ public class LogViewModel extends ViewModel {
         logAccessor.clear();
     }
 
-    public Future<File> exportLogs(Context context) {
-        return logAccessor.exportLogs(context);
+    public Future<?> exportLogs(Context context, Uri targetUri) {
+        return logAccessor.exportLogs(context, targetUri);
     }
 }

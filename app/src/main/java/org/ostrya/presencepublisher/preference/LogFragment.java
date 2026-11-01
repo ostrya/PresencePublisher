@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.preference;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,9 +12,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,15 +28,19 @@ import org.ostrya.presencepublisher.log.ui.LogRecyclerViewAdapter;
 import org.ostrya.presencepublisher.log.ui.LogType;
 import org.ostrya.presencepublisher.log.ui.LogViewModel;
 
-import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 public class LogFragment extends Fragment {
     private static final String TAG = "LogFragment";
     private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final ActivityResultLauncher<String> exportLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.CreateDocument("text/plain"), this::onFileSelected);
+    private Function<Uri, Future<?>> logFutureFunction;
 
     private void updateLogView(RecyclerView recyclerView, LogViewModel viewModel) {
         LogRecyclerViewAdapter logAdapter = new LogRecyclerViewAdapter();
@@ -43,25 +50,46 @@ public class LogFragment extends Fragment {
 
     private void exportLogs(View view, LogViewModel viewModel) {
         Context context = view.getContext();
-        Future<File> fileFuture = viewModel.exportLogs(context);
+        logFutureFunction = (uri) -> viewModel.exportLogs(context, uri);
+        exportLauncher.launch(System.currentTimeMillis() + ".log");
+    }
 
-        executorService.execute(
-                () -> {
-                    File file = null;
-                    try {
-                        file = fileFuture.get();
-                    } catch (ExecutionException e) {
-                        DatabaseLogger.w(TAG, "Unable to export logs", e.getCause());
-                    } catch (InterruptedException e) {
-                        DatabaseLogger.w(TAG, "Unable to export logs", e);
-                    }
-                    String message =
-                            file != null
-                                    ? context.getString(R.string.toast_logs_stored, file)
-                                    : context.getString(R.string.toast_logs_not_stored);
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
-                });
+    private void onFileSelected(Uri targetUri) {
+        Context context = getContext();
+        if (targetUri != null && context != null && logFutureFunction != null) {
+            executorService.execute(
+                    () -> {
+                        String message;
+                        try {
+                            logFutureFunction.apply(targetUri).get();
+                            logFutureFunction = null;
+                            message = context.getString(R.string.message_logs_stored);
+                        } catch (ExecutionException e) {
+                            DatabaseLogger.w(TAG, "Unable to export logs", e.getCause());
+                            message =
+                                    context.getString(
+                                            R.string.message_logs_not_stored,
+                                            e.getCause().getLocalizedMessage());
+                        } catch (InterruptedException e) {
+                            DatabaseLogger.w(TAG, "Unable to export logs", e);
+                            message =
+                                    context.getString(
+                                            R.string.message_logs_not_stored,
+                                            e.getLocalizedMessage());
+                        }
+                        final String finalMessage = message;
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(
+                                () -> {
+                                    AlertDialog.Builder builder =
+                                            new AlertDialog.Builder(requireContext());
+                                    builder.setTitle(R.string.button_export);
+                                    builder.setMessage(finalMessage);
+                                    builder.setNeutralButton(R.string.dialog_close, null);
+                                    builder.create().show();
+                                });
+                    });
+        }
     }
 
     @Override

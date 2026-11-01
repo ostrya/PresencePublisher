@@ -1,6 +1,7 @@
 package org.ostrya.presencepublisher.log;
 
 import android.content.Context;
+import android.net.Uri;
 
 import androidx.lifecycle.LiveData;
 
@@ -9,9 +10,9 @@ import org.ostrya.presencepublisher.log.db.LogDao;
 
 import java.io.BufferedWriter;
 import java.io.Closeable;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -32,12 +33,12 @@ public class LogAccessor<T extends DbLog> implements Closeable {
         return dao.getAllContinuously();
     }
 
-    public Future<File> exportLogs(Context context) {
+    public Future<?> exportLogs(Context context, Uri targetUri) {
         return workingExecutor.submit(
                 () -> {
                     try {
                         List<T> logEntries = dao.getAll().get();
-                        return writeFile(context, logEntries);
+                        writeFile(context, targetUri, logEntries);
                     } catch (ExecutionException e) {
                         throw new RuntimeException(e.getCause());
                     } catch (RuntimeException e) {
@@ -48,13 +49,12 @@ public class LogAccessor<T extends DbLog> implements Closeable {
                 });
     }
 
-    private File writeFile(Context context, List<T> lines) {
-        File parentDir = context.getExternalFilesDir(null);
-        if (parentDir == null) {
-            throw new RuntimeException("Unable to open external files directory");
-        }
-        File result = new File(parentDir, System.currentTimeMillis() + ".log");
-        try (BufferedWriter out = new BufferedWriter(new FileWriter(result, false))) {
+    private void writeFile(Context context, Uri targetUri, List<T> lines) {
+        try (BufferedWriter out =
+                new BufferedWriter(
+                        new OutputStreamWriter(
+                                context.getContentResolver().openOutputStream(targetUri, "wt"),
+                                StandardCharsets.UTF_8))) {
             for (T line : lines) {
                 out.append(line.getLine());
                 out.newLine();
@@ -62,7 +62,6 @@ public class LogAccessor<T extends DbLog> implements Closeable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return result;
     }
 
     public void clear() {

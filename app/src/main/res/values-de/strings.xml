@@ -104,8 +104,8 @@
     <string name="dialog_scan_beacons_title">Beacons in der Nähe</string>
     <string name="message_charging_schedule_title">Ladesendeperiode</string>
     <string name="message_charging_schedule_summary">Sendeperiode, wenn das Gerät geladen wird.\nBei Wert = 0 wird die normale Periode benutzt.</string>
-    <string name="toast_logs_stored" formatted="true">Gespeichert nach \'%s\'</string>
-    <string name="toast_logs_not_stored">Fehler beim Exportieren des Logs</string>
+    <string name="message_logs_stored">Log erfolgreich gespeichert.</string>
+    <string name="message_logs_not_stored" formatted="true">Fehler beim Exportieren des Logs:%n%1$s</string>
     <string name="bundled_licenses_title">Lizenzen eingebundener Komponenten</string>
     <string name="bundled_licenses_summary">Tippe hier, um Lizenzen der eingebundenen Komponenten zu sehen.</string>
     <string name="privacy_title">Datenschutzerklärung</string>
@@ -115,6 +115,7 @@
     <string name="version_title">Version</string>
     <string name="category_build">Build-Information</string>
     <string name="category_legal">Rechtliches</string>
+    <string name="category_backup">Sicherung</string>
     <string name="category_ui">UI</string>
     <string name="dialog_close">Schließen</string>
     <string name="source_repo_summary">Tippe hier, um den Quellcode in einem Browser zu öffnen.</string>
@@ -150,4 +151,14 @@
     <string name="client_certificate_missing">Falls kein Dialog zur Auswahl eines Client-Zertifikats erschienen ist, stelle sicher dass du das Client-Zertifikat wie in der Readme (leider nur auf Englisch) auf deinem Gerät installiert hast.</string>
     <string name="dialog_show_readme">Readme öffnen</string>
     <string name="night_mode_title">Nachtmodus</string>
+    <string name="backup_title">Sichern</string>
+    <string name="backup_summary">Tippe hier, um deine Einstellungen in eine Datei zu sichern.</string>
+    <string name="backup_confirmation">Wenn du fortfährst, werden deine Einstellungen in eine Datei gespeichert. Deine MQTT-Client-ID, dein Passwort (falls vorhanden) und dein Client-Zertifikat (falls vorhanden) können aus Sicherheitsgründen nicht gesichert werden.\n\nVerwende am Besten dieselbe App-Version, um die Einstellungen zu sichern und wiederherzustellen. Auch wenn die Einstellungen so gut wie möglich importiert werden, können Daten verloren gehen, wenn die Sicherung mit einer anderen App-Version erfolgt ist.</string>
+    <string name="backup_success">Sicherung erfolgreich.</string>
+    <string name="backup_failure" formatted="true">Sicherung fehlgeschlagen:%n%1$s</string>
+    <string name="restore_title">Wiederherstellen</string>
+    <string name="restore_summary">Tippe hier, um deine Einstellungen aus einer Datei wiederherzustellen.</string>
+    <string name="restore_confirmation">Wenn du fortfährst, werden deine Einstellungen mit denen aus einer Sicherung überschrieben. Deine MQTT-Client-ID, dein Passwort (falls vorhanden) und dein Client-Zertifikat (falls vorhanden) können aus Sicherheitsgründen nicht gesichert werden.\n\nVerwende am Besten dieselbe App-Version, um die Einstellungen zu sichern und wiederherzustellen. Auch wenn die Einstellungen so gut wie möglich importiert werden, können Daten verloren gehen, wenn die Sicherung mit einer anderen App-Version erfolgt ist.</string>
+    <string name="restore_failure" formatted="true">Wiederherstellung fehlgeschlagen:%n%1$s</string>
+    <string name="restore_success">Wiederherstellung erfolgreich.</string>
 </resources>

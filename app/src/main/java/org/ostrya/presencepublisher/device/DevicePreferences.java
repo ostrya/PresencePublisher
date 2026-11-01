@@ -37,8 +37,7 @@ import javax.crypto.spec.GCMParameterSpec;
 /**
  * Helper class to store data which is device-specific
  *
- * <p>For extra safety, this is encrypted starting with Android 6. No encryption in older versions,
- * because Google decided to delete the required class KeyGeneratorSpec from the more recent SDKs.
+ * <p>For extra safety, this is encrypted.
  */
 public class DevicePreferences extends PreferenceDataStore {
     private static final String TAG = "DevicePreferences";
