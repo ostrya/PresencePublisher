@@ -1,8 +1,10 @@
+v2.8.2
+• settings can now be backed up and restored
+
 v2.8.1
 • fixed bug in address check
 
 v2.8.0
 • upgraded dependencies and adapted for Android 17
 
-Important: After the update, the app needs to be opened once to acquire the permission to access
-the local network for MQTT messages.
+⚠️ After the update, the app needs to be opened once to acquire the permission to access the local network for MQTT messages.
