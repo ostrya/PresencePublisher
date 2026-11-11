@@ -1,3 +1,6 @@
+v2.8.3
+• MQTT publishing fixed
+
 v2.8.2
 • settings can now be backed up and restored
 

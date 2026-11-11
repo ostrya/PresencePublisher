@@ -1,3 +1,6 @@
+v2.8.3
+• MQTT-Versand wiederhergestellt
+
 v2.8.2
 • Einstellungen können nun gesichert und wiederhergestellt werden
 

@@ -49,7 +49,7 @@ extensions.configure<ApplicationExtension> {
         targetSdk = 37
         vectorDrawables.useSupportLibrary = true
         versionCode = 63
-        versionName = "2.8.2"
+        versionName = "2.8.3"
         javaCompileOptions {
             annotationProcessorOptions {
                 argument("room.schemaLocation", "$projectDir/schemas")
