@@ -48,7 +48,7 @@ extensions.configure<ApplicationExtension> {
         minSdk = 23
         targetSdk = 37
         vectorDrawables.useSupportLibrary = true
-        versionCode = 63
+        versionCode = 64
         versionName = "2.8.3"
         javaCompileOptions {
             annotationProcessorOptions {

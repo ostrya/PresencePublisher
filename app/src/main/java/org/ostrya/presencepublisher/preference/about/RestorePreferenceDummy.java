@@ -27,7 +27,7 @@ public class RestorePreferenceDummy extends ClickDummy {
     @Override
     protected void onClick() {
         ConfirmationDialogFragment.getInstance(
-                        this::onConfirm, R.string.backup_title, R.string.backup_confirmation)
+                        this::onConfirm, R.string.backup_title, R.string.restore_confirmation)
                 .show(getParentFragmentManager(), null);
     }
 
